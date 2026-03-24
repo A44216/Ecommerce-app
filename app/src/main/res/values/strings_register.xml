@@ -1,0 +1,21 @@
+<resources>
+    <!-- Titles -->
+    <string name="register_title">ĐĂNG KÝ</string>
+
+    <!-- Input hints -->
+    <string name="register_hint_full_name">Họ và tên</string>
+    <string name="register_hint_username">Tên đăng nhập</string>
+    <string name="register_hint_email">Email</string>
+    <string name="register_hint_phone">Số điện thoại</string>
+    <string name="register_hint_password">Mật khẩu</string>
+    <string name="register_hint_password_confirm">Nhập lại mật khẩu</string>
+
+    <!-- Autofill hints -->
+    <string name="register_autofill_full_name">fullName</string>
+    <string name="register_autofill_username">username</string>
+    <string name="register_autofill_phone">phone</string>
+    <string name="register_autofill_email">email</string>
+
+    <!-- Buttons -->
+    <string name="register_button">Đăng ký</string>
+</resources>
