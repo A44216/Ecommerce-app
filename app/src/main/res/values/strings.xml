@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EcommerceApp</string>
+
+    <!-- Content descriptions -->
+    <string name="desc_back_button">Quay lại</string>
+    <string name="desc_logo_app">Logo ứng dụng</string>
+    <string name="desc_logo_google">Logo Google</string>
+</resources>

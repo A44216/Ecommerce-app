@@ -1,0 +1,26 @@
+<resources>
+    <!-- Titles -->
+    <string name="login_title">ĐĂNG NHẬP</string>
+
+    <!-- Buttons -->
+    <string name="login_button">Đăng nhập</string>
+    <string name="login_google_button">Đăng nhập bằng Google</string>
+
+    <!-- CheckBox / links -->
+    <string name="login_remember_password">Ghi nhớ mật khẩu</string>
+    <string name="login_forgot_password">Quên mật khẩu</string>
+
+    <!-- Bottom text -->
+    <string name="login_no_account">Chưa có tài khoản?</string>
+    <string name="login_register">Đăng ký</string>
+
+    <!-- Input hints -->
+    <string name="login_hint_username_or_email">Tên tài khoản hoặc Email</string>
+    <string name="login_autofill_username_or_email">username|emailAddress</string>
+    <string name="login_hint_password">Mật khẩu</string>
+
+    <!-- Descriptions / accessibility -->
+    <string name="desc_icon_user">Icon người dùng</string>
+    <string name="desc_icon_password">Icon mật khẩu</string>
+    <string name="desc_icon_google">Icon Google</string>
+</resources>
