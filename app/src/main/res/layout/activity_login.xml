@@ -16,7 +16,6 @@
         android:contentDescription="@string/desc_logo_app"
         android:src="@drawable/img_logo_app"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layoutUsernameOrEmail"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

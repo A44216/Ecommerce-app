@@ -131,15 +131,17 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Đăng nhập
-        Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-
         // TODO: gọi API login ở đây
 
         // Nếu nhớ đăng nhập
         if (chkRememberLogin.isChecked()) {
             // TODO: lưu SharedPreferences
         }
+
+        // Đăng nhập
+        Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+
+
     }
 
 }
