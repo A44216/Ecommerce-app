@@ -122,16 +122,16 @@
 
         <!-- Nhập lại mật khẩu -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutPasswordConfirm"
+            android:id="@+id/layoutConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="@string/register_hint_password_confirm"
+            android:hint="@string/register_hint_confirm_password"
             app:startIconDrawable="@drawable/ic_key"
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPasswordConfirm"
+                android:id="@+id/etConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"

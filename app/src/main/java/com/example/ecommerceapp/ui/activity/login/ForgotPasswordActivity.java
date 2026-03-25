@@ -83,7 +83,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         // Validate
 
-        // 1. Không được để trống
+        // 1. Email/Username Không được để trống
         if (TextUtils.isEmpty(input)) {
             etUsernameOrEmail.setError("Không được để trống");
             etUsernameOrEmail.requestFocus();
@@ -98,7 +98,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 return;
             }
         } else {
-            // 3. Username
+            // 3. Kiểm tra Username
             if (input.length() < 7) {
                 etUsernameOrEmail.setError("Username phải >= 7 ký tự");
                 etUsernameOrEmail.requestFocus();
@@ -113,18 +113,40 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     // Hàm xử lý xác nhận OTP
     private void handleConfirm() {
+        String input = Objects.requireNonNull(etUsernameOrEmail.getText()).toString().trim();
         String code = Objects.requireNonNull(etCode.getText()).toString().trim();
-
         // Validate
 
-        // 1. Không được để trống
+        // 1. Email/Username và code Không được để trống
+        if (TextUtils.isEmpty(input)) {
+            etUsernameOrEmail.setError("Không được để trống");
+            etUsernameOrEmail.requestFocus();
+            return;
+        }
+
         if (TextUtils.isEmpty(code)) {
             etCode.setError("Không được để trống");
             etCode.requestFocus();
             return;
         }
 
-        // 2. OTP phải đủ 6 số
+        // 2. Kiểm tra email nếu nhập email
+        if (input.contains("@")) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(input).matches()) {
+                etUsernameOrEmail.setError("Email không hợp lệ");
+                etUsernameOrEmail.requestFocus();
+                return;
+            }
+        } else {
+            // 3. Kiểm tra Username
+            if (input.length() < 7) {
+                etUsernameOrEmail.setError("Username phải >= 7 ký tự");
+                etUsernameOrEmail.requestFocus();
+                return;
+            }
+        }
+
+        // 4. Kiểm tra OTP phải đủ 6 số
         if (code.length() != 6) {
             etCode.setError("Mã phải 6 số");
             etCode.requestFocus();

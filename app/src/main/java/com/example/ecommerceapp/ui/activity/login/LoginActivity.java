@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Validate
 
-        // 1. Không được để trống
+        // 1. Email/Username và Password Không được để trống
         if (TextUtils.isEmpty(input)) {
             etUsernameOrEmail.setError("Không được để trống");
             etUsernameOrEmail.requestFocus();
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
         } else {
-            // 3. Username
+            // 3. Kiểm tra Username
             if (input.length() < 7) {
                 etUsernameOrEmail.setError("Username phải >= 7 ký tự");
                 etUsernameOrEmail.requestFocus();
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        // 4. Password
+        // 4. Kiểm tra Password
         if (password.length() < 6) {
             etPassword.setError("Mật khẩu phải >= 6 ký tự");
             etPassword.requestFocus();
@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // TODO: gọi API login ở đây
 
-        // Nếu nhớ đăng nhập
+        // Ghi nhớ đăng nhập
         if (chkRememberLogin.isChecked()) {
             // TODO: lưu SharedPreferences
         }

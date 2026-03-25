@@ -8,7 +8,7 @@
     <string name="register_hint_email">Email</string>
     <string name="register_hint_phone">Số điện thoại</string>
     <string name="register_hint_password">Mật khẩu</string>
-    <string name="register_hint_password_confirm">Nhập lại mật khẩu</string>
+    <string name="register_hint_confirm_password">Nhập lại mật khẩu</string>
 
     <!-- Autofill hints -->
     <string name="register_autofill_full_name">fullName</string>
