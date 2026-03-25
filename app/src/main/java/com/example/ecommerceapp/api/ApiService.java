@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.api;
 
+import com.example.ecommerceapp.data.model.request.UserRequest;
 import com.example.ecommerceapp.data.model.response.AddressResponse;
 import com.example.ecommerceapp.data.model.response.CategoryResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
@@ -8,7 +9,9 @@ import com.example.ecommerceapp.data.model.response.UserResponse;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 public interface ApiService {
 
@@ -24,5 +27,10 @@ public interface ApiService {
     @GET("addresses")
     Call<List<AddressResponse>> getAddresses();
 
+    @POST("users")
+    Call<UserResponse> createUser(@Body UserRequest request);
+
+    @POST("users/login")
+    Call<UserResponse> loginUser(@Body UserRequest request);
 
 }

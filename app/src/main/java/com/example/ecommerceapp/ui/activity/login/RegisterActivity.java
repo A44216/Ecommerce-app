@@ -7,22 +7,34 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.data.enums.Role;
+import com.example.ecommerceapp.data.model.request.UserRequest;
+import com.example.ecommerceapp.data.model.response.UserResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private ImageView ivBack;
     private TextInputEditText etFullName, etUsername, etEmail, etPhone, etPassword, etConfirmPassword;
-    private MaterialButton btnNext;
+    private MaterialButton btnRegister;
+
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        apiService = ApiClient.getApiService(); // Khởi tạo apiService
 
         initViews();
         initEvents();
@@ -51,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
 
-        btnNext = findViewById(R.id.btnNext);
+        btnRegister = findViewById(R.id.btnRegister);
     }
 
     // Thiết lập sự kiện
@@ -61,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
         ivBack.setOnClickListener(v -> finish());
 
         // Xử lý đăng ký
-        btnNext.setOnClickListener(v -> handleRegister());
+        btnRegister.setOnClickListener(v -> handleRegister());
     }
 
     // Hàm xử lý đăng ký
@@ -147,10 +161,32 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: gọi API register ở đây
+        // Tạo request
+        UserRequest request = new UserRequest();
+        request.fullName = fullName;
+        request.username = username;
+        request.email = email;
+        request.phone = phone;
+        request.password = password;
+        request.role = Role.CUSTOMER;
 
-        Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-        finish();
+        // Gọi API
+        apiService.createUser(request).enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UserResponse> call, @NonNull Response<UserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                    finish(); // đóng activity
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserResponse> call, @NonNull Throwable t) {
+                Toast.makeText(RegisterActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

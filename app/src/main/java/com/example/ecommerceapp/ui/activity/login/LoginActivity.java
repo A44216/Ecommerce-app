@@ -9,16 +9,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.data.model.request.UserRequest;
+import com.example.ecommerceapp.data.model.response.UserResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnLogin;
     private CheckBox chkRememberLogin;
 
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
 
             return insets;
         });
+
+        apiService = ApiClient.getApiService(); // Khởi tạo apiService
 
         initViews();
         initEvents();
@@ -131,16 +143,34 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: gọi API login ở đây
-
-        // Ghi nhớ đăng nhập
-        if (chkRememberLogin.isChecked()) {
-            // TODO: lưu SharedPreferences
+        // Tạo request
+        UserRequest request = new UserRequest();
+        request.password = password;
+        if (input.contains("@")) {
+            request.email = input;
+        } else {
+            request.username = input;
         }
+        request.password = password;
 
-        // Đăng nhập
-        Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+        // Gọi API login
+        // Gọi API
+        apiService.loginUser(request).enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UserResponse> call, @NonNull Response<UserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                    // TODO: chuyển sang MainActivity nếu muốn
+                } else {
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            @Override
+            public void onFailure(@NonNull Call<UserResponse> call, @NonNull Throwable t) {
+                Toast.makeText(LoginActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
