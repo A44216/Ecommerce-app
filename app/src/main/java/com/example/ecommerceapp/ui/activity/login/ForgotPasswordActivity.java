@@ -1,6 +1,8 @@
 package com.example.ecommerceapp.ui.activity.login;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             );
 
             return insets;
+        });
+
+        ImageView ivBack = findViewById(R.id.ivBack);
+
+        // Trở lại màn hình đăng nhập
+        ivBack.setOnClickListener(v -> {
+            Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+            startActivity(intent);
         });
 
     }

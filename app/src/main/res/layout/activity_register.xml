@@ -48,9 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName|textCapWords"
-                android:autofillHints="@string/register_autofill_full_name"
-                android:paddingStart="45dp"
-                android:paddingEnd="45dp"/>
+                android:autofillHints="@string/register_autofill_full_name"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Tên đăng nhập -->
@@ -67,9 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:autofillHints="@string/register_autofill_username"
-                android:paddingStart="45dp"
-                android:paddingEnd="45dp"/>
+                android:autofillHints="@string/register_autofill_username"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Email -->
@@ -86,9 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:autofillHints="@string/register_autofill_email"
-                android:paddingStart="45dp"
-                android:paddingEnd="45dp"/>
+                android:autofillHints="@string/register_autofill_email"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Phone -->
@@ -105,9 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
-                android:autofillHints="@string/register_autofill_phone"
-                android:paddingStart="45dp"
-                android:paddingEnd="45dp"/>
+                android:autofillHints="@string/register_autofill_phone"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Mật khẩu -->
@@ -125,9 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:importantForAutofill="no"
-                android:paddingStart="45dp"
-                android:paddingEnd="45dp"/>
+                android:importantForAutofill="no"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Nhập lại mật khẩu -->
@@ -145,9 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:importantForAutofill="no"
-                android:paddingStart="45dp"
-                android:paddingEnd="45dp"/>
+                android:importantForAutofill="no"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Nút tiếp theo -->
