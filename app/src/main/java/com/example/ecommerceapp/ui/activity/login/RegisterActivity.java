@@ -80,6 +80,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Hàm xử lý đăng ký
     private void handleRegister() {
+        etFullName.setError(null);
+        etUsername.setError(null);
+        etEmail.setError(null);
+        etPhone.setError(null);
+        etPassword.setError(null);
+        etConfirmPassword.setError(null);
+
         String fullName = Objects.requireNonNull(etFullName.getText()).toString().trim();
         String username = Objects.requireNonNull(etUsername.getText()).toString().trim();
         String email = Objects.requireNonNull(etEmail.getText()).toString().trim();
@@ -108,8 +115,8 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(phone)) {
-            etPhone.setError("Không được để trống");
+        if (!TextUtils.isEmpty(phone) && !phone.matches("^0\\d{9}$")) {
+            etPhone.setError("SĐT phải 10 số và bắt đầu bằng số 0");
             etPhone.requestFocus();
             return;
         }
@@ -140,21 +147,14 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // 4. Kiểm tra số điện thoại
-        if (!phone.matches("^0\\d{9}$")) {
-            etPhone.setError("SĐT phải 10 số và bắt đầu bằng số 0");
-            etPhone.requestFocus();
-            return;
-        }
-
-        // 5. Kiểm tra mật khẩu
+        // 4. Kiểm tra mật khẩu
         if (password.length() < 6) {
             etPassword.setError("Mật khẩu phải >= 6 ký tự");
             etPassword.requestFocus();
             return;
         }
 
-        // 6. Kiểm tra xác nhận mật khẩu
+        // 5. Kiểm tra xác nhận mật khẩu
         if (!confirmPassword.equals(password)) {
             etConfirmPassword.setError("Mật khẩu không khớp");
             etConfirmPassword.requestFocus();
@@ -178,22 +178,11 @@ public class RegisterActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                     finish();
-                } else {
-
-                    String errorBody = "";
-
-                    try {
-                        if (response.errorBody() != null) {
-                            errorBody = response.errorBody().string();
-                        }
-                    } catch (Exception e) {
-                        errorBody = e.getMessage();
-                    }
-
-                    Toast.makeText(RegisterActivity.this,
-                            "Đăng ký thất bại: " + response.code() + " " + errorBody,
-                            Toast.LENGTH_LONG).show();
+                    return;
                 }
+
+                String error = parseError(response);
+                showFieldError(error);
             }
 
             @Override
@@ -202,6 +191,64 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String parseError(Response<?> response) {
+        try {
+            if (response.errorBody() == null) return "UNKNOWN_ERROR";
+
+            String errorBody = response.errorBody().string();
+
+            if (errorBody.trim().startsWith("{")) {
+                org.json.JSONObject json = new org.json.JSONObject(errorBody);
+
+                if (json.has("message")) return json.getString("message");
+                if (json.has("error")) return json.getString("error");
+            }
+
+            return errorBody;
+
+        } catch (Exception e) {
+            return "PARSE_ERROR";
+        }
+    }
+
+    private void showFieldError(String error) {
+
+        etUsername.setError(null);
+        etEmail.setError(null);
+        etPhone.setError(null);
+
+        if (error == null) {
+            Toast.makeText(this, "Unknown error", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        switch (error) {
+
+            case "USERNAME_EXIST":
+                etUsername.setError("Username đã tồn tại");
+                etUsername.requestFocus();
+                break;
+
+            case "EMAIL_EXIST":
+                etEmail.setError("Email đã tồn tại");
+                etEmail.requestFocus();
+                break;
+
+            case "PHONE_EXIST":
+                etPhone.setError("Số điện thoại đã tồn tại");
+                etPhone.requestFocus();
+                break;
+
+            case "INVALID_INPUT":
+                Toast.makeText(this, "Dữ liệu không hợp lệ", Toast.LENGTH_SHORT).show();
+                break;
+
+            default:
+                Toast.makeText(this, "Lỗi: " + error, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
 }
