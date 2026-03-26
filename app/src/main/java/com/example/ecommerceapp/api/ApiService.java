@@ -30,7 +30,6 @@ public interface ApiService {
     @POST("users")
     Call<UserResponse> createUser(@Body UserRequest request);
 
-    @POST("users/login")
+    @POST("auth/login")
     Call<UserResponse> loginUser(@Body UserRequest request);
-
 }

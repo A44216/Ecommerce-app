@@ -20,6 +20,9 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.ApiService;
 import com.example.ecommerceapp.data.model.request.UserRequest;
 import com.example.ecommerceapp.data.model.response.UserResponse;
+import com.example.ecommerceapp.ui.activity.home.AdminHomeActivity;
+import com.example.ecommerceapp.ui.activity.home.SellerHomeActivity;
+import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -145,7 +148,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Tạo request
         UserRequest request = new UserRequest();
-        request.password = password;
         if (input.contains("@")) {
             request.email = input;
         } else {
@@ -154,15 +156,28 @@ public class LoginActivity extends AppCompatActivity {
         request.password = password;
 
         // Gọi API login
-        // Gọi API
         apiService.loginUser(request).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(@NonNull Call<UserResponse> call, @NonNull Response<UserResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-                    // TODO: chuyển sang MainActivity nếu muốn
+                    UserResponse user = response.body(); // Lấy dữ liệu user từ API
+                    if (user.role != null) {
+                        switch (user.role) {
+                            case ADMIN:
+                                startActivity(new Intent(LoginActivity.this, AdminHomeActivity.class));
+                                break;
+                            case SELLER:
+                            case CUSTOMER:
+                                startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
+                                break;
+                        }
+                        finish(); // đóng LoginActivity
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công nhưng không xác định role", Toast.LENGTH_SHORT).show();
+                    }
+
                 } else {
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                 }
             }
 
