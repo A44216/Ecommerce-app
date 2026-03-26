@@ -66,9 +66,10 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         tokenManager = new TokenManager(this);
-        apiService = ApiClient.getApiService(tokenManager);
+        apiService = ApiClient.getPublicApiService();
 
-        if (tokenManager.isRememberLogin() && tokenManager.getToken() != null) {
+        if (tokenManager.isRememberLogin() && tokenManager.getToken() != null && tokenManager.getRole() != null) {
+//            tokenManager.clearToken();
             checkRememberLogin();
         }
 
@@ -186,6 +187,8 @@ public class LoginActivity extends AppCompatActivity {
                 tokenManager.saveRole(user.role);
                 // Lưu remember
                 tokenManager.setRememberLogin(chkRememberLogin.isChecked());
+                // Save userId
+                tokenManager.saveUserId(user.id);
 
                 Toast.makeText(LoginActivity.this,
                         "Login success: " + user.role,
@@ -214,9 +217,10 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
 
             } else {
-                Toast.makeText(LoginActivity.this,
-                        "Login failed",
-                        Toast.LENGTH_SHORT).show();
+
+                String error = parseError(response);
+
+                showFieldError(error);
             }
         }
 
@@ -226,6 +230,67 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String parseError(Response<?> response) {
+        try {
+            if (response.errorBody() == null) return "UNKNOWN_ERROR";
+
+            String errorBody = response.errorBody().string();
+
+            // Nếu backend trả JSON
+            if (errorBody.trim().startsWith("{")) {
+                org.json.JSONObject json = new org.json.JSONObject(errorBody);
+
+                if (json.has("message")) {
+                    return json.getString("message");
+                }
+                if (json.has("error")) {
+                    return json.getString("error");
+                }
+            }
+
+            // Nếu trả text thuần (WRONG_PASSWORD, USER_NOT_FOUND...)
+            return errorBody;
+
+        } catch (Exception e) {
+            return "PARSE_ERROR";
+        }
+    }
+
+    private void showFieldError(String error) {
+
+        etUsernameOrEmail.setError(null);
+        etPassword.setError(null);
+
+        switch (error) {
+
+            case "WRONG_PASSWORD":
+                etPassword.setError("Sai mật khẩu");
+                etPassword.requestFocus();
+                etPassword.setSelection(etPassword.length());
+                break;
+
+            case "USER_NOT_FOUND":
+                etUsernameOrEmail.setError("Tài khoản không tồn tại");
+                etUsernameOrEmail.requestFocus();
+                break;
+
+            case "ACCOUNT_BLOCKED":
+                etUsernameOrEmail.setError("Tài khoản đã bị khóa");
+                etUsernameOrEmail.requestFocus();
+                break;
+
+            case "INVALID_INPUT":
+                etUsernameOrEmail.setError("Dữ liệu không hợp lệ");
+                etUsernameOrEmail.requestFocus();
+                break;
+
+            default:
+                etUsernameOrEmail.setError("Lỗi: " + error);
+                etUsernameOrEmail.requestFocus();
+                break;
+        }
     }
 
 }

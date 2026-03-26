@@ -9,6 +9,7 @@ public class TokenManager {
     private static final String KEY_TOKEN = "token";
     private static final String KEY_REMEMBER = "remember_login";
     private static final String KEY_ROLE = "role";
+    private static final String KEY_USER_ID = "user_id";
 
     private final SharedPreferences prefs;
 
@@ -42,6 +43,18 @@ public class TokenManager {
 
     public String getRole() {
         return prefs.getString(KEY_ROLE, null);
+    }
+
+    public void saveUserId(long userId) {
+        prefs.edit().putLong(KEY_USER_ID, userId).apply();
+    }
+
+    public long getUserId() {
+        return prefs.getLong(KEY_USER_ID, -1);
+    }
+
+    public void clearUserId() {
+        prefs.edit().remove(KEY_USER_ID).apply();
     }
 
 }
