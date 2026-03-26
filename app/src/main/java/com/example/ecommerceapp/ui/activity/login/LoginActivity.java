@@ -18,8 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.ApiService;
-import com.example.ecommerceapp.data.model.request.UserRequest;
-import com.example.ecommerceapp.data.model.response.UserResponse;
+import com.example.ecommerceapp.data.model.request.LoginRequest;
+import com.example.ecommerceapp.data.model.response.LoginResponse;
 import com.example.ecommerceapp.ui.activity.home.AdminHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.SellerHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Tạo request
-        UserRequest request = new UserRequest();
+        LoginRequest request = new LoginRequest();
         if (input.contains("@")) {
             request.email = input;
         } else {
@@ -156,34 +156,35 @@ public class LoginActivity extends AppCompatActivity {
         request.password = password;
 
         // Gọi API login
-        apiService.loginUser(request).enqueue(new Callback<UserResponse>() {
+        apiService.loginUser(request).enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(@NonNull Call<UserResponse> call, @NonNull Response<UserResponse> response) {
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    UserResponse user = response.body(); // Lấy dữ liệu user từ API
+                    LoginResponse user = response.body();
+
                     if (user.role != null) {
                         switch (user.role) {
-                            case ADMIN:
+                            case "ADMIN":
                                 startActivity(new Intent(LoginActivity.this, AdminHomeActivity.class));
                                 break;
-                            case SELLER:
-                            case CUSTOMER:
+                            case "SELLER":
+                                startActivity(new Intent(LoginActivity.this, SellerHomeActivity.class));
+                                break;
+                            case "CUSTOMER":
                                 startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
                                 break;
                         }
-                        finish(); // đóng LoginActivity
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công nhưng không xác định role", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,user.role + " đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
-
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<UserResponse> call, @NonNull Throwable t) {
-                Toast.makeText(LoginActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
+                Toast.makeText(LoginActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

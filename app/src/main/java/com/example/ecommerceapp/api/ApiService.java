@@ -1,8 +1,10 @@
 package com.example.ecommerceapp.api;
 
+import com.example.ecommerceapp.data.model.request.LoginRequest;
 import com.example.ecommerceapp.data.model.request.UserRequest;
 import com.example.ecommerceapp.data.model.response.AddressResponse;
 import com.example.ecommerceapp.data.model.response.CategoryResponse;
+import com.example.ecommerceapp.data.model.response.LoginResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
@@ -31,5 +33,4 @@ public interface ApiService {
     Call<UserResponse> createUser(@Body UserRequest request);
 
     @POST("auth/login")
-    Call<UserResponse> loginUser(@Body UserRequest request);
-}
+    Call<LoginResponse> loginUser(@Body LoginRequest request);}
