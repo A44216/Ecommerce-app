@@ -7,6 +7,8 @@ public class TokenManager {
 
     private static final String PREF_NAME = "app_prefs";
     private static final String KEY_TOKEN = "token";
+    private static final String KEY_REMEMBER = "remember_login";
+    private static final String KEY_ROLE = "role";
 
     private final SharedPreferences prefs;
 
@@ -25,4 +27,21 @@ public class TokenManager {
     public void clearToken() {
         prefs.edit().remove(KEY_TOKEN).apply();
     }
+
+    public void setRememberLogin(boolean remember) {
+        prefs.edit().putBoolean(KEY_REMEMBER, remember).apply();
+    }
+
+    public boolean isRememberLogin() {
+        return prefs.getBoolean(KEY_REMEMBER, false);
+    }
+
+    public void saveRole(String role) {
+        prefs.edit().putString(KEY_ROLE, role).apply();
+    }
+
+    public String getRole() {
+        return prefs.getString(KEY_ROLE, null);
+    }
+
 }

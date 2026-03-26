@@ -67,10 +67,15 @@ public class LoginActivity extends AppCompatActivity {
 
         tokenManager = new TokenManager(this);
         apiService = ApiClient.getApiService(tokenManager);
+
+        if (tokenManager.isRememberLogin() && tokenManager.getToken() != null) {
+            checkRememberLogin();
+        }
+
         initViews();
         initEvents();
 
-        }
+    }
 
     // Ánh xạ view
     private void initViews() {
@@ -101,6 +106,18 @@ public class LoginActivity extends AppCompatActivity {
 
         // Xử lý login
         btnLogin.setOnClickListener(v -> handleLogin());
+    }
+
+    private void checkRememberLogin() {
+        String role = tokenManager.getRole();
+
+        if ("ADMIN".equals(role)) {
+            startActivity(new Intent(this, AdminHomeActivity.class));
+        } else {
+            startActivity(new Intent(this, UserHomeActivity.class));
+        }
+
+        finish();
     }
 
     // Hàm xử lý đăng nhập
@@ -157,47 +174,51 @@ public class LoginActivity extends AppCompatActivity {
 
         // Gọi API login
         apiService.loginUser(request).enqueue(new Callback<LoginResponse>() {            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
-                if (response.isSuccessful() && response.body() != null) {
+            if (response.isSuccessful() && response.body() != null) {
 
-                    LoginResponse user = response.body();
+                LoginResponse user = response.body();
 
-                    // Save token
-                    tokenManager.saveToken(user.token);
+                // Save token
+                tokenManager.saveToken(user.token);
+                // Save role
+                tokenManager.saveRole(user.role);
+                // Lưu remember
+                tokenManager.setRememberLogin(chkRememberLogin.isChecked());
 
-                    Toast.makeText(LoginActivity.this,
-                            "Login success: " + user.role,
-                            Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this,
+                        "Login success: " + user.role,
+                        Toast.LENGTH_SHORT).show();
 
-                    switch (user.role) {
-                        case "ADMIN":
-                            startActivity(new Intent(LoginActivity.this, AdminHomeActivity.class));
-                            break;
+                switch (user.role) {
+                    case "ADMIN":
+                        startActivity(new Intent(LoginActivity.this, AdminHomeActivity.class));
+                        break;
 
-                        case "SELLER":
-                        case "CUSTOMER":
-                            startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
-                            break;
-                        default:
-                            Toast.makeText(LoginActivity.this,
-                                    "Role không hợp lệ: " + user.role,
-                                    Toast.LENGTH_SHORT).show();
+                    case "SELLER":
+                    case "CUSTOMER":
+                        startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
+                        break;
+                    default:
+                        Toast.makeText(LoginActivity.this,
+                                "Role không hợp lệ: " + user.role,
+                                Toast.LENGTH_SHORT).show();
 
-                            tokenManager.clearToken();
-                            startActivity(new Intent(LoginActivity.this, LoginActivity.class));
-                            finish();
-                            break;
-                    }
-
-                    finish();
-
-                } else {
-                    Toast.makeText(LoginActivity.this,
-                            "Login failed",
-                            Toast.LENGTH_SHORT).show();
+                        tokenManager.clearToken();
+                        startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+                        finish();
+                        break;
                 }
+
+                finish();
+
+            } else {
+                Toast.makeText(LoginActivity.this,
+                        "Login failed",
+                        Toast.LENGTH_SHORT).show();
             }
+        }
 
             @Override
             public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
