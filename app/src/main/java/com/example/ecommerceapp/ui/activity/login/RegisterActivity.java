@@ -171,14 +171,28 @@ public class RegisterActivity extends AppCompatActivity {
         request.role = Role.CUSTOMER;
 
         // Gọi API
-        apiService.createUser(request).enqueue(new Callback<UserResponse>() {
+        apiService.register(request).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(@NonNull Call<UserResponse> call, @NonNull Response<UserResponse> response) {
+
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                    finish(); // đóng activity
+                    finish();
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+
+                    String errorBody = "";
+
+                    try {
+                        if (response.errorBody() != null) {
+                            errorBody = response.errorBody().string();
+                        }
+                    } catch (Exception e) {
+                        errorBody = e.getMessage();
+                    }
+
+                    Toast.makeText(RegisterActivity.this,
+                            "Đăng ký thất bại: " + response.code() + " " + errorBody,
+                            Toast.LENGTH_LONG).show();
                 }
             }
 

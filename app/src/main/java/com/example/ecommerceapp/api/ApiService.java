@@ -29,8 +29,8 @@ public interface ApiService {
     @GET("addresses")
     Call<List<AddressResponse>> getAddresses();
 
-    @POST("users")
-    Call<UserResponse> createUser(@Body UserRequest request);
+    @POST("auth/register")
+    Call<UserResponse> register(@Body UserRequest request);
 
     @POST("auth/login")
     Call<LoginResponse> loginUser(@Body LoginRequest request);}
