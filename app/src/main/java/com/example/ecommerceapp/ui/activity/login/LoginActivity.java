@@ -21,9 +21,7 @@ import com.example.ecommerceapp.api.ApiService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.LoginRequest;
 import com.example.ecommerceapp.data.model.response.LoginResponse;
-import com.example.ecommerceapp.data.repository.LoginRepository;
 import com.example.ecommerceapp.ui.activity.home.AdminHomeActivity;
-import com.example.ecommerceapp.ui.activity.home.SellerHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -42,8 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox chkRememberLogin;
     private ApiService apiService;
     private TokenManager tokenManager;
-
-    LoginRepository loginRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +67,6 @@ public class LoginActivity extends AppCompatActivity {
 
         tokenManager = new TokenManager(this);
         apiService = ApiClient.getApiService(tokenManager);
-        loginRepository = new LoginRepository(apiService);
-
         initViews();
         initEvents();
 
@@ -182,11 +176,17 @@ public class LoginActivity extends AppCompatActivity {
                             break;
 
                         case "SELLER":
-                            startActivity(new Intent(LoginActivity.this, SellerHomeActivity.class));
-                            break;
-
                         case "CUSTOMER":
                             startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
+                            break;
+                        default:
+                            Toast.makeText(LoginActivity.this,
+                                    "Role không hợp lệ: " + user.role,
+                                    Toast.LENGTH_SHORT).show();
+
+                            tokenManager.clearToken();
+                            startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+                            finish();
                             break;
                     }
 
