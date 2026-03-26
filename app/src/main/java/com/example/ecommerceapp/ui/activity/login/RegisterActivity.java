@@ -134,8 +134,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // 2. Kiểm tra username
-        if (username.length() < 7) {
-            etUsername.setError("Username phải >= 7 ký tự");
+        if (!username.matches("^[a-zA-Z0-9_]{7,}$")) {
+            etUsername.setError("Username chỉ gồm chữ, số và _");
             etUsername.requestFocus();
             return;
         }
@@ -143,7 +143,6 @@ public class RegisterActivity extends AppCompatActivity {
         // 3. Kiểm tra email
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             etEmail.setError("Email không hợp lệ");
-            etEmail.requestFocus();
             return;
         }
 
@@ -161,12 +160,15 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        username = username.toLowerCase();
+        email = email.toLowerCase();
+
         // Tạo request
         UserRequest request = new UserRequest();
         request.fullName = fullName;
         request.username = username;
         request.email = email;
-        request.phone = phone;
+        request.phone = TextUtils.isEmpty(phone) ? null : phone;
         request.password = password;
         request.role = Role.CUSTOMER;
 
@@ -243,6 +245,26 @@ public class RegisterActivity extends AppCompatActivity {
 
             case "INVALID_INPUT":
                 Toast.makeText(this, "Dữ liệu không hợp lệ", Toast.LENGTH_SHORT).show();
+                break;
+
+            case "INVALID_USERNAME":
+                etUsername.setError("Username không hợp lệ (7+ ký tự, không ký tự đặc biệt)");
+                etUsername.requestFocus();
+                break;
+
+            case "INVALID_EMAIL":
+                etEmail.setError("Email không hợp lệ");
+                etEmail.requestFocus();
+                break;
+
+            case "INVALID_PASSWORD":
+                etPassword.setError("Mật khẩu phải >= 6 ký tự");
+                etPassword.requestFocus();
+                break;
+
+            case "INVALID_PHONE":
+                etPhone.setError("Số điện thoại không hợp lệ");
+                etPhone.requestFocus();
                 break;
 
             default:

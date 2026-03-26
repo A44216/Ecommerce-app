@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
     // Hàm xử lý đăng nhập
     private void handleLogin() {
         String input = Objects.requireNonNull(etUsernameOrEmail.getText()).toString().trim();
-        String password = Objects.requireNonNull(etPassword.getText()).toString().trim();
+        String password = Objects.requireNonNull(etPassword.getText()).toString();
 
         // Validate
 
