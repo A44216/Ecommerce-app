@@ -10,10 +10,10 @@ import retrofit2.Call;
 
 public class UserRepository {
 
-    private ApiService apiService;
+    private final ApiService apiService;
 
-    public UserRepository() {
-        apiService = ApiClient.getApiService();
+    public UserRepository(ApiService apiService) {
+        this.apiService = apiService;
     }
 
     public Call<List<UserResponse>> getUsers() {

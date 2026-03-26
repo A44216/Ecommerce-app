@@ -15,8 +15,12 @@ import retrofit2.Response;
 
 public class ProductViewModel extends ViewModel {
 
-    private MutableLiveData<List<ProductResponse>> productList = new MutableLiveData<>();
-    private ProductRepository repository = new ProductRepository();
+    private final MutableLiveData<List<ProductResponse>> productList = new MutableLiveData<>();
+    private final ProductRepository repository;
+
+    public ProductViewModel(ProductRepository repository) {
+        this.repository = repository;
+    }
 
     public LiveData<List<ProductResponse>> getProducts() {
         return productList;
@@ -26,7 +30,7 @@ public class ProductViewModel extends ViewModel {
         repository.getProducts().enqueue(new Callback<List<ProductResponse>>() {
             @Override
             public void onResponse(Call<List<ProductResponse>> call, Response<List<ProductResponse>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     productList.setValue(response.body());
                 }
             }

@@ -10,10 +10,10 @@ import retrofit2.Call;
 
 public class CategoryRepository {
 
-    private ApiService apiService;
+    private final ApiService apiService;
 
-    public CategoryRepository() {
-        apiService = ApiClient.getApiService();
+    public CategoryRepository(ApiService apiService) {
+        this.apiService = apiService;
     }
 
     public Call<List<CategoryResponse>> getCategories() {

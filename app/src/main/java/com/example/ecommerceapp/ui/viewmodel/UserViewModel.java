@@ -15,8 +15,12 @@ import retrofit2.Response;
 
 public class UserViewModel extends ViewModel {
 
-    private MutableLiveData<List<UserResponse>> userList = new MutableLiveData<>();
-    private UserRepository repository = new UserRepository();
+    private final MutableLiveData<List<UserResponse>> userList = new MutableLiveData<>();
+    private final UserRepository repository;
+
+    public UserViewModel(UserRepository repository) {
+        this.repository = repository;
+    }
 
     public LiveData<List<UserResponse>> getUsers() {
         return userList;
@@ -26,7 +30,7 @@ public class UserViewModel extends ViewModel {
         repository.getUsers().enqueue(new Callback<List<UserResponse>>() {
             @Override
             public void onResponse(Call<List<UserResponse>> call, Response<List<UserResponse>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     userList.setValue(response.body());
                 }
             }

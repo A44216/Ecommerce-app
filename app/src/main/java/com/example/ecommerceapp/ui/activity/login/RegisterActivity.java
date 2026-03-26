@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
             return insets;
         });
 
-        apiService = ApiClient.getApiService(); // Khởi tạo apiService
+        apiService = ApiClient.getPublicApiService();
 
         initViews();
         initEvents();

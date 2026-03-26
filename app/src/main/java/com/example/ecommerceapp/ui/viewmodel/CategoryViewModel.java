@@ -15,8 +15,12 @@ import retrofit2.Response;
 
 public class CategoryViewModel extends ViewModel {
 
-    private MutableLiveData<List<CategoryResponse>> categoryList = new MutableLiveData<>();
-    private CategoryRepository repository = new CategoryRepository();
+    private final MutableLiveData<List<CategoryResponse>> categoryList = new MutableLiveData<>();
+    private final CategoryRepository repository;
+
+    public CategoryViewModel(CategoryRepository repository) {
+        this.repository = repository;
+    }
 
     public LiveData<List<CategoryResponse>> getCategories() {
         return categoryList;
@@ -26,7 +30,7 @@ public class CategoryViewModel extends ViewModel {
         repository.getCategories().enqueue(new Callback<List<CategoryResponse>>() {
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     categoryList.setValue(response.body());
                 }
             }

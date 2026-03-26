@@ -18,8 +18,11 @@ import retrofit2.Response;
 public class AddressViewModel extends ViewModel {
 
     private MutableLiveData<List<AddressResponse>> addresses = new MutableLiveData<>();
-    private AddressRepository repository = new AddressRepository();
+    private AddressRepository repository;
 
+    public AddressViewModel(AddressRepository repository) {
+        this.repository = repository;
+    }
     public LiveData<List<AddressResponse>> getAddresses() {
         return addresses;
     }

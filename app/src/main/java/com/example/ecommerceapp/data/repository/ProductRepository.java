@@ -10,10 +10,10 @@ import retrofit2.Call;
 
 public class ProductRepository {
 
-    private ApiService apiService;
+    private final ApiService apiService;
 
-    public ProductRepository() {
-        apiService = ApiClient.getApiService();
+    public ProductRepository(ApiService apiService) {
+        this.apiService = apiService;
     }
 
     public Call<List<ProductResponse>> getProducts() {
