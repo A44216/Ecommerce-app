@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.api;
 
 import com.example.ecommerceapp.data.model.request.LoginRequest;
+import com.example.ecommerceapp.data.model.request.ResetPasswordRequest;
 import com.example.ecommerceapp.data.model.request.UserRequest;
 import com.example.ecommerceapp.data.model.response.AddressResponse;
 import com.example.ecommerceapp.data.model.response.CategoryResponse;
@@ -33,4 +34,9 @@ public interface ApiService {
     Call<UserResponse> register(@Body UserRequest request);
 
     @POST("auth/login")
-    Call<LoginResponse> loginUser(@Body LoginRequest request);}
+    Call<LoginResponse> loginUser(@Body LoginRequest request);
+
+    @POST("auth/reset-password")
+    Call<Void> resetPassword(@Body ResetPasswordRequest request);
+
+}

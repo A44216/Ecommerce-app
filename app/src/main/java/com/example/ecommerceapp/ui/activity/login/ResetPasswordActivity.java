@@ -13,16 +13,25 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.data.model.request.ResetPasswordRequest;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
     private ImageView ivBack;
     private TextInputEditText etNewPassword, etConfirmPassword;
     private MaterialButton btnFinish;
+
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,13 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
             return insets;
         });;
+
+        email = getIntent().getStringExtra("email");
+        if (email == null) {
+            Toast.makeText(this, "Thiếu email", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         initViews();
         initEvents();
@@ -75,9 +91,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     // Hàm xử lý reset password
     private void handleResetPassword() {
-        String newPassword = Objects.requireNonNull(etNewPassword.getText()).toString().trim();
-        String confirmPassword = Objects.requireNonNull(etConfirmPassword.getText()).toString().trim();
-
+        String newPassword = etNewPassword.getText() != null ? etNewPassword.getText().toString().trim() : "";
+        String confirmPassword = etConfirmPassword.getText() != null ? etConfirmPassword.getText().toString().trim() : "";
         // Validate
 
         // 1. Không được để trống
@@ -107,15 +122,43 @@ public class ResetPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: gọi API update password ở đây
+        ResetPasswordRequest request = new ResetPasswordRequest(email, newPassword);
+        request.email = email;
+        request.newPassword = newPassword;
 
-        Toast.makeText(this, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
+        ApiService apiService = ApiClient.getPublicApiService();
 
-        // Trở về màn hình Đăng nhập
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
-        finish();
+        apiService.resetPassword(request).enqueue(new Callback<Void>() {
+
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if (response.isSuccessful()) {
+
+                    Toast.makeText(ResetPasswordActivity.this,
+                            "Đổi mật khẩu thành công",
+                            Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    finish();
+
+                } else {
+                    Toast.makeText(ResetPasswordActivity.this,
+                            "Reset thất bại",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(ResetPasswordActivity.this,
+                        "Lỗi mạng: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 }
