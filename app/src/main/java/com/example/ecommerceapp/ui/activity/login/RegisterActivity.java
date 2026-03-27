@@ -199,16 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
         try {
             if (response.errorBody() == null) return "UNKNOWN_ERROR";
 
-            String errorBody = response.errorBody().string();
-
-            if (errorBody.trim().startsWith("{")) {
-                org.json.JSONObject json = new org.json.JSONObject(errorBody);
-
-                if (json.has("message")) return json.getString("message");
-                if (json.has("error")) return json.getString("error");
-            }
-
-            return errorBody;
+            return response.errorBody().string().trim();
 
         } catch (Exception e) {
             return "PARSE_ERROR";

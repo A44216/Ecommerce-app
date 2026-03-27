@@ -235,24 +235,7 @@ public class LoginActivity extends AppCompatActivity {
     private String parseError(Response<?> response) {
         try {
             if (response.errorBody() == null) return "UNKNOWN_ERROR";
-
-            String errorBody = response.errorBody().string();
-
-            // Nếu backend trả JSON
-            if (errorBody.trim().startsWith("{")) {
-                org.json.JSONObject json = new org.json.JSONObject(errorBody);
-
-                if (json.has("message")) {
-                    return json.getString("message");
-                }
-                if (json.has("error")) {
-                    return json.getString("error");
-                }
-            }
-
-            // Nếu trả text thuần (WRONG_PASSWORD, USER_NOT_FOUND...)
-            return errorBody;
-
+            return response.errorBody().string().trim();
         } catch (Exception e) {
             return "PARSE_ERROR";
         }
