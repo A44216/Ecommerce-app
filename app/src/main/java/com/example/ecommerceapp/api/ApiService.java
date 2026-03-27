@@ -9,6 +9,8 @@ import com.example.ecommerceapp.data.model.response.LoginResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
+import com.example.ecommerceapp.data.model.request.GoogleLoginRequest;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -39,4 +41,6 @@ public interface ApiService {
     @POST("auth/reset-password")
     Call<Void> resetPassword(@Body ResetPasswordRequest request);
 
+    @POST("auth/google")
+    Call<LoginResponse> loginWithGoogle(@Body GoogleLoginRequest request);
 }
