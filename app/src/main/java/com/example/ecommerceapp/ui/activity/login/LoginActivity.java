@@ -104,7 +104,8 @@ public class LoginActivity extends AppCompatActivity {
         tokenManager = new TokenManager(this);
         apiService = ApiClient.getPublicApiService(); // Sửa lại theo biến của nhóm bạn
 
-        if (tokenManager.isRememberLogin() && tokenManager.getToken() != null && tokenManager.getRole() != null) {
+        if (tokenManager.isRememberLogin() && tokenManager.getToken() != null) {
+//            tokenManager.clearToken();
             checkRememberLogin();
         }
 
@@ -159,13 +160,60 @@ public class LoginActivity extends AppCompatActivity {
         // ----------------------------
     }
 
-    private void checkRememberLogin() {
-        String role = tokenManager.getRole();
-        if ("ADMIN".equals(role)) {
-            startActivity(new Intent(this, AdminHomeActivity.class));
-        } else {
-            startActivity(new Intent(this, UserHomeActivity.class));
+    // Kiểm tra token hết hạn
+    private boolean isTokenExpired(String token) {
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length < 2) return true;
+
+            String payload = new String(
+                    android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT)
+            );
+
+            org.json.JSONObject json = new org.json.JSONObject(payload);
+            long exp = json.getLong("exp") * 1000; // giây → ms
+
+            return System.currentTimeMillis() > exp;
+
+        } catch (Exception e) {
+            return true; // lỗi coi như hết hạn
         }
+    }
+
+    private void goToLogin() {
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
+    }
+
+    private void checkRememberLogin() {
+        String token = tokenManager.getToken();
+
+        if (token == null || isTokenExpired(token)) {
+            tokenManager.clearToken();
+            tokenManager.setRememberLogin(false);
+            tokenManager.clearUserId();
+            goToLogin();
+            return;
+        }
+
+        String role = tokenManager.getRole();
+
+        if (isTokenExpired(token)) {
+            tokenManager.clearToken();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        Intent intent;
+
+        if ("ADMIN".equals(role)) {
+            intent = new Intent(this, AdminHomeActivity.class);
+        } else {
+            intent = new Intent(this, UserHomeActivity.class);
+        }
+
+        startActivity(intent);
         finish();
     }
 
@@ -184,7 +232,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Tái sử dụng logic lưu token và phân quyền y hệt như đăng nhập thường
                     tokenManager.saveToken(user.token);
                     tokenManager.saveRole(user.role);
-                    tokenManager.setRememberLogin(chkRememberLogin.isChecked());
+                    tokenManager.setRememberLogin(true);
                     tokenManager.saveUserId(user.id);
 
                     Toast.makeText(LoginActivity.this, "Đăng nhập Google thành công!", Toast.LENGTH_SHORT).show();
@@ -335,6 +383,10 @@ public class LoginActivity extends AppCompatActivity {
                 break;
             case "INVALID_INPUT":
                 etUsernameOrEmail.setError("Dữ liệu không hợp lệ");
+                etUsernameOrEmail.requestFocus();
+                break;
+            case "ACCOUNT_USER_GOOGLE_LOGIN":
+                etUsernameOrEmail.setError("Tài khoản này đăng nhập bằng Google");
                 etUsernameOrEmail.requestFocus();
                 break;
             default:
