@@ -10,6 +10,7 @@ import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
 import com.example.ecommerceapp.data.model.request.GoogleLoginRequest;
+import com.example.ecommerceapp.data.model.request.SendOtpRequest;
 
 import java.util.List;
 
@@ -43,4 +44,7 @@ public interface ApiService {
 
     @POST("auth/google")
     Call<LoginResponse> loginWithGoogle(@Body GoogleLoginRequest request);
+
+    @POST("auth/send-register-otp")
+    Call<Void> sendRegisterOtp(@Body SendOtpRequest request);
 }

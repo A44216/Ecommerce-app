@@ -105,8 +105,8 @@ public class LoginActivity extends AppCompatActivity {
         apiService = ApiClient.getPublicApiService(); // Sửa lại theo biến của nhóm bạn
 
         if (tokenManager.isRememberLogin() && tokenManager.getToken() != null) {
-//            tokenManager.clearToken();
-            checkRememberLogin();
+            tokenManager.clearToken();
+//            checkRememberLogin();
         }
 
         // --- GOOGLE SIGN IN CONFIG ---

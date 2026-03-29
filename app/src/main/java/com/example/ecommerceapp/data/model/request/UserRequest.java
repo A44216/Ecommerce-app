@@ -9,4 +9,5 @@ public class UserRequest {
     public String email;
     public String phone;
     public Role role;
+    public String otpCode;
 }

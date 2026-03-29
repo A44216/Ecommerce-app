@@ -21,6 +21,7 @@ import com.example.ecommerceapp.data.model.request.UserRequest;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.example.ecommerceapp.data.model.request.SendOtpRequest;
 
 import java.util.Objects;
 
@@ -35,6 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
     private MaterialButton btnRegister;
 
     private ApiService apiService;
+
+    private TextInputEditText etCode;
+    private MaterialButton btnSendCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,8 @@ public class RegisterActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
 
         btnRegister = findViewById(R.id.btnRegister);
+        etCode = findViewById(R.id.etCode);
+        btnSendCode = findViewById(R.id.btnSendCode);
     }
 
     // Thiết lập sự kiện
@@ -76,6 +82,56 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Xử lý đăng ký
         btnRegister.setOnClickListener(v -> handleRegister());
+
+        btnSendCode.setOnClickListener(v -> {
+            String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+
+            // Kiểm tra định dạng email trước khi gửi
+            if (TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                etEmail.setError("Vui lòng nhập email hợp lệ trước khi gửi mã");
+                etEmail.requestFocus();
+                return;
+            }
+
+            // Hiển thị trạng thái đang gửi
+            btnSendCode.setEnabled(false);
+            btnSendCode.setText("Đang gửi...");
+
+            SendOtpRequest request = new SendOtpRequest(email);
+            apiService.sendRegisterOtp(request).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(RegisterActivity.this, "Mã OTP đã được gửi đến Email của bạn!", Toast.LENGTH_LONG).show();
+                        btnSendCode.setText("Đã gửi");
+                        // Thường ở đây người ta sẽ làm bộ đếm ngược 60s, nhưng tạm thời để "Đã gửi" cho đơn giản
+                    } else {
+                        btnSendCode.setEnabled(true);
+                        btnSendCode.setText("Gửi mã");
+
+                        // Đọc lỗi từ server (ví dụ: EMAIL_ALREADY_EXISTS)
+                        try {
+                            String error = response.errorBody() != null ? response.errorBody().string() : "Lỗi không xác định";
+                            if (error.contains("EMAIL_ALREADY_EXISTS")) {
+                                etEmail.setError("Email này đã được sử dụng");
+                                etEmail.requestFocus();
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Lỗi Server: " + error, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    btnSendCode.setEnabled(true);
+                    btnSendCode.setText("Gửi mã");
+                    Toast.makeText(RegisterActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     // Hàm xử lý đăng ký
@@ -86,6 +142,8 @@ public class RegisterActivity extends AppCompatActivity {
         etPhone.setError(null);
         etPassword.setError(null);
         etConfirmPassword.setError(null);
+        // BỔ SUNG 1: Xóa lỗi cũ của ô nhập mã OTP
+        if (etCode != null) etCode.setError(null);
 
         String fullName = Objects.requireNonNull(etFullName.getText()).toString().trim();
         String username = Objects.requireNonNull(etUsername.getText()).toString().trim();
@@ -93,6 +151,12 @@ public class RegisterActivity extends AppCompatActivity {
         String phone = Objects.requireNonNull(etPhone.getText()).toString().trim();
         String password = Objects.requireNonNull(etPassword.getText()).toString().trim();
         String confirmPassword = Objects.requireNonNull(etConfirmPassword.getText()).toString().trim();
+
+        // BỔ SUNG 2: Lấy dữ liệu mã OTP người dùng nhập
+        String otpCode = "";
+        if (etCode != null && etCode.getText() != null) {
+            otpCode = etCode.getText().toString().trim();
+        }
 
         // Validate
 
@@ -112,6 +176,19 @@ public class RegisterActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Không được để trống");
             etEmail.requestFocus();
+            return;
+        }
+
+        // BỔ SUNG 3: Bắt buộc phải nhập OTP và độ dài phải là 6
+        if (TextUtils.isEmpty(otpCode)) {
+            etCode.setError("Vui lòng nhập mã xác thực OTP");
+            etCode.requestFocus();
+            return;
+        }
+
+        if (otpCode.length() != 6) {
+            etCode.setError("Mã OTP phải bao gồm 6 chữ số");
+            etCode.requestFocus();
             return;
         }
 
@@ -172,6 +249,9 @@ public class RegisterActivity extends AppCompatActivity {
         request.password = password;
         request.role = Role.CUSTOMER;
 
+        // BỔ SUNG 4: Nhét mã OTP vào Request để gửi lên Server
+        request.otpCode = otpCode;
+
         // Gọi API
         apiService.register(request).enqueue(new Callback<UserResponse>() {
             @Override
@@ -192,7 +272,6 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private String parseError(Response<?> response) {
@@ -256,6 +335,16 @@ public class RegisterActivity extends AppCompatActivity {
             case "INVALID_PHONE":
                 etPhone.setError("Số điện thoại không hợp lệ");
                 etPhone.requestFocus();
+                break;
+
+            case "INVALID_OTP":
+                etCode.setError("Mã xác thực không chính xác");
+                etCode.requestFocus();
+                break;
+
+            case "OTP_EXPIRED":
+                etCode.setError("Mã xác thực đã hết hạn, vui lòng gửi lại");
+                etCode.requestFocus();
                 break;
 
             default:
