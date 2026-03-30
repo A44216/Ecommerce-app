@@ -7,10 +7,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.ecommerceapp.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SellerHomeActivity extends AppCompatActivity {
+
+    private FragmentContainerView navHost;
+    private BottomNavigationView bnvMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +30,16 @@ public class SellerHomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // 1. init view
+        bnvMenu = findViewById(R.id.bnvMenu);
+
+        // 2. lấy navController từ navHost
+        NavController navController =
+                Navigation.findNavController(this, R.id.navHost);
+
+        // 3. connect BottomNav với Navigation
+        NavigationUI.setupWithNavController(bnvMenu, navController);
+
     }
 }

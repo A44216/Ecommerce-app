@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.fragment;
+package com.example.ecommerceapp.ui.fragment.seller;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,26 +13,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.ui.viewmodel.OrderViewModel;
+import com.example.ecommerceapp.ui.viewmodel.ShopViewModel;
 
-public class OrderFragment extends Fragment {
+public class ShopFragment extends Fragment {
 
-    private OrderViewModel mViewModel;
+    private ShopViewModel mViewModel;
 
-    public static OrderFragment newInstance() {
-        return new OrderFragment();
+    public static ShopFragment newInstance() {
+        return new ShopFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_order, container, false);
+        return inflater.inflate(R.layout.fragment_shop, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(ShopViewModel.class);
         // TODO: Use the ViewModel
     }
 
