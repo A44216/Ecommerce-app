@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    NAV-->
+    <string name="nav_dashboard">Tổng quan</string>
+    <string name="nav_product">Sản phẩm</string>
+    <string name="nav_order">Đơn hàng</string>
+    <string name="nav_shop">Cửa hàng</string>
+
+    <string name="desc_edit">Sửa</string>
+    <string name="desc_delete">Xóa</string>
+
+    <!--    Product-->
+    <string name="hint_search_product_name">Nhập tên sản phẩm cần tìm</string>
+    <string name="desc_add_new">Thêm mới</string>
+
+    <!--    Order-->
+    <string name="order_description">Mô tả hóa đơn</string>
+    <string name="order_tracking">Theo dõi đơn hàng</string>
+
+    <string name="order_step_pending">Chờ xử lý</string>
+    <string name="order_step_confirmed">Đã xác nhận</string>
+    <string name="order_step_shipping">Đang giao hàng</string>
+    <string name="order_step_completed">Hoàn thành</string>
+    <string name="order_step_canceled">Đã hủy</string>
+
+</resources>
