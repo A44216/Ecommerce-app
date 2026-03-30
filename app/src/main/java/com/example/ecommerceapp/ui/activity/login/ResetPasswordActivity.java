@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,8 +20,6 @@ import com.example.ecommerceapp.data.model.request.ResetPasswordRequest;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +30,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private TextInputEditText etNewPassword, etConfirmPassword;
     private MaterialButton btnFinish;
 
-    private String email;
+    private String targetEmail; // Đổi tên biến cho rõ nghĩa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,52 +39,41 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reset_password);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-
-            // Lấy Insets của status bar + navigation bar
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-
             int padding = getResources().getDimensionPixelSize(R.dimen.screen_padding_large);
-
-            // Cộng padding cố định + Insets
             v.setPadding(
                     padding + systemBars.left,
                     padding + systemBars.top,
                     padding + systemBars.right,
                     padding + systemBars.bottom
             );
-
             return insets;
-        });;
+        });
 
-        email = getIntent().getStringExtra("email");
-        if (email == null) {
-            Toast.makeText(this, "Thiếu email", Toast.LENGTH_SHORT).show();
+        // ĐÃ SỬA LỖI: Chìa khóa phải khớp 100% với ForgotPasswordActivity
+        targetEmail = getIntent().getStringExtra("EMAIL_OR_USERNAME");
+
+        if (targetEmail == null || targetEmail.isEmpty()) {
+            Toast.makeText(this, "Lỗi dữ liệu, vui lòng thử lại từ đầu", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
         initViews();
         initEvents();
-
     }
 
     // Ánh xạ view
     private void initViews() {
         ivBack = findViewById(R.id.ivBack);
-
         etNewPassword = findViewById(R.id.etNewPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
-
         btnFinish = findViewById(R.id.btnFinish);
     }
 
     // Thiết lập sự kiện
     private void initEvents() {
-
-        // Nút quay lại
         ivBack.setOnClickListener(v -> finish());
-
-        // Xử lý đổi mật khẩu
         btnFinish.setOnClickListener(v -> handleResetPassword());
     }
 
@@ -93,7 +81,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private void handleResetPassword() {
         String newPassword = etNewPassword.getText() != null ? etNewPassword.getText().toString().trim() : "";
         String confirmPassword = etConfirmPassword.getText() != null ? etConfirmPassword.getText().toString().trim() : "";
-        // Validate
 
         // 1. Không được để trống
         if (TextUtils.isEmpty(newPassword)) {
@@ -122,43 +109,53 @@ public class ResetPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        ResetPasswordRequest request = new ResetPasswordRequest(email, newPassword);
-        request.email = email;
+        // Đổi trạng thái nút tránh bấm 2 lần
+        btnFinish.setEnabled(false);
+        btnFinish.setText("Đang xử lý...");
+
+        // Chuẩn bị Request
+        ResetPasswordRequest request = new ResetPasswordRequest(targetEmail, newPassword);
+        request.email = targetEmail;
         request.newPassword = newPassword;
 
         ApiService apiService = ApiClient.getPublicApiService();
 
         apiService.resetPassword(request).enqueue(new Callback<Void>() {
-
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                btnFinish.setEnabled(true);
+                btnFinish.setText("Hoàn tất");
 
                 if (response.isSuccessful()) {
+                    Toast.makeText(ResetPasswordActivity.this, "Đổi mật khẩu thành công! Vui lòng đăng nhập lại.", Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(ResetPasswordActivity.this,
-                            "Đổi mật khẩu thành công",
-                            Toast.LENGTH_SHORT).show();
-
+                    // Về màn hình Login và xóa sạch lịch sử màn hình cũ
                     Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
-
                 } else {
-                    Toast.makeText(ResetPasswordActivity.this,
-                            "Reset thất bại",
-                            Toast.LENGTH_SHORT).show();
+                    String error = parseError(response);
+                    Toast.makeText(ResetPasswordActivity.this, "Lỗi từ Server: " + error, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(ResetPasswordActivity.this,
-                        "Lỗi mạng: " + t.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                btnFinish.setEnabled(true);
+                btnFinish.setText("Hoàn tất");
+                Toast.makeText(ResetPasswordActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
+    // Hàm đọc lỗi từ Backend
+    private String parseError(Response<?> response) {
+        try {
+            if (response.errorBody() == null) return "UNKNOWN_ERROR";
+            return response.errorBody().string().trim();
+        } catch (Exception e) {
+            return "PARSE_ERROR";
+        }
+    }
 }

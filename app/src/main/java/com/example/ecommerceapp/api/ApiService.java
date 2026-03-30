@@ -3,6 +3,7 @@ package com.example.ecommerceapp.api;
 import com.example.ecommerceapp.data.model.request.LoginRequest;
 import com.example.ecommerceapp.data.model.request.ResetPasswordRequest;
 import com.example.ecommerceapp.data.model.request.UserRequest;
+import com.example.ecommerceapp.data.model.request.VerifyOtpRequest;
 import com.example.ecommerceapp.data.model.response.AddressResponse;
 import com.example.ecommerceapp.data.model.response.CategoryResponse;
 import com.example.ecommerceapp.data.model.response.LoginResponse;
@@ -47,4 +48,15 @@ public interface ApiService {
 
     @POST("auth/send-register-otp")
     Call<Void> sendRegisterOtp(@Body SendOtpRequest request);
+
+    // 1. Gửi mã OTP Quên mật khẩu
+    @POST("auth/send-forgot-password-otp")
+    Call<Void> sendForgotPasswordOtp(@Body SendOtpRequest request);
+
+    // 2. Xác nhận mã OTP
+    @POST("auth/verify-otp")
+    Call<Void> verifyOtp(@Body VerifyOtpRequest request);
+
+    // 3. Đặt lại mật khẩu mới
+
 }
