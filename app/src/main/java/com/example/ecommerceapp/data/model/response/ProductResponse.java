@@ -3,6 +3,7 @@ package com.example.ecommerceapp.data.model.response;
 import com.example.ecommerceapp.data.enums.ProductStatus;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ProductResponse {
 
@@ -11,8 +12,7 @@ public class ProductResponse {
     private BigDecimal price;
     private int stock;
     private String description;
-    private String image;
-
+    private List<String> images;
     private String categoryName;
     private String shopName;
 
@@ -27,11 +27,14 @@ public class ProductResponse {
 
     public Integer getId() { return id; }
     public int getStock() { return stock; }
-    public String getImage() { return image; }
     public String getCategoryName() { return categoryName; }
     public String getShopName() { return shopName; }
     public BigDecimal getRatingAvg() { return ratingAvg; }
     public int getSoldCount() { return soldCount; }
     public ProductStatus getStatus() { return status; }
+
+    public List<String> getImages() {
+        return images;
+    }
 
 }

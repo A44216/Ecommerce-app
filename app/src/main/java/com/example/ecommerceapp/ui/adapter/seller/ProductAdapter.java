@@ -67,11 +67,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
         holder.getStatus().setText("Trạng thái: " + product.getStatus());
 
         // Ảnh sản phẩm
-        Glide.with(holder.itemView.getContext())
-                .load(product.getImage())
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
-                .into(holder.getImgProduct());
+        List<String> images = product.getImages();
+
+        if (images != null && !images.isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(images.get(0))
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(holder.getImgProduct());
+        } else {
+            holder.getImgProduct()
+                    .setImageResource(R.drawable.ic_launcher_background);
+        }
 
         // Click item
         holder.itemView.setOnClickListener(v -> {

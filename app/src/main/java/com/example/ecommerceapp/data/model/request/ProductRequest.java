@@ -8,6 +8,5 @@ public class ProductRequest {
     public BigDecimal price;
     public int stock;
     public String description;
-    public String image;
     public int shopId;
 }
