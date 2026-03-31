@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.data.model.ui;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Product {
 
@@ -9,12 +10,13 @@ public class Product {
     private BigDecimal price;
     private int stock;
     private String description;
-    private String image;
-
+    private List<String> images;
     private String categoryName;
     private String shopName;
 
     // getter
     public String getName() { return name; }
     public BigDecimal getPrice() { return price; }
+    public List<String> getImages() { return images; }
+
 }
