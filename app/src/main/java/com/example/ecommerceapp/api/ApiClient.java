@@ -1,5 +1,10 @@
 package com.example.ecommerceapp.api;
 
+import com.example.ecommerceapp.api.service.AddressService;
+import com.example.ecommerceapp.api.service.AuthService;
+import com.example.ecommerceapp.api.service.CategoryService;
+import com.example.ecommerceapp.api.service.ProductService;
+import com.example.ecommerceapp.api.service.UserService;
 import com.example.ecommerceapp.data.local.TokenManager;
 
 import okhttp3.OkHttpClient;
@@ -13,8 +18,8 @@ public class ApiClient {
     private static Retrofit publicRetrofit;
     private static Retrofit authRetrofit;
 
-    // AUTH API (WITH TOKEN)
-    public static ApiService getApiService(TokenManager tokenManager) {
+    // RETROFIT WITH TOKEN
+    private static Retrofit getAuthRetrofit(TokenManager tokenManager) {
 
         if (authRetrofit == null) {
 
@@ -34,11 +39,12 @@ public class ApiClient {
                     .build();
         }
 
-        return authRetrofit.create(ApiService.class);
+        return authRetrofit;
     }
 
-    // PUBLIC API (NO TOKEN)
-    public static ApiService getPublicApiService() {
+
+    // RETROFIT NO TOKEN
+    private static Retrofit getPublicRetrofit() {
 
         if (publicRetrofit == null) {
             publicRetrofit = new Retrofit.Builder()
@@ -47,6 +53,28 @@ public class ApiClient {
                     .build();
         }
 
-        return publicRetrofit.create(ApiService.class);
+        return publicRetrofit;
+    }
+
+    // SERVICES - PUBLIC
+    public static ProductService getProductService() {
+        return getPublicRetrofit().create(ProductService.class);
+    }
+
+    public static CategoryService getCategoryService() {
+        return getPublicRetrofit().create(CategoryService.class);
+    }
+
+    public static UserService getUserService() {
+        return getPublicRetrofit().create(UserService.class);
+    }
+
+    // SERVICE - AUTH (CÓ TOKEN)
+    public static AuthService getAuthService(TokenManager tokenManager) {
+        return getAuthRetrofit(tokenManager).create(AuthService.class);
+    }
+
+    public static AddressService getAddressService() {
+        return getPublicRetrofit().create(AddressService.class);
     }
 }

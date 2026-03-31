@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
-import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.repository.ProductRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.AddAndEditProductActivity;
@@ -61,8 +61,10 @@ public class ProductFragment extends Fragment {
 
     private void setupViewModel() {
 
-        ApiService apiService = ApiClient.getPublicApiService();
+        ProductService apiService = ApiClient.getProductService();
+
         ProductRepository repository = new ProductRepository(apiService);
+
         ProductViewModelFactory factory = new ProductViewModelFactory(repository);
 
         viewModel = new ViewModelProvider(this, factory)

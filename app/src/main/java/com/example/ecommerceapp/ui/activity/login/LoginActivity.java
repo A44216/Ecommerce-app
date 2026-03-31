@@ -20,7 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
-import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.GoogleLoginRequest;
 import com.example.ecommerceapp.data.model.request.LoginRequest;
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     // --------------------------------
 
     private CheckBox chkRememberLogin;
-    private ApiService apiService;
+    private AuthService authService;
     private TokenManager tokenManager;
 
     // --- GOOGLE SIGN IN LAUNCHER ---
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         tokenManager = new TokenManager(this);
-        apiService = ApiClient.getPublicApiService(); // Sửa lại theo biến của nhóm bạn
+        authService = ApiClient.getAuthService(null);
 
         if (tokenManager.isRememberLogin() && tokenManager.getToken() != null) {
             tokenManager.clearToken();
@@ -223,7 +223,7 @@ public class LoginActivity extends AppCompatActivity {
 
         GoogleLoginRequest request = new GoogleLoginRequest(idToken);
 
-        apiService.loginWithGoogle(request).enqueue(new Callback<LoginResponse>() {
+        authService.loginWithGoogle(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -323,7 +323,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         request.password = password;
 
-        apiService.loginUser(request).enqueue(new Callback<LoginResponse>() {
+        authService.loginUser(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {

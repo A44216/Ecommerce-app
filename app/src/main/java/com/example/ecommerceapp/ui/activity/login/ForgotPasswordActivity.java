@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
-import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.data.model.request.SendOtpRequest;
 import com.example.ecommerceapp.data.model.request.VerifyOtpRequest;
 import com.google.android.material.button.MaterialButton;
@@ -34,8 +34,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private TextInputEditText etUsernameOrEmail, etCode;
     private MaterialButton btnSendCode, btnConfirm;
 
-    // BỔ SUNG: Khai báo ApiService
-    private ApiService apiService;
+    private AuthService authService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
 
         // BỔ SUNG: Khởi tạo apiService
-        apiService = ApiClient.getPublicApiService();
+        authService = ApiClient.getAuthService(null);
 
         initViews();
         initEvents();
@@ -108,7 +107,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         // GỌI API GỬI OTP
         SendOtpRequest request = new SendOtpRequest(input);
-        apiService.sendForgotPasswordOtp(request).enqueue(new Callback<Void>() {
+        authService.sendForgotPasswordOtp(request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 btnSendCode.setEnabled(true);
@@ -173,7 +172,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         // GỌI API XÁC NHẬN OTP
         VerifyOtpRequest request = new VerifyOtpRequest(input, code);
-        apiService.verifyOtp(request).enqueue(new Callback<Void>() {
+        authService.verifyOtp(request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 btnConfirm.setEnabled(true);

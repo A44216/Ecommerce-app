@@ -1,7 +1,6 @@
 package com.example.ecommerceapp.data.repository;
 
-import com.example.ecommerceapp.api.ApiClient;
-import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 
 import java.util.List;
@@ -10,9 +9,9 @@ import retrofit2.Call;
 
 public class ProductRepository {
 
-    private final ApiService apiService;
+    private final ProductService apiService;
 
-    public ProductRepository(ApiService apiService) {
+    public ProductRepository(ProductService apiService) {
         this.apiService = apiService;
     }
 
@@ -23,5 +22,4 @@ public class ProductRepository {
     public Call<List<ProductResponse>> getProductsByShop(int shopId) {
         return apiService.getProductsByShop(shopId);
     }
-
 }

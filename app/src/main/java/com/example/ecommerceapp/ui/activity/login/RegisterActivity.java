@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
-import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.data.enums.Role;
 import com.example.ecommerceapp.data.model.request.UserRequest;
 import com.example.ecommerceapp.data.model.response.UserResponse;
@@ -35,8 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etFullName, etUsername, etEmail, etPhone, etPassword, etConfirmPassword;
     private MaterialButton btnRegister;
 
-    private ApiService apiService;
-
+    private AuthService authService;
     private TextInputEditText etCode;
     private MaterialButton btnSendCode;
 
@@ -51,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
             return insets;
         });
 
-        apiService = ApiClient.getPublicApiService();
+        authService = ApiClient.getAuthService(null);
 
         initViews();
         initEvents();
@@ -98,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
             btnSendCode.setText("Đang gửi...");
 
             SendOtpRequest request = new SendOtpRequest(email);
-            apiService.sendRegisterOtp(request).enqueue(new Callback<Void>() {
+            authService.sendRegisterOtp(request).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if (response.isSuccessful()) {
@@ -253,7 +252,7 @@ public class RegisterActivity extends AppCompatActivity {
         request.otpCode = otpCode;
 
         // Gọi API
-        apiService.register(request).enqueue(new Callback<UserResponse>() {
+        authService.register(request).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(@NonNull Call<UserResponse> call, @NonNull Response<UserResponse> response) {
 

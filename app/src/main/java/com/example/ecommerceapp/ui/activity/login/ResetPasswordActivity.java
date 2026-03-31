@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
-import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.data.model.request.ResetPasswordRequest;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -29,6 +29,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private ImageView ivBack;
     private TextInputEditText etNewPassword, etConfirmPassword;
     private MaterialButton btnFinish;
+
+    private AuthService authService;
 
     private String targetEmail; // Đổi tên biến cho rõ nghĩa
 
@@ -58,6 +60,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        authService = ApiClient.getAuthService(null);
 
         initViews();
         initEvents();
@@ -118,9 +122,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         request.email = targetEmail;
         request.newPassword = newPassword;
 
-        ApiService apiService = ApiClient.getPublicApiService();
-
-        apiService.resetPassword(request).enqueue(new Callback<Void>() {
+        authService.resetPassword(request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 btnFinish.setEnabled(true);

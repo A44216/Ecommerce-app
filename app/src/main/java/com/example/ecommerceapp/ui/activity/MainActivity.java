@@ -8,7 +8,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
-import com.example.ecommerceapp.api.ApiService;
+import com.example.ecommerceapp.api.service.AddressService;
+import com.example.ecommerceapp.api.service.CategoryService;
+import com.example.ecommerceapp.api.service.ProductService;
+import com.example.ecommerceapp.api.service.UserService;
 import com.example.ecommerceapp.data.model.response.AddressResponse;
 import com.example.ecommerceapp.data.model.response.CategoryResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
@@ -43,31 +46,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // =========================
-        // 1. TOKEN + API SERVICE
-        // =========================
+        // TOKEN + API SERVICE
         TokenManager tokenManager = new TokenManager(this);
-        ApiService apiService = ApiClient.getApiService(tokenManager);
 
-        // =========================
-        // 2. REPOSITORIES
-        // =========================
-        UserRepository userRepo = new UserRepository(apiService);
-        ProductRepository productRepo = new ProductRepository(apiService);
-        CategoryRepository categoryRepo = new CategoryRepository(apiService);
-        AddressRepository addressRepo = new AddressRepository(apiService);
+        // ERVICES
+        UserService userService = ApiClient.getUserService();
+        ProductService productService = ApiClient.getProductService();
+        CategoryService categoryService = ApiClient.getCategoryService();
 
-        // =========================
+        // REPOSITORIES
+        UserRepository userRepo = new UserRepository(userService);
+        ProductRepository productRepo = new ProductRepository(productService);
+        CategoryRepository categoryRepo = new CategoryRepository(categoryService);
+
+        // Address tạm giữ nếu chưa tách service
+        AddressService addressService = ApiClient.getAddressService();
+        AddressRepository addressRepo = new AddressRepository(addressService);
+
         // 3. FACTORIES
-        // =========================
         UserViewModelFactory userFactory = new UserViewModelFactory(userRepo);
         ProductViewModelFactory productFactory = new ProductViewModelFactory(productRepo);
         CategoryViewModelFactory categoryFactory = new CategoryViewModelFactory(categoryRepo);
         AddressViewModelFactory addressFactory = new AddressViewModelFactory(addressRepo);
 
-        // =========================
         // 4. VIEWMODELS
-        // =========================
         userViewModel =
                 new ViewModelProvider(this, userFactory).get(UserViewModel.class);
 
