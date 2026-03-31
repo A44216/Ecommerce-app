@@ -21,7 +21,7 @@
             android:name=".ui.activity.home.seller.product.AddAndEditProductActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.login.LoginActivity"
+            android:name=".ui.activity.home.SellerHomeActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.AdminHomeActivity"
@@ -42,7 +42,7 @@
             android:name=".ui.activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.SellerHomeActivity"
+            android:name=".ui.activity.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -26,6 +26,7 @@ import com.example.ecommerceapp.data.model.request.GoogleLoginRequest;
 import com.example.ecommerceapp.data.model.request.LoginRequest;
 import com.example.ecommerceapp.data.model.response.LoginResponse;
 import com.example.ecommerceapp.ui.activity.home.AdminHomeActivity;
+import com.example.ecommerceapp.ui.activity.home.SellerHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 
 // --- GOOGLE SIGN IN IMPORTS ---
@@ -101,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        tokenManager = new TokenManager(this);
+        tokenManager = TokenManager.getInstance(this);
         authService = ApiClient.getAuthService(null);
 
         if (tokenManager.isRememberLogin() && tokenManager.getToken() != null) {
@@ -341,6 +342,8 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(LoginActivity.this, AdminHomeActivity.class));
                             break;
                         case "SELLER":
+                            startActivity(new Intent(LoginActivity.this, SellerHomeActivity.class));
+                            break;
                         case "CUSTOMER":
                             startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
                             break;

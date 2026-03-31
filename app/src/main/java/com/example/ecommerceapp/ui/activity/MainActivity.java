@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // TOKEN + API SERVICE
-        TokenManager tokenManager = new TokenManager(this);
+        TokenManager tokenManager = TokenManager.getInstance(this);
 
         // ERVICES
         UserService userService = ApiClient.getUserService();

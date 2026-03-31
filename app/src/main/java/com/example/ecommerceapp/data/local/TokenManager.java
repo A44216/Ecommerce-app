@@ -6,15 +6,24 @@ import android.content.SharedPreferences;
 public class TokenManager {
 
     private static final String PREF_NAME = "app_prefs";
+    private static TokenManager instance;
+    private final SharedPreferences prefs;
+
     private static final String KEY_TOKEN = "token";
     private static final String KEY_REMEMBER = "remember_login";
     private static final String KEY_ROLE = "role";
     private static final String KEY_USER_ID = "user_id";
 
-    private final SharedPreferences prefs;
+    private TokenManager(Context context) {
+        prefs = context.getApplicationContext()
+                .getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
 
-    public TokenManager(Context context) {
-        prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    public static synchronized TokenManager getInstance(Context context) {
+        if (instance == null) {
+            instance = new TokenManager(context);
+        }
+        return instance;
     }
 
     public void saveToken(String token) {
@@ -56,5 +65,4 @@ public class TokenManager {
     public void clearUserId() {
         prefs.edit().remove(KEY_USER_ID).apply();
     }
-
 }
