@@ -102,9 +102,9 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        tokenManager = TokenManager.getInstance(this);
-        authService = ApiClient.getAuthService(null);
+        authService = ApiClient.getAuthService();
 
+        tokenManager = TokenManager.getInstance(this);
         if (tokenManager.isRememberLogin() && tokenManager.getToken() != null) {
             tokenManager.clearToken();
 //            checkRememberLogin();

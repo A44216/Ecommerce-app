@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
             return insets;
         });
 
-        authService = ApiClient.getAuthService(null);
+        authService = ApiClient.getAuthService();
 
         initViews();
         initEvents();

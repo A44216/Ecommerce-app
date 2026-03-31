@@ -55,8 +55,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
 
         // BỔ SUNG: Khởi tạo apiService
-        authService = ApiClient.getAuthService(null);
-
+        authService = ApiClient.getAuthService();
         initViews();
         initEvents();
     }

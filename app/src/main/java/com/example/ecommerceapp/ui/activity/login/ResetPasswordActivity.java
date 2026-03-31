@@ -61,7 +61,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        authService = ApiClient.getAuthService(null);
+        authService = ApiClient.getAuthService();
 
         initViews();
         initEvents();

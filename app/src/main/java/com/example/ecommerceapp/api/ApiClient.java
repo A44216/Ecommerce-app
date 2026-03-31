@@ -16,47 +16,36 @@ public class ApiClient {
     private static final String BASE_URL = "http://10.0.2.2:8081/api/";
 
     private static Retrofit publicRetrofit;
-    private static Retrofit authRetrofit;
 
-    // RETROFIT WITH TOKEN
-    private static Retrofit getAuthRetrofit(TokenManager tokenManager) {
-
-        if (authRetrofit == null) {
-
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(chain -> {
-                        if (tokenManager == null) {
-                            return chain.proceed(chain.request());
-                        }
-                        return new AuthInterceptor(tokenManager).intercept(chain);
-                    })
-                    .build();
-
-            authRetrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-
-        return authRetrofit;
-    }
-
-
-    // RETROFIT NO TOKEN
+    // PUBLIC
     private static Retrofit getPublicRetrofit() {
-
         if (publicRetrofit == null) {
             publicRetrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-
         return publicRetrofit;
     }
 
-    // SERVICES - PUBLIC
+    // AUTH (có token)
+    private static Retrofit createAuthRetrofit(TokenManager tokenManager) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new AuthInterceptor(tokenManager))
+                .build();
+
+        return new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
+
+    // ===== PUBLIC API =====
+    public static AuthService getAuthService() {
+        return getPublicRetrofit().create(AuthService.class);
+    }
+
     public static ProductService getProductService() {
         return getPublicRetrofit().create(ProductService.class);
     }
@@ -65,16 +54,16 @@ public class ApiClient {
         return getPublicRetrofit().create(CategoryService.class);
     }
 
-    public static UserService getUserService() {
-        return getPublicRetrofit().create(UserService.class);
-    }
-
-    // SERVICE - AUTH (CÓ TOKEN)
-    public static AuthService getAuthService(TokenManager tokenManager) {
-        return getAuthRetrofit(tokenManager).create(AuthService.class);
-    }
-
     public static AddressService getAddressService() {
         return getPublicRetrofit().create(AddressService.class);
+    }
+
+    // ===== AUTH API =====
+    public static ProductService getProductService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(ProductService.class);
+    }
+
+    public static UserService getUserService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(UserService.class);
     }
 }
