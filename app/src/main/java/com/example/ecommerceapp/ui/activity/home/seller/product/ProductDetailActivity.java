@@ -2,6 +2,7 @@ package com.example.ecommerceapp.ui.activity.home.seller.product;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.repository.ProductRepository;
 import com.example.ecommerceapp.ui.adapter.seller.ImagePagerAdapter;
@@ -46,7 +48,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         handleBack();
 
         // init API
-        repository = new ProductRepository(ApiClient.getProductService());
+        TokenManager tokenManager = TokenManager.getInstance(this);
+
+        repository = new ProductRepository(
+                ApiClient.getProductService(tokenManager)
+        );
 
         // lấy productId
         int productId = getIntent().getIntExtra("productId", -1);
@@ -99,6 +105,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Load ảnh
         if (product.getImages() != null && !product.getImages().isEmpty()) {
+            Log.d("IMAGES", String.valueOf(product.getImages()));
             ImagePagerAdapter adapter = new ImagePagerAdapter(this, product.getImages());
             viewPagerImages.setAdapter(adapter);
         }
