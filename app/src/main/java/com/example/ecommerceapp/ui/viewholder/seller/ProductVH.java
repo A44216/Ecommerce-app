@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.ui.viewholder.seller;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,16 +11,23 @@ import com.example.ecommerceapp.R;
 
 public class ProductVH extends RecyclerView.ViewHolder {
 
+    ImageView imgProduct;
     TextView name, price, category, rating, sold, status;
 
     public ProductVH(@NonNull View itemView) {
         super(itemView);
+
+        imgProduct = itemView.findViewById(R.id.imgPathProduct);
         name = itemView.findViewById(R.id.tvProductName);
         price = itemView.findViewById(R.id.tvProductPrice);
         category = itemView.findViewById(R.id.tvProductCategory);
         rating = itemView.findViewById(R.id.tvRating);
         sold = itemView.findViewById(R.id.tvSold);
         status = itemView.findViewById(R.id.tvProductStatus);
+    }
+
+    public ImageView getImgProduct() {
+        return imgProduct;
     }
 
     public TextView getName() { return name; }

@@ -9,7 +9,7 @@
     android:background="@color/white"
     tools:context=".ui.fragment.seller.OrderFragment">
 
-        <!-- Tab Pending / Completed -->
+        <!-- Tab Pending / Completed / .... -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabOrder"
             android:layout_width="0dp"

@@ -52,4 +52,7 @@ dependencies {
 
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
 }
