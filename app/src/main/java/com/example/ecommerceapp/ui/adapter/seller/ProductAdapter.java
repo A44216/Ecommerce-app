@@ -45,14 +45,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
         return new ProductVH(view);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull ProductVH holder, int position) {
         ProductResponse product = list.get(position);
 
         // ===== TEXT =====
         holder.getName().setText(product.getName());
-        holder.getPrice().setText(product.getPrice() + " đ");
+        holder.getPrice().setText(String.format("%,.0f", product.getPrice()) + " đ");
 
         holder.getCategory().setText(
                 product.getCategoryName() != null

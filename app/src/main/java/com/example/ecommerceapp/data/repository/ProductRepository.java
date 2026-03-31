@@ -19,6 +19,10 @@ public class ProductRepository {
         return apiService.getProducts();
     }
 
+    public Call<ProductResponse> getProductById(int id) {
+        return apiService.getProductById(id);
+    }
+
     public Call<List<ProductResponse>> getProductsByShop(int shopId) {
         return apiService.getProductsByShop(shopId);
     }

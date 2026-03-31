@@ -32,7 +32,9 @@ public class ProductResponse {
     public BigDecimal getRatingAvg() { return ratingAvg; }
     public int getSoldCount() { return soldCount; }
     public ProductStatus getStatus() { return status; }
-
+    public String getDescription() {
+        return description;
+    }
     public List<String> getImages() {
         return images;
     }

@@ -14,6 +14,9 @@ public interface ProductService {
     @GET("products")
     Call<List<ProductResponse>> getProducts();
 
+    @GET("products/{id}")
+    Call<ProductResponse> getProductById(@Path("id") int id);
+
     @GET("products/shop/{shopId}")
     Call<List<ProductResponse>> getProductsByShop(@Path("shopId") int shopId);
 
@@ -22,4 +25,6 @@ public interface ProductService {
 
     @DELETE("products/{id}")
     Call<Void> deleteProduct(@Path("id") int id);
+
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--    NAV-->
+    <!-- NAV -->
     <string name="nav_dashboard">Tổng quan</string>
     <string name="nav_product">Sản phẩm</string>
     <string name="nav_order">Đơn hàng</string>
@@ -10,11 +10,19 @@
     <string name="desc_edit">Sửa</string>
     <string name="desc_delete">Xóa</string>
 
-    <!--    Product-->
+    <!-- Product-->
     <string name="hint_search_product_name">Nhập tên sản phẩm cần tìm</string>
     <string name="desc_add_new">Thêm mới</string>
 
-    <!--    Order-->
+    <string name="default_name">Laptop Gamming</string>
+    <string name="default_price">Giá: 25000000đ</string>
+    <string name="default_stock">Kho: 5</string>
+    <string name="default_sold">Đã bán: 1</string>
+    <string name="default_rating">Đánh giá: 5.0</string>
+    <string name="default_status">Trạng thái: Có sẵn</string>
+    <string name="default_description">Chưa có mô tả</string>
+
+    <!-- Order -->
     <string name="order_description">Mô tả hóa đơn</string>
     <string name="order_tracking">Theo dõi đơn hàng</string>
 
