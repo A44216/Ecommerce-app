@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.adapter.seller;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
 
     private List<ProductResponse> list = new ArrayList<>();
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<ProductResponse> newList) {
         this.list = newList;
         notifyDataSetChanged();
@@ -31,12 +33,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
         return new ProductVH(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ProductVH holder, int position) {
         ProductResponse product = list.get(position);
 
         holder.getName().setText(product.getName());
-        holder.getPrice().setText(String.valueOf(product.getPrice()));
+        holder.getPrice().setText(product.getPrice() + " đ");
+        holder.getCategory().setText(product.getCategoryName());
+
+        holder.getRating().setText("⭐ " + product.getRatingAvg());
+        holder.getSold().setText("Đã bán " + product.getSoldCount());
+
+        holder.getStatus().setText(product.getStatus().name());
     }
 
     @Override

@@ -24,4 +24,14 @@ public class ProductResponse {
 
     public String getName() { return name; }
     public BigDecimal getPrice() { return price; }
+
+    public Integer getId() { return id; }
+    public int getStock() { return stock; }
+    public String getImage() { return image; }
+    public String getCategoryName() { return categoryName; }
+    public String getShopName() { return shopName; }
+    public BigDecimal getRatingAvg() { return ratingAvg; }
+    public int getSoldCount() { return soldCount; }
+    public ProductStatus getStatus() { return status; }
+
 }

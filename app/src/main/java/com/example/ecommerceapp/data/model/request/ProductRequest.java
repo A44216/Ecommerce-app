@@ -9,4 +9,5 @@ public class ProductRequest {
     public int stock;
     public String description;
     public String image;
+    public int shopId;
 }

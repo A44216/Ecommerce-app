@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.ecommerceapp.R;
@@ -35,8 +36,11 @@ public class SellerHomeActivity extends AppCompatActivity {
         bnvMenu = findViewById(R.id.bnvMenu);
 
         // 2. lấy navController từ navHost
-        NavController navController =
-                Navigation.findNavController(this, R.id.navHost);
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.navHost);
+
+        NavController navController = navHostFragment.getNavController();
 
         // 3. connect BottomNav với Navigation
         NavigationUI.setupWithNavController(bnvMenu, navController);

@@ -19,6 +19,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface ApiService {
 
@@ -57,6 +58,10 @@ public interface ApiService {
     @POST("auth/verify-otp")
     Call<Void> verifyOtp(@Body VerifyOtpRequest request);
 
-    // 3. Đặt lại mật khẩu mới
+    @GET("products/shop/{shopId}")
+    Call<List<ProductResponse>> getProductsByShop(@Path("shopId") int shopId);
+
+    @GET("products/deleted")
+    Call<List<ProductResponse>> getDeletedProducts();
 
 }

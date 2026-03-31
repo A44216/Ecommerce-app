@@ -10,20 +10,22 @@ import com.example.ecommerceapp.R;
 
 public class ProductVH extends RecyclerView.ViewHolder {
 
-    TextView name, price;
+    TextView name, price, category, rating, sold, status;
 
     public ProductVH(@NonNull View itemView) {
         super(itemView);
         name = itemView.findViewById(R.id.tvProductName);
         price = itemView.findViewById(R.id.tvProductPrice);
+        category = itemView.findViewById(R.id.tvProductCategory);
+        rating = itemView.findViewById(R.id.tvRating);
+        sold = itemView.findViewById(R.id.tvSold);
+        status = itemView.findViewById(R.id.tvProductStatus);
     }
 
-    public TextView getName() {
-        return name;
-    }
-
-    public TextView getPrice() {
-        return price;
-    }
-
+    public TextView getName() { return name; }
+    public TextView getPrice() { return price; }
+    public TextView getCategory() { return category; }
+    public TextView getRating() { return rating; }
+    public TextView getSold() { return sold; }
+    public TextView getStatus() { return status; }
 }

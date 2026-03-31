@@ -19,4 +19,9 @@ public class ProductRepository {
     public Call<List<ProductResponse>> getProducts() {
         return apiService.getProducts();
     }
+
+    public Call<List<ProductResponse>> getProductsByShop(int shopId) {
+        return apiService.getProductsByShop(shopId);
+    }
+
 }
