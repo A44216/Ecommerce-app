@@ -121,9 +121,6 @@ public class ProductFragment extends Fragment {
     }
 
     private void deleteProduct(Integer productId) {
-        // TODO: gọi API delete
-
-        // Sau khi xóa xong reload lại list
-        viewModel.fetchProducts();
+        viewModel.deleteProduct(productId);
     }
 }

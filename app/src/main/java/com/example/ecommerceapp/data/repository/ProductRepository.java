@@ -22,4 +22,8 @@ public class ProductRepository {
     public Call<List<ProductResponse>> getProductsByShop(int shopId) {
         return apiService.getProductsByShop(shopId);
     }
+
+    public Call<Void> deleteProduct(int id) {
+        return apiService.deleteProduct(id);
+    }
 }

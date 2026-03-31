@@ -1,5 +1,7 @@
 package com.example.ecommerceapp.ui.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -38,6 +40,22 @@ public class ProductViewModel extends ViewModel {
             @Override
             public void onFailure(Call<List<ProductResponse>> call, Throwable t) {
                 t.printStackTrace();
+            }
+        });
+    }
+
+    public void deleteProduct(int id) {
+        repository.deleteProduct(id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    fetchProducts(); // reload list
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("DELETE", t.getMessage());
             }
         });
     }
