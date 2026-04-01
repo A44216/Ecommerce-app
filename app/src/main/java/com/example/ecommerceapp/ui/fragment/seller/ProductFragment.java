@@ -29,6 +29,8 @@ import com.example.ecommerceapp.ui.viewmodel.ProductViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.ProductViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 public class ProductFragment extends Fragment {
 
     private ProductAdapter adapter;
@@ -51,6 +53,20 @@ public class ProductFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (viewModel == null) return;
+
+        TokenManager tokenManager = TokenManager.getInstance(requireContext());
+        long shopId = tokenManager.getShopId();
+
+        if (shopId > 0) {
+            viewModel.fetchProductsByShop((int) shopId);
+        }
+    }
+
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.listProduct);
 
@@ -63,8 +79,8 @@ public class ProductFragment extends Fragment {
     private void setupViewModel() {
 
         TokenManager tokenManager = TokenManager.getInstance(requireContext());
-        ProductService apiService = ApiClient.getProductService(tokenManager);
 
+        ProductService apiService = ApiClient.getProductService(tokenManager);
         ProductRepository repository = new ProductRepository(apiService);
 
         ProductViewModelFactory factory = new ProductViewModelFactory(repository);
@@ -72,9 +88,18 @@ public class ProductFragment extends Fragment {
         viewModel = new ViewModelProvider(this, factory)
                 .get(ProductViewModel.class);
 
-        viewModel.fetchProducts();
+        observeProducts();
+    }
+
+    private void observeProducts() {
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+
+            if (products == null) {
+                adapter.setData(new ArrayList<>());
+                return;
+            }
+
             adapter.setData(products);
         });
     }
@@ -123,6 +148,8 @@ public class ProductFragment extends Fragment {
     }
 
     private void deleteProduct(Integer productId) {
-        viewModel.deleteProduct(productId);
+        TokenManager tokenManager = TokenManager.getInstance(requireContext());
+        long shopId = tokenManager.getShopId();
+        viewModel.deleteProduct(productId, (int)shopId);
     }
 }

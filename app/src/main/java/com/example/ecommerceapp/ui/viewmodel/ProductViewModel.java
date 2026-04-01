@@ -44,12 +44,28 @@ public class ProductViewModel extends ViewModel {
         });
     }
 
-    public void deleteProduct(int id) {
+    public void fetchProductsByShop(int shopId) {
+        repository.getProductsByShop(shopId).enqueue(new Callback<List<ProductResponse>>() {
+            @Override
+            public void onResponse(Call<List<ProductResponse>> call, Response<List<ProductResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    productList.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductResponse>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void deleteProduct(int id, int shopId) {
         repository.deleteProduct(id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    fetchProducts(); // reload list
+                    fetchProductsByShop(shopId);
                 }
             }
 

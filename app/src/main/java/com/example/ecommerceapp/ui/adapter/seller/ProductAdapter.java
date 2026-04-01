@@ -27,7 +27,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
 
     @SuppressLint("NotifyDataSetChanged")
     public void setData(List<ProductResponse> newList) {
-        this.list = newList;
+
+        if (newList == null) {
+            this.list = new ArrayList<>();
+        } else {
+            this.list = newList;
+        }
+
         notifyDataSetChanged();
     }
 
@@ -98,6 +104,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list != null ? list.size() : 0;
     }
+
 }

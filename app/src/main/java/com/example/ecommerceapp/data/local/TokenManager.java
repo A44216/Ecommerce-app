@@ -13,6 +13,7 @@ public class TokenManager {
     private static final String KEY_REMEMBER = "remember_login";
     private static final String KEY_ROLE = "role";
     private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_SHOP_ID = "shop_id";
 
     private TokenManager(Context context) {
         prefs = context.getApplicationContext()
@@ -65,4 +66,15 @@ public class TokenManager {
     public void clearUserId() {
         prefs.edit().remove(KEY_USER_ID).apply();
     }
+
+    public long getShopId() {
+        return prefs.getLong(KEY_SHOP_ID, 0);
+    }
+    public void saveShopId(long shopId) {
+        prefs.edit().putLong(KEY_SHOP_ID, shopId).apply();
+    }
+    public void clearShopId() {
+        prefs.edit().remove(KEY_SHOP_ID).apply();
+    }
+
 }
