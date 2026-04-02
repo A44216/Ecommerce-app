@@ -114,8 +114,9 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
         tokenManager = TokenManager.getInstance(this);
 
-        loadCategories();
-
+        loadCategories(() -> {
+            if (isEdit) loadProduct();
+        });
         productImageRepository = new ProductImageRepository(
                 ApiClient.getProductImageService(tokenManager)
         );
@@ -124,10 +125,6 @@ public class AddAndEditProductActivity extends AppCompatActivity {
         );
         productId = getIntent().getIntExtra("productId", -1);
         isEdit = productId != -1;
-
-        if (isEdit) {
-            loadProduct();
-        }
 
     }
 
@@ -180,7 +177,7 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                 });
     }
 
-    private void loadCategories() {
+    private void loadCategories(Runnable onDone) {
         CategoryRepository repo = new CategoryRepository(
                 ApiClient.getCategoryService(tokenManager)
         );
@@ -195,7 +192,6 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                     categoryList = response.body();
 
                     List<String> names = new ArrayList<>();
-
                     for (CategoryResponse c : categoryList) {
                         names.add(c.getName());
                     }
@@ -207,6 +203,8 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                     );
 
                     etCategory.setAdapter(adapter);
+
+                    if (onDone != null) onDone.run(); // ✅ thêm dòng này
                 }
             }
 
@@ -223,23 +221,24 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
         List<Uri> localImages = imageAdapter.getLocalImages();
 
+        if (localImages == null || localImages.isEmpty()) {
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                finish();
+            });
+            return;
+        }
+
+        int total = localImages.size();
+        final int[] count = {0};
+
         for (Uri uri : localImages) {
 
             try {
-                InputStream inputStream = getContentResolver().openInputStream(uri);
+                byte[] bytes = readBytes(uri);
 
-                RequestBody requestFile = new RequestBody() {
-                    @Override
-                    public MediaType contentType() {
-                        return MediaType.parse("image/*");
-                    }
-
-                    @Override
-                    public void writeTo(okio.BufferedSink sink) throws IOException {
-                        okio.Source source = okio.Okio.source(inputStream);
-                        sink.writeAll(source);
-                    }
-                };
+                RequestBody requestFile =
+                        RequestBody.create(bytes, MediaType.parse("image/*"));
 
                 MultipartBody.Part body =
                         MultipartBody.Part.createFormData(
@@ -251,23 +250,42 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                 ApiClient.getProductImageService(tokenManager)
                         .uploadImage(body)
                         .enqueue(new Callback<String>() {
+
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {
+
                                 if (response.isSuccessful() && response.body() != null) {
                                     addProductImage(productId, response.body());
                                 }
+
+                                count[0]++;
+                                checkDone(total, count[0]);
                             }
 
                             @Override
                             public void onFailure(Call<String> call, Throwable t) {
-                                Toast.makeText(AddAndEditProductActivity.this,
-                                        "Upload ảnh lỗi", Toast.LENGTH_SHORT).show();
+                                count[0]++;
+                                checkDone(total, count[0]);
                             }
                         });
 
             } catch (Exception e) {
                 e.printStackTrace();
+                count[0]++;
+                checkDone(total, count[0]);
             }
+        }
+    }
+
+    private void checkDone(int total, int done) {
+        if (done == total) {
+
+            imageAdapter.getLocalImages().clear();
+
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                finish();
+            });
         }
     }
 
@@ -403,8 +421,6 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
                             Toast.makeText(AddAndEditProductActivity.this,
                                     "Tạo thành công", Toast.LENGTH_SHORT).show();
-
-                            finish();
                         }
                     }
 
@@ -449,7 +465,6 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
                                                 if (deletedCount[0] == total) {
                                                     uploadImages(productId);
-                                                    finish();
                                                 }
                                             }
 
@@ -480,6 +495,21 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                                 "Lỗi cập nhật", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private byte[] readBytes(Uri uri) throws IOException {
+        InputStream inputStream = getContentResolver().openInputStream(uri);
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        byte[] data = new byte[4096];
+
+        while ((nRead = inputStream.read(data)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        inputStream.close();
+        return buffer.toByteArray();
     }
 
 }
