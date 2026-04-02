@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.adapter.seller;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class ImageEditAdapter extends RecyclerView.Adapter<ImageVH> {
     private List<ProductImageResponse> deletedServerImages = new ArrayList<>();
 
     // ===== SET SERVER IMAGES (LOAD FROM MYSQL) =====
+    @SuppressLint("NotifyDataSetChanged")
     public void setServerImages(List<ProductImageResponse> images) {
         serverImages.clear();
         if (images != null) serverImages.addAll(images);
@@ -33,6 +35,7 @@ public class ImageEditAdapter extends RecyclerView.Adapter<ImageVH> {
     }
 
     // ===== ADD LOCAL IMAGES (USER PICK) =====
+    @SuppressLint("NotifyDataSetChanged")
     public void addImages(List<Uri> images) {
         localImages.addAll(images);
         notifyDataSetChanged();
