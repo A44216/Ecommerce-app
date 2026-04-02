@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.data.repository;
 
 import com.example.ecommerceapp.api.service.ProductService;
+import com.example.ecommerceapp.data.model.request.ProductRequest;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 
 import java.util.List;
@@ -25,6 +26,14 @@ public class ProductRepository {
 
     public Call<List<ProductResponse>> getProductsByShop(int shopId) {
         return apiService.getProductsByShop(shopId);
+    }
+
+    public Call<ProductResponse> createProduct(ProductRequest request) {
+        return apiService.createProduct(request);
+    }
+
+    public Call<ProductResponse> updateProduct(int id, ProductRequest request) {
+        return apiService.updateProduct(id, request);
     }
 
     public Call<Void> deleteProduct(int id) {

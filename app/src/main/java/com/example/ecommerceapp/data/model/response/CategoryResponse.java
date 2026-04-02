@@ -8,4 +8,7 @@ public class CategoryResponse {
     public String getName() {
         return name;
     }
+    public Integer getId() {
+        return id;
+    }
 }

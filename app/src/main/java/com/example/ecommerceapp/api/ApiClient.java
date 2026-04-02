@@ -64,6 +64,10 @@ public class ApiClient {
         return createAuthRetrofit(tm).create(ProductService.class);
     }
 
+    public static CategoryService getCategoryService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(CategoryService.class);
+    }
+
     public static UserService getUserService(TokenManager tm) {
         return createAuthRetrofit(tm).create(UserService.class);
     }

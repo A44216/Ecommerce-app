@@ -26,7 +26,7 @@ import java.math.RoundingMode;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    private TextView txtName, txtPrice, txtStock, txtSold, txtRating, txtStatus, txtDescription;
+    private TextView txtName, txtPrice, txtCategory, txtStock, txtSold, txtRating, txtStatus, txtDescription;
     private ViewPager2 viewPagerImages;
     private ImageView ivBack;
     private WormDotsIndicator dotsIndicator;
@@ -66,6 +66,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void initViews() {
         txtName = findViewById(R.id.txtName);
         txtPrice = findViewById(R.id.txtPrice);
+        txtCategory = findViewById(R.id.txtCategory);
         txtStock = findViewById(R.id.txtStock);
         txtSold = findViewById(R.id.txtSold);
         txtRating = findViewById(R.id.txtRating);
@@ -84,21 +85,16 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void bindData(ProductResponse product) {
 
         txtName.setText(product.getName());
-
         txtPrice.setText("💰 " + String.format("%,.0f", product.getPrice()) + " đ");
-
+        txtCategory.setText("🏷️ Danh mục: " + product.getCategoryName());
         txtStock.setText("📦 Kho: " + product.getStock());
-
         txtSold.setText("🔥 Đã bán: " + product.getSoldCount());
-
         if (product.getRatingAvg() != null) {
             txtRating.setText("⭐ " + product.getRatingAvg().setScale(1, RoundingMode.HALF_UP));
         } else {
             txtRating.setText("⭐ 0.0");
         }
-
         txtStatus.setText("Trạng thái: " + product.getStatus());
-
         txtDescription.setText(product.getDescription() != null
                 ? "Mô tả: " +product.getDescription()
                 : "Chưa có mô tả");

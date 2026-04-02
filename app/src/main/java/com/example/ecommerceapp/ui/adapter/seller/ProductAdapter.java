@@ -62,7 +62,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
 
         holder.getCategory().setText(
                 product.getCategoryName() != null
-                        ? product.getCategoryName()
+                        ? "Danh mục: " + product.getCategoryName()
                         : "Không có danh mục"
         );
 

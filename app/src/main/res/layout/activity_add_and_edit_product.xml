@@ -117,27 +117,43 @@
                 android:maxLines="5"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Status -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutStatus"
+<!--        &lt;!&ndash; Status &ndash;&gt;-->
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/layoutStatus"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="12dp"-->
+<!--            android:hint="@string/hint_product_status"-->
+<!--            app:endIconMode="dropdown_menu">-->
+
+<!--            <AutoCompleteTextView-->
+<!--                android:id="@+id/etStatus"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:focusable="true"-->
+<!--                android:paddingStart="12dp"-->
+<!--                android:paddingEnd="12dp"-->
+
+<!--                android:clickable="true"-->
+<!--                android:inputType="none"-->
+<!--                tools:ignore="LabelFor" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvImages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="@string/hint_product_status"
-            app:endIconMode="dropdown_menu">
+            android:layout_marginTop="12dp"/>
 
-            <AutoCompleteTextView
-                android:id="@+id/etStatus"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusable="true"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-
-                android:clickable="true"
-                android:inputType="none"
-                tools:ignore="LabelFor" />
-        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelectImages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_image"
+            app:cornerRadius="4dp"
+            android:backgroundTint="@color/brown"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"/>
 
         <!-- Button -->
         <com.google.android.material.button.MaterialButton

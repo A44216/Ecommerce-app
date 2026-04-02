@@ -1,16 +1,91 @@
 package com.example.ecommerceapp.ui.activity.home.seller.product;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.request.ProductRequest;
+import com.example.ecommerceapp.data.model.response.CategoryResponse;
+import com.example.ecommerceapp.data.model.response.ProductResponse;
+import com.example.ecommerceapp.data.repository.CategoryRepository;
+import com.example.ecommerceapp.data.repository.ProductRepository;
+import com.example.ecommerceapp.ui.adapter.seller.ImageEditAdapter;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddAndEditProductActivity extends AppCompatActivity {
+
+    private TextView tvTitle;
+    private TextInputEditText etName, etPrice, etStock, etDescription;
+    private AutoCompleteTextView etCategory;
+    private MaterialButton btnSubmit, btnSelectImages;
+    private RecyclerView rvImages;
+    private ImageEditAdapter imageAdapter;
+
+    private TokenManager tokenManager;
+    private ProductRepository repository;
+
+    private int productId = -1;
+    private boolean isEdit = false;
+
+    private List<CategoryResponse> categoryList = new ArrayList<>();
+    private Integer selectedCategoryId = null;
+    private ActivityResultLauncher<Intent> imagePickerLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                            List<Uri> list = new ArrayList<>();
+
+                            if (result.getData().getClipData() != null) {
+                                int count = result.getData().getClipData().getItemCount();
+
+                                for (int i = 0; i < count; i++) {
+                                    Uri uri = result.getData()
+                                            .getClipData()
+                                            .getItemAt(i)
+                                            .getUri();
+                                    list.add(uri);
+                                }
+                            } else {
+                                list.add(result.getData().getData());
+                            }
+
+                            imageAdapter.addImages(list);
+                        }
+                    }
+            );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +97,250 @@ public class AddAndEditProductActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        initViews();
+        setupActions();
+
+        tokenManager = TokenManager.getInstance(this);
+
+        loadCategories();
+
+        repository = new ProductRepository(
+                ApiClient.getProductService(tokenManager)
+        );
+        productId = getIntent().getIntExtra("productId", -1);
+        isEdit = productId != -1;
+
+        if (isEdit) {
+            loadProduct();
+        }
+
     }
+
+    private void initViews() {
+        tvTitle = findViewById(R.id.tvTitle);
+
+        etName = findViewById(R.id.etName);
+        etPrice = findViewById(R.id.etPrice);
+        etStock = findViewById(R.id.etStock);
+        etDescription = findViewById(R.id.etDescription);
+
+        etCategory = findViewById(R.id.etCategory);
+
+        btnSubmit = findViewById(R.id.btnAddOrEditProduct);
+        btnSelectImages = findViewById(R.id.btnSelectImages);
+
+        ImageView ivBack = findViewById(R.id.ivBack);
+
+        ivBack.setOnClickListener(v -> finish());
+
+        rvImages = findViewById(R.id.rvImages);
+
+        imageAdapter = new ImageEditAdapter();
+
+        rvImages.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        );
+
+        rvImages.setAdapter(imageAdapter);
+    }
+
+    private void loadProduct() {
+        repository.getProductById(productId)
+                .enqueue(new Callback<ProductResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ProductResponse> call,
+                                           @NonNull Response<ProductResponse> response) {
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            bindData(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
+                        Toast.makeText(AddAndEditProductActivity.this,
+                                "Lỗi load sản phẩm",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void loadCategories() {
+        CategoryRepository repo = new CategoryRepository(
+                ApiClient.getCategoryService(tokenManager)
+        );
+
+        repo.getCategories().enqueue(new Callback<List<CategoryResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<CategoryResponse>> call,
+                                   @NonNull Response<List<CategoryResponse>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+
+                    categoryList = response.body();
+
+                    List<String> names = new ArrayList<>();
+
+                    for (CategoryResponse c : categoryList) {
+                        names.add(c.getName());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            AddAndEditProductActivity.this,
+                            android.R.layout.simple_dropdown_item_1line,
+                            names
+                    );
+
+                    etCategory.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<CategoryResponse>> call, @NonNull Throwable t) {
+                Toast.makeText(AddAndEditProductActivity.this,
+                        "Load category lỗi",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void bindData(ProductResponse product) {
+        tvTitle.setText("CẬP NHẬT SẢN PHẨM");
+
+        etName.setText(product.getName());
+        etPrice.setText(String.valueOf(product.getPrice()));
+        etStock.setText(String.valueOf(product.getStock()));
+        etDescription.setText(product.getDescription());
+
+        etCategory.setText(product.getCategoryName(), false);
+
+        for (CategoryResponse c : categoryList) {
+            if (c.getName().equals(product.getCategoryName())) {
+                selectedCategoryId = c.getId();
+                break;
+            }
+        }
+
+        selectedCategoryId = product.getId();
+
+        btnSubmit.setText("Cập nhật");
+    }
+
+    private void setupActions() {
+
+        etCategory.setOnItemClickListener((parent, view, position, id) -> {
+            handleCategorySelect(parent, position);
+        });
+
+        btnSelectImages.setOnClickListener(v -> handleImageSelect());
+
+        btnSubmit.setOnClickListener(v -> {
+
+            String name = Objects.requireNonNull(etName.getText()).toString().trim();
+            String priceStr = Objects.requireNonNull(etPrice.getText()).toString().trim();
+            String stockStr = Objects.requireNonNull(etStock.getText()).toString().trim();
+
+            if (name.isEmpty() || priceStr.isEmpty() || stockStr.isEmpty()) {
+                Toast.makeText(this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            ProductRequest request = new ProductRequest();
+
+            request.setName(name);
+            request.setPrice(new BigDecimal(priceStr));
+            request.setStock(Integer.parseInt(stockStr));
+            request.setDescription(Objects.requireNonNull(etDescription.getText()).toString());
+
+            if (selectedCategoryId == null) {
+                Toast.makeText(this, "Vui lòng chọn category", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            request.setCategoryId(selectedCategoryId);
+            TokenManager tokenManager = TokenManager.getInstance(this);
+            request.setShopId((int) tokenManager.getShopId());
+
+            if (isEdit) {
+                updateProduct(request);
+            } else {
+                createProduct(request);
+            }
+        });
+
+    }
+
+    private void handleImageSelect() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+        imagePickerLauncher.launch(intent);
+    }
+
+    private void handleCategorySelect(AdapterView<?> parent, int position) {
+
+        String name = (String) parent.getItemAtPosition(position);
+
+        for (CategoryResponse c : categoryList) {
+            if (c.getName().equals(name)) {
+                selectedCategoryId = c.getId();
+                break;
+            }
+        }
+    }
+
+    private void createProduct(ProductRequest request) {
+
+        repository.createProduct(request)
+                .enqueue(new Callback<ProductResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ProductResponse> call,
+                                           @NonNull Response<ProductResponse> response) {
+
+                        if (response.isSuccessful()) {
+                            Toast.makeText(AddAndEditProductActivity.this,
+                                    "Tạo thành công", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
+                        Toast.makeText(AddAndEditProductActivity.this,
+                                "Lỗi tạo sản phẩm", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void updateProduct(ProductRequest request) {
+
+        repository.updateProduct(productId, request)
+                .enqueue(new Callback<ProductResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ProductResponse> call,
+                                           @NonNull Response<ProductResponse> response) {
+
+                        if (response.isSuccessful() && response.body() != null) {
+
+                            ProductResponse p = response.body();
+                            Toast.makeText(AddAndEditProductActivity.this,
+                                    "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                            finish();
+
+                        } else {
+                            Toast.makeText(AddAndEditProductActivity.this,
+                                    "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ProductResponse> call, @NonNull Throwable t) {
+                        Toast.makeText(AddAndEditProductActivity.this,
+                                "Lỗi cập nhật", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 }
