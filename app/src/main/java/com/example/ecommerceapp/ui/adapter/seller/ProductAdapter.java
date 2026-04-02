@@ -9,10 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.ProductVH;
@@ -81,17 +78,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
         List<ProductImageResponse> images = product.getImages();
 
         if (images != null && !images.isEmpty()) {
-            String token = TokenManager.getInstance(holder.itemView.getContext()).getToken();
-
-            GlideUrl glideUrl = new GlideUrl(
-                    images.get(0).getImageUrl(),
-                    new LazyHeaders.Builder()
-                            .addHeader("Authorization", "Bearer " + token)
-                            .build()
-            );
-
             Glide.with(holder.itemView.getContext())
-                    .load(glideUrl)
+                    .load(images.get(0).getImageUrl())
                     .placeholder(R.drawable.ic_launcher_background)
                     .error(R.drawable.ic_launcher_background)
                     .into(holder.getImgProduct());
