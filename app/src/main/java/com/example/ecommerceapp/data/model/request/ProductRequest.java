@@ -3,7 +3,7 @@ package com.example.ecommerceapp.data.model.request;
 import java.math.BigDecimal;
 
 public class ProductRequest {
-    private int categoryId;
+    private Integer categoryId;
     private String name;
     private BigDecimal price;
     private int stock;

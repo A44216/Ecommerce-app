@@ -348,14 +348,22 @@ public class AddAndEditProductActivity extends AppCompatActivity {
         etStock.setText(String.valueOf(product.getStock()));
         etDescription.setText(product.getDescription());
 
-        etCategory.setText(product.getCategoryName(), false);
+        selectedCategoryId = null;
 
-        // ===== FIX CATEGORY ID =====
-        for (CategoryResponse c : categoryList) {
-            if (c.getName().equals(product.getCategoryName())) {
-                selectedCategoryId = c.getId();
-                break;
+        if (product.getCategoryName() != null) {
+            etCategory.setText(
+                    product.getCategoryName() != null ? product.getCategoryName() : "",
+                    false
+            );
+
+            for (CategoryResponse c : categoryList) {
+                if (product.getCategoryName().equals(c.getName())) {
+                    selectedCategoryId = c.getId();
+                    break;
+                }
             }
+        } else {
+            etCategory.setText("", false);
         }
 
         // ===== FIX LOAD SERVER IMAGES =====
@@ -376,14 +384,11 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
         btnSubmit.setOnClickListener(v -> {
 
+            if (!validateForm()) return;
+
             String name = Objects.requireNonNull(etName.getText()).toString().trim();
             String priceStr = Objects.requireNonNull(etPrice.getText()).toString().trim();
             String stockStr = Objects.requireNonNull(etStock.getText()).toString().trim();
-
-            if (name.isEmpty() || priceStr.isEmpty() || stockStr.isEmpty()) {
-                Toast.makeText(this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                return;
-            }
 
             ProductRequest request = new ProductRequest();
 
@@ -392,13 +397,9 @@ public class AddAndEditProductActivity extends AppCompatActivity {
             request.setStock(Integer.parseInt(stockStr));
             request.setDescription(Objects.requireNonNull(etDescription.getText()).toString());
 
-            if (selectedCategoryId == null) {
-                Toast.makeText(this, "Vui lòng chọn category", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
+            // 👉 CATEGORY CÓ THỂ NULL
             request.setCategoryId(selectedCategoryId);
-            TokenManager tokenManager = TokenManager.getInstance(this);
+
             request.setShopId((int) tokenManager.getShopId());
 
             if (isEdit) {
@@ -539,6 +540,57 @@ public class AddAndEditProductActivity extends AppCompatActivity {
         }
 
         return file;
+    }
+
+    private boolean validateForm() {
+        boolean isValid = true;
+
+        etName.setError(null);
+        etPrice.setError(null);
+        etStock.setError(null);
+        etCategory.setError(null);
+
+        String name = Objects.requireNonNull(etName.getText()).toString().trim();
+        String priceStr = Objects.requireNonNull(etPrice.getText()).toString().trim();
+        String stockStr = Objects.requireNonNull(etStock.getText()).toString().trim();
+
+        // NAME
+        if (name.isEmpty()) {
+            etName.setError("Tên không được để trống");
+            isValid = false;
+        } else {
+            etName.setError(null);
+        }
+
+        // PRICE
+        try {
+            BigDecimal price = new BigDecimal(priceStr);
+            if (price.compareTo(BigDecimal.ZERO) < 0) {
+                etPrice.setError("Giá phải >= 0");
+                isValid = false;
+            } else {
+                etPrice.setError(null);
+            }
+        } catch (Exception e) {
+            etPrice.setError("Giá không hợp lệ");
+            isValid = false;
+        }
+
+        // STOCK
+        try {
+            int stock = Integer.parseInt(stockStr);
+            if (stock < 0) {
+                etStock.setError("Tồn kho phải >= 0");
+                isValid = false;
+            } else {
+                etStock.setError(null);
+            }
+        } catch (Exception e) {
+            etStock.setError("Số lượng không hợp lệ");
+            isValid = false;
+        }
+
+        return isValid;
     }
 
 }
