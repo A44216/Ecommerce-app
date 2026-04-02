@@ -33,6 +33,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private ProductRepository repository;
 
+    private boolean isIndicatorAttached = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,14 +103,21 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Load ảnh
         if (product.getImages() != null && !product.getImages().isEmpty()) {
-            ImagePagerAdapter adapter = new ImagePagerAdapter(this, product.getImages());
+
+            ImagePagerAdapter adapter =
+                    new ImagePagerAdapter(this, product.getImages());
+
             viewPagerImages.setAdapter(adapter);
+
+            if (!isIndicatorAttached) {
+                dotsIndicator.attachTo(viewPagerImages);
+                isIndicatorAttached = true;
+            }
+
         } else {
             viewPagerImages.setAdapter(null);
         }
 
-        // Kết nối dots indicator
-        dotsIndicator.attachTo(viewPagerImages);
     }
 
     private void fetchProduct(int id) {
