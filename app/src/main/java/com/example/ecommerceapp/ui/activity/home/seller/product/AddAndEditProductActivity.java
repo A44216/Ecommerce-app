@@ -37,7 +37,6 @@ import com.example.ecommerceapp.ui.adapter.seller.ImageEditAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -235,15 +234,16 @@ public class AddAndEditProductActivity extends AppCompatActivity {
         for (Uri uri : localImages) {
 
             try {
-                byte[] bytes = readBytes(uri);
+
+                File file = uriToFile(uri);
 
                 RequestBody requestFile =
-                        RequestBody.create(bytes, MediaType.parse("image/*"));
+                        RequestBody.create(file, MediaType.parse("image/*"));
 
                 MultipartBody.Part body =
                         MultipartBody.Part.createFormData(
                                 "file",
-                                "image.jpg",
+                                file.getName(),
                                 requestFile
                         );
 
@@ -497,19 +497,26 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                 });
     }
 
-    private byte[] readBytes(Uri uri) throws IOException {
-        InputStream inputStream = getContentResolver().openInputStream(uri);
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    private File uriToFile(Uri uri) throws IOException {
 
-        int nRead;
-        byte[] data = new byte[4096];
+        File file = new File(getCacheDir(), "upload_" + System.currentTimeMillis() + ".jpg");
 
-        while ((nRead = inputStream.read(data)) != -1) {
-            buffer.write(data, 0, nRead);
+        try (
+                InputStream inputStream = getContentResolver().openInputStream(uri);
+                java.io.FileOutputStream outputStream = new java.io.FileOutputStream(file)
+        ) {
+
+            if (inputStream == null) return file;
+
+            byte[] buffer = new byte[4096];
+            int read;
+
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+            }
         }
 
-        inputStream.close();
-        return buffer.toByteArray();
+        return file;
     }
 
 }
