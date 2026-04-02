@@ -136,7 +136,6 @@ public class ImageEditAdapter extends RecyclerView.Adapter<ImageVH> {
                 if (index >= 0 && index < localImages.size()) {
                     localImages.remove(index);
                     notifyItemRemoved(pos);
-                    notifyItemRangeChanged(pos, getItemCount());
                 }
             });
         }
