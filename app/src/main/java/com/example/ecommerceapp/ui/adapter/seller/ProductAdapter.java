@@ -16,6 +16,7 @@ import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.ProductVH;
+import com.example.ecommerceapp.utils.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,25 +83,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
 
         if (images != null && !images.isEmpty()) {
 
-            String url = images.get(0).getImageUrl();
-
-            TokenManager tokenManager =
-                    TokenManager.getInstance(holder.itemView.getContext());
-
-            String token = tokenManager.getToken();
-
-            GlideUrl glideUrl = new GlideUrl(
-                    url,
-                    new LazyHeaders.Builder()
-                            .addHeader("Authorization", "Bearer " + token)
-                            .build()
+            ImageLoader.load(
+                    holder.itemView.getContext(),
+                    holder.getImgProduct(),
+                    images.get(0).getImageUrl()
             );
-
-            Glide.with(holder.itemView.getContext())
-                    .load(glideUrl)
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .error(R.drawable.ic_launcher_background)
-                    .into(holder.getImgProduct());
 
         } else {
             holder.getImgProduct()

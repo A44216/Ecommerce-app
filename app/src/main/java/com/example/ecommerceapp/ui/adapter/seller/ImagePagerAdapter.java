@@ -15,6 +15,7 @@ import com.bumptech.glide.load.model.LazyHeaders;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
+import com.example.ecommerceapp.utils.ImageLoader;
 
 import java.util.List;
 
@@ -41,17 +42,12 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Im
 
         ProductImageResponse image = images.get(position);
 
-        GlideUrl url = new GlideUrl(
-                image.getImageUrl(),
-                new LazyHeaders.Builder()
-                        .addHeader("Authorization",
-                                "Bearer " + TokenManager.getInstance(context).getToken())
-                        .build()
+        ImageLoader.load(
+                context,
+                holder.imageView,
+                image.getImageUrl()
         );
 
-        Glide.with(context)
-                .load(url)
-                .into(holder.imageView);
     }
 
     @Override

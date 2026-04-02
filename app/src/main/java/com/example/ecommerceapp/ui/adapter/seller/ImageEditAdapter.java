@@ -14,6 +14,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.ImageVH;
+import com.example.ecommerceapp.utils.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,24 +93,11 @@ public class ImageEditAdapter extends RecyclerView.Adapter<ImageVH> {
 
             String url = image.getImageUrl();
 
-            TokenManager tokenManager =
-                    TokenManager.getInstance(holder.itemView.getContext());
-
-            String token = tokenManager.getToken();
-
-            com.bumptech.glide.load.model.GlideUrl glideUrl =
-                    new com.bumptech.glide.load.model.GlideUrl(
-                            url,
-                            new com.bumptech.glide.load.model.LazyHeaders.Builder()
-                                    .addHeader("Authorization", "Bearer " + token)
-                                    .build()
-                    );
-
-            Glide.with(holder.itemView.getContext())
-                    .load(glideUrl)
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .error(R.drawable.ic_launcher_background)
-                    .into(holder.getImgProduct());
+            ImageLoader.load(
+                    holder.itemView.getContext(),
+                    holder.getImgProduct(),
+                    url
+            );
 
             holder.getBtnDelete().setOnClickListener(v -> {
 
@@ -132,11 +120,11 @@ public class ImageEditAdapter extends RecyclerView.Adapter<ImageVH> {
             int localIndex = position - serverImages.size();
             Uri uri = localImages.get(localIndex);
 
-            Glide.with(holder.itemView.getContext())
-                    .load(uri)
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .error(R.drawable.ic_launcher_background)
-                    .into(holder.getImgProduct());
+            ImageLoader.load(
+                    holder.itemView.getContext(),
+                    holder.getImgProduct(),
+                    uri
+            );
 
             holder.getBtnDelete().setOnClickListener(v -> {
 
@@ -148,6 +136,7 @@ public class ImageEditAdapter extends RecyclerView.Adapter<ImageVH> {
                 if (index >= 0 && index < localImages.size()) {
                     localImages.remove(index);
                     notifyItemRemoved(pos);
+                    notifyItemRangeChanged(pos, getItemCount());
                 }
             });
         }
