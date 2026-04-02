@@ -15,7 +15,7 @@ import retrofit2.http.Path;
 public interface ProductImageService {
 
     @Multipart
-    @POST("/images/upload")
+    @POST("/api/images/upload")
     Call<String> uploadImage(@Part MultipartBody.Part file);
 
     @POST("product-images")

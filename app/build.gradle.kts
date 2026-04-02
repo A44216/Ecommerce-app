@@ -45,6 +45,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation(libs.retrofit)
+    implementation(libs.converter.scalars)
     implementation(libs.converter.gson)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
@@ -56,4 +57,5 @@ dependencies {
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
     implementation(libs.dotsindicator)
+
 }

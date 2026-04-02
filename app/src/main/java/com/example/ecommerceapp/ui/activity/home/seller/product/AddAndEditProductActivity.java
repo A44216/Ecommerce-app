@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -254,6 +255,26 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {
 
+                                Log.d("UPLOAD", "========================");
+                                Log.d("UPLOAD", "CODE: " + response.code());
+                                Log.d("UPLOAD", "MESSAGE: " + response.message());
+
+                                if (response.errorBody() != null) {
+                                    try {
+                                        Log.e("UPLOAD_ERROR", response.errorBody().string());
+                                    } catch (Exception e) {
+                                        Log.e("UPLOAD_ERROR", "errorBody read failed");
+                                    }
+                                }
+
+                                if (response.body() != null) {
+                                    Log.d("UPLOAD_BODY", response.body());
+                                } else {
+                                    Log.e("UPLOAD_BODY", "BODY IS NULL");
+                                }
+
+                                Log.d("UPLOAD", "========================");
+
                                 if (response.isSuccessful() && response.body() != null) {
                                     addProductImage(productId, response.body());
                                 }
@@ -264,6 +285,8 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<String> call, Throwable t) {
+                                Log.e("UPLOAD_FAILURE", "ERROR: " + t.getMessage(), t);
+
                                 count[0]++;
                                 checkDone(total, count[0]);
                             }
@@ -479,9 +502,6 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                                             }
                                         });
                             }
-
-                            Toast.makeText(AddAndEditProductActivity.this,
-                                    "Cập nhật thành công", Toast.LENGTH_SHORT).show();
 
                         } else {
                             Toast.makeText(AddAndEditProductActivity.this,
