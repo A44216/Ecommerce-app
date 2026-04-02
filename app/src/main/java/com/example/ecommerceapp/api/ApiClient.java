@@ -51,18 +51,6 @@ public class ApiClient {
         return getPublicRetrofit().create(AuthService.class);
     }
 
-    public static ProductService getProductService() {
-        return getPublicRetrofit().create(ProductService.class);
-    }
-
-    public static CategoryService getCategoryService() {
-        return getPublicRetrofit().create(CategoryService.class);
-    }
-
-    public static AddressService getAddressService() {
-        return getPublicRetrofit().create(AddressService.class);
-    }
-
     // ===== AUTH API =====
     public static ProductService getProductService(TokenManager tm) {
         return createAuthRetrofit(tm).create(ProductService.class);
@@ -74,10 +62,6 @@ public class ApiClient {
 
     public static UserService getUserService(TokenManager tm) {
         return createAuthRetrofit(tm).create(UserService.class);
-    }
-
-    public static ShopService getShopService() {
-        return getPublicRetrofit().create(ShopService.class);
     }
 
     public static ShopService getShopService(TokenManager tm) {

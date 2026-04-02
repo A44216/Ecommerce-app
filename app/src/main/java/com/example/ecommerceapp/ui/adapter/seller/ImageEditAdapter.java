@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.ImageVH;
 
@@ -77,15 +78,37 @@ public class ImageEditAdapter extends RecyclerView.Adapter<ImageVH> {
     }
 
     @Override
+    public void onViewRecycled(@NonNull ImageVH holder) {
+        super.onViewRecycled(holder);
+        Glide.with(holder.itemView.getContext()).clear(holder.getImgProduct());
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull ImageVH holder, int position) {
 
         if (getItemViewType(position) == TYPE_SERVER) {
 
-            // ===== SERVER IMAGE =====
             ProductImageResponse image = serverImages.get(position);
 
+            String url = image.getImageUrl();
+
+            TokenManager tokenManager =
+                    TokenManager.getInstance(holder.itemView.getContext());
+
+            String token = tokenManager.getToken();
+
+            com.bumptech.glide.load.model.GlideUrl glideUrl =
+                    new com.bumptech.glide.load.model.GlideUrl(
+                            url,
+                            new com.bumptech.glide.load.model.LazyHeaders.Builder()
+                                    .addHeader("Authorization", "Bearer " + token)
+                                    .build()
+                    );
+
             Glide.with(holder.itemView.getContext())
-                    .load(image.getImageUrl())
+                    .load(glideUrl)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
                     .into(holder.getImgProduct());
 
             holder.getBtnDelete().setOnClickListener(v -> {
@@ -106,12 +129,13 @@ public class ImageEditAdapter extends RecyclerView.Adapter<ImageVH> {
 
         } else {
 
-            // ===== LOCAL IMAGE =====
             int localIndex = position - serverImages.size();
             Uri uri = localImages.get(localIndex);
 
             Glide.with(holder.itemView.getContext())
                     .load(uri)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
                     .into(holder.getImgProduct());
 
             holder.getBtnDelete().setOnClickListener(v -> {

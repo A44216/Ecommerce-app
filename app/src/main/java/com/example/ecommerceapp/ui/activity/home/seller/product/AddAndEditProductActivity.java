@@ -109,23 +109,25 @@ public class AddAndEditProductActivity extends AppCompatActivity {
             return insets;
         });
 
+        productId = getIntent().getIntExtra("productId", -1);
+        isEdit = productId != -1;
+
+        tokenManager = TokenManager.getInstance(this);
+
         initViews();
         setupActions();
 
-        tokenManager = TokenManager.getInstance(this);
+        productImageRepository = new ProductImageRepository(
+                ApiClient.getProductImageService(tokenManager)
+        );
+
+        productRepository = new ProductRepository(
+                ApiClient.getProductService(tokenManager)
+        );
 
         loadCategories(() -> {
             if (isEdit) loadProduct();
         });
-        productImageRepository = new ProductImageRepository(
-                ApiClient.getProductImageService(tokenManager)
-        );
-        productRepository = new ProductRepository(
-                ApiClient.getProductService(tokenManager)
-        );
-        productId = getIntent().getIntExtra("productId", -1);
-        isEdit = productId != -1;
-
     }
 
     private void initViews() {
