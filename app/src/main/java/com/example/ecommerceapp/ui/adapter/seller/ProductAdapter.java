@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.ProductVH;
 
@@ -19,6 +20,7 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
 
     private List<ProductResponse> list = new ArrayList<>();
+
     private OnProductActionListener listener;
 
     public void setListener(OnProductActionListener listener) {
@@ -73,11 +75,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
         holder.getStatus().setText("Trạng thái: " + product.getStatus());
 
         // Ảnh sản phẩm
-        List<String> images = product.getImages();
+        List<ProductImageResponse> images = product.getImages();
 
         if (images != null && !images.isEmpty()) {
             Glide.with(holder.itemView.getContext())
-                    .load(images.get(0))
+                    .load(images.get(0).getImageUrl())
                     .placeholder(R.drawable.ic_launcher_background)
                     .error(R.drawable.ic_launcher_background)
                     .into(holder.getImgProduct());

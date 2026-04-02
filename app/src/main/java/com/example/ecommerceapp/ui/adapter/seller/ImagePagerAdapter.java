@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 
 import java.util.List;
 
 public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.ImageViewHolder> {
 
     private Context context;
-    private List<String> images;
+    private List<ProductImageResponse> images;
 
-    public ImagePagerAdapter(Context context, List<String> images) {
+    public ImagePagerAdapter(Context context, List<ProductImageResponse> images) {
         this.context = context;
         this.images = images;
     }
@@ -27,23 +28,25 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Im
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false);
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.item_image, parent, false);
         return new ImageViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        String url = images.get(position);
+
+        ProductImageResponse image = images.get(position);
 
         Glide.with(context)
-                .load(url)
+                .load(image.getImageUrl())
                 .placeholder(R.drawable.ic_image)
                 .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return images.size();
+        return images != null ? images.size() : 0;
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {

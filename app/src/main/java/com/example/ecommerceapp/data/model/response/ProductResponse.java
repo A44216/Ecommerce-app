@@ -12,7 +12,7 @@ public class ProductResponse {
     private BigDecimal price;
     private int stock;
     private String description;
-    private List<String> images;
+    private List<ProductImageResponse> images;
     private String categoryName;
     private String shopName;
 
@@ -35,7 +35,7 @@ public class ProductResponse {
     public String getDescription() {
         return description;
     }
-    public List<String> getImages() {
+    public List<ProductImageResponse> getImages() {
         return images;
     }
 

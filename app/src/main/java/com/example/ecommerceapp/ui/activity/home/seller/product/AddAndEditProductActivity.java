@@ -25,20 +25,30 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.request.ProductImageRequest;
 import com.example.ecommerceapp.data.model.request.ProductRequest;
 import com.example.ecommerceapp.data.model.response.CategoryResponse;
+import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.repository.CategoryRepository;
+import com.example.ecommerceapp.data.repository.ProductImageRepository;
 import com.example.ecommerceapp.data.repository.ProductRepository;
 import com.example.ecommerceapp.ui.adapter.seller.ImageEditAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +63,8 @@ public class AddAndEditProductActivity extends AppCompatActivity {
     private ImageEditAdapter imageAdapter;
 
     private TokenManager tokenManager;
-    private ProductRepository repository;
+    private ProductRepository productRepository;
+    private ProductImageRepository productImageRepository;
 
     private int productId = -1;
     private boolean isEdit = false;
@@ -105,7 +116,10 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
         loadCategories();
 
-        repository = new ProductRepository(
+        productImageRepository = new ProductImageRepository(
+                ApiClient.getProductImageService(tokenManager)
+        );
+        productRepository = new ProductRepository(
                 ApiClient.getProductService(tokenManager)
         );
         productId = getIntent().getIntExtra("productId", -1);
@@ -146,7 +160,7 @@ public class AddAndEditProductActivity extends AppCompatActivity {
     }
 
     private void loadProduct() {
-        repository.getProductById(productId)
+        productRepository.getProductById(productId)
                 .enqueue(new Callback<ProductResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<ProductResponse> call,
@@ -205,8 +219,85 @@ public class AddAndEditProductActivity extends AppCompatActivity {
         });
     }
 
+    private void uploadImages(int productId) {
+
+        List<Uri> localImages = imageAdapter.getLocalImages();
+
+        for (Uri uri : localImages) {
+
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(uri);
+
+                RequestBody requestFile = new RequestBody() {
+                    @Override
+                    public MediaType contentType() {
+                        return MediaType.parse("image/*");
+                    }
+
+                    @Override
+                    public void writeTo(okio.BufferedSink sink) throws IOException {
+                        okio.Source source = okio.Okio.source(inputStream);
+                        sink.writeAll(source);
+                    }
+                };
+
+                MultipartBody.Part body =
+                        MultipartBody.Part.createFormData(
+                                "file",
+                                "image.jpg",
+                                requestFile
+                        );
+
+                ApiClient.getProductImageService(tokenManager)
+                        .uploadImage(body)
+                        .enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                if (response.isSuccessful() && response.body() != null) {
+                                    addProductImage(productId, response.body());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Toast.makeText(AddAndEditProductActivity.this,
+                                        "Upload ảnh lỗi", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void addProductImage(int productId, String url) {
+
+        ProductImageRequest req = new ProductImageRequest();
+        req.setProductId(productId);
+        req.setImageUrl(url);
+
+        productImageRepository.addProductImage(req)
+                .enqueue(new Callback<ProductImageResponse>() {
+                    @Override
+                    public void onResponse(Call<ProductImageResponse> call,
+                                           Response<ProductImageResponse> response) {
+                        if (response.isSuccessful()) {
+                            System.out.println("Save image OK");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProductImageResponse> call, Throwable t) {
+                        Toast.makeText(AddAndEditProductActivity.this,
+                                "Lưu ảnh DB lỗi", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     @SuppressLint("SetTextI18n")
     private void bindData(ProductResponse product) {
+
         tvTitle.setText("CẬP NHẬT SẢN PHẨM");
 
         etName.setText(product.getName());
@@ -216,6 +307,7 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
         etCategory.setText(product.getCategoryName(), false);
 
+        // ===== FIX CATEGORY ID =====
         for (CategoryResponse c : categoryList) {
             if (c.getName().equals(product.getCategoryName())) {
                 selectedCategoryId = c.getId();
@@ -223,7 +315,10 @@ public class AddAndEditProductActivity extends AppCompatActivity {
             }
         }
 
-        selectedCategoryId = product.getId();
+        // ===== FIX LOAD SERVER IMAGES =====
+        if (product.getImages() != null) {
+            imageAdapter.setServerImages(product.getImages());
+        }
 
         btnSubmit.setText("Cập nhật");
     }
@@ -294,15 +389,21 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
     private void createProduct(ProductRequest request) {
 
-        repository.createProduct(request)
+        productRepository.createProduct(request)
                 .enqueue(new Callback<ProductResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<ProductResponse> call,
                                            @NonNull Response<ProductResponse> response) {
 
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful() && response.body() != null) {
+
+                            int newProductId = response.body().getId();
+
+                            uploadImages(newProductId);
+
                             Toast.makeText(AddAndEditProductActivity.this,
                                     "Tạo thành công", Toast.LENGTH_SHORT).show();
+
                             finish();
                         }
                     }
@@ -317,22 +418,60 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
     private void updateProduct(ProductRequest request) {
 
-        repository.updateProduct(productId, request)
+        productRepository.updateProduct(productId, request)
                 .enqueue(new Callback<ProductResponse>() {
+
                     @Override
                     public void onResponse(@NonNull Call<ProductResponse> call,
                                            @NonNull Response<ProductResponse> response) {
 
                         if (response.isSuccessful() && response.body() != null) {
 
-                            ProductResponse p = response.body();
+                            List<ProductImageResponse> deleteList = imageAdapter.getDeletedServerImages();
+
+                            if (deleteList == null || deleteList.isEmpty()) {
+                                uploadImages(productId);
+                                return;
+                            }
+
+                            final int total = deleteList.size();
+                            final int[] deletedCount = {0};
+
+                            for (ProductImageResponse img : deleteList) {
+
+                                productImageRepository.deleteProductImage(img.getId())
+                                        .enqueue(new Callback<Void>() {
+
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                                                deletedCount[0]++;
+
+                                                if (deletedCount[0] == total) {
+                                                    uploadImages(productId);
+                                                    finish();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+
+                                                deletedCount[0]++;
+
+                                                if (deletedCount[0] == total) {
+                                                    uploadImages(productId);
+                                                }
+                                            }
+                                        });
+                            }
+
                             Toast.makeText(AddAndEditProductActivity.this,
                                     "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                            finish();
 
                         } else {
                             Toast.makeText(AddAndEditProductActivity.this,
-                                    "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();                        }
+                                    "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

@@ -101,9 +101,10 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Load ảnh
         if (product.getImages() != null && !product.getImages().isEmpty()) {
-            Log.d("IMAGES", String.valueOf(product.getImages()));
             ImagePagerAdapter adapter = new ImagePagerAdapter(this, product.getImages());
             viewPagerImages.setAdapter(adapter);
+        } else {
+            viewPagerImages.setAdapter(null);
         }
 
         // Kết nối dots indicator
