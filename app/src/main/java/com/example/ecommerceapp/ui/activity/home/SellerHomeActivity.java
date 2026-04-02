@@ -63,8 +63,8 @@ public class SellerHomeActivity extends AppCompatActivity {
 
         if (userId <= 0) return;
 
-        ShopService shopService = ApiClient.getShopService();
-
+        ShopService shopService = ApiClient.getShopService(tokenManager);
+        
         shopService.getShopByUser((int)userId)
                 .enqueue(new retrofit2.Callback<ShopResponse>() {
                     @Override
