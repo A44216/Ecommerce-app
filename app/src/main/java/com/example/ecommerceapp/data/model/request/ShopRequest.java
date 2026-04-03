@@ -6,9 +6,11 @@ public class ShopRequest {
 
     private String shopName;
     private String description;
-    private int userId;
     private ShopStatus status;
     private String address;
+    private String avatar;
+    private String phone;
+    private String email;
 
     public String getShopName() {
         return shopName;
@@ -26,14 +28,6 @@ public class ShopRequest {
         this.description = description;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public ShopStatus getStatus() {
         return status;
     }
@@ -49,4 +43,29 @@ public class ShopRequest {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }
