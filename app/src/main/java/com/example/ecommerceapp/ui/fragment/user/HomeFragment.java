@@ -1,9 +1,12 @@
 package com.example.ecommerceapp.ui.fragment.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.ui.Category;
 import com.example.ecommerceapp.data.model.ui.Product;
+import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
 import com.example.ecommerceapp.ui.adapter.user.BannerAdapter;
 import com.example.ecommerceapp.ui.adapter.user.CategoryAdapter;
 import com.example.ecommerceapp.ui.adapter.user.ProductAdapter;
@@ -72,6 +76,12 @@ public class HomeFragment extends Fragment {
         List<Product> dummyProducts = getDummyProducts();
         ProductAdapter productAdapter = new ProductAdapter(dummyProducts);
         rvProducts.setAdapter(productAdapter);
+
+        ImageView ivCartHome = view.findViewById(R.id.ivCartHome);
+        ivCartHome.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), UserCartActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }

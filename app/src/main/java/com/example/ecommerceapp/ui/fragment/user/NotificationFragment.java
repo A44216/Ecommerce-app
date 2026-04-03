@@ -1,9 +1,11 @@
 package com.example.ecommerceapp.ui.fragment.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.ui.NotificationItem;
+import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
 import com.example.ecommerceapp.ui.adapter.user.NotificationAdapter;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,15 @@ public class NotificationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
+
+        //Ánh xạ icon Giỏ hàng trên Header
+        ImageView ivUserCartNotification = view.findViewById(R.id.ivUserCartNotification);
+
+        //Cài đặt sự kiện Click để bay sang UserCartActivity
+        ivUserCartNotification.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), UserCartActivity.class);
+            startActivity(intent);
+        });
         RecyclerView rvNotifications = view.findViewById(R.id.rvNotifications);
         rvNotifications.setLayoutManager(new LinearLayoutManager(requireContext()));
 
