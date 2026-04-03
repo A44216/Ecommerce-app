@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_dashboard"
+        android:title="@string/seller_nav_dashboard"/>
+
+    <item
+        android:id="@+id/productFragment"
+        android:icon="@drawable/ic_product"
+        android:title="@string/seller_nav_product"/>
+
+    <item
+        android:id="@+id/orderFragment"
+        android:icon="@drawable/ic_order"
+        android:title="@string/seller_nav_order"/>
+
+    <item
+        android:id="@+id/shopFragment"
+        android:icon="@drawable/ic_shop"
+        android:title="@string/seller_nav_shop"/>
+
+</menu>

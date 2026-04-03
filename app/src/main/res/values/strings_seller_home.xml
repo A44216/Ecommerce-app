@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- NAV -->
+    <string name="seller_nav_dashboard">Tổng quan</string>
+    <string name="seller_nav_product">Sản phẩm</string>
+    <string name="seller_nav_order">Đơn hàng</string>
+    <string name="seller_nav_shop">Cửa hàng</string>
+
+    <string name="seller_stat_revenue">Doanh thu</string>
+    <string name="seller_stat_orders">Đơn hàng</string>
+    <string name="seller_stat_reviews">Đánh giá</string>
+
+    <!-- Dashboard-->
+    <string name="seller_dashboard_overview">Tổng quan</string>
+    <string name="seller_dashboard_best_selling_products">🔥 Sản phẩm bán chạy</string>
+
+    <!-- Product-->
+    <string name="seller_product_search_hint">Nhập tên hoặc danh mục cần tìm</string>
+    <!-- Default for product-->
+    <string name="seller_product_default_name">Laptop Gamming</string>
+    <string name="seller_product_default_price">Giá: 25000000đ</string>
+    <string name="seller_product_default_category">Danh mục: Chưa có</string>
+    <string name="seller_product_default_stock">Kho: 5</string>
+    <string name="seller_product_default_sold">Đã bán: 1</string>
+    <string name="seller_product_default_rating">Đánh giá: ⭐ 5.0</string>
+    <string name="seller_product_default_status">Trạng thái: Có sẵn</string>
+    <string name="seller_product_default_description">Chưa có mô tả</string>
+    <!-- Add / Edit Product -->
+    <string name="seller_product_add_title">Thêm sản phẩm</string>
+    <string name="seller_product_hint_name">Nhập tên sản phẩm</string>
+    <string name="seller_product_hint_price">Giá</string>
+    <string name="seller_product_hint_stock">Số lượng</string>
+    <string name="seller_product_hint_category">Danh mục</string>
+    <string name="seller_product_hint_description">Mô tả</string>
+    <string name="seller_product_hint_status">Trạng thái</string>
+    <string name="seller_product_action_add">Thêm sản phẩm</string>
+
+    <string name="seller_product_select_image">Chọn ảnh</string>
+
+    <!-- Order -->
+    <string name="seller_order_description">Mô tả hóa đơn</string>
+    <string name="seller_order_tracking">Theo dõi đơn hàng</string>
+
+    <!-- SHOP DEFAULT -->
+    <string name="seller_shop_default_name">Shop Name</string>
+    <string name="seller_shop_default_address">Hà Nội</string>
+    <string name="seller_shop_default_rating">⭐ 4.8</string>
+    <string name="seller_shop_action_edit">Chỉnh sửa shop</string>
+
+    <string name="seller_shop_desc_avatar">Ảnh đại diện shop</string>
+    <string name="seller_shop_info">Thông tin cửa hàng</string>
+    <string name="seller_shop_back">Trở về</string>
+
+</resources>
