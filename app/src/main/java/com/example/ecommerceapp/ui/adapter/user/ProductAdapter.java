@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.data.model.ui.Product; // Import đúng Model của bạn
+import com.example.ecommerceapp.data.model.ui.Product;
 import com.example.ecommerceapp.utils.ImageLoader;
 
 import java.text.DecimalFormat;
@@ -35,31 +35,43 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
         if (product == null) return;
 
-        // 1. Set Tên sản phẩm
+        // Set Tên & Giá
         holder.tvProductName.setText(product.getName());
-
-        // 2. Format Giá tiền từ BigDecimal sang chuỗi (VD: 150.000đ)
         if (product.getPrice() != null) {
             DecimalFormat formatter = new DecimalFormat("#,###");
             String formattedPrice = formatter.format(product.getPrice()) + "đ";
             holder.tvProductPrice.setText(formattedPrice);
         }
 
-        // 3. Xử lý phần "Đã bán" (Tạm thời ẩn đi vì Model chưa có)
         holder.tvSold.setVisibility(View.GONE);
 
-        // 4. Load Hình ảnh từ đường link URL
+        // Load Ảnh bằng ImageLoader của nhóm bạn
         List<String> images = product.getImages();
         if (images != null && !images.isEmpty()) {
             String firstImageUrl = images.get(0);
-
-            // Gọi class ImageLoader xịn xò của nhóm bạn:
             ImageLoader.load(holder.itemView.getContext(), holder.ivProductImage, firstImageUrl);
-
         } else {
-            // Nếu sản phẩm không có link ảnh, set 1 cái ảnh mặc định
             holder.ivProductImage.setImageResource(android.R.drawable.ic_menu_gallery);
         }
+
+        // BẮT SỰ KIỆN CLICK VÀO SẢN PHẨM CHUYỂN SANG TRANG CHI TIẾT
+        holder.itemView.setOnClickListener(v -> {
+
+            // Khai báo đường dẫn chuẩn theo cấu trúc thư mục mới tạo
+            android.content.Intent intent = new android.content.Intent(v.getContext(),
+                    com.example.ecommerceapp.ui.activity.home.user.product.UserProductDetailActivity.class);
+
+            // Truyền dữ liệu
+            intent.putExtra("product_name", product.getName());
+            if (product.getPrice() != null) {
+                intent.putExtra("product_price", product.getPrice().toString());
+            }
+            if (images != null && !images.isEmpty()) {
+                intent.putExtra("product_image", images.get(0));
+            }
+
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
