@@ -19,4 +19,20 @@ public class Product {
     public BigDecimal getPrice() { return price; }
     public List<String> getImages() { return images; }
 
+    public void setId(int id) { this.id = id; }
+
+    public void setName(String name) { this.name = name; }
+
+    public void setPrice(BigDecimal price) { this.price = price; }
+
+    public void setStock(int stock) { this.stock = stock; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public void setImages(List<String> images) { this.images = images; }
+
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+
+    public void setShopName(String shopName) { this.shopName = shopName; }
+
 }
