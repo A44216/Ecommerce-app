@@ -58,20 +58,29 @@ public class ShopFragment extends Fragment {
         setUpViewModel();
         setListeners();
         observeData();
+
+        loadShop(); // gọi lần đầu
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadShop(); // refresh khi quay lại từ Activity
+    }
+
+    private void loadShop() {
+        int userId = (int) tokenManager.getUserId();
+        mViewModel.fetchShopByUser(userId);
     }
 
     private void setUpViewModel() {
-
         ShopService api = ApiClient.getShopService(tokenManager);
         ShopRepository repository = new ShopRepository(api);
 
         mViewModel = new ViewModelProvider(
-                this,
+                requireActivity(),
                 new ShopViewModelFactory(repository)
         ).get(ShopViewModel.class);
-
-        int userId = (int) tokenManager.getUserId();
-        mViewModel.fetchShopByUser(userId);
     }
 
     @SuppressLint("SetTextI18n")
@@ -85,11 +94,13 @@ public class ShopFragment extends Fragment {
                     shop.getRatingAvg() + " ⭐ (" + shop.getRatingCount() + ")"
             );
 
-            ImageLoader.load(
-                    requireContext(),
-                    imgShopAvatar,
-                    shop.getAvatar()
-            );
+            String avatar = shop.getAvatar();
+
+            if (avatar == null || avatar.trim().isEmpty()) {
+                imgShopAvatar.setImageResource(R.drawable.ic_avatar);
+            } else {
+                ImageLoader.load(requireContext(), imgShopAvatar, avatar);
+            }
         });
     }
 

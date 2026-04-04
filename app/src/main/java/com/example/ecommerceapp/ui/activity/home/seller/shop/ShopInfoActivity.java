@@ -44,44 +44,45 @@ public class ShopInfoActivity extends AppCompatActivity {
     private String avatarUrl;
 
     private boolean isUpdating = false;
-
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
-                        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-
-                            Uri uri = result.getData().getData();
-                            if (uri != null) {
-
-                                ImageUploadHelper.uploadImage(
-                                        tokenManager,
-                                        uri,
-                                        this,
-                                        new ImageUploadHelper.Callback<String>() {
-                                            @Override
-                                            public void onSuccess(String url) {
-                                                avatarUrl = url;
-
-                                                ImageLoader.load(
-                                                        ShopInfoActivity.this,
-                                                        imgAvatar,
-                                                        url
-                                                );
-                                            }
-
-                                            @Override
-                                            public void onError(String error) {
-                                                Toast.makeText(
-                                                        ShopInfoActivity.this,
-                                                        error,
-                                                        Toast.LENGTH_SHORT
-                                                ).show();
-                                            }
-                                        }
-                                );
-                            }
+                        if (result.getResultCode() != RESULT_OK || result.getData() == null) {
+                            return;
                         }
+
+                        Uri uri = result.getData().getData();
+                        if (uri == null) return;
+
+                        ImageUploadHelper.uploadImage(
+                                tokenManager,
+                                uri,
+                                this,
+                                new ImageUploadHelper.Callback<String>() {
+                                    @Override
+                                    public void onSuccess(String url) {
+                                        avatarUrl = url;
+
+                                        ImageLoader.load(
+                                                ShopInfoActivity.this,
+                                                imgAvatar,
+                                                url
+                                        );
+
+                                    }
+
+                                    @Override
+                                    public void onError(String error) {
+
+                                        Toast.makeText(
+                                                ShopInfoActivity.this,
+                                                error,
+                                                Toast.LENGTH_SHORT
+                                        ).show();
+                                    }
+                                }
+                        );
                     }
             );
 
@@ -134,7 +135,12 @@ public class ShopInfoActivity extends AppCompatActivity {
             edtDescription.setText(shop.getDescription());
 
             avatarUrl = shop.getAvatar();
-            ImageLoader.load(this, imgAvatar, avatarUrl);
+
+            if (avatarUrl == null || avatarUrl.trim().isEmpty()) {
+                imgAvatar.setImageResource(R.drawable.ic_avatar);
+            } else {
+                ImageLoader.load(this, imgAvatar, avatarUrl);
+            }
 
             // chỉ xử lý khi update xong
             if (isUpdating) {
@@ -151,6 +157,7 @@ public class ShopInfoActivity extends AppCompatActivity {
         btnChooseImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
+
             imagePickerLauncher.launch(intent);
         });
 
