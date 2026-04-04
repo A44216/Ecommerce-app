@@ -1,19 +1,22 @@
 package com.example.ecommerceapp.ui.activity.home.user.cart;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.data.model.ui.Product;
 import com.example.ecommerceapp.data.model.ui.UserCartItem;
+import com.example.ecommerceapp.ui.activity.home.user.checkout.UserCheckoutActivity;
 import com.example.ecommerceapp.ui.adapter.user.UserCartAdapter;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class UserCartActivity extends AppCompatActivity implements UserCartAdapter.OnCartChangeListener {
@@ -38,6 +41,28 @@ public class UserCartActivity extends AppCompatActivity implements UserCartAdapt
         cartItems = com.example.ecommerceapp.utils.CartManager.getInstance().getCartItems();
         adapter = new UserCartAdapter(cartItems, this);
         rv.setAdapter(adapter);
+
+        // ==========================================
+        // XỬ LÝ CHUYỂN TRANG THANH TOÁN (BƯỚC 5)
+        // ==========================================
+        btnUserCartCheckout.setOnClickListener(v -> {
+            // Kiểm tra xem có đang chọn món nào không
+            boolean hasItem = false;
+            for (UserCartItem item : cartItems) {
+                if (item.isChecked()) {
+                    hasItem = true;
+                    break;
+                }
+            }
+
+            if (!hasItem) {
+                Toast.makeText(UserCartActivity.this, "Bạn chưa chọn sản phẩm nào để mua", Toast.LENGTH_SHORT).show();
+            } else {
+                // Chuyển sang trang Thanh toán
+                Intent intent = new Intent(UserCartActivity.this, UserCheckoutActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -55,6 +80,4 @@ public class UserCartActivity extends AppCompatActivity implements UserCartAdapt
         tvUserCartTotal.setText(df.format(total) + "đ");
         btnUserCartCheckout.setText("Mua hàng (" + count + ")");
     }
-
-
 }
