@@ -131,10 +131,19 @@ public class ShopFragment extends Fragment {
         });
 
         itemLogout.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), UserHomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        });
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Xác nhận đăng xuất")
+                    .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
+                    .setPositiveButton("Đăng xuất", (dialog, which) -> {
 
+                        Intent intent = new Intent(requireContext(), UserHomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+
+                    })
+                    .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
+                    .show();
+        });
     }
+
 }

@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:paddingTop="5dp"
-            android:text="@string/seller_product_default_sold"
+            android:text="@string/seller_product_default_sold_and_revenue"
             app:layout_constraintTop_toBottomOf="@id/txtStock"
             app:layout_constraintStart_toStartOf="parent"/>
 

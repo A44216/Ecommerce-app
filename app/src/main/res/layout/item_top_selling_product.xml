@@ -76,10 +76,10 @@
 
         <!-- SOLD -->
         <TextView
-            android:id="@+id/tvSold"
+            android:id="@+id/tvSoldAndRevenue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/seller_product_default_sold"
+            android:text="@string/seller_product_default_sold_and_revenue"
             android:textSize="13sp"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@id/tvPrice"

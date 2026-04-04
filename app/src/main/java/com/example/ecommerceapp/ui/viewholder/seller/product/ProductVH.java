@@ -22,7 +22,7 @@ public class ProductVH extends RecyclerView.ViewHolder {
         price = itemView.findViewById(R.id.tvProductPrice);
         category = itemView.findViewById(R.id.tvProductCategory);
         rating = itemView.findViewById(R.id.tvRating);
-        sold = itemView.findViewById(R.id.tvSold);
+        sold = itemView.findViewById(R.id.tvSoldAndRevenue);
         status = itemView.findViewById(R.id.tvProductStatus);
     }
 

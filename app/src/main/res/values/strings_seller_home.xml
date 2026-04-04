@@ -33,7 +33,7 @@
     <string name="seller_product_default_price">Giá: 25000000đ</string>
     <string name="seller_product_default_category">Danh mục: Chưa có</string>
     <string name="seller_product_default_stock">Kho: 5</string>
-    <string name="seller_product_default_sold">Đã bán: 1</string>
+    <string name="seller_product_default_sold_and_revenue">Đã bán: 1</string>
     <string name="seller_product_default_rating">Đánh giá: ⭐ 5.0</string>
     <string name="seller_product_default_status">Trạng thái: Có sẵn</string>
     <string name="seller_product_default_description">Chưa có mô tả</string>
