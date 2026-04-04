@@ -2,6 +2,7 @@ package com.example.ecommerceapp.ui.fragment.seller;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
@@ -23,10 +26,16 @@ import com.example.ecommerceapp.ui.activity.home.seller.shop.ChatActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.ShopInfoActivity;
 import com.example.ecommerceapp.ui.viewmodel.ShopViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.ShopViewModelFactory;
+import com.example.ecommerceapp.utils.ImageLoader;
 
 public class ShopFragment extends Fragment {
 
     private ShopViewModel mViewModel;
+
+    private ImageView imgShopAvatar;
+    private TextView tvShopName;
+    private TextView tvShopAddress;
+    private TextView tvShopRating;
 
     private TokenManager tokenManager;
 
@@ -46,13 +55,53 @@ public class ShopFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setInits(view);
+        setUpViewModel();
         setListeners();
+        observeData();
+    }
+
+    private void setUpViewModel() {
+
+        ShopService api = ApiClient.getShopService(tokenManager);
+        ShopRepository repository = new ShopRepository(api);
+
+        mViewModel = new ViewModelProvider(
+                this,
+                new ShopViewModelFactory(repository)
+        ).get(ShopViewModel.class);
+
+        int userId = (int) tokenManager.getUserId();
+        mViewModel.fetchShopByUser(userId);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void observeData() {
+        mViewModel.getShop().observe(getViewLifecycleOwner(), shop -> {
+            if (shop == null) return;
+
+            tvShopName.setText(shop.getShopName());
+            tvShopAddress.setText(shop.getAddress());
+            tvShopRating.setText(
+                    shop.getRatingAvg() + " ⭐ (" + shop.getRatingCount() + ")"
+            );
+
+            ImageLoader.load(
+                    requireContext(),
+                    imgShopAvatar,
+                    shop.getAvatar()
+            );
+        });
     }
 
     private void setInits(View view) {
         tokenManager = TokenManager.getInstance(requireContext());
 
         // ánh xạ view
+        imgShopAvatar = view.findViewById(R.id.imgShopAvatar);
+        tvShopName = view.findViewById(R.id.tvShopName);
+        tvShopAddress = view.findViewById(R.id.tvShopAddress);
+        tvShopRating = view.findViewById(R.id.tvShopRating);
+
         itemShopInfo = view.findViewById(R.id.itemShopInfo);
         itemChat = view.findViewById(R.id.itemChat);
         itemLogout = view.findViewById(R.id.itemLogout);

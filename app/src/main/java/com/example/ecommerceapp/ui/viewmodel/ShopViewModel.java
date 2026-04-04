@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.ecommerceapp.data.model.request.ShopRequest;
 import com.example.ecommerceapp.data.model.response.ShopResponse;
 import com.example.ecommerceapp.data.repository.ShopRepository;
 
@@ -24,6 +25,12 @@ public class ShopViewModel extends ViewModel {
 
     public LiveData<List<ShopResponse>> getShops() {
         return shopList;
+    }
+
+    private final MutableLiveData<ShopResponse> shop = new MutableLiveData<>();
+
+    public LiveData<ShopResponse> getShop() {
+        return shop;
     }
 
     public void fetchShops() {
@@ -47,7 +54,7 @@ public class ShopViewModel extends ViewModel {
             @Override
             public void onResponse(Call<ShopResponse> call, Response<ShopResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // nếu bạn dùng LiveData 1 shop thì tạo thêm MutableLiveData<ShopResponse>
+                    shop.setValue(response.body());
                 }
             }
 
@@ -73,4 +80,21 @@ public class ShopViewModel extends ViewModel {
             }
         });
     }
+
+    public void updateShop(int id, ShopRequest request) {
+        repository.updateShop(id, request).enqueue(new Callback<ShopResponse>() {
+            @Override
+            public void onResponse(Call<ShopResponse> call, Response<ShopResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    shop.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ShopResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
 }

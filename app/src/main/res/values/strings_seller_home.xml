@@ -52,4 +52,13 @@
     <string name="seller_shop_info">Thông tin cửa hàng</string>
     <string name="seller_shop_back">Trở về</string>
 
+    <!-- Shop Info -->
+    <string name="shop_hint_select_image">Chọn ảnh</string>
+    <string name="shop_hint_name">Tên cửa hàng</string>
+    <string name="shop_hint_address">Địa chỉ</string>
+    <string name="shop_hint_phone">Số điện thoại</string>
+    <string name="shop_hint_email">Email</string>
+    <string name="shop_hint_description">Mô tả cửa hàng</string>
+    <string name="shop_button_update">Cập nhật</string>
+
 </resources>

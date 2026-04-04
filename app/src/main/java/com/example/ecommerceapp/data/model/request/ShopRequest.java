@@ -6,7 +6,6 @@ public class ShopRequest {
 
     private String shopName;
     private String description;
-    private ShopStatus status;
     private String address;
     private String avatar;
     private String phone;
@@ -26,14 +25,6 @@ public class ShopRequest {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public ShopStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ShopStatus status) {
-        this.status = status;
     }
 
     public String getAddress() {

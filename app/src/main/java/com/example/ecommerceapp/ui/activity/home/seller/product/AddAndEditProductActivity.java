@@ -35,20 +35,15 @@ import com.example.ecommerceapp.data.repository.CategoryRepository;
 import com.example.ecommerceapp.data.repository.ProductImageRepository;
 import com.example.ecommerceapp.data.repository.ProductRepository;
 import com.example.ecommerceapp.ui.adapter.seller.ImageEditAdapter;
+import com.example.ecommerceapp.utils.ImageUploadHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,7 +66,7 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
     private List<CategoryResponse> categoryList = new ArrayList<>();
     private Integer selectedCategoryId = null;
-    private ActivityResultLauncher<Intent> imagePickerLauncher =
+    private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
@@ -225,80 +220,38 @@ public class AddAndEditProductActivity extends AppCompatActivity {
 
         if (localImages == null || localImages.isEmpty()) {
             runOnUiThread(() -> {
-                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Thành công", Toast.LENGTH_SHORT).show();
                 finish();
             });
             return;
         }
 
         int total = localImages.size();
-        final int[] count = {0};
+        final int[] done = {0};
 
         for (Uri uri : localImages) {
 
-            try {
+            ImageUploadHelper.uploadImage(
+                    tokenManager,
+                    uri,
+                    this,
+                    new ImageUploadHelper.Callback<String>() {
 
-                File file = uriToFile(uri);
+                        @Override
+                        public void onSuccess(String url) {
+                            addProductImage(productId, url);
 
-                RequestBody requestFile =
-                        RequestBody.create(file, MediaType.parse("image/*"));
+                            done[0]++;
+                            checkDone(total, done[0]);
+                        }
 
-                MultipartBody.Part body =
-                        MultipartBody.Part.createFormData(
-                                "file",
-                                file.getName(),
-                                requestFile
-                        );
-
-                ApiClient.getProductImageService(tokenManager)
-                        .uploadImage(body)
-                        .enqueue(new Callback<String>() {
-
-                            @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-
-                                Log.d("UPLOAD", "========================");
-                                Log.d("UPLOAD", "CODE: " + response.code());
-                                Log.d("UPLOAD", "MESSAGE: " + response.message());
-
-                                if (response.errorBody() != null) {
-                                    try {
-                                        Log.e("UPLOAD_ERROR", response.errorBody().string());
-                                    } catch (Exception e) {
-                                        Log.e("UPLOAD_ERROR", "errorBody read failed");
-                                    }
-                                }
-
-                                if (response.body() != null) {
-                                    Log.d("UPLOAD_BODY", response.body());
-                                } else {
-                                    Log.e("UPLOAD_BODY", "BODY IS NULL");
-                                }
-
-                                Log.d("UPLOAD", "========================");
-
-                                if (response.isSuccessful() && response.body() != null) {
-                                    addProductImage(productId, response.body());
-                                }
-
-                                count[0]++;
-                                checkDone(total, count[0]);
-                            }
-
-                            @Override
-                            public void onFailure(Call<String> call, Throwable t) {
-                                Log.e("UPLOAD_FAILURE", "ERROR: " + t.getMessage(), t);
-
-                                count[0]++;
-                                checkDone(total, count[0]);
-                            }
-                        });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                count[0]++;
-                checkDone(total, count[0]);
-            }
+                        @Override
+                        public void onError(String error) {
+                            done[0]++;
+                            checkDone(total, done[0]);
+                        }
+                    }
+            );
         }
     }
 
@@ -391,22 +344,14 @@ public class AddAndEditProductActivity extends AppCompatActivity {
             String stockStr = Objects.requireNonNull(etStock.getText()).toString().trim();
 
             ProductRequest request = new ProductRequest();
-
             request.setName(name);
             request.setPrice(new BigDecimal(priceStr));
             request.setStock(Integer.parseInt(stockStr));
             request.setDescription(Objects.requireNonNull(etDescription.getText()).toString());
-
-            // 👉 CATEGORY CÓ THỂ NULL
             request.setCategoryId(selectedCategoryId);
-
             request.setShopId((int) tokenManager.getShopId());
 
-            if (isEdit) {
-                updateProduct(request);
-            } else {
-                createProduct(request);
-            }
+            showConfirmDialog(request);
         });
 
     }
@@ -520,28 +465,6 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                 });
     }
 
-    private File uriToFile(Uri uri) throws IOException {
-
-        File file = new File(getCacheDir(), "upload_" + System.currentTimeMillis() + ".jpg");
-
-        try (
-                InputStream inputStream = getContentResolver().openInputStream(uri);
-                java.io.FileOutputStream outputStream = new java.io.FileOutputStream(file)
-        ) {
-
-            if (inputStream == null) return file;
-
-            byte[] buffer = new byte[4096];
-            int read;
-
-            while ((read = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, read);
-            }
-        }
-
-        return file;
-    }
-
     private boolean validateForm() {
         boolean isValid = true;
 
@@ -567,7 +490,7 @@ public class AddAndEditProductActivity extends AppCompatActivity {
             BigDecimal price = new BigDecimal(priceStr);
             if (price.compareTo(new BigDecimal("9999999999999999.99")) > 0) {
                 etPrice.setError("Giá quá lớn");
-                return false;
+                isValid = false;
             }
             if (price.compareTo(BigDecimal.ZERO) < 0) {
                 etPrice.setError("Giá phải >= 0");
@@ -595,6 +518,26 @@ public class AddAndEditProductActivity extends AppCompatActivity {
         }
 
         return isValid;
+    }
+
+    private void showConfirmDialog(ProductRequest request) {
+
+        String message = isEdit
+                ? "Bạn có chắc muốn cập nhật sản phẩm này?"
+                : "Bạn có chắc muốn tạo sản phẩm này?";
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Xác nhận")
+                .setMessage(message)
+                .setPositiveButton("Đồng ý", (dialog, which) -> {
+                    if (isEdit) {
+                        updateProduct(request);
+                    } else {
+                        createProduct(request);
+                    }
+                })
+                .setNegativeButton("Huỷ", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
 }
