@@ -257,8 +257,9 @@ public class DashboardFragment extends Fragment {
             tvSold.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getSold())));
 
             // Mặc định load theo Revenue
-            topProductAdapter.setData(data.getTopProductsByRevenue());
-            topProductAdapter.setDisplayMode(TopProductAdapter.MODE_REVENUE);
+            spFilterTopProduct.setSelection(0, false);
+            topProductAdapter.setDisplayMode(TopProductAdapter.MODE_SOLD);
+            topProductAdapter.setData(data.getTopProductsBySold());
         });
     }
 }
