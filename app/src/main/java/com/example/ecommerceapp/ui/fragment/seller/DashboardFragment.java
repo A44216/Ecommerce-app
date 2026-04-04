@@ -19,14 +19,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.data.enums.ChartType;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.dashboard.DashboardResponse;
+import com.example.ecommerceapp.data.model.response.dashboard.RevenueChartResponse;
 import com.example.ecommerceapp.data.model.response.dashboard.TopSellingProductResponse;
 import com.example.ecommerceapp.data.repository.DashboardRepository;
 import com.example.ecommerceapp.ui.adapter.seller.dashboard.TopProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.DashboardViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.DashboardViewModelFactory;
 import com.example.ecommerceapp.utils.NumberUtils;
+import com.github.mikephil.charting.charts.BarChart;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,14 +39,17 @@ public class DashboardFragment extends Fragment {
 
     private DashboardViewModel viewModel;
     private TextView tvRevenue, tvOrders, tvSold;
-    private Spinner spFilterTopProduct;
+    private Spinner spFilterTopProduct, spFilterTime;
     private RecyclerView rvTopProduct;
+    private BarChart chartRevenue;
 
     private TopProductAdapter topProductAdapter;
     private final List<TopSellingProductResponse> topProductList = new ArrayList<>();
     private DashboardResponse dashboardData;
 
     TokenManager tokenManager;
+
+    DashboardRepository dashboardRepository;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -55,10 +61,10 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initViews(view);
 
         tokenManager = TokenManager.getInstance(requireContext());
 
-        initViews(view);
         setInits();
         setListeners();
 
@@ -67,11 +73,10 @@ public class DashboardFragment extends Fragment {
         rvTopProduct.setLayoutManager(new LinearLayoutManager(getContext()));
         rvTopProduct.setAdapter(topProductAdapter);
 
-        DashboardRepository repository =
-                new DashboardRepository(ApiClient.getDashboardService(tokenManager));
+        dashboardRepository = new DashboardRepository(ApiClient.getDashboardService(tokenManager));
 
         DashboardViewModelFactory factory =
-                new DashboardViewModelFactory(repository);
+                new DashboardViewModelFactory(dashboardRepository);
 
         viewModel = new ViewModelProvider(this, factory)
                 .get(DashboardViewModel.class);
@@ -81,6 +86,8 @@ public class DashboardFragment extends Fragment {
         int shopId = (int) tokenManager.getShopId();
 
         viewModel.loadDashboard(shopId);
+
+        loadChart(shopId, ChartType.DAY);
     }
 
     private void initViews(View view) {
@@ -88,6 +95,8 @@ public class DashboardFragment extends Fragment {
         tvOrders = view.findViewById(R.id.tvOrders);
         tvSold = view.findViewById(R.id.tvSold);
         spFilterTopProduct = view.findViewById(R.id.spFilterTopProduct);
+        spFilterTime = view.findViewById(R.id.spFilterTime);
+        chartRevenue = view.findViewById(R.id.chartRevenue);
         rvTopProduct = view.findViewById(R.id.rvTopProducts);
     }
 
@@ -100,6 +109,15 @@ public class DashboardFragment extends Fragment {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spFilterTopProduct.setAdapter(adapter);
+
+        ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.filter_time,
+                android.R.layout.simple_spinner_item
+        );
+
+        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spFilterTime.setAdapter(timeAdapter);
     }
 
     private void setListeners() {
@@ -121,6 +139,92 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
+        spFilterTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                ChartType type;
+
+                switch (position) {
+                    case 1: type = ChartType.MONTH; break;
+                    case 2: type = ChartType.YEAR; break;
+                    default: type = ChartType.DAY;
+                }
+
+                int shopId = (int) tokenManager.getShopId();
+                loadChart(shopId, type);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+    }
+
+    private void loadChart(int shopId, ChartType type) {
+
+        dashboardRepository.getRevenueChart(shopId, type)
+                .enqueue(new retrofit2.Callback<List<RevenueChartResponse>>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<List<RevenueChartResponse>> call,
+                                           retrofit2.Response<List<RevenueChartResponse>> response) {
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            drawChart(response.body(), type);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<List<RevenueChartResponse>> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void drawChart(List<RevenueChartResponse> list, ChartType type) {
+
+        List<com.github.mikephil.charting.data.BarEntry> entries = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            RevenueChartResponse item = list.get(i);
+
+            entries.add(new com.github.mikephil.charting.data.BarEntry(
+                    i,
+                    item.getRevenue().floatValue()
+            ));
+
+            String label = item.getLabel();
+
+            // format đẹp
+            if (type == ChartType.DAY) {
+                label = label.substring(5); // MM-dd
+            } else if (type == ChartType.MONTH) {
+                String month = label.split("-")[1];
+                label = "T" + Integer.parseInt(month);
+            }
+
+            labels.add(label);
+        }
+
+        com.github.mikephil.charting.data.BarDataSet dataSet =
+                new com.github.mikephil.charting.data.BarDataSet(entries, "Doanh thu");
+
+        com.github.mikephil.charting.data.BarData barData =
+                new com.github.mikephil.charting.data.BarData(dataSet);
+
+        chartRevenue.setData(barData);
+
+        chartRevenue.getXAxis().setValueFormatter(
+                new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(labels)
+        );
+
+        chartRevenue.getXAxis().setGranularity(1f);
+        chartRevenue.getXAxis().setGranularityEnabled(true);
+        chartRevenue.getXAxis().setLabelCount(labels.size());
+
+        chartRevenue.invalidate();
     }
 
     private void sortByRevenue() {

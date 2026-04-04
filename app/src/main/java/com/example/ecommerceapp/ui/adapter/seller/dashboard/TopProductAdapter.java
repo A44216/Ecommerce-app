@@ -34,14 +34,14 @@ public class TopProductAdapter extends RecyclerView.Adapter<TopProductVH> {
         return new TopProductVH(view);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull TopProductVH holder, int position) {
         TopSellingProductResponse item = list.get(position);
 
         holder.getTvRank().setText("#" + String.valueOf(position + 1));
         holder.getTvName().setText(item.getName());
-        holder.getTvPrice().setText(item.getRevenue() + " đ");
+        holder.getTvPrice().setText(String.format("%,.0f",item.getRevenue()) + " đ");
         holder.getTvSold().setText("Đã bán " + item.getSoldQuantity());
 
         ImageLoader.load(
