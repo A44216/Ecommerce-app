@@ -204,19 +204,34 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
-                <!-- LIST TITLE -->
-                <TextView
+                <!-- TITLE + FILTER -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/seller_dashboard_best_selling_products"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginBottom="10dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <!-- TITLE -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/seller_dashboard_best_selling_products"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+
+                    <!-- FILTER -->
+                    <Spinner
+                        android:id="@+id/spFilterTopProduct"
+                        android:layout_width="140dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
                 <!-- LIST -->
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvProducts"
+                    android:id="@+id/rvTopProducts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"/>

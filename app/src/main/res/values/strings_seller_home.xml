@@ -13,7 +13,18 @@
 
     <!-- Dashboard-->
     <string name="seller_dashboard_overview">Tổng quan</string>
-    <string name="seller_dashboard_best_selling_products">🔥 Sản phẩm bán chạy</string>
+    <string name="seller_dashboard_best_selling_products">🔥 Top sản phẩm</string>
+
+    <string-array name="filter_top_product">
+        <item>Bán chạy</item>
+        <item>Doanh thu</item>
+    </string-array>
+
+    <string-array name="filter_time">
+        <item>Ngày</item>
+        <item>Tháng</item>
+        <item>Năm</item>
+    </string-array>
 
     <!-- Product-->
     <string name="seller_product_search_hint">Nhập tên hoặc danh mục cần tìm</string>

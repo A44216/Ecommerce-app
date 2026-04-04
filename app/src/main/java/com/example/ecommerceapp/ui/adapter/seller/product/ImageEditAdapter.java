@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.adapter.seller;
+package com.example.ecommerceapp.ui.adapter.seller.product;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
-import com.example.ecommerceapp.ui.viewholder.seller.ImageVH;
+import com.example.ecommerceapp.ui.viewholder.seller.product.ImageVH;
 import com.example.ecommerceapp.utils.ImageLoader;
 
 import java.util.ArrayList;

@@ -17,5 +17,8 @@
         android:layout_gravity="end|top"
         android:contentDescription="@string/desc_image"
         android:src="@drawable/ic_close"
-        android:background="@android:color/white"/>
+        android:background="@android:color/white"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"/>
 </FrameLayout>

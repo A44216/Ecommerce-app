@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +24,7 @@ import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.repository.ProductRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.AddAndEditProductActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.product.ProductDetailActivity;
-import com.example.ecommerceapp.ui.adapter.seller.ProductAdapter;
+import com.example.ecommerceapp.ui.adapter.seller.product.ProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.ProductViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.ProductViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

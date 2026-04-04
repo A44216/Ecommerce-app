@@ -13,6 +13,10 @@ import com.example.ecommerceapp.data.local.TokenManager;
 public class ImageLoader {
 
     public static void load(Context context, ImageView imageView, String url) {
+        if (url == null || url.trim().isEmpty()) {
+            imageView.setImageResource(R.drawable.ic_launcher_background);
+            return;
+        }
 
         TokenManager tm = TokenManager.getInstance(context);
 

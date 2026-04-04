@@ -2,7 +2,6 @@ package com.example.ecommerceapp.ui.activity.home.seller.product;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,7 +19,7 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.repository.ProductRepository;
-import com.example.ecommerceapp.ui.adapter.seller.ImagePagerAdapter;
+import com.example.ecommerceapp.ui.adapter.seller.product.ImagePagerAdapter;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.math.RoundingMode;

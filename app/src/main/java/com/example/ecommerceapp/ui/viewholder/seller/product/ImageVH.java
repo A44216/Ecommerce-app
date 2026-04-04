@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.viewholder.seller;
+package com.example.ecommerceapp.ui.viewholder.seller.product;
 
 import android.view.View;
 import android.widget.ImageView;

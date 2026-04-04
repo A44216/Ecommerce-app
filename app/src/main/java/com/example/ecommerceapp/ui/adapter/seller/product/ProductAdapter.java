@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.adapter.seller;
+package com.example.ecommerceapp.ui.adapter.seller.product;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
-import com.example.ecommerceapp.ui.viewholder.seller.ProductVH;
+import com.example.ecommerceapp.ui.viewholder.seller.product.ProductVH;
 import com.example.ecommerceapp.utils.ImageLoader;
 
 import java.util.ArrayList;
@@ -77,18 +77,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductVH> {
         // Ảnh sản phẩm
         List<ProductImageResponse> images = product.getImages();
 
+        String imageUrl = null;
+
         if (images != null && !images.isEmpty()) {
-
-            ImageLoader.load(
-                    holder.itemView.getContext(),
-                    holder.getImgProduct(),
-                    images.get(0).getImageUrl()
-            );
-
-        } else {
-            holder.getImgProduct()
-                    .setImageResource(R.drawable.ic_launcher_background);
+            imageUrl = images.get(0).getImageUrl();
         }
+
+        ImageLoader.load(
+                holder.itemView.getContext(),
+                holder.getImgProduct(),
+                imageUrl
+        );
 
         // Click item
         holder.itemView.setOnClickListener(v -> {

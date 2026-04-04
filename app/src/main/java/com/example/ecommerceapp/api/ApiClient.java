@@ -3,6 +3,7 @@ package com.example.ecommerceapp.api;
 import com.example.ecommerceapp.api.service.AddressService;
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.api.service.CategoryService;
+import com.example.ecommerceapp.api.service.DashboardService;
 import com.example.ecommerceapp.api.service.ProductImageService;
 import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.api.service.ShopService;
@@ -70,6 +71,10 @@ public class ApiClient {
     public static
     ProductImageService getProductImageService(TokenManager tm) {
         return createAuthRetrofit(tm).create(ProductImageService.class);
+    }
+
+    public static DashboardService getDashboardService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(DashboardService.class);
     }
 
 }
