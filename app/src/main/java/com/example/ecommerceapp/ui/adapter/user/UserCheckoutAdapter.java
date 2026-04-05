@@ -43,7 +43,13 @@ public class UserCheckoutAdapter extends RecyclerView.Adapter<UserCheckoutAdapte
         }
 
         if (item.getProduct().getImages() != null && !item.getProduct().getImages().isEmpty()) {
-            ImageLoader.load(holder.itemView.getContext(), holder.ivCheckoutImage, item.getProduct().getImages().get(0));
+            String imgUrl = item.getProduct().getImages().get(0).getImageUrl();
+            if (imgUrl != null) {
+                ImageLoader.load(holder.itemView.getContext(), holder.ivCheckoutImage, imgUrl);
+                // CHÚ Ý: Ở file CheckoutAdapter thì đổi ivUserCartImage thành ivCheckoutImage nhé
+            }
+        } else {
+            holder.ivCheckoutImage.setImageResource(android.R.drawable.ic_menu_gallery);
         }
     }
 

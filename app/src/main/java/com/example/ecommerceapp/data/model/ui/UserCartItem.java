@@ -1,17 +1,19 @@
 package com.example.ecommerceapp.data.model.ui;
 
-public class UserCartItem {
-    private Product product;
-    private int quantity;
-    private boolean isChecked; // Lưu trạng thái checkbox
+import com.example.ecommerceapp.data.model.response.UserProductResponse;
 
-    public UserCartItem(Product product, int quantity) {
+public class UserCartItem {
+    private UserProductResponse product; // Đã đổi
+    private int quantity;
+    private boolean isChecked;
+
+    public UserCartItem(UserProductResponse product, int quantity) {
         this.product = product;
         this.quantity = quantity;
         this.isChecked = false;
     }
 
-    public Product getProduct() { return product; }
+    public UserProductResponse getProduct() { return product; } // Đã đổi
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public boolean isChecked() { return isChecked; }

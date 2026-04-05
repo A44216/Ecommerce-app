@@ -11,7 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.data.model.ui.Product;
+import com.example.ecommerceapp.data.model.response.UserProductImageResponse;
+import com.example.ecommerceapp.data.model.response.UserProductResponse;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
 import com.example.ecommerceapp.utils.CartManager;
 import com.example.ecommerceapp.utils.ImageLoader;
@@ -33,8 +34,8 @@ public class UserProductDetailActivity extends AppCompatActivity {
         TextView tvDetailName = findViewById(R.id.tvDetailName);
         TextView tvDetailPrice = findViewById(R.id.tvDetailPrice);
 
-        LinearLayout btnAddToCart = findViewById(R.id.btnViewCart); // Nút Thêm Giỏ
-        Button btnBuyNow = findViewById(R.id.btnBuyNow);            // Nút Mua ngay
+        LinearLayout btnAddToCart = findViewById(R.id.btnViewCart);
+        Button btnBuyNow = findViewById(R.id.btnBuyNow);
 
         // 2. Nhận dữ liệu từ Intent gửi sang
         String name = getIntent().getStringExtra("product_name");
@@ -62,33 +63,34 @@ public class UserProductDetailActivity extends AppCompatActivity {
         // 4. XỬ LÝ LOGIC GIỎ HÀNG
         // ==========================================
 
-        // Gom dữ liệu hiện tại thành 1 đối tượng Product
-        Product currentProduct = new Product();
+        UserProductResponse currentProduct = new UserProductResponse();
         if (name != null) currentProduct.setName(name);
         if (priceString != null) {
             try {
-                // Ép kiểu an toàn từ String sang BigDecimal
                 currentProduct.setPrice(new BigDecimal(priceString));
             } catch (Exception e) {
                 currentProduct.setPrice(BigDecimal.ZERO);
             }
         }
-        if (imageUrl != null) currentProduct.setImages(Collections.singletonList(imageUrl));
+        if (imageUrl != null) {
+            UserProductImageResponse imgObj = new UserProductImageResponse();
+            imgObj.setImageUrl(imageUrl);
+            currentProduct.setImages(Collections.singletonList(imgObj));
+        }
 
-        // Nút "Thêm Giỏ": Chỉ lưu vào túi CartManager và hiện thông báo (không chuyển trang)
+        // Đảm bảo sự kiện Click ở đây vẫn tồn tại
         btnAddToCart.setOnClickListener(v -> {
             CartManager.getInstance().addToCart(currentProduct);
             Toast.makeText(UserProductDetailActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
         });
 
-        // Nút "Mua ngay": Lưu vào CartManager và bay thẳng sang trang Giỏ hàng
         btnBuyNow.setOnClickListener(v -> {
             CartManager.getInstance().addToCart(currentProduct);
             Intent intent = new Intent(UserProductDetailActivity.this, UserCartActivity.class);
             startActivity(intent);
         });
 
-        // 5. Bắt sự kiện nút Back để quay về Trang chủ
+        // 5. Nút Back
         btnBack.setOnClickListener(v -> finish());
     }
 }

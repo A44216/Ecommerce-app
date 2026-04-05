@@ -27,4 +27,9 @@ public class UserProductResponse {
     public BigDecimal getRatingAvg() { return ratingAvg; }
     public int getSoldCount() { return soldCount; }
     public ProductStatus getStatus() { return status; }
+
+    public void setId(Integer id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+    public void setImages(List<UserProductImageResponse> images) { this.images = images; }
 }

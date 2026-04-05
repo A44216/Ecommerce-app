@@ -53,7 +53,10 @@ public class UserCartAdapter extends RecyclerView.Adapter<UserCartAdapter.UserCa
         }
 
         if (item.getProduct().getImages() != null && !item.getProduct().getImages().isEmpty()) {
-            ImageLoader.load(holder.itemView.getContext(), holder.ivUserCartImage, item.getProduct().getImages().get(0));
+            String imgUrl = item.getProduct().getImages().get(0).getImageUrl();
+            if (imgUrl != null) {
+                ImageLoader.load(holder.itemView.getContext(), holder.ivUserCartImage, imgUrl);
+            }
         } else {
             holder.ivUserCartImage.setImageResource(android.R.drawable.ic_menu_gallery);
         }

@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.ui.activity.home.user.checkout;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -69,17 +70,24 @@ public class UserCheckoutActivity extends AppCompatActivity {
         tvCheckoutFinalTotal.setText(df.format(finalTotal) + "đ");
 
         // 4. SỰ KIỆN BẤM ĐẶT HÀNG
+        // 4. SỰ KIỆN BẤM ĐẶT HÀNG
         btnPlaceOrder.setOnClickListener(v -> {
-            // Hiện Dialog chúc mừng
             new AlertDialog.Builder(this)
                     .setTitle("Đặt hàng thành công!")
                     .setMessage("Cảm ơn bạn đã mua sắm. Đơn hàng sẽ sớm được giao đến bạn.")
-                    .setCancelable(false)
+                    .setCancelable(false) // Không cho bấm ra ngoài để đóng bảng
                     .setPositiveButton("Về Trang chủ", (dialog, which) -> {
-                        // Xóa các món đã mua khỏi giỏ hàng chung
+
+                        // 1. Xóa các món đã mua khỏi giỏ hàng chung
                         CartManager.getInstance().getCartItems().removeAll(selectedItems);
 
-                        // Ở app thực tế, chỗ này sẽ gọi Intent chèn cờ CLEAR_TOP để bay thẳng về MainActivity
+                        // 2. Chuyển hướng về màn hình chính và xóa lịch sử các trang trước đó
+                        // LƯU Ý: Thay "MainActivity.class" bằng tên Activity chứa HomeFragment của bạn nếu nó tên khác
+                        Intent intent = new Intent(UserCheckoutActivity.this, com.example.ecommerceapp.ui.activity.home.UserHomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
+                        // 3. Kết thúc Activity thanh toán hiện tại
                         finish();
                     })
                     .show();
