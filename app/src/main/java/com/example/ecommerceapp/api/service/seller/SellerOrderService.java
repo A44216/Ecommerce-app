@@ -15,6 +15,7 @@ public interface SellerOrderService {
     // LIST ORDERS BY STATUS (tab)
     @GET("seller/orders")
     Call<List<SellerOrderResponse>> getOrdersByStatus(
+            @Query("shopId") int shopId,
             @Query("status") String status
     );
 

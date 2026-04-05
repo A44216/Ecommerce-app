@@ -18,8 +18,8 @@ public class OrderRepository {
         service = ApiClient.getOrderService(tm);
     }
 
-    public Call<List<SellerOrderResponse>> getOrders(String status) {
-        return service.getOrdersByStatus(status);
+    public Call<List<SellerOrderResponse>> getOrders(String status, int shopId) {
+        return service.getOrdersByStatus(shopId, status);
     }
 
     public Call<SellerOrderDetailResponse> getOrderDetail(int id) {

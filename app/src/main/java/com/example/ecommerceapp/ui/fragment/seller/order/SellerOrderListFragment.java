@@ -66,21 +66,23 @@ public class SellerOrderListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        TokenManager tm = TokenManager.getInstance(requireContext());
+        TokenManager tokenManager = TokenManager.getInstance(requireContext());
+
+        int shopId = (int)tokenManager.getShopId(); // hoặc bạn tự lưu shopId
 
         viewModel = new ViewModelProvider(
                 this,
-                new SellerOrderViewModelFactory(tm)
+                new SellerOrderViewModelFactory(tokenManager)
         ).get(SellerOrderViewModel.class);
 
-        // OBSERVE DATA
-        viewModel.getOrders(status).observe(getViewLifecycleOwner(), data -> {
+        viewModel.getOrders(status, shopId).observe(getViewLifecycleOwner(), data -> {
             if (data != null) {
                 adapter.setData(data);
             }
         });
 
-        // LOAD DATA THEO STATUS TAB
-        viewModel.loadOrders(status);
+        viewModel.loadOrders(status, shopId);
     }
+
+
 }

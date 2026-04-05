@@ -4,21 +4,23 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.seller.SellerOrderResponse;
+import com.example.ecommerceapp.ui.viewholder.seller.order.SellerOrderVH;
+import com.example.ecommerceapp.utils.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderAdapter.VH> {
+public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderVH> {
 
     private List<SellerOrderResponse> list = new ArrayList<>();
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<SellerOrderResponse> data) {
         this.list = (data != null) ? data : new ArrayList<>();
         notifyDataSetChanged();
@@ -26,17 +28,17 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderAdapter.
 
     @NonNull
     @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SellerOrderVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_seller_order, parent, false);
 
-        return new VH(view);
+        return new SellerOrderVH(view);
     }
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
-    public void onBindViewHolder(@NonNull VH holder, int position) {
+    public void onBindViewHolder(@NonNull SellerOrderVH holder, int position) {
 
         SellerOrderResponse item = list.get(position);
 
@@ -44,23 +46,16 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderAdapter.
         holder.customerName.setText(item.getCustomerName());
         holder.totalPrice.setText(String.format("%,.0f", item.getTotalPrice()) + " đ");
 
+        holder.createdAt.setText(item.getCreatedAt());
+
+        ImageLoader.load(
+                holder.itemView.getContext(),
+                holder.ivOrder,
+                item.getImageOrder());
     }
 
     @Override
     public int getItemCount() {
         return list.size();
-    }
-
-    static class VH extends RecyclerView.ViewHolder {
-
-        TextView orderId, customerName, totalPrice;
-
-        public VH(@NonNull View itemView) {
-            super(itemView);
-
-            orderId = itemView.findViewById(R.id.tvOrderId);
-            customerName = itemView.findViewById(R.id.tvCustomerName);
-            totalPrice = itemView.findViewById(R.id.tvTotalPrice);
-        }
     }
 }

@@ -15,6 +15,8 @@ public class SellerOrderResponse {
 
     private String createdAt;
 
+    private String imageOrder;
+
     public Integer getOrderId() {
         return orderId;
     }
@@ -33,6 +35,10 @@ public class SellerOrderResponse {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    public String getImageOrder() {
+        return imageOrder;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.ui.viewholder.seller.order;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,7 +11,8 @@ import com.example.ecommerceapp.R;
 
 public class SellerOrderVH extends RecyclerView.ViewHolder {
 
-    TextView orderId, customerName, totalPrice, createdAt;
+    public TextView orderId, customerName, totalPrice, createdAt;
+    public ImageView ivOrder;
 
     public SellerOrderVH(@NonNull View itemView) {
         super(itemView);
@@ -19,5 +21,6 @@ public class SellerOrderVH extends RecyclerView.ViewHolder {
         customerName = itemView.findViewById(R.id.tvCustomerName);
         totalPrice = itemView.findViewById(R.id.tvTotalPrice);
         createdAt = itemView.findViewById(R.id.tvCreatedAt);
+        ivOrder = itemView.findViewById(R.id.ivOrder);
     }
 }

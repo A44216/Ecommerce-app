@@ -20,39 +20,46 @@ public class SellerOrderViewModel extends ViewModel {
 
     private final OrderRepository repository;
 
-    // cache theo status
     private final Map<String, MutableLiveData<List<SellerOrderResponse>>> cache = new HashMap<>();
 
     public SellerOrderViewModel(TokenManager tm) {
         repository = new OrderRepository(tm);
     }
 
-    public LiveData<List<SellerOrderResponse>> getOrders(String status) {
+    public LiveData<List<SellerOrderResponse>> getOrders(String status, int shopId) {
 
-        if (!cache.containsKey(status)) {
-            cache.put(status, new MutableLiveData<>());
-            loadOrders(status);
+        String key = status + "_" + shopId;
+
+        if (!cache.containsKey(key)) {
+            cache.put(key, new MutableLiveData<>());
+            loadOrders(status, shopId);
         }
 
-        return cache.get(status);
+        return cache.get(key);
     }
 
-    public void loadOrders(String status) {
+    public void loadOrders(String status, int shopId) {
 
-        repository.getOrders(status).enqueue(new Callback<List<SellerOrderResponse>>() {
+        String key = status + "_" + shopId;
+
+        repository.getOrders(status, shopId).enqueue(new Callback<List<SellerOrderResponse>>() {
             @Override
-            public void onResponse(Call<List<SellerOrderResponse>> call, Response<List<SellerOrderResponse>> response) {
+            public void onResponse(Call<List<SellerOrderResponse>> call,
+                                   Response<List<SellerOrderResponse>> response) {
+
+                System.out.println("CODE = " + response.code());
+                System.out.println("BODY = " + response.body());
 
                 if (response.isSuccessful()) {
-                    cache.get(status).setValue(response.body());
+                    cache.get(key).setValue(response.body());
                 } else {
-                    cache.get(status).setValue(null);
+                    cache.get(key).setValue(null);
                 }
             }
 
             @Override
             public void onFailure(Call<List<SellerOrderResponse>> call, Throwable t) {
-                cache.get(status).setValue(null);
+                cache.get(key).setValue(null);
             }
         });
     }
