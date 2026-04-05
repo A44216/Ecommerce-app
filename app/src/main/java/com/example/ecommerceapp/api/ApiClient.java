@@ -6,6 +6,7 @@ import com.example.ecommerceapp.api.service.CategoryService;
 import com.example.ecommerceapp.api.service.ProductImageService;
 import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.api.service.ShopService;
+import com.example.ecommerceapp.api.service.UserOrderApiService;
 import com.example.ecommerceapp.api.service.UserProductService;
 import com.example.ecommerceapp.api.service.UserService;
 import com.example.ecommerceapp.data.local.TokenManager;
@@ -76,6 +77,12 @@ public class ApiClient {
     // ===== USER API =====
     public static UserProductService getUserProductService() {
         return getPublicRetrofit().create(UserProductService.class);
+    }
+
+    // ===== USER ORDER API =====
+    public static UserOrderApiService getUserOrderApiService(TokenManager tm) {
+        // Dùng AuthRetrofit vì gửi đơn hàng cần biết ai đang mua
+        return createAuthRetrofit(tm).create(UserOrderApiService.class);
     }
 
 }
