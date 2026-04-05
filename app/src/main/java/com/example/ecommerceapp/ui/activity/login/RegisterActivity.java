@@ -21,7 +21,7 @@ import com.example.ecommerceapp.data.model.request.UserRequest;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.example.ecommerceapp.data.model.request.SendOtpRequest;
+import com.example.ecommerceapp.data.model.request.auth.SendOtpRequest;
 
 import java.util.Objects;
 

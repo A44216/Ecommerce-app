@@ -1,7 +1,6 @@
 package com.example.ecommerceapp.ui.activity.home;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,15 +9,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
-import com.example.ecommerceapp.api.service.ShopService;
+import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.response.ShopResponse;
+import com.example.ecommerceapp.data.model.response.seller.SellerShopResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SellerHomeActivity extends AppCompatActivity {
@@ -63,17 +61,17 @@ public class SellerHomeActivity extends AppCompatActivity {
 
         if (userId <= 0) return;
 
-        ShopService shopService = ApiClient.getShopService(tokenManager);
+        SellerShopService shopService = ApiClient.getShopService(tokenManager);
         
-        shopService.getShopByUser((int)userId)
-                .enqueue(new retrofit2.Callback<ShopResponse>() {
+        shopService.getMyShop()
+                .enqueue(new retrofit2.Callback<SellerShopResponse>() {
                     @Override
-                    public void onResponse(retrofit2.Call<ShopResponse> call,
-                                           retrofit2.Response<ShopResponse> response) {
+                    public void onResponse(retrofit2.Call<SellerShopResponse> call,
+                                           retrofit2.Response<SellerShopResponse> response) {
 
                         if (response.isSuccessful() && response.body() != null) {
 
-                            ShopResponse shop = response.body();
+                            SellerShopResponse shop = response.body();
 
                             tokenManager.saveShopId(shop.getId());
                         } else {
@@ -83,7 +81,7 @@ public class SellerHomeActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(retrofit2.Call<ShopResponse> call, Throwable t) {
+                    public void onFailure(retrofit2.Call<SellerShopResponse> call, Throwable t) {
                         tokenManager.saveShopId(0);
                     }
                 });

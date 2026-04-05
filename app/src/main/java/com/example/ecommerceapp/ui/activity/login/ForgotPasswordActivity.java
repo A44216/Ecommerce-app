@@ -17,8 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.AuthService;
-import com.example.ecommerceapp.data.model.request.SendOtpRequest;
-import com.example.ecommerceapp.data.model.request.VerifyOtpRequest;
+import com.example.ecommerceapp.data.model.request.auth.SendOtpRequest;
+import com.example.ecommerceapp.data.model.request.auth.VerifyOtpRequest;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 

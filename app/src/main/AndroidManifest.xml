@@ -15,16 +15,16 @@
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.activity.home.seller.shop.ChatActivity"
+            android:name=".ui.activity.home.seller.shop.SellerChatActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.seller.shop.ShopInfoActivity"
+            android:name=".ui.activity.home.seller.shop.SellerShopInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.seller.product.ProductDetailActivity"
+            android:name=".ui.activity.home.seller.product.SellerProductDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.seller.product.AddAndEditProductActivity"
+            android:name=".ui.activity.home.seller.product.SellerAddAndEditProductActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.SellerHomeActivity"

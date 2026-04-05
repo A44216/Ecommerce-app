@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.AuthService;
-import com.example.ecommerceapp.data.model.request.ResetPasswordRequest;
+import com.example.ecommerceapp.data.model.request.auth.ResetPasswordRequest;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 

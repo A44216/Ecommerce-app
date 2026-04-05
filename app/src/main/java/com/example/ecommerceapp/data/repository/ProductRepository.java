@@ -1,8 +1,8 @@
 package com.example.ecommerceapp.data.repository;
 
-import com.example.ecommerceapp.api.service.ProductService;
-import com.example.ecommerceapp.data.model.request.ProductRequest;
-import com.example.ecommerceapp.data.model.response.ProductResponse;
+import com.example.ecommerceapp.api.service.seller.SellerProductService;
+import com.example.ecommerceapp.data.model.request.seller.SellerProductRequest;
+import com.example.ecommerceapp.data.model.response.seller.SellerProductResponse;
 
 import java.util.List;
 
@@ -10,29 +10,29 @@ import retrofit2.Call;
 
 public class ProductRepository {
 
-    private final ProductService apiService;
+    private final SellerProductService apiService;
 
-    public ProductRepository(ProductService apiService) {
+    public ProductRepository(SellerProductService apiService) {
         this.apiService = apiService;
     }
 
-    public Call<List<ProductResponse>> getProducts() {
+    public Call<List<SellerProductResponse>> getProducts() {
         return apiService.getProducts();
     }
 
-    public Call<ProductResponse> getProductById(int id) {
+    public Call<SellerProductResponse> getProductById(int id) {
         return apiService.getProductById(id);
     }
 
-    public Call<List<ProductResponse>> getProductsByShop(int shopId) {
+    public Call<List<SellerProductResponse>> getProductsByShop(int shopId) {
         return apiService.getProductsByShop(shopId);
     }
 
-    public Call<ProductResponse> createProduct(ProductRequest request) {
+    public Call<SellerProductResponse> createProduct(SellerProductRequest request) {
         return apiService.createProduct(request);
     }
 
-    public Call<ProductResponse> updateProduct(int id, ProductRequest request) {
+    public Call<SellerProductResponse> updateProduct(int id, SellerProductRequest request) {
         return apiService.updateProduct(id, request);
     }
 
@@ -40,7 +40,7 @@ public class ProductRepository {
         return apiService.deleteProduct(id);
     }
 
-    public Call<List<ProductResponse>> search(String keyword, Integer shopId) {
+    public Call<List<SellerProductResponse>> search(String keyword, Integer shopId) {
         return apiService.searchProducts(keyword, shopId);
     }
 

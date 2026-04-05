@@ -1,12 +1,12 @@
 package com.example.ecommerceapp.api.service;
 
-import com.example.ecommerceapp.data.model.request.LoginRequest;
-import com.example.ecommerceapp.data.model.request.ResetPasswordRequest;
+import com.example.ecommerceapp.data.model.request.auth.LoginRequest;
+import com.example.ecommerceapp.data.model.request.auth.ResetPasswordRequest;
 import com.example.ecommerceapp.data.model.request.UserRequest;
-import com.example.ecommerceapp.data.model.request.VerifyOtpRequest;
-import com.example.ecommerceapp.data.model.request.GoogleLoginRequest;
-import com.example.ecommerceapp.data.model.request.SendOtpRequest;
-import com.example.ecommerceapp.data.model.response.LoginResponse;
+import com.example.ecommerceapp.data.model.request.auth.VerifyOtpRequest;
+import com.example.ecommerceapp.data.model.request.auth.GoogleLoginRequest;
+import com.example.ecommerceapp.data.model.request.auth.SendOtpRequest;
+import com.example.ecommerceapp.data.model.response.auth.LoginResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
 import retrofit2.Call;

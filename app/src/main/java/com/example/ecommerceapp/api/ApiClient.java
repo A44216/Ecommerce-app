@@ -1,12 +1,12 @@
 package com.example.ecommerceapp.api;
 
-import com.example.ecommerceapp.api.service.AddressService;
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.api.service.CategoryService;
-import com.example.ecommerceapp.api.service.DashboardService;
+import com.example.ecommerceapp.api.service.seller.SellerDashboardService;
+import com.example.ecommerceapp.api.service.seller.SellerOrderService;
 import com.example.ecommerceapp.api.service.ProductImageService;
-import com.example.ecommerceapp.api.service.ProductService;
-import com.example.ecommerceapp.api.service.ShopService;
+import com.example.ecommerceapp.api.service.seller.SellerProductService;
+import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.api.service.UserService;
 import com.example.ecommerceapp.data.local.TokenManager;
 
@@ -53,8 +53,8 @@ public class ApiClient {
     }
 
     // ===== AUTH API =====
-    public static ProductService getProductService(TokenManager tm) {
-        return createAuthRetrofit(tm).create(ProductService.class);
+    public static SellerProductService getProductService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(SellerProductService.class);
     }
 
     public static CategoryService getCategoryService(TokenManager tm) {
@@ -65,16 +65,19 @@ public class ApiClient {
         return createAuthRetrofit(tm).create(UserService.class);
     }
 
-    public static ShopService getShopService(TokenManager tm) {
-        return createAuthRetrofit(tm).create(ShopService.class);
+    public static SellerShopService getShopService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(SellerShopService.class);
     }
-    public static
-    ProductImageService getProductImageService(TokenManager tm) {
+    public static ProductImageService getProductImageService(TokenManager tm) {
         return createAuthRetrofit(tm).create(ProductImageService.class);
     }
 
-    public static DashboardService getDashboardService(TokenManager tm) {
-        return createAuthRetrofit(tm).create(DashboardService.class);
+    public static SellerDashboardService getDashboardService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(SellerDashboardService.class);
+    }
+
+    public static SellerOrderService getOrderService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(SellerOrderService.class);
     }
 
 }
