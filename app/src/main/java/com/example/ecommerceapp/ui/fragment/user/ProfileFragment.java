@@ -29,6 +29,15 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        //Ánh xạ chữ "Xem lịch sử mua hàng >" (Bạn nhớ thay đúng ID của bạn nhé)
+        TextView tvViewOrderHistory = view.findViewById(R.id.tvViewOrderHistory);
+
+        //Bắt sự kiện Click để chuyển trang
+        tvViewOrderHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity.class);
+            startActivity(intent);
+        });
+
         return view;
     }
 }
