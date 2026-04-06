@@ -22,7 +22,8 @@ public class OrderRepository {
         return service.getOrdersByStatus(shopId, status);
     }
 
-    public Call<SellerOrderDetailResponse> getOrderDetail(int id) {
-        return service.getOrderDetail(id);
+    public Call<SellerOrderDetailResponse> getOrderDetail(int id, int shopId) {
+        return service.getOrderDetail(id, shopId);
     }
+
 }

@@ -3,10 +3,35 @@ package com.example.ecommerceapp.data.model.response.seller;
 import java.math.BigDecimal;
 
 public class SellerOrderItemResponse {
-    public Integer productId;
-    public String productName;
-    public String productImage;
-    public BigDecimal price;
-    public Integer quantity;
-    public BigDecimal subtotal;
+
+    private Integer productId;
+    private String productName;
+    private String productImage;
+    private BigDecimal price;
+    private Integer quantity;
+    private BigDecimal subtotal;
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
 }

@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.seller.SellerOrderDetailResponse;
+import com.example.ecommerceapp.data.model.response.seller.SellerOrderItemResponse;
 import com.example.ecommerceapp.data.model.response.seller.SellerOrderResponse;
 import com.example.ecommerceapp.data.repository.OrderRepository;
 
@@ -63,4 +65,31 @@ public class SellerOrderViewModel extends ViewModel {
             }
         });
     }
+
+    public LiveData<List<SellerOrderItemResponse>> getOrderDetail(int orderId, int shopId) {
+
+        MutableLiveData<List<SellerOrderItemResponse>> data = new MutableLiveData<>();
+
+        repository.getOrderDetail(orderId, shopId)
+                .enqueue(new Callback<SellerOrderDetailResponse>() {
+                    @Override
+                    public void onResponse(Call<SellerOrderDetailResponse> call,
+                                           Response<SellerOrderDetailResponse> response) {
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            data.setValue(response.body().getItems());
+                        } else {
+                            data.setValue(null);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SellerOrderDetailResponse> call, Throwable t) {
+                        data.setValue(null);
+                    }
+                });
+
+        return data;
+    }
+
 }

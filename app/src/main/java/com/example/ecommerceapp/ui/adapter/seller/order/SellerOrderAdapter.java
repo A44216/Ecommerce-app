@@ -54,7 +54,7 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderVH> {
 
         holder.orderId.setText("#" + item.getOrderId());
         holder.customerName.setText("Khách hàng: " + item.getCustomerName());
-        holder.totalPrice.setText("Tổng tiền: " +String.format("%,.0f", item.getTotalPrice()) + " đ");
+        holder.totalPrice.setText("Tổng tiền: " + String.format("%,.0f", item.getTotalPrice()) + " đ");
 
         String rawDate = item.getCreatedAt(); // ví dụ: 2026-04-05T19:05:31
         if (rawDate != null && rawDate.contains("T")) {

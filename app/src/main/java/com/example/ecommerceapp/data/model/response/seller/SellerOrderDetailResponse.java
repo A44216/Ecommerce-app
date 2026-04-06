@@ -27,4 +27,49 @@ public class SellerOrderDetailResponse {
     private String customerName;
 
     private List<SellerOrderItemResponse> items;
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getShippingName() {
+        return shippingName;
+    }
+
+    public String getShippingPhone() {
+        return shippingPhone;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public List<SellerOrderItemResponse> getItems() {
+        return items;
+    }
+
 }

@@ -22,6 +22,7 @@ public interface SellerOrderService {
     // ORDER DETAIL
     @GET("seller/orders/{id}")
     Call<SellerOrderDetailResponse> getOrderDetail(
-            @Path("id") int orderId
+            @Path("id") int orderId,
+            @Query("shopId") int shopId
     );
 }
