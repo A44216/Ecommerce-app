@@ -112,7 +112,7 @@ public class SellerDashboardFragment extends Fragment {
     private void setInits() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireContext(),
-                R.array.filter_top_product,
+                R.array.seller_filter_top_product,
                 android.R.layout.simple_spinner_item
         );
 
@@ -121,7 +121,7 @@ public class SellerDashboardFragment extends Fragment {
 
         ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
-                R.array.filter_time,
+                R.array.seller_filter_time,
                 android.R.layout.simple_spinner_item
         );
 

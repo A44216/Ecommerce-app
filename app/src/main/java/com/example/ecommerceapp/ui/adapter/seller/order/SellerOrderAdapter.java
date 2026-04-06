@@ -18,7 +18,17 @@ import java.util.List;
 
 public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderVH> {
 
+    public interface OnItemClickListener {
+        void onClick(SellerOrderResponse item);
+    }
+
     private List<SellerOrderResponse> list = new ArrayList<>();
+
+    private OnItemClickListener listener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     public void setData(List<SellerOrderResponse> data) {
@@ -56,6 +66,13 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderVH> {
                 holder.itemView.getContext(),
                 holder.ivOrder,
                 item.getImageOrder());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(item);
+            }
+        });
+
     }
 
     @Override

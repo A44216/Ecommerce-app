@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:id="@+id/main"
+    android:background="@color/background_light"
+    tools:context=".ui.activity.home.seller.order.SellerOrderDetailActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/screen_padding_small">
+
+        <!-- BACK -->
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/desc_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- TITLE -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_title"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- ORDER ID -->
+        <TextView
+            android:id="@+id/tvOrderId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_id"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- CREATED AT -->
+        <TextView
+            android:id="@+id/tvCreatedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_created_at"
+            android:textColor="@color/gray"
+            android:layout_marginTop="4dp"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/tvOrderId"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- CUSTOMER -->
+        <TextView
+            android:id="@+id/tvCustomer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_customer_name"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/tvCreatedAt"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- SHIPPING NAME -->
+        <TextView
+            android:id="@+id/tvShippingName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_shipping_name"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/tvCustomer"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- PHONE -->
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_shipping_phone"
+            android:layout_marginTop="4dp"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/tvShippingName"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- ADDRESS -->
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_shipping_address"
+            android:layout_marginTop="4dp"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/tvPhone"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- FRAGMENT -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOrderItems"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/tvAddress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- TOTAL -->
+        <TextView
+            android:id="@+id/tvTotalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_total_price"
+            android:textStyle="bold"
+            android:textColor="#E53935"
+            android:textSize="24sp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintTop_toBottomOf="@id/rvOrderItems"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- PAYMENT METHOD -->
+        <TextView
+            android:id="@+id/tvPaymentMethod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_payment_method"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/tvTotalPrice"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- PAYMENT STATUS -->
+        <TextView
+            android:id="@+id/tvPaymentStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_detail_default_status"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/tvPaymentMethod"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- STATUS -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOrderStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/tvPaymentStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- TRACK BUTTON -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTrackOrder"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="Theo dõi"
+            android:textColor="@color/black"
+            android:layout_marginTop="20dp"
+            app:cornerRadius="4dp"
+            android:backgroundTint="#EEEEEE"
+            app:layout_constraintTop_toBottomOf="@id/rvOrderStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnAction"/>
+
+        <!-- ACTION BUTTON -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAction"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="Xác nhận"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp"
+            app:cornerRadius="4dp"
+            android:backgroundTint="#FF5722"
+            app:layout_constraintTop_toTopOf="@id/btnTrackOrder"
+            app:layout_constraintBottom_toBottomOf="@id/btnTrackOrder"
+            app:layout_constraintStart_toEndOf="@id/btnTrackOrder"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

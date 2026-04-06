@@ -12,15 +12,15 @@
     <string name="seller_stat_reviews">Đánh giá</string>
 
     <!-- Dashboard-->
-    <string name="seller_dashboard_overview">Tổng quan</string>
+    <string name="seller_dashboard_overview">TỔNG QUAN</string>
     <string name="seller_dashboard_best_selling_products">🔥 Top sản phẩm</string>
-
-    <string-array name="filter_top_product">
+    <string name="seller_dashboard_chart_title">Biểu đồ thống kê</string>
+    <string-array name="seller_filter_top_product">
         <item>Bán chạy</item>
         <item>Doanh thu</item>
     </string-array>
 
-    <string-array name="filter_time">
+    <string-array name="seller_filter_time">
         <item>Ngày</item>
         <item>Tháng</item>
         <item>Năm</item>
@@ -29,6 +29,7 @@
     <!-- Product-->
     <string name="seller_product_search_hint">Nhập tên hoặc danh mục cần tìm</string>
     <!-- Default for product-->
+    <string name="seller_product_default_id">#1</string>
     <string name="seller_product_default_name">Laptop Gamming</string>
     <string name="seller_product_default_price">Giá: 25000000đ</string>
     <string name="seller_product_default_category">Danh mục: Chưa có</string>
@@ -50,8 +51,24 @@
     <string name="seller_product_select_image">Chọn ảnh</string>
 
     <!-- Order -->
-    <string name="seller_order_description">Mô tả hóa đơn</string>
-    <string name="seller_order_tracking">Theo dõi đơn hàng</string>
+    <string name="seller_order_default_description">Mô tả hóa đơn</string>
+    <string name="seller_order_default_tracking">Theo dõi đơn hàng</string>
+    <string name="seller_order_default_id">#1</string>
+    <string name="seller_order_default_created_at">05/04/2026</string>
+    <string name="seller_order_default_customer_name">Khách hàng: User 1</string>
+
+    <!-- Order Detail-->
+    <string name="seller_order_detail_title">CHI TIẾT ĐƠN HÀNG</string>
+    <string name="seller_order_detail_order_">#Mã đơn: #123</string>
+    <string name="seller_order_detail_default_id">Mã đơn: 1</string>
+    <string name="seller_order_detail_default_created_at">Ngày tạo: 05/04/2026</string>
+    <string name="seller_order_detail_default_customer_name">Khách hàng: Nguyễn Văn A</string>
+    <string name="seller_order_detail_default_shipping_name">Người nhận: Nguyễn Văn A</string>
+    <string name="seller_order_detail_default_shipping_phone">SĐT: 0123456789</string>
+    <string name="seller_order_detail_default_shipping_address">Địa chỉ nhận hàng: Hà Nội</string>
+    <string name="seller_order_detail_default_total_price">Tổng tiền: 0đ</string>
+    <string name="seller_order_detail_default_payment_method">Phương thức thanh toán: COD</string>
+    <string name="seller_order_detail_default_status">Trạng thái: Đã thanh toán</string>
 
     <!-- SHOP DEFAULT -->
     <string name="seller_shop_default_name">Shop Name</string>
@@ -64,12 +81,12 @@
     <string name="seller_shop_back">Trở về</string>
 
     <!-- Shop Info -->
-    <string name="shop_hint_select_image">Chọn ảnh</string>
-    <string name="shop_hint_name">Tên cửa hàng</string>
-    <string name="shop_hint_address">Địa chỉ</string>
-    <string name="shop_hint_phone">Số điện thoại</string>
-    <string name="shop_hint_email">Email</string>
-    <string name="shop_hint_description">Mô tả cửa hàng</string>
-    <string name="shop_button_update">Cập nhật</string>
+    <string name="seller_shop_hint_select_image">Chọn ảnh</string>
+    <string name="seller_shop_hint_name">Tên cửa hàng</string>
+    <string name="seller_shop_hint_address">Địa chỉ</string>
+    <string name="seller_shop_hint_phone">Số điện thoại</string>
+    <string name="seller_shop_hint_email">Email</string>
+    <string name="seller_shop_hint_description">Mô tả cửa hàng</string>
+    <string name="seller_shop_button_update">Cập nhật</string>
 
 </resources>

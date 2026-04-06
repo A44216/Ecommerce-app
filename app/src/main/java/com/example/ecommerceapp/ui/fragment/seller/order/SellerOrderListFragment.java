@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.fragment.seller.order;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.ui.activity.home.seller.order.SellerOrderDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerOrderViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerOrderViewModelFactory;
@@ -59,6 +61,12 @@ public class SellerOrderListFragment extends Fragment {
 
         adapter = new SellerOrderAdapter();
         rv.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(item -> {
+            Intent intent = new Intent(requireContext(), SellerOrderDetailActivity.class);
+            intent.putExtra("orderId", item.getOrderId());
+            startActivity(intent);
+        });
 
         return view;
     }
