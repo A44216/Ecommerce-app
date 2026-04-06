@@ -60,8 +60,15 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
                 Toast.makeText(this, s, Toast.LENGTH_SHORT).show()
         );
 
-        // 5. GỌI API (Vẫn dùng ID 15 của bạn để test nhé)
-        int dummyUserId = 15;
-        viewModel.fetchOrdersByUser(dummyUserId);
+        // ==========================================
+        // 5. GỌI API LẤY ĐƠN HÀNG VỚI ID THẬT
+        // ==========================================
+        int realUserId = (int) tokenManager.getUserId();
+
+        if (realUserId != -1) {
+            viewModel.fetchOrdersByUser(realUserId);
+        } else {
+            Toast.makeText(this, "Vui lòng đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show();
+        }
     }
 }

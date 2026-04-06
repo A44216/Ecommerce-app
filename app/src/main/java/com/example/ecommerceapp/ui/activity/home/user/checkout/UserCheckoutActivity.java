@@ -120,12 +120,21 @@ public class UserCheckoutActivity extends AppCompatActivity {
             // Lấy phương thức thanh toán
             int selectedId = rgPaymentMethod.getCheckedRadioButtonId();
             PaymentMethod method = (selectedId == R.id.rbVNPay) ? PaymentMethod.QR : PaymentMethod.COD;
+
+            // lấy ID thật từ TokenManager và ép kiểu sang int ---
+            int realUserId = (int) tokenManager.getUserId();
+
+            // Chặn lại nếu người dùng chưa đăng nhập (ID = -1)
+            if (realUserId == -1) {
+                Toast.makeText(this, "Vui lòng đăng nhập để thực hiện đặt hàng!", Toast.LENGTH_SHORT).show();
+                return; // Dừng lại, không cho gọi API
+            }
+
             int dummyAddressId = 1;
-            int dummyUserId = 15;
             int dummyShopId = 2;
 
-            // Tạo Request và gọi API
-            UserOrderRequest request = new UserOrderRequest(dummyAddressId, method, dummyUserId, dummyShopId, finalTotal);
+            // Truyền realUserId vào Request
+            UserOrderRequest request = new UserOrderRequest(dummyAddressId, method, realUserId, dummyShopId, finalTotal);
 
             // Ra lệnh cho ViewModel bắn API
             viewModel.placeOrder(request);
