@@ -57,10 +57,12 @@ public class SellerOrderStatusAdapter extends RecyclerView.Adapter<SellerOrderSt
 
         holder.getTvStatus().setText(getStatusText(status));
 
-        if (status == selectedStatus) {
-            holder.getIvCircle().setImageResource(R.drawable.bg_status_circle_selected);
+        if (status == OrderStatus.CANCELED) {
+            holder.getIvCircle().setImageResource(R.drawable.bg_order_status_circle_canceled);
+        } else if (status == selectedStatus) {
+            holder.getIvCircle().setImageResource(R.drawable.bg_order_status_circle_active);
         } else {
-            holder.getIvCircle().setImageResource(R.drawable.bg_status_circle_unselected);
+            holder.getIvCircle().setImageResource(R.drawable.bg_order_status_circle_inactive);
         }
 
         holder.itemView.setOnClickListener(v -> {

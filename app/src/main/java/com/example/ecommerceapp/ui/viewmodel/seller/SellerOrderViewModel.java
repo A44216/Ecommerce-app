@@ -50,16 +50,28 @@ public class SellerOrderViewModel extends ViewModel {
             public void onResponse(Call<List<SellerOrderResponse>> call,
                                    Response<List<SellerOrderResponse>> response) {
 
+                MutableLiveData<List<SellerOrderResponse>> liveData = cache.get(key);
+
+                if (liveData == null) {
+                    liveData = new MutableLiveData<>();
+                    cache.put(key, liveData);
+                }
+
                 if (response.isSuccessful()) {
-                    cache.get(key).setValue(response.body());
+                    liveData.setValue(response.body());
                 } else {
-                    cache.get(key).setValue(null);
+                    liveData.setValue(null);
                 }
             }
 
             @Override
             public void onFailure(Call<List<SellerOrderResponse>> call, Throwable t) {
-                cache.get(key).setValue(null);
+
+                MutableLiveData<List<SellerOrderResponse>> liveData = cache.get(key);
+
+                if (liveData != null) {
+                    liveData.setValue(null);
+                }
             }
         });
     }
@@ -90,17 +102,24 @@ public class SellerOrderViewModel extends ViewModel {
         return data;
     }
 
-    public LiveData<Boolean> getUpdateStatusResult() {
-        return updateStatusResult;
-    }
-
     public void updateOrderStatus(int orderId, int shopId, OrderStatus status) {
 
         repository.updateOrderStatus(orderId, shopId, status.name())
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        updateStatusResult.setValue(response.isSuccessful());
+
+                        if (response.isSuccessful()) {
+
+                            updateStatusResult.setValue(true);
+
+                            // Chỉ reset list để reload lại tất cả tab
+                            for (String key : cache.keySet()) {
+                                cache.get(key).setValue(null);
+                            }
+                        } else {
+                            updateStatusResult.setValue(false);
+                        }
                     }
 
                     @Override
@@ -109,4 +128,9 @@ public class SellerOrderViewModel extends ViewModel {
                     }
                 });
     }
+
+    public LiveData<Boolean> getUpdateStatusResult() {
+        return updateStatusResult;
+    }
+
 }

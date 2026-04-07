@@ -3,6 +3,7 @@ package com.example.ecommerceapp.ui.activity.home.seller.order;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,6 +58,8 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         initViewModel();
         initListeners();
         observeData();
+
+        observeUpdateStatus();
     }
 
     private void initViews() {
@@ -133,8 +136,8 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setTitle("Xác nhận")
                     .setMessage("Đổi sang: " + getStatusText(selectedStatus) + "?")
                     .setPositiveButton("OK", (dialog, which) -> {
+
                         viewModel.updateOrderStatus(orderId, shopId, selectedStatus);
-                        finish();
                     })
                     .setNegativeButton("Huỷ", null)
                     .show();
@@ -146,8 +149,8 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setTitle("Huỷ đơn hàng")
                     .setMessage("Bạn chắc chắn muốn huỷ đơn này?")
                     .setPositiveButton("Huỷ đơn", (dialog, which) -> {
+
                         viewModel.updateOrderStatus(orderId, shopId, OrderStatus.CANCELED);
-                        finish();
                     })
                     .setNegativeButton("Không", null)
                     .show();
@@ -189,7 +192,25 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
                     selectedStatus = currentStatus;
 
-                    statusAdapter.setData(getStatusFlow(), currentStatus);
+                    if (currentStatus == OrderStatus.CANCELED) {
+
+                        // Chỉ show 1 trạng thái: Đã huỷ
+                        statusAdapter.setData(
+                                java.util.Collections.singletonList(OrderStatus.CANCELED),
+                                OrderStatus.CANCELED
+                        );
+
+                        btnConfirm.setVisibility(View.GONE);
+                        btnCancel.setVisibility(View.GONE);
+
+                    } else {
+
+                        statusAdapter.setData(getStatusFlow(), currentStatus);
+
+                        btnConfirm.setVisibility(View.VISIBLE);
+                        btnCancel.setVisibility(View.VISIBLE);
+                    }
+
                 });
     }
 
@@ -216,4 +237,16 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                 return status.name();
         }
     }
+
+    private void observeUpdateStatus() {
+
+        viewModel.getUpdateStatusResult().observe(this, success -> {
+
+            if (success != null && success) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+    }
+
 }

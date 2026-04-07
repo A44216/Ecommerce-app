@@ -72,6 +72,15 @@ public class SellerOrderListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        int shopId = (int) TokenManager.getInstance(requireContext()).getShopId();
+
+        viewModel.loadOrders(status, shopId);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         TokenManager tokenManager = TokenManager.getInstance(requireContext());
