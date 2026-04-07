@@ -68,9 +68,12 @@
     <string name="seller_order_detail_default_shipping_name">Người nhận: Nguyễn Văn A</string>
     <string name="seller_order_detail_default_shipping_phone">SĐT: 0123456789</string>
     <string name="seller_order_detail_default_shipping_address">Địa chỉ nhận hàng: Hà Nội</string>
-    <string name="seller_order_detail_default_total_price">Tổng tiền: 0đ</string>
-    <string name="seller_order_detail_default_payment_method">Phương thức thanh toán: COD</string>
-    <string name="seller_order_detail_default_status">Trạng thái: Đã thanh toán</string>
+    <string name="seller_order_detail_default_total_price">Thanh toán:</string>
+    <string name="seller_order_detail_default_payment_method">Phương thức thanh toán:</string>
+    <string name="seller_order_detail_default_status_payment">Trạng thái:</string>
+    <string name="seller_order_detail_default_status_order">Trạng thái đơn hàng</string>
+    <string name="seller_order_detail_cancel_button">Hủy đơn</string>
+    <string name="seller_order_detail_confirm_button">Xác nhận</string>
 
     <!-- SHOP DEFAULT -->
     <string name="seller_shop_default_name">Shop Name</string>

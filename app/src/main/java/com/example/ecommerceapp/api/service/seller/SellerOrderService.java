@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -25,4 +26,13 @@ public interface SellerOrderService {
             @Path("id") int orderId,
             @Query("shopId") int shopId
     );
+
+    // Update order status
+    @PUT("seller/orders/{id}/status")
+    Call<Void> updateOrderStatus(
+            @Path("id") int orderId,
+            @Query("shopId") int shopId,
+            @Query("status") String status
+    );
+
 }

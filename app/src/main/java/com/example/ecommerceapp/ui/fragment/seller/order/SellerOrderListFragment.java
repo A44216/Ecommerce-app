@@ -89,7 +89,6 @@ public class SellerOrderListFragment extends Fragment {
             }
         });
 
-        viewModel.loadOrders(status, shopId);
     }
 
 

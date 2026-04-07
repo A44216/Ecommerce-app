@@ -44,6 +44,8 @@
                 android:text="@string/seller_shop_default_name"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/imgShopAvatar"
                 app:layout_constraintTop_toTopOf="@id/imgShopAvatar"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -55,6 +57,8 @@
                 android:layout_marginTop="7dp"
                 android:text="@string/seller_shop_default_address"
                 android:textSize="18sp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintStart_toStartOf="@id/tvShopName"
                 app:layout_constraintTop_toBottomOf="@id/tvShopName"
                 app:layout_constraintEnd_toEndOf="parent"/>
