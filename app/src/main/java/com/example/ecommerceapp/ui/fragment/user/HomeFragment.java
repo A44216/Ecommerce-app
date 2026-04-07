@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
         UserProductService productService = ApiClient.getUserProductService();
         UserProductRepository productRepository = new UserProductRepository(productService);
 
-        // ===== ĐÃ SỬA CHỖ NÀY: THÊM TOKEN VÀO API DANH MỤC =====
+        //THÊM TOKEN VÀO API DANH MỤC =====
         TokenManager tokenManager = TokenManager.getInstance(getContext());
         UserCategoryApiService categoryService = ApiClient.getUserCategoryApiService(tokenManager);
         // =======================================================

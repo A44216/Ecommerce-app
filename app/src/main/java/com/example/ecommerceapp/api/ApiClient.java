@@ -6,6 +6,7 @@ import com.example.ecommerceapp.api.service.CategoryService;
 import com.example.ecommerceapp.api.service.ProductImageService;
 import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.api.service.ShopService;
+import com.example.ecommerceapp.api.service.UserAddressApiService;
 import com.example.ecommerceapp.api.service.UserCategoryApiService;
 import com.example.ecommerceapp.api.service.UserOrderApiService;
 import com.example.ecommerceapp.api.service.UserProductService;
@@ -89,5 +90,9 @@ public class ApiClient {
     public static UserCategoryApiService getUserCategoryApiService(TokenManager tm) {
         // Đổi từ getPublicRetrofit sang createAuthRetrofit
         return createAuthRetrofit(tm).create(UserCategoryApiService.class);
+    }
+
+    public static UserAddressApiService getUserAddressApiService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(UserAddressApiService.class);
     }
 }

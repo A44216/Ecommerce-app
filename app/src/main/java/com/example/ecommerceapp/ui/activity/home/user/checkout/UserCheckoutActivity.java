@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.service.UserAddressApiService;
 import com.example.ecommerceapp.api.service.UserOrderApiService;
 import com.example.ecommerceapp.data.enums.PaymentMethod;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.UserOrderRequest;
 import com.example.ecommerceapp.data.model.ui.UserCartItem;
+import com.example.ecommerceapp.data.repository.UserAddressRepository;
 import com.example.ecommerceapp.data.repository.UserOrderRepository;
+import com.example.ecommerceapp.ui.adapter.user.UserAddressAdapter;
 import com.example.ecommerceapp.ui.adapter.user.UserCheckoutAdapter;
 import com.example.ecommerceapp.ui.viewmodel.UserCheckoutViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.UserCheckoutViewModelFactory;
@@ -37,6 +40,9 @@ public class UserCheckoutActivity extends AppCompatActivity {
     private UserCheckoutViewModel viewModel;
     private BigDecimal finalTotal = BigDecimal.ZERO;
 
+    // Lưu ID địa chỉ thực tế mà người dùng chọn
+    private int realAddressId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +55,27 @@ public class UserCheckoutActivity extends AppCompatActivity {
         RecyclerView rvCheckoutItems = findViewById(R.id.rvCheckoutItems);
         RadioGroup rgPaymentMethod = findViewById(R.id.rgPaymentMethod);
 
+        // --- SETUP RECYCLERVIEW ĐỊA CHỈ ---
+        RecyclerView rvCheckoutAddresses = findViewById(R.id.rvCheckoutAddresses);
+        rvCheckoutAddresses.setLayoutManager(new LinearLayoutManager(this));
+
+        UserAddressAdapter addressAdapter = new UserAddressAdapter(address -> {
+            realAddressId = address.getId(); // Bắt ID khi người dùng click
+        });
+        rvCheckoutAddresses.setAdapter(addressAdapter);
+        // ----------------------------------
+
         // 2. Setup MVVM (Khởi tạo ViewModel)
         TokenManager tokenManager = TokenManager.getInstance(this);
-        UserOrderApiService apiService = ApiClient.getUserOrderApiService(tokenManager);
-        UserOrderRepository repository = new UserOrderRepository(apiService);
-        UserCheckoutViewModelFactory factory = new UserCheckoutViewModelFactory(repository);
+        int realUserId = (int) tokenManager.getUserId();
+
+        UserOrderApiService orderApi = ApiClient.getUserOrderApiService(tokenManager);
+        UserOrderRepository orderRepo = new UserOrderRepository(orderApi);
+
+        UserAddressApiService addressApi = ApiClient.getUserAddressApiService(tokenManager);
+        UserAddressRepository addressRepo = new UserAddressRepository(addressApi);
+
+        UserCheckoutViewModelFactory factory = new UserCheckoutViewModelFactory(orderRepo, addressRepo);
         viewModel = new ViewModelProvider(this, factory).get(UserCheckoutViewModel.class);
 
         // 3. Setup dữ liệu sản phẩm & Tính tiền
@@ -82,18 +104,28 @@ public class UserCheckoutActivity extends AppCompatActivity {
                 total = total.add(price.multiply(new BigDecimal(item.getQuantity())));
             }
         }
-        BigDecimal shippingFee = new BigDecimal("30000"); // Phí ship giả định
+        BigDecimal shippingFee = new BigDecimal("30000"); // Phí ship
         finalTotal = total.add(shippingFee);
 
         DecimalFormat df = new DecimalFormat("#,###");
         tvCheckoutFinalTotal.setText(df.format(finalTotal) + "đ");
 
-        // ==========================================
-        // 4. LẮNG NGHE KẾT QUẢ TỪ SERVER (MVVM)
-        // ==========================================
+        // 4. LẮNG NGHE DỮ LIỆU ĐỊA CHỈ & KẾT QUẢ ĐẶT HÀNG
+        viewModel.getAddressList().observe(this, addresses -> {
+            if (addresses != null && !addresses.isEmpty()) {
+                addressAdapter.updateData(addresses);
+            } else {
+                Toast.makeText(this, "Bạn chưa có địa chỉ giao hàng nào!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Gọi API tải địa chỉ ngay khi vào trang
+        if (realUserId != -1) {
+            viewModel.fetchAddresses(realUserId);
+        }
+
         viewModel.getOrderSuccess().observe(this, isSuccess -> {
             if (isSuccess) {
-                // Hiện Dialog chúc mừng KHI VÀ CHỈ KHI API trả về thành công
                 new AlertDialog.Builder(this)
                         .setTitle("Đặt hàng thành công!")
                         .setMessage("Cảm ơn bạn đã mua sắm. Đơn hàng sẽ sớm được giao đến bạn.")
@@ -113,30 +145,27 @@ public class UserCheckoutActivity extends AppCompatActivity {
             Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
         });
 
-        // ==========================================
         // 5. SỰ KIỆN BẤM NÚT ĐẶT HÀNG
-        // ==========================================
         btnPlaceOrder.setOnClickListener(v -> {
-            // Lấy phương thức thanh toán
             int selectedId = rgPaymentMethod.getCheckedRadioButtonId();
             PaymentMethod method = (selectedId == R.id.rbVNPay) ? PaymentMethod.QR : PaymentMethod.COD;
 
-            // lấy ID thật từ TokenManager và ép kiểu sang int ---
-            int realUserId = (int) tokenManager.getUserId();
-
-            // Chặn lại nếu người dùng chưa đăng nhập (ID = -1)
             if (realUserId == -1) {
                 Toast.makeText(this, "Vui lòng đăng nhập để thực hiện đặt hàng!", Toast.LENGTH_SHORT).show();
-                return; // Dừng lại, không cho gọi API
+                return;
             }
 
-            int dummyAddressId = 1;
+            // Chặn nếu chưa có địa chỉ
+            if (realAddressId == -1) {
+                Toast.makeText(this, "Vui lòng chọn địa chỉ giao hàng!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             int dummyShopId = 2;
 
-            // Truyền realUserId vào Request
-            UserOrderRequest request = new UserOrderRequest(dummyAddressId, method, realUserId, dummyShopId, finalTotal);
+            // Truyền realAddressId thật vào Request
+            UserOrderRequest request = new UserOrderRequest(realAddressId, method, realUserId, dummyShopId, finalTotal);
 
-            // Ra lệnh cho ViewModel bắn API
             viewModel.placeOrder(request);
         });
     }
