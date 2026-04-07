@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:elevation="2dp">
+        <ImageView
+            android:id="@+id/btnAddAddressBack"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@android:drawable/ic_menu_revert" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Thêm địa chỉ mới"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_marginTop="8dp"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/etFullName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Họ và tên"
+            android:background="@android:color/transparent"
+            android:inputType="textPersonName" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Số điện thoại"
+            android:background="@android:color/transparent"
+            android:inputType="phone" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+        <EditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Tỉnh / Thành phố"
+            android:background="@android:color/transparent" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+        <EditText
+            android:id="@+id/etDistrict"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Quận / Huyện"
+            android:background="@android:color/transparent" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+        <EditText
+            android:id="@+id/etWard"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Phường / Xã"
+            android:background="@android:color/transparent" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
+
+        <EditText
+            android:id="@+id/etAddressLine"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Tên đường, Tòa nhà, Số nhà"
+            android:background="@android:color/transparent" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSaveAddress"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/shopee_orange"
+        android:text="HOÀN THÀNH"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+</LinearLayout>

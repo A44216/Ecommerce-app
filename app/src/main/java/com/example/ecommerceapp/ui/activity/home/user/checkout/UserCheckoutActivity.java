@@ -65,6 +65,13 @@ public class UserCheckoutActivity extends AppCompatActivity {
         rvCheckoutAddresses.setAdapter(addressAdapter);
         // ----------------------------------
 
+        // --- NÚT THÊM ĐỊA CHỈ MỚI ---
+        TextView tvAddNewAddress = findViewById(R.id.tvAddNewAddress);
+        tvAddNewAddress.setOnClickListener(v -> {
+            Intent intent = new Intent(UserCheckoutActivity.this, UserAddAddressActivity.class);
+            startActivity(intent);
+        });
+
         // 2. Setup MVVM (Khởi tạo ViewModel)
         TokenManager tokenManager = TokenManager.getInstance(this);
         int realUserId = (int) tokenManager.getUserId();
@@ -120,9 +127,9 @@ public class UserCheckoutActivity extends AppCompatActivity {
         });
 
         // Gọi API tải địa chỉ ngay khi vào trang
-        if (realUserId != -1) {
-            viewModel.fetchAddresses(realUserId);
-        }
+//        if (realUserId != -1) {
+//            viewModel.fetchAddresses(realUserId);
+//        }
 
         viewModel.getOrderSuccess().observe(this, isSuccess -> {
             if (isSuccess) {
@@ -168,5 +175,15 @@ public class UserCheckoutActivity extends AppCompatActivity {
 
             viewModel.placeOrder(request);
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Lấy lại ID và gọi lại API mỗi khi màn hình này hiện lên
+        TokenManager tokenManager = TokenManager.getInstance(this);
+        int realUserId = (int) tokenManager.getUserId();
+        if (realUserId != -1 && viewModel != null) {
+            viewModel.fetchAddresses(realUserId);
+        }
     }
 }
