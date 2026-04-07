@@ -19,10 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.enums.ChartType;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.SellerDashboardResponse;
 import com.example.ecommerceapp.data.model.response.seller.SellerRevenueChartResponse;
+import com.example.ecommerceapp.data.repository.DashboardRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.dashboard.SellerTopProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerDashboardViewModel;
@@ -37,7 +39,6 @@ import java.util.List;
 public class SellerDashboardFragment extends Fragment {
 
     private SellerDashboardViewModel viewModel;
-
     private TextView tvRevenue, tvOrders, tvSold;
     private Spinner spFilterTopProduct, spFilterTime;
     private RecyclerView rvTopProduct;
@@ -46,7 +47,10 @@ public class SellerDashboardFragment extends Fragment {
     private SellerTopProductAdapter topProductAdapter;
     private SellerDashboardResponse dashboardData;
 
-    private TokenManager tokenManager;
+    TokenManager tokenManager;
+
+    DashboardRepository dashboardRepository;
+
     private int shopId;
 
     @Override
@@ -59,48 +63,41 @@ public class SellerDashboardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initViews(view);
 
         tokenManager = TokenManager.getInstance(requireContext());
         shopId = (int) tokenManager.getShopId();
 
-        initSpinners();
-        initRecyclerView();
+        setInits();
         setListeners();
 
+        topProductAdapter = new SellerTopProductAdapter();
+
+        rvTopProduct.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvTopProduct.setAdapter(topProductAdapter);
+
+        topProductAdapter.setListener(product -> {
+            Intent intent = new Intent(getContext(), SellerProductDetailActivity.class);
+
+            intent.putExtra("productId", product.getProductId());
+
+            startActivity(intent);
+        });
+
+        dashboardRepository = new DashboardRepository(ApiClient.getDashboardService(tokenManager));
+
         SellerDashboardViewModelFactory factory =
-                new SellerDashboardViewModelFactory(
-                        new com.example.ecommerceapp.data.repository.DashboardRepository(
-                                com.example.ecommerceapp.api.ApiClient.getDashboardService(tokenManager)
-                        )
-                );
+                new SellerDashboardViewModelFactory(dashboardRepository);
 
         viewModel = new ViewModelProvider(this, factory)
                 .get(SellerDashboardViewModel.class);
 
-        observeDashboard();
-        observeChart();
+        observeData();
 
-        // LOAD DATA
-        viewModel.getDashboard(shopId).observe(getViewLifecycleOwner(), data -> {
-            if (data == null) return;
-
-            dashboardData = data;
-
-            tvRevenue.setText(NumberUtils.formatCompact(data.getRevenue()) + " ₫");
-            tvOrders.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getOrders())));
-            tvSold.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getSold())));
-
-            spFilterTopProduct.setSelection(0, false);
-            topProductAdapter.setDisplayMode(SellerTopProductAdapter.MODE_SOLD);
-            topProductAdapter.setData(data.getTopProductsBySold());
-        });
+        viewModel.loadDashboard(shopId);
 
         loadChart(shopId, ChartType.DAY);
     }
-
-    // ================= INIT =================
 
     private void initViews(View view) {
         tvRevenue = view.findViewById(R.id.tvRevenue);
@@ -112,26 +109,13 @@ public class SellerDashboardFragment extends Fragment {
         rvTopProduct = view.findViewById(R.id.rvTopProducts);
     }
 
-    private void initRecyclerView() {
-        topProductAdapter = new SellerTopProductAdapter();
-
-        rvTopProduct.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvTopProduct.setAdapter(topProductAdapter);
-
-        topProductAdapter.setListener(product -> {
-            Intent intent = new Intent(getContext(), SellerProductDetailActivity.class);
-            intent.putExtra("productId", product.getProductId());
-            startActivity(intent);
-        });
-    }
-
-    private void initSpinners() {
-
+    private void setInits() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.seller_filter_top_product,
                 android.R.layout.simple_spinner_item
         );
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spFilterTopProduct.setAdapter(adapter);
 
@@ -140,26 +124,22 @@ public class SellerDashboardFragment extends Fragment {
                 R.array.seller_filter_time,
                 android.R.layout.simple_spinner_item
         );
+
         timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spFilterTime.setAdapter(timeAdapter);
     }
 
-    // ================= LISTENER =================
-
     private void setListeners() {
-
         spFilterTopProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if (dashboardData == null) return;
-
                 if (position == 0) {
                     topProductAdapter.setDisplayMode(SellerTopProductAdapter.MODE_SOLD);
-                    topProductAdapter.setData(dashboardData.getTopProductsBySold());
+                    sortBySold();
                 } else {
                     topProductAdapter.setDisplayMode(SellerTopProductAdapter.MODE_REVENUE);
-                    topProductAdapter.setData(dashboardData.getTopProductsByRevenue());
+                    sortByRevenue();
                 }
             }
 
@@ -185,16 +165,25 @@ public class SellerDashboardFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-    }
 
-    // ================= CHART =================
+    }
 
     private void loadChart(int shopId, ChartType type) {
 
-        viewModel.getRevenueChart(shopId, type)
-                .observe(getViewLifecycleOwner(), list -> {
-                    if (list != null) {
-                        drawChart(list, type);
+        dashboardRepository.getRevenueChart(shopId, type)
+                .enqueue(new retrofit2.Callback<List<SellerRevenueChartResponse>>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<List<SellerRevenueChartResponse>> call,
+                                           retrofit2.Response<List<SellerRevenueChartResponse>> response) {
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            drawChart(response.body(), type);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<List<SellerRevenueChartResponse>> call, Throwable t) {
+
                     }
                 });
     }
@@ -205,7 +194,6 @@ public class SellerDashboardFragment extends Fragment {
         List<String> labels = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
-
             SellerRevenueChartResponse item = list.get(i);
 
             entries.add(new com.github.mikephil.charting.data.BarEntry(
@@ -215,8 +203,9 @@ public class SellerDashboardFragment extends Fragment {
 
             String label = item.getLabel();
 
+            // format đẹp
             if (type == ChartType.DAY) {
-                label = label.substring(5);
+                label = label.substring(5); // MM-dd
             } else if (type == ChartType.MONTH) {
                 String month = label.split("-")[1];
                 label = "T" + Integer.parseInt(month);
@@ -244,11 +233,33 @@ public class SellerDashboardFragment extends Fragment {
         chartRevenue.invalidate();
     }
 
-    private void observeDashboard() {
-        // đã gộp trong onViewCreated (không cần tách nữa)
+    private void sortByRevenue() {
+        if (dashboardData == null) return;
+
+        topProductAdapter.setData(dashboardData.getTopProductsByRevenue());
     }
 
-    private void observeChart() {
-        // optional (đã gộp loadChart)
+    private void sortBySold() {
+        if (dashboardData == null) return;
+
+        topProductAdapter.setData(dashboardData.getTopProductsBySold());
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void observeData() {
+        viewModel.getDashboardData().observe(getViewLifecycleOwner(), data -> {
+            if (data == null) return;
+
+            dashboardData = data;
+
+            tvRevenue.setText(NumberUtils.formatCompact(data.getRevenue()) + " ₫");
+            tvOrders.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getOrders())));
+            tvSold.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getSold())));
+
+            // Mặc định load theo Revenue
+            spFilterTopProduct.setSelection(0, false);
+            topProductAdapter.setDisplayMode(SellerTopProductAdapter.MODE_SOLD);
+            topProductAdapter.setData(data.getTopProductsBySold());
+        });
     }
 }
