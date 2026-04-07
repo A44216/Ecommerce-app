@@ -32,14 +32,18 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
     private RecyclerView rvOrder, rvStatus;
     private ImageView ivBack;
-    MaterialButton btnCancel, btnConfirm;
+
+    private MaterialButton btnCancel, btnConfirm;
+
     private SellerOrderDetailAdapter adapter;
     private SellerOrderViewModel viewModel;
     private SellerOrderStatusAdapter statusAdapter;
 
     private TokenManager tokenManager;
+
     private int orderId;
     private int shopId;
+
     private OrderStatus selectedStatus;
 
     @Override
@@ -56,7 +60,10 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+
         rvOrder = findViewById(R.id.rvOrderItems);
+        rvStatus = findViewById(R.id.rvOrderStatus);
+
         ivBack = findViewById(R.id.ivBack);
 
         tvOrderId = findViewById(R.id.tvOrderId);
@@ -69,14 +76,12 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         tvPaymentStatus = findViewById(R.id.tvPaymentStatus);
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
 
+        btnCancel = findViewById(R.id.btnCancel);
+        btnConfirm = findViewById(R.id.btnConfirm);
+
         adapter = new SellerOrderDetailAdapter();
         rvOrder.setLayoutManager(new LinearLayoutManager(this));
         rvOrder.setAdapter(adapter);
-
-        orderId = getIntent().getIntExtra("orderId", 0);
-        shopId = (int) tokenManager.getShopId();
-
-        rvStatus = findViewById(R.id.rvOrderStatus);
 
         statusAdapter = new SellerOrderStatusAdapter();
         rvStatus.setLayoutManager(
@@ -84,8 +89,8 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         );
         rvStatus.setAdapter(statusAdapter);
 
-        btnCancel = findViewById(R.id.btnCancel);
-        btnConfirm = findViewById(R.id.btnConfirm);
+        orderId = getIntent().getIntExtra("orderId", 0);
+        shopId = (int) tokenManager.getShopId();
     }
 
     private void initViewModel() {
@@ -96,6 +101,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     }
 
     private void initListeners() {
+
         ivBack.setOnClickListener(v -> finish());
 
         adapter.setOnItemClickListener(item -> {
@@ -110,14 +116,10 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setTitle("Xác nhận thay đổi")
                     .setMessage("Đổi sang: " + getStatusText(status) + "?")
                     .setPositiveButton("OK", (dialog, which) -> {
-
-                        // CHỈ SET khi user confirm
                         selectedStatus = status;
-
                         statusAdapter.setSelectedStatus(status);
                     })
                     .setNegativeButton("Huỷ", (d, w) -> {
-                        // rollback UI về trạng thái cũ
                         statusAdapter.setSelectedStatus(selectedStatus);
                     })
                     .show();
@@ -131,9 +133,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setTitle("Xác nhận")
                     .setMessage("Đổi sang: " + getStatusText(selectedStatus) + "?")
                     .setPositiveButton("OK", (dialog, which) -> {
-
                         viewModel.updateOrderStatus(orderId, shopId, selectedStatus);
-
                         finish();
                     })
                     .setNegativeButton("Huỷ", null)
@@ -146,24 +146,22 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setTitle("Huỷ đơn hàng")
                     .setMessage("Bạn chắc chắn muốn huỷ đơn này?")
                     .setPositiveButton("Huỷ đơn", (dialog, which) -> {
-
                         viewModel.updateOrderStatus(orderId, shopId, OrderStatus.CANCELED);
-
-                        finish(); // thêm dòng này
+                        finish();
                     })
                     .setNegativeButton("Không", null)
                     .show();
         });
-
     }
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void observeData() {
+
         viewModel.getOrderDetail(orderId, shopId)
                 .observe(this, data -> {
+
                     if (data == null) return;
 
-                    // ORDER INFO
                     tvOrderId.setText("Đơn #" + data.getOrderId());
 
                     String createdAt = data.getCreatedAt();
@@ -172,22 +170,18 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     }
                     tvCreatedAt.setText("Ngày: " + createdAt);
 
-                    // CUSTOMER + SHIPPING
                     tvCustomer.setText("Khách hàng: " + data.getCustomerName());
                     tvShippingName.setText("Người nhận: " + data.getShippingName());
-                    tvPhone.setText("Sdt: " + data.getShippingPhone());
+                    tvPhone.setText("Sđt: " + data.getShippingPhone());
                     tvAddress.setText("Địa chỉ: " + data.getShippingAddress());
 
-                    // PAYMENT
                     tvPaymentMethod.setText(String.valueOf(data.getPaymentMethod()));
                     tvPaymentStatus.setText(String.valueOf(data.getPaymentStatus()));
 
-                    // TOTAL
                     if (data.getTotalPrice() != null) {
                         tvTotalPrice.setText(String.format("%,.0f", data.getTotalPrice()) + " đ");
                     }
 
-                    // ITEMS
                     adapter.setData(data.getItems());
 
                     OrderStatus currentStatus =
@@ -195,10 +189,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
                     selectedStatus = currentStatus;
 
-                    statusAdapter.setData(
-                            getStatusFlow(),
-                            currentStatus
-                    );
+                    statusAdapter.setData(getStatusFlow(), currentStatus);
                 });
     }
 
@@ -225,6 +216,4 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                 return status.name();
         }
     }
-
-
 }
