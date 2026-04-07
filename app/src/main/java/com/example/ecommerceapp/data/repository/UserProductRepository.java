@@ -19,4 +19,8 @@ public class UserProductRepository {
     public Call<UserProductResponse> getProductById(int id) {
         return apiService.getProductById(id);
     }
+
+    public Call<List<UserProductResponse>> getProductsByCategory(int categoryId) {
+        return apiService.getProductsByCategory(categoryId);
+    }
 }

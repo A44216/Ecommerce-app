@@ -12,4 +12,7 @@ public interface UserProductService {
 
     @GET("products/{id}")
     Call<UserProductResponse> getProductById(@Path("id") int id);
+
+    @GET("products/category/{categoryId}")
+    Call<List<UserProductResponse>> getProductsByCategory(@Path("categoryId") int categoryId);
 }
