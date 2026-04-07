@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
-import com.example.ecommerceapp.data.model.response.seller.SellerProductResponse;
+import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.product.SellerProductVH;
 import com.example.ecommerceapp.utils.ImageLoader;
 

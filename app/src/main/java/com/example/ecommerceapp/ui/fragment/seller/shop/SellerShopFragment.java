@@ -20,7 +20,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.repository.ShopRepository;
+import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerChatActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerShopInfoActivity;
@@ -75,7 +75,7 @@ public class SellerShopFragment extends Fragment {
 
     private void setUpViewModel() {
         SellerShopService api = ApiClient.getShopService(tokenManager);
-        ShopRepository repository = new ShopRepository(api);
+        SellerShopRepository repository = new SellerShopRepository(api);
 
         mViewModel = new ViewModelProvider(
                 requireActivity(),

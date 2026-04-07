@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.model.response.seller;
+package com.example.ecommerceapp.data.model.response.seller.dashboard;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

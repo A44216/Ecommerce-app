@@ -4,13 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.ecommerceapp.data.repository.DashboardRepository;
+import com.example.ecommerceapp.data.repository.seller.dashboard.SellerDashboardRepository;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerDashboardViewModel;
 
 public class SellerDashboardViewModelFactory implements ViewModelProvider.Factory {
-    private final DashboardRepository repository;
+    private final SellerDashboardRepository repository;
 
-    public SellerDashboardViewModelFactory(DashboardRepository repository) {
+    public SellerDashboardViewModelFactory(SellerDashboardRepository repository) {
         this.repository = repository;
     }
 

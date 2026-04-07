@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ecommerceapp.data.model.response.seller.SellerDashboardResponse;
-import com.example.ecommerceapp.data.repository.DashboardRepository;
+import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardResponse;
+import com.example.ecommerceapp.data.repository.seller.dashboard.SellerDashboardRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -13,9 +13,9 @@ import retrofit2.Response;
 
 public class SellerDashboardViewModel extends ViewModel {
 
-    private final DashboardRepository repository;
+    private final SellerDashboardRepository repository;
 
-    public SellerDashboardViewModel(DashboardRepository repository) {
+    public SellerDashboardViewModel(SellerDashboardRepository repository) {
         this.repository = repository;
     }
 

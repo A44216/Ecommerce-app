@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.data.model.response.seller.SellerOrderItemResponse;
+import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderItemResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.order.SellerOrderDetailVH;
 import com.example.ecommerceapp.utils.ImageLoader;
 

@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.model.response.seller;
+package com.example.ecommerceapp.data.model.response.seller.shop;
 
 import com.example.ecommerceapp.data.enums.ShopStatus;
 

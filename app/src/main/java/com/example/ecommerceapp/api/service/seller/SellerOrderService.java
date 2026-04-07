@@ -1,7 +1,7 @@
 package com.example.ecommerceapp.api.service.seller;
 
-import com.example.ecommerceapp.data.model.response.seller.SellerOrderDetailResponse;
-import com.example.ecommerceapp.data.model.response.seller.SellerOrderResponse;
+import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderDetailResponse;
+import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 
 import java.util.List;
 

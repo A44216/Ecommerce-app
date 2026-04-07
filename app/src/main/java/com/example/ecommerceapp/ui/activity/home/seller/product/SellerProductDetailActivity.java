@@ -17,8 +17,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.response.seller.SellerProductResponse;
-import com.example.ecommerceapp.data.repository.ProductRepository;
+import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
+import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
 import com.example.ecommerceapp.ui.adapter.seller.product.SellerImagePagerAdapter;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
@@ -31,7 +31,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
     private ImageView ivBack;
     private WormDotsIndicator dotsIndicator;
 
-    private ProductRepository repository;
+    private SellerProductRepository repository;
 
     private boolean isIndicatorAttached = false;
 
@@ -52,7 +52,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
         // init API
         TokenManager tokenManager = TokenManager.getInstance(this);
 
-        repository = new ProductRepository(
+        repository = new SellerProductRepository(
                 ApiClient.getProductService(tokenManager)
         );
 

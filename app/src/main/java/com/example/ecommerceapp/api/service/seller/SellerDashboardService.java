@@ -1,8 +1,8 @@
 package com.example.ecommerceapp.api.service.seller;
 
 import com.example.ecommerceapp.data.enums.ChartType;
-import com.example.ecommerceapp.data.model.response.seller.SellerDashboardResponse;
-import com.example.ecommerceapp.data.model.response.seller.SellerRevenueChartResponse;
+import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardResponse;
+import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerRevenueChartResponse;
 
 import java.util.List;
 

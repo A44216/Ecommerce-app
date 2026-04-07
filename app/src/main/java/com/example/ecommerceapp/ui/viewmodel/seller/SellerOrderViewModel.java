@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.enums.OrderStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.response.seller.SellerOrderDetailResponse;
-import com.example.ecommerceapp.data.model.response.seller.SellerOrderResponse;
-import com.example.ecommerceapp.data.repository.OrderRepository;
+import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderDetailResponse;
+import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
+import com.example.ecommerceapp.data.repository.seller.order.SellerOrderRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,13 +20,13 @@ import retrofit2.Response;
 
 public class SellerOrderViewModel extends ViewModel {
 
-    private final OrderRepository repository;
+    private final SellerOrderRepository repository;
 
     private final Map<String, MutableLiveData<List<SellerOrderResponse>>> cache = new HashMap<>();
     private final MutableLiveData<Boolean> updateStatusResult = new MutableLiveData<>();
 
     public SellerOrderViewModel(TokenManager tm) {
-        repository = new OrderRepository(tm);
+        repository = new SellerOrderRepository(tm);
     }
 
     public LiveData<List<SellerOrderResponse>> getOrders(String status, int shopId) {

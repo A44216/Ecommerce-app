@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.repository;
+package com.example.ecommerceapp.data.repository.seller.product;
 
 import com.example.ecommerceapp.api.service.ProductImageService;
 import com.example.ecommerceapp.data.model.request.ProductImageRequest;
@@ -7,11 +7,11 @@ import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 
-public class ProductImageRepository {
+public class SellerProductImageRepository {
 
     private final ProductImageService service;
 
-    public ProductImageRepository(ProductImageService service) {
+    public SellerProductImageRepository(ProductImageService service) {
         this.service = service;
     }
 

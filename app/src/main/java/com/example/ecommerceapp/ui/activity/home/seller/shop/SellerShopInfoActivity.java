@@ -17,8 +17,8 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.request.seller.SellerShopRequest;
-import com.example.ecommerceapp.data.repository.ShopRepository;
+import com.example.ecommerceapp.data.model.request.seller.shop.SellerShopRequest;
+import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerShopViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerShopViewModelFactory;
 import com.example.ecommerceapp.utils.ImageLoader;
@@ -105,7 +105,7 @@ public class SellerShopInfoActivity extends AppCompatActivity {
 
     private void setupViewModel() {
         SellerShopService api = ApiClient.getShopService(tokenManager);
-        ShopRepository repository = new ShopRepository(api);
+        SellerShopRepository repository = new SellerShopRepository(api);
 
         viewModel = new ViewModelProvider(
                 this,

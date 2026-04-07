@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ecommerceapp.data.model.request.seller.SellerShopRequest;
-import com.example.ecommerceapp.data.model.response.seller.SellerShopResponse;
-import com.example.ecommerceapp.data.repository.ShopRepository;
+import com.example.ecommerceapp.data.model.request.seller.shop.SellerShopRequest;
+import com.example.ecommerceapp.data.model.response.seller.shop.SellerShopResponse;
+import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,9 +15,9 @@ import retrofit2.Response;
 public class SellerShopViewModel extends ViewModel {
 
     private final MutableLiveData<SellerShopResponse> shop = new MutableLiveData<>();
-    private final ShopRepository repository;
+    private final SellerShopRepository repository;
 
-    public SellerShopViewModel(ShopRepository repository) {
+    public SellerShopViewModel(SellerShopRepository repository) {
         this.repository = repository;
     }
 

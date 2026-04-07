@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.model.response.seller;
+package com.example.ecommerceapp.data.model.response.seller.order;
 
 import com.example.ecommerceapp.data.enums.OrderStatus;
 import com.example.ecommerceapp.data.enums.PaymentMethod;

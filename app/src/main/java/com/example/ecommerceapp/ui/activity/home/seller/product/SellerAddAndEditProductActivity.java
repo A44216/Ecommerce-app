@@ -26,13 +26,13 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.ProductImageRequest;
-import com.example.ecommerceapp.data.model.request.seller.SellerProductRequest;
+import com.example.ecommerceapp.data.model.request.seller.product.SellerProductRequest;
 import com.example.ecommerceapp.data.model.response.CategoryResponse;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
-import com.example.ecommerceapp.data.model.response.seller.SellerProductResponse;
+import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.data.repository.CategoryRepository;
-import com.example.ecommerceapp.data.repository.ProductImageRepository;
-import com.example.ecommerceapp.data.repository.ProductRepository;
+import com.example.ecommerceapp.data.repository.seller.product.SellerProductImageRepository;
+import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
 import com.example.ecommerceapp.ui.adapter.seller.product.SellerImageEditAdapter;
 import com.example.ecommerceapp.utils.ImageUploadHelper;
 import com.google.android.material.button.MaterialButton;
@@ -57,8 +57,8 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
     private SellerImageEditAdapter imageAdapter;
 
     private TokenManager tokenManager;
-    private ProductRepository productRepository;
-    private ProductImageRepository productImageRepository;
+    private SellerProductRepository productRepository;
+    private SellerProductImageRepository productImageRepository;
 
     private int productId = -1;
     private boolean isEdit = false;
@@ -111,11 +111,11 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
         initViews();
         setupActions();
 
-        productImageRepository = new ProductImageRepository(
+        productImageRepository = new SellerProductImageRepository(
                 ApiClient.getProductImageService(tokenManager)
         );
 
-        productRepository = new ProductRepository(
+        productRepository = new SellerProductRepository(
                 ApiClient.getProductService(tokenManager)
         );
 

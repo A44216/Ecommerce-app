@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.model.request.seller;
+package com.example.ecommerceapp.data.model.request.seller.shop;
 
 public class SellerShopRequest {
 

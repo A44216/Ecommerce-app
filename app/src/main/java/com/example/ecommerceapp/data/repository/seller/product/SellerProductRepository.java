@@ -1,18 +1,18 @@
-package com.example.ecommerceapp.data.repository;
+package com.example.ecommerceapp.data.repository.seller.product;
 
 import com.example.ecommerceapp.api.service.seller.SellerProductService;
-import com.example.ecommerceapp.data.model.request.seller.SellerProductRequest;
-import com.example.ecommerceapp.data.model.response.seller.SellerProductResponse;
+import com.example.ecommerceapp.data.model.request.seller.product.SellerProductRequest;
+import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 
 import java.util.List;
 
 import retrofit2.Call;
 
-public class ProductRepository {
+public class SellerProductRepository {
 
     private final SellerProductService apiService;
 
-    public ProductRepository(SellerProductService apiService) {
+    public SellerProductRepository(SellerProductService apiService) {
         this.apiService = apiService;
     }
 

@@ -4,14 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.ecommerceapp.data.repository.ShopRepository;
+import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerShopViewModel;
 
 public class SellerShopViewModelFactory implements ViewModelProvider.Factory {
 
-    private final ShopRepository repository;
+    private final SellerShopRepository repository;
 
-    public SellerShopViewModelFactory(ShopRepository repository) {
+    public SellerShopViewModelFactory(SellerShopRepository repository) {
         this.repository = repository;
     }
 

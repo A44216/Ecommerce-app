@@ -16,7 +16,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.response.seller.SellerShopResponse;
+import com.example.ecommerceapp.data.model.response.seller.shop.SellerShopResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SellerHomeActivity extends AppCompatActivity {

@@ -20,8 +20,8 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerProductService;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.response.seller.SellerProductResponse;
-import com.example.ecommerceapp.data.repository.ProductRepository;
+import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
+import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerAddAndEditProductActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.product.SellerProductAdapter;
@@ -90,7 +90,7 @@ public class SellerProductFragment extends Fragment {
 
     private void setupViewModel() {
         SellerProductService apiService = ApiClient.getProductService(tokenManager);
-        ProductRepository repository = new ProductRepository(apiService);
+        SellerProductRepository repository = new SellerProductRepository(apiService);
 
         SellerProductViewModelFactory factory = new SellerProductViewModelFactory(repository);
 

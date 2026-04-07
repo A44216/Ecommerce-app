@@ -1,20 +1,20 @@
-package com.example.ecommerceapp.data.repository;
+package com.example.ecommerceapp.data.repository.seller.order;
 
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerOrderService;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.response.seller.SellerOrderDetailResponse;
-import com.example.ecommerceapp.data.model.response.seller.SellerOrderResponse;
+import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderDetailResponse;
+import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 
 import java.util.List;
 
 import retrofit2.Call;
 
-public class OrderRepository {
+public class SellerOrderRepository {
 
     private final SellerOrderService service;
 
-    public OrderRepository(TokenManager tm) {
+    public SellerOrderRepository(TokenManager tm) {
         service = ApiClient.getOrderService(tm);
     }
 

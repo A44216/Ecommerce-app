@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ecommerceapp.data.model.response.seller.SellerProductResponse;
-import com.example.ecommerceapp.data.repository.ProductRepository;
+import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
+import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ import retrofit2.Response;
 public class SellerProductViewModel extends ViewModel {
 
     private final MutableLiveData<List<SellerProductResponse>> productList = new MutableLiveData<>();
-    private final ProductRepository repository;
+    private final SellerProductRepository repository;
 
-    public SellerProductViewModel(ProductRepository repository) {
+    public SellerProductViewModel(SellerProductRepository repository) {
         this.repository = repository;
     }
 

@@ -22,9 +22,9 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.enums.ChartType;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.response.seller.SellerDashboardResponse;
-import com.example.ecommerceapp.data.model.response.seller.SellerRevenueChartResponse;
-import com.example.ecommerceapp.data.repository.DashboardRepository;
+import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardResponse;
+import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerRevenueChartResponse;
+import com.example.ecommerceapp.data.repository.seller.dashboard.SellerDashboardRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.dashboard.SellerTopProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerDashboardViewModel;
@@ -49,7 +49,7 @@ public class SellerDashboardFragment extends Fragment {
 
     TokenManager tokenManager;
 
-    DashboardRepository dashboardRepository;
+    SellerDashboardRepository dashboardRepository;
 
     private int shopId;
 
@@ -84,7 +84,7 @@ public class SellerDashboardFragment extends Fragment {
             startActivity(intent);
         });
 
-        dashboardRepository = new DashboardRepository(ApiClient.getDashboardService(tokenManager));
+        dashboardRepository = new SellerDashboardRepository(ApiClient.getDashboardService(tokenManager));
 
         SellerDashboardViewModelFactory factory =
                 new SellerDashboardViewModelFactory(dashboardRepository);
