@@ -5,6 +5,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface UserProductService {
     @GET("products")
@@ -15,4 +16,10 @@ public interface UserProductService {
 
     @GET("products/category/{categoryId}")
     Call<List<UserProductResponse>> getProductsByCategory(@Path("categoryId") int categoryId);
+
+    @GET("products/search")
+    Call<List<UserProductResponse>> searchProducts(
+            @Query("keyword") String keyword,
+            @Query("shopId") Integer shopId
+    );
 }

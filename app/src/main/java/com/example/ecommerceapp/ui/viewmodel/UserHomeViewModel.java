@@ -96,4 +96,27 @@ public class UserHomeViewModel extends ViewModel {
             }
         });
     }
+
+    // ===========================================
+    // 4. TÌM KIẾM SẢN PHẨM
+    // ===========================================
+    public void searchProducts(String keyword) {
+        productRepository.searchProducts(keyword, null).enqueue(new Callback<List<UserProductResponse>>() {
+            @Override
+            public void onResponse(Call<List<UserProductResponse>> call, Response<List<UserProductResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Nhét kết quả tìm kiếm vào danh sách, giao diện sẽ tự đổi!
+                    productList.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserProductResponse>> call, Throwable t) {
+                t.printStackTrace();
+                errorMessage.setValue("Lỗi tìm kiếm: " + t.getMessage());
+            }
+        });
+    }
+
+
 }

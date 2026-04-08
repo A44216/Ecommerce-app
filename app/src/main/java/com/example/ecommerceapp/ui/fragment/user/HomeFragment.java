@@ -20,7 +20,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.UserCategoryApiService;
 import com.example.ecommerceapp.api.service.UserProductService;
-import com.example.ecommerceapp.data.local.TokenManager; // <-- ĐÃ THÊM IMPORT NÀY
+import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.repository.UserCategoryRepository;
 import com.example.ecommerceapp.data.repository.UserProductRepository;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
@@ -28,6 +28,9 @@ import com.example.ecommerceapp.ui.adapter.user.UserCategoryAdapter;
 import com.example.ecommerceapp.ui.adapter.user.UserProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.UserHomeViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.UserHomeViewModelFactory;
+
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 
 public class HomeFragment extends Fragment {
 
@@ -45,6 +48,32 @@ public class HomeFragment extends Fragment {
         ivCartHome.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), UserCartActivity.class);
             startActivity(intent);
+        });
+
+        // --- CHỨC NĂNG TÌM KIẾM ---
+        android.widget.EditText etSearch = view.findViewById(R.id.tvSearch);
+
+        etSearch.setOnEditorActionListener((v, actionId, event) -> {
+            // Khi người dùng bấm nút Kính Lúp (Search) trên bàn phím ảo
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                String keyword = etSearch.getText().toString().trim();
+
+                if (!keyword.isEmpty()) {
+                    // Gọi API tìm kiếm
+                    viewModel.searchProducts(keyword);
+                } else {
+                    // Nếu xóa trắng ô tìm kiếm rồi ấn Search -> Tải lại toàn bộ sản phẩm
+                    viewModel.fetchProducts();
+                }
+
+                // Ẩn bàn phím đi sau khi bấm tìm kiếm cho đỡ vướng
+                android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+                return true;
+            }
+            return false;
         });
 
         // 2. Setup RecyclerView Sản phẩm

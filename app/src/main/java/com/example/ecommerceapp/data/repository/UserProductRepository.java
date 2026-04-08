@@ -23,4 +23,8 @@ public class UserProductRepository {
     public Call<List<UserProductResponse>> getProductsByCategory(int categoryId) {
         return apiService.getProductsByCategory(categoryId);
     }
+
+    public Call<List<UserProductResponse>> searchProducts(String keyword, Integer shopId) {
+        return apiService.searchProducts(keyword, shopId);
+    }
 }
