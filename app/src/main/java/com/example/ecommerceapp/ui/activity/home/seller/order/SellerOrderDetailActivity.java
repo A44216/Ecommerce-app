@@ -192,9 +192,9 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
                     selectedStatus = currentStatus;
 
+                    // CANCELED (FINAL - RED)
                     if (currentStatus == OrderStatus.CANCELED) {
 
-                        // Chỉ show 1 trạng thái: Đã huỷ
                         statusAdapter.setData(
                                 java.util.Collections.singletonList(OrderStatus.CANCELED),
                                 OrderStatus.CANCELED
@@ -203,14 +203,40 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                         btnConfirm.setVisibility(View.GONE);
                         btnCancel.setVisibility(View.GONE);
 
-                    } else {
-
-                        statusAdapter.setData(getStatusFlow(), currentStatus);
-
-                        btnConfirm.setVisibility(View.VISIBLE);
-                        btnCancel.setVisibility(View.VISIBLE);
+                        return;
                     }
 
+                    // COMPLETED (FINAL - GREEN)
+                    if (currentStatus == OrderStatus.COMPLETED) {
+
+                        statusAdapter.setData(
+                                java.util.Collections.singletonList(OrderStatus.COMPLETED),
+                                OrderStatus.COMPLETED
+                        );
+
+                        btnConfirm.setVisibility(View.GONE);
+                        btnCancel.setVisibility(View.GONE);
+
+                        return;
+                    }
+
+                    // NORMAL FLOW
+                    statusAdapter.setData(getStatusFlow(), currentStatus);
+
+                    btnConfirm.setVisibility(View.VISIBLE);
+                    btnCancel.setVisibility(View.VISIBLE);
+
+                    // reset button UI
+                    btnConfirm.setText("Xác nhận");
+                    btnConfirm.setEnabled(true);
+                    btnConfirm.setBackgroundTintList(
+                            android.content.res.ColorStateList.valueOf(
+                                    androidx.core.content.ContextCompat.getColor(
+                                            this,
+                                            R.color.green
+                                    )
+                            )
+                    );
                 });
     }
 

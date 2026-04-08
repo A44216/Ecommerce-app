@@ -29,6 +29,10 @@ public class SellerOrderListFragment extends Fragment {
     private SellerOrderViewModel viewModel;
     private SellerOrderAdapter adapter;
 
+    private LinearLayoutManager layoutManager;
+
+    private boolean isLoadingMore = false;
+
     public static SellerOrderListFragment newInstance(String status) {
         SellerOrderListFragment fragment = new SellerOrderListFragment();
 
@@ -57,18 +61,66 @@ public class SellerOrderListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_seller_order_list, container, false);
 
         RecyclerView rv = view.findViewById(R.id.rvOrders);
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        layoutManager = new LinearLayoutManager(getContext());
+        rv.setLayoutManager(layoutManager);
 
         adapter = new SellerOrderAdapter();
         rv.setAdapter(adapter);
 
+        // click item → detail
         adapter.setOnItemClickListener(item -> {
             Intent intent = new Intent(requireContext(), SellerOrderDetailActivity.class);
             intent.putExtra("orderId", item.getOrderId());
             startActivity(intent);
         });
 
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if (totalItemCount == 0) return;
+
+                int shopId = (int) TokenManager.getInstance(requireContext()).getShopId();
+
+                // gần cuối list → load more
+                if (!isLoadingMore && lastVisibleItem >= totalItemCount - 2) {
+
+                    isLoadingMore = true;
+
+                    viewModel.loadOrders(status, shopId, true);
+                }
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        TokenManager tokenManager = TokenManager.getInstance(requireContext());
+
+        int shopId = (int) tokenManager.getShopId();
+
+        viewModel = new ViewModelProvider(
+                this,
+                new SellerOrderViewModelFactory(tokenManager)
+        ).get(SellerOrderViewModel.class);
+
+        // OBSERVE DATA (LIST)
+        viewModel.getOrders(status, shopId).observe(getViewLifecycleOwner(), data -> {
+
+            isLoadingMore = false; // reset load state
+
+            if (data != null) {
+                adapter.setData(data);
+            }
+        });
     }
 
     @Override
@@ -77,28 +129,7 @@ public class SellerOrderListFragment extends Fragment {
 
         int shopId = (int) TokenManager.getInstance(requireContext()).getShopId();
 
-        viewModel.loadOrders(status, shopId);
+        // 🔥 reload page 0
+        viewModel.loadOrders(status, shopId, false);
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        TokenManager tokenManager = TokenManager.getInstance(requireContext());
-
-        int shopId = (int)tokenManager.getShopId(); // hoặc bạn tự lưu shopId
-
-        viewModel = new ViewModelProvider(
-                this,
-                new SellerOrderViewModelFactory(tokenManager)
-        ).get(SellerOrderViewModel.class);
-
-        viewModel.getOrders(status, shopId).observe(getViewLifecycleOwner(), data -> {
-            if (data != null) {
-                adapter.setData(data);
-            }
-        });
-
-    }
-
-
 }

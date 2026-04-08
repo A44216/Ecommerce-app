@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.enums.OrderStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderDetailResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 import com.example.ecommerceapp.data.repository.seller.order.SellerOrderRepository;
@@ -23,6 +24,12 @@ public class SellerOrderViewModel extends ViewModel {
     private final SellerOrderRepository repository;
 
     private final Map<String, MutableLiveData<List<SellerOrderResponse>>> cache = new HashMap<>();
+
+    private final Map<String, Integer> currentPageMap = new HashMap<>();
+    private final Map<String, Boolean> lastPageMap = new HashMap<>();
+
+    private static final int PAGE_SIZE = 10;
+
     private final MutableLiveData<Boolean> updateStatusResult = new MutableLiveData<>();
 
     public SellerOrderViewModel(TokenManager tm) {
@@ -35,45 +42,61 @@ public class SellerOrderViewModel extends ViewModel {
 
         if (!cache.containsKey(key)) {
             cache.put(key, new MutableLiveData<>());
-            loadOrders(status, shopId);
+            loadOrders(status, shopId, false);
         }
 
         return cache.get(key);
     }
 
-    public void loadOrders(String status, int shopId) {
+    public void loadOrders(String status, int shopId, boolean isLoadMore) {
 
         String key = status + "_" + shopId;
 
-        repository.getOrders(status, shopId).enqueue(new Callback<List<SellerOrderResponse>>() {
-            @Override
-            public void onResponse(Call<List<SellerOrderResponse>> call,
-                                   Response<List<SellerOrderResponse>> response) {
+        int page = currentPageMap.getOrDefault(key, 0);
 
-                MutableLiveData<List<SellerOrderResponse>> liveData = cache.get(key);
+        if (!isLoadMore) {
+            page = 0;
+            currentPageMap.put(key, 0);
+            lastPageMap.put(key, false);
+        }
 
-                if (liveData == null) {
-                    liveData = new MutableLiveData<>();
-                    cache.put(key, liveData);
-                }
+        if (Boolean.TRUE.equals(lastPageMap.get(key))) return;
 
-                if (response.isSuccessful()) {
-                    liveData.setValue(response.body());
-                } else {
-                    liveData.setValue(null);
-                }
-            }
+        repository.getOrders(status, shopId, page, PAGE_SIZE)
+                .enqueue(new Callback<PageResponse<SellerOrderResponse>>() {
 
-            @Override
-            public void onFailure(Call<List<SellerOrderResponse>> call, Throwable t) {
+                    @Override
+                    public void onResponse(Call<PageResponse<SellerOrderResponse>> call,
+                                           Response<PageResponse<SellerOrderResponse>> response) {
 
-                MutableLiveData<List<SellerOrderResponse>> liveData = cache.get(key);
+                        if (!response.isSuccessful() || response.body() == null) return;
 
-                if (liveData != null) {
-                    liveData.setValue(null);
-                }
-            }
-        });
+                        PageResponse<SellerOrderResponse> body = response.body();
+
+                        MutableLiveData<List<SellerOrderResponse>> liveData = cache.get(key);
+                        if (liveData == null) {
+                            liveData = new MutableLiveData<>();
+                            cache.put(key, liveData);
+                        }
+
+                        List<SellerOrderResponse> current = liveData.getValue();
+                        if (current == null) current = new java.util.ArrayList<>();
+
+                        if (isLoadMore) {
+                            current.addAll(body.getContent());
+                        } else {
+                            current = new java.util.ArrayList<>(body.getContent());
+                        }
+
+                        liveData.setValue(current);
+
+                        currentPageMap.put(key, body.getNumber() + 1);
+                        lastPageMap.put(key, body.isLast());
+                    }
+
+                    @Override
+                    public void onFailure(Call<PageResponse<SellerOrderResponse>> call, Throwable t) {}
+                });
     }
 
     public LiveData<SellerOrderDetailResponse> getOrderDetail(int orderId, int shopId) {

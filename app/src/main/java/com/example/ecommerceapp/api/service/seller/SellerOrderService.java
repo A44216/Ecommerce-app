@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.api.service.seller;
 
+import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderDetailResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 
@@ -15,9 +16,11 @@ public interface SellerOrderService {
 
     // LIST ORDERS BY STATUS (tab)
     @GET("seller/orders")
-    Call<List<SellerOrderResponse>> getOrdersByStatus(
+    Call<PageResponse<SellerOrderResponse>> getOrdersByStatus(
             @Query("shopId") int shopId,
-            @Query("status") String status
+            @Query("status") String status,
+            @Query("page") int page,
+            @Query("size") int size
     );
 
     // ORDER DETAIL

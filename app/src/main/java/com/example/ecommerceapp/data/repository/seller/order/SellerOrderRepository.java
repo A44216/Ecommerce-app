@@ -3,6 +3,7 @@ package com.example.ecommerceapp.data.repository.seller.order;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerOrderService;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderDetailResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 
@@ -18,8 +19,10 @@ public class SellerOrderRepository {
         service = ApiClient.getOrderService(tm);
     }
 
-    public Call<List<SellerOrderResponse>> getOrders(String status, int shopId) {
-        return service.getOrdersByStatus(shopId, status);
+    public Call<PageResponse<SellerOrderResponse>> getOrders(
+            String status, int shopId, int page, int size
+    ) {
+        return service.getOrdersByStatus(shopId, status, page, size);
     }
 
     public Call<SellerOrderDetailResponse> getOrderDetail(int id, int shopId) {
