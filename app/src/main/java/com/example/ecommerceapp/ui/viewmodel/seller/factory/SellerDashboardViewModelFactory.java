@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ecommerceapp.data.repository.seller.dashboard.SellerDashboardRepository;
-import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerDashboardViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.SellerDashboardViewModel;
 
 public class SellerDashboardViewModelFactory implements ViewModelProvider.Factory {
     private final SellerDashboardRepository repository;

@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.api.service.seller;
 
+import com.example.ecommerceapp.data.model.request.seller.PageResponse;
 import com.example.ecommerceapp.data.model.request.seller.order.SellerReplyRequest;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerReviewResponse;
 
@@ -12,8 +13,11 @@ public interface SellerReviewService {
 
     // GET /api/seller/reviews?productId=
     @GET("seller/reviews")
-    Call<List<SellerReviewResponse>> getReviews(
-            @Query("productId") Integer productId
+    Call<PageResponse<SellerReviewResponse>> getReviews(
+            @Query("productId") Integer productId,
+            @Query("isReplied") Boolean isReplied,
+            @Query("page") int page,
+            @Query("size") int size
     );
 
     // POST /api/seller/reviews/{reviewId}/reply

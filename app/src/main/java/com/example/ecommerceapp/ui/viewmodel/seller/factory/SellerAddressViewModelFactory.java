@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ecommerceapp.data.repository.AddressRepository;
-import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerAddressViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.SellerAddressViewModel;
 
 public class SellerAddressViewModelFactory implements ViewModelProvider.Factory {
 

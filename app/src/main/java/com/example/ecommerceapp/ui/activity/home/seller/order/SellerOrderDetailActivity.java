@@ -18,7 +18,7 @@ import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderDetailAdapter;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderStatusAdapter;
-import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerOrderViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.SellerOrderViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerOrderViewModelFactory;
 import com.google.android.material.button.MaterialButton;
 

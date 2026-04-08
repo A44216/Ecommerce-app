@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.viewmodel.seller.viewmodel;
+package com.example.ecommerceapp.ui.viewmodel.seller;
 
 import android.util.Log;
 

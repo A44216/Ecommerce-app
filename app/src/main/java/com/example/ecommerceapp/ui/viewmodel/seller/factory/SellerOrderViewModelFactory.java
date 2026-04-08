@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerOrderViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.SellerOrderViewModel;
 
 public class SellerOrderViewModelFactory implements ViewModelProvider.Factory {
 

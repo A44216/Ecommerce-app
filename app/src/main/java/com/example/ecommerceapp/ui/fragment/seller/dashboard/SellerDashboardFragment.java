@@ -27,7 +27,7 @@ import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerReven
 import com.example.ecommerceapp.data.repository.seller.dashboard.SellerDashboardRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.dashboard.SellerTopProductAdapter;
-import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerDashboardViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.SellerDashboardViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerDashboardViewModelFactory;
 import com.example.ecommerceapp.utils.NumberUtils;
 import com.github.mikephil.charting.charts.BarChart;

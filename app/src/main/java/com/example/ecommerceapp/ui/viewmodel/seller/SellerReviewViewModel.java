@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.request.seller.PageResponse;
 import com.example.ecommerceapp.data.model.request.seller.order.SellerReplyRequest;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerReviewResponse;
 import com.example.ecommerceapp.data.repository.seller.order.SellerReviewRepository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -21,8 +21,7 @@ public class SellerReviewViewModel extends ViewModel {
 
     private final SellerReviewRepository repository;
 
-    // cache theo productId
-    private final Map<Integer, MutableLiveData<List<SellerReviewResponse>>> cache = new HashMap<>();
+    private final Map<Integer, MutableLiveData<PageResponse<SellerReviewResponse>>> cache = new HashMap<>();
 
     private final MutableLiveData<Boolean> replyResult = new MutableLiveData<>();
 
@@ -31,47 +30,62 @@ public class SellerReviewViewModel extends ViewModel {
     }
 
     // ===== GET REVIEWS =====
-    public LiveData<List<SellerReviewResponse>> getReviews(Integer productId) {
+    public LiveData<PageResponse<SellerReviewResponse>> getReviews(
+            Integer productId,
+            Boolean isReplied,
+            int page,
+            int size
+    ) {
 
         if (!cache.containsKey(productId)) {
             cache.put(productId, new MutableLiveData<>());
-            loadReviews(productId);
         }
+
+        loadReviews(productId, isReplied, page, size);
 
         return cache.get(productId);
     }
 
-    public void loadReviews(Integer productId) {
+    public void loadReviews(
+            Integer productId,
+            Boolean isReplied,
+            int page,
+            int size
+    ) {
 
-        repository.getReviews(productId).enqueue(new Callback<List<SellerReviewResponse>>() {
-            @Override
-            public void onResponse(Call<List<SellerReviewResponse>> call,
-                                   Response<List<SellerReviewResponse>> response) {
+        repository.getReviews(productId, isReplied, page, size)
+                .enqueue(new Callback<PageResponse<SellerReviewResponse>>() {
 
-                MutableLiveData<List<SellerReviewResponse>> liveData = cache.get(productId);
+                    @Override
+                    public void onResponse(
+                            Call<PageResponse<SellerReviewResponse>> call,
+                            Response<PageResponse<SellerReviewResponse>> response
+                    ) {
 
-                if (liveData == null) {
-                    liveData = new MutableLiveData<>();
-                    cache.put(productId, liveData);
-                }
+                        MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(productId);
 
-                if (response.isSuccessful()) {
-                    liveData.setValue(response.body());
-                } else {
-                    liveData.setValue(null);
-                }
-            }
+                        if (liveData == null) {
+                            liveData = new MutableLiveData<>();
+                            cache.put(productId, liveData);
+                        }
 
-            @Override
-            public void onFailure(Call<List<SellerReviewResponse>> call, Throwable t) {
+                        if (response.isSuccessful()) {
+                            liveData.setValue(response.body());
+                        } else {
+                            liveData.setValue(null);
+                        }
+                    }
 
-                MutableLiveData<List<SellerReviewResponse>> liveData = cache.get(productId);
+                    @Override
+                    public void onFailure(Call<PageResponse<SellerReviewResponse>> call, Throwable t) {
 
-                if (liveData != null) {
-                    liveData.setValue(null);
-                }
-            }
-        });
+                        MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(productId);
+
+                        if (liveData != null) {
+                            liveData.setValue(null);
+                        }
+                    }
+                });
     }
 
     // ===== REPLY REVIEW =====
@@ -81,15 +95,15 @@ public class SellerReviewViewModel extends ViewModel {
 
         repository.replyReview(reviewId, request)
                 .enqueue(new Callback<Void>() {
+
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
 
                         if (response.isSuccessful()) {
-
                             replyResult.setValue(true);
 
-                            // reload lại đúng product
-                            loadReviews(productId);
+                            // reload page 0
+                            loadReviews(productId, null, 0, 10);
 
                         } else {
                             replyResult.setValue(false);
