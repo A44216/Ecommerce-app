@@ -26,20 +26,33 @@ public class UserOrderViewModel extends ViewModel {
     public LiveData<List<UserOrderResponse>> getOrderList() { return orderList; }
     public LiveData<String> getErrorMessage() { return errorMessage; }
 
-    public void fetchOrdersByUser(int userId) {
+    public void fetchOrdersByUserAndStatus(int userId, String statusFilter) {
         repository.getOrdersByUser(userId).enqueue(new Callback<List<UserOrderResponse>>() {
             @Override
             public void onResponse(Call<List<UserOrderResponse>> call, Response<List<UserOrderResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    orderList.setValue(response.body());
-                } else {
-                    errorMessage.setValue("Không thể tải đơn hàng");
+                    List<UserOrderResponse> allOrders = response.body();
+
+                    // NẾU CHỌN "ALL" THÌ HIỂN THỊ HẾT
+                    if ("ALL".equals(statusFilter)) {
+                        orderList.setValue(allOrders);
+                        return;
+                    }
+
+                    // NẾU CHỌN TRẠNG THÁI CỤ THỂ -> LỌC RA
+                    List<UserOrderResponse> filteredList = new java.util.ArrayList<>();
+                    for (UserOrderResponse order : allOrders) {
+                        if (statusFilter.equals(order.getStatus())) {
+                            filteredList.add(order);
+                        }
+                    }
+                    orderList.setValue(filteredList);
                 }
             }
 
             @Override
             public void onFailure(Call<List<UserOrderResponse>> call, Throwable t) {
-                errorMessage.setValue("Lỗi kết nối: " + t.getMessage());
+                errorMessage.setValue("Lỗi tải đơn hàng: " + t.getMessage());
             }
         });
     }

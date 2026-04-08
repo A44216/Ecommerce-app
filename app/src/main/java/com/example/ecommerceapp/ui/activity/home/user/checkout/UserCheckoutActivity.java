@@ -161,17 +161,25 @@ public class UserCheckoutActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng đăng nhập để thực hiện đặt hàng!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // Chặn nếu chưa có địa chỉ
             if (realAddressId == -1) {
                 Toast.makeText(this, "Vui lòng chọn địa chỉ giao hàng!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // --- BƯỚC MỚI: GÓI CÁC SẢN PHẨM TRONG GIỎ HÀNG LẠI ---
+            List<UserOrderRequest.OrderItemRequest> itemsRequest = new ArrayList<>();
+            for (UserCartItem cartItem : selectedItems) {
+                itemsRequest.add(new UserOrderRequest.OrderItemRequest(
+                        cartItem.getProduct().getId(),
+                        cartItem.getQuantity(),
+                        cartItem.getProduct().getPrice()
+                ));
+            }
+
             int dummyShopId = 2;
 
-            // Truyền realAddressId thật vào Request
-            UserOrderRequest request = new UserOrderRequest(realAddressId, method, realUserId, dummyShopId, finalTotal);
+            // Truyền itemsRequest vào OrderRequest
+            UserOrderRequest request = new UserOrderRequest(realAddressId, method, realUserId, dummyShopId, finalTotal, itemsRequest);
 
             viewModel.placeOrder(request);
         });

@@ -23,10 +23,19 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
     private UserOrderViewModel viewModel;
     private UserOrderAdapter adapter;
 
+    private String currentStatus = "ALL";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_order_history);
+
+        // --- NHẬN TÍN HIỆU TỪ TRANG PROFILE ---
+        if (getIntent() != null && getIntent().hasExtra("ORDER_STATUS")) {
+            currentStatus = getIntent().getStringExtra("ORDER_STATUS");
+            // Hiện Toast để bạn test xem tín hiệu đã thông chưa
+            Toast.makeText(this, "Đang lọc: " + currentStatus, Toast.LENGTH_SHORT).show();
+        }
 
         // 1. Ánh xạ View
         ImageView btnBack = findViewById(R.id.btnOrderHistoryBack);
@@ -63,10 +72,13 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
         // ==========================================
         // 5. GỌI API LẤY ĐƠN HÀNG VỚI ID THẬT
         // ==========================================
+        // ==========================================
+        // 5. GỌI API VÀ TRUYỀN VÀO BỘ LỌC
+        // ==========================================
         int realUserId = (int) tokenManager.getUserId();
 
         if (realUserId != -1) {
-            viewModel.fetchOrdersByUser(realUserId);
+            viewModel.fetchOrdersByUserAndStatus(realUserId, currentStatus);
         } else {
             Toast.makeText(this, "Vui lòng đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show();
         }

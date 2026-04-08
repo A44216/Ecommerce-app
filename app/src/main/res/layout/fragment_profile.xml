@@ -131,6 +131,7 @@
             android:weightSum="4">
 
             <LinearLayout
+                android:id="@+id/btnPending"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -151,6 +152,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btnProcessing"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -171,6 +173,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btnShipping"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -191,6 +194,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btnDelivered"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

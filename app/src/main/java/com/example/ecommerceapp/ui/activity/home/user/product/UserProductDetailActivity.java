@@ -38,6 +38,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
         Button btnBuyNow = findViewById(R.id.btnBuyNow);
 
         // 2. Nhận dữ liệu từ Intent gửi sang
+        int productId = getIntent().getIntExtra("product_id", -1);
         String name = getIntent().getStringExtra("product_name");
         String priceString = getIntent().getStringExtra("product_price");
         String imageUrl = getIntent().getStringExtra("product_image");
@@ -64,6 +65,9 @@ public class UserProductDetailActivity extends AppCompatActivity {
         // ==========================================
 
         UserProductResponse currentProduct = new UserProductResponse();
+        if (productId != -1) {
+            currentProduct.setId(productId);
+        }
         if (name != null) currentProduct.setName(name);
         if (priceString != null) {
             try {

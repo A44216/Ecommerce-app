@@ -39,6 +39,12 @@
                 android:textSize="14sp" />
         </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/llOrderItemsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -55,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:text="Ngày đặt: 05/04/2026"
                 android:textColor="#777777"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:layout_centerVertical="true"/>
 
             <TextView
                 android:id="@+id/tvOrderTotal"
@@ -65,7 +72,8 @@
                 android:text="Thành tiền: 150.000đ"
                 android:textColor="#333333"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:layout_centerVertical="true"/>
         </RelativeLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

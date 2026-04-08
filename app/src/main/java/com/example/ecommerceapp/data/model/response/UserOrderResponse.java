@@ -1,19 +1,22 @@
 package com.example.ecommerceapp.data.model.response;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class UserOrderResponse {
     private Integer id;
     private Integer userId;
     private Integer shopId;
-    private String status; // Trạng thái đơn hàng (PENDING, SHIPPING, DELIVERED...)
+    private String status; // Trạng thái đơn hàng (PENDING, PROCESSING, SHIPPING, DELIVERED...)
     private BigDecimal totalPrice;
-    private String createdAt; // Ngày đặt hàng (Dùng String để Gson tự ép kiểu cho dễ)
+    private String createdAt;
 
-    // Phần địa chỉ (để hiển thị nếu cần)
+    // Phần địa chỉ
     private String shippingName;
     private String shippingPhone;
     private String addressLine;
+
+    private List<UserOrderItemResponse> orderItems;
 
     // Getters
     public Integer getId() { return id; }
@@ -25,4 +28,7 @@ public class UserOrderResponse {
     public String getShippingName() { return shippingName; }
     public String getShippingPhone() { return shippingPhone; }
     public String getAddressLine() { return addressLine; }
+
+    // Getter mới
+    public List<UserOrderItemResponse> getOrderItems() { return orderItems; }
 }

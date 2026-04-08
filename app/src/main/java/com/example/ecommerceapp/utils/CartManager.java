@@ -23,9 +23,9 @@ public class CartManager {
     // ĐÃ ĐỔI SANG UserProductResponse
     public void addToCart(UserProductResponse product) {
         for (UserCartItem item : cartList) {
-            // Đã thêm kiểm tra null để chống lỗi crash ngầm
-            if (item.getProduct().getName() != null && product.getName() != null) {
-                if (item.getProduct().getName().equals(product.getName())) {
+            // SO SÁNH BẰNG ID THAY VÌ NAME
+            if (item.getProduct().getId() != null && product.getId() != null) {
+                if (item.getProduct().getId().equals(product.getId())) {
                     item.setQuantity(item.getQuantity() + 1);
                     return;
                 }

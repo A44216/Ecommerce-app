@@ -10,11 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
-
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
+import com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity;
 
 public class ProfileFragment extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -22,22 +23,33 @@ public class ProfileFragment extends Fragment {
 
         // Ánh xạ icon Giỏ hàng
         ImageView ivCartProfile = view.findViewById(R.id.ivCartProfile);
-
-        // Bắt sự kiện chuyển trang
         ivCartProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), UserCartActivity.class);
             startActivity(intent);
         });
 
-        //Ánh xạ chữ "Xem lịch sử mua hàng >" (Bạn nhớ thay đúng ID của bạn nhé)
+        // 1. Ánh xạ chữ "Xem lịch sử mua hàng >" và 4 nút trạng thái
         TextView tvViewOrderHistory = view.findViewById(R.id.tvViewOrderHistory);
+        View btnPending = view.findViewById(R.id.btnPending);
+        View btnProcessing = view.findViewById(R.id.btnProcessing);
+        View btnShipping = view.findViewById(R.id.btnShipping);
+        View btnDelivered = view.findViewById(R.id.btnDelivered);
 
-        //Bắt sự kiện Click để chuyển trang
-        tvViewOrderHistory.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity.class);
-            startActivity(intent);
-        });
+        // 2. Bắt sự kiện Click để chuyển trang & truyền Trạng thái tương ứng
+        tvViewOrderHistory.setOnClickListener(v -> openOrderHistory("ALL"));
+
+        if (btnPending != null) btnPending.setOnClickListener(v -> openOrderHistory("PENDING"));
+        if (btnProcessing != null) btnProcessing.setOnClickListener(v -> openOrderHistory("PROCESSING"));
+        if (btnShipping != null) btnShipping.setOnClickListener(v -> openOrderHistory("SHIPPING"));
+        if (btnDelivered != null) btnDelivered.setOnClickListener(v -> openOrderHistory("DELIVERED"));
 
         return view;
+    }
+
+    // Hàm phụ trợ giúp chuyển trang và mang theo trạng thái (Status)
+    private void openOrderHistory(String status) {
+        Intent intent = new Intent(getActivity(), UserOrderHistoryActivity.class);
+        intent.putExtra("ORDER_STATUS", status);
+        startActivity(intent);
     }
 }
