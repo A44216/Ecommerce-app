@@ -25,7 +25,7 @@ import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepo
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerAddAndEditProductActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.product.SellerProductAdapter;
-import com.example.ecommerceapp.ui.viewmodel.seller.SellerProductViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerProductViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerProductViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;

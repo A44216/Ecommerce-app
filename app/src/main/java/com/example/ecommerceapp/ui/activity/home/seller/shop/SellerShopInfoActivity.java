@@ -19,14 +19,14 @@ import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.seller.shop.SellerShopRequest;
 import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
-import com.example.ecommerceapp.ui.viewmodel.seller.SellerShopViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerShopViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerShopViewModelFactory;
 import com.example.ecommerceapp.utils.ImageLoader;
 import com.example.ecommerceapp.utils.ImageUploadHelper;
 
 public class SellerShopInfoActivity extends AppCompatActivity {
 
-    private ImageView imgAvatar;
+    private ImageView imgAvatar, ivBack;
     private EditText edtShopName, edtAddress, edtPhone, edtEmail, edtDescription;
     private Button btnUpdate, btnChooseImage;
 
@@ -83,6 +83,8 @@ public class SellerShopInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_info);
 
+        tokenManager = TokenManager.getInstance(this);
+
         initViews();
         setupViewModel();
         observeData();
@@ -90,8 +92,8 @@ public class SellerShopInfoActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tokenManager = TokenManager.getInstance(this);
 
+        ivBack = findViewById(R.id.ivBack);
         imgAvatar = findViewById(R.id.imgAvatar);
         edtShopName = findViewById(R.id.edtShopName);
         edtAddress = findViewById(R.id.edtAddress);
@@ -145,6 +147,8 @@ public class SellerShopInfoActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
+
+        ivBack.setOnClickListener( v -> finish());
 
         btnChooseImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);

@@ -22,7 +22,10 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/ic_back"
-            android:contentDescription="@string/desc_back"/>
+            android:contentDescription="@string/desc_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <!-- Title -->
         <TextView

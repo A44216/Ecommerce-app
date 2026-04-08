@@ -17,7 +17,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.ui.activity.home.seller.order.SellerOrderDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderAdapter;
-import com.example.ecommerceapp.ui.viewmodel.seller.SellerOrderViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerOrderViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerOrderViewModelFactory;
 
 public class SellerOrderListFragment extends Fragment {

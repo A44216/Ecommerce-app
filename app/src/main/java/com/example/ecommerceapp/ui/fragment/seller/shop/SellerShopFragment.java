@@ -24,7 +24,7 @@ import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerChatActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerShopInfoActivity;
-import com.example.ecommerceapp.ui.viewmodel.seller.SellerShopViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.viewmodel.SellerShopViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerShopViewModelFactory;
 import com.example.ecommerceapp.utils.ImageLoader;
 

@@ -12,9 +12,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Avatar -->
+        <!-- Nút quay lại -->
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/desc_back_button"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"/>
 
-        <!-- Shop name -->
+        <!-- Avatar -->
         <ImageView
             android:id="@+id/imgAvatar"
             android:layout_width="100dp"
@@ -22,7 +31,6 @@
             android:layout_gravity="center"
             android:contentDescription="@string/desc_image"
             android:src="@drawable/ic_launcher_background" />
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnChooseImage"
             android:layout_width="wrap_content"
@@ -33,6 +41,7 @@
             android:textSize="14sp"
             app:cornerRadius="6dp"/>
 
+        <!-- Shop name -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
