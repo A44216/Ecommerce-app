@@ -12,7 +12,7 @@ public class SellerReviewResponse {
 
     // USER INFO
     private Integer userId;
-    private String userName;
+    private String fullName;
     private String userAvatar;
 
     // REVIEW DATA
@@ -44,8 +44,8 @@ public class SellerReviewResponse {
         return userId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getFullName() {
+        return fullName;
     }
 
     public String getUserAvatar() {
