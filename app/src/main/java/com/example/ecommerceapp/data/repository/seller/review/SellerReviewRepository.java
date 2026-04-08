@@ -1,11 +1,11 @@
-package com.example.ecommerceapp.data.repository.seller.order;
+package com.example.ecommerceapp.data.repository.seller.review;
 
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerReviewService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.seller.PageResponse;
-import com.example.ecommerceapp.data.model.request.seller.order.SellerReplyRequest;
-import com.example.ecommerceapp.data.model.response.seller.order.SellerReviewResponse;
+import com.example.ecommerceapp.data.model.request.seller.review.SellerReplyRequest;
+import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
 
 import retrofit2.Call;
 

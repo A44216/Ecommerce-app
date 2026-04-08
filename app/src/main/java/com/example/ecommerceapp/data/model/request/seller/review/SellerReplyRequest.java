@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.model.request.seller.order;
+package com.example.ecommerceapp.data.model.request.seller.review;
 
 public class SellerReplyRequest {
 

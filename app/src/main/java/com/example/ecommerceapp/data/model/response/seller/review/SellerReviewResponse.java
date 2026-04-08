@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.model.response.seller.order;
+package com.example.ecommerceapp.data.model.response.seller.review;
 
 import java.time.LocalDateTime;
 

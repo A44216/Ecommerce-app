@@ -1,10 +1,8 @@
 package com.example.ecommerceapp.api.service.seller;
 
 import com.example.ecommerceapp.data.model.request.seller.PageResponse;
-import com.example.ecommerceapp.data.model.request.seller.order.SellerReplyRequest;
-import com.example.ecommerceapp.data.model.response.seller.order.SellerReviewResponse;
-
-import java.util.List;
+import com.example.ecommerceapp.data.model.request.seller.review.SellerReplyRequest;
+import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
 
 import retrofit2.Call;
 import retrofit2.http.*;
