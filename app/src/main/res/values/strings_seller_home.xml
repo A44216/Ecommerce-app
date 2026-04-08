@@ -94,4 +94,8 @@
     <string name="seller_shop_hint_description">Mô tả cửa hàng</string>
     <string name="seller_shop_button_update">Cập nhật</string>
 
+    <string name="seller_review_title">ĐÁNH GIÁ KHÁCH HÀNG</string>
+    <string name="seller_review_sort_star_button">⭐ Đánh giá</string>
+    <string name="seller_review_sort_time_button">📅 Thời gian</string>
+
 </resources>
