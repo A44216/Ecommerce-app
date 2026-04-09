@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.ui.activity.home.seller.product;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
+import com.example.ecommerceapp.ui.activity.home.seller.review.SellerReviewActivity;
 import com.example.ecommerceapp.ui.adapter.seller.product.SellerImagePagerAdapter;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
@@ -27,6 +29,7 @@ import java.math.RoundingMode;
 public class SellerProductDetailActivity extends AppCompatActivity {
 
     private TextView txtName, txtPrice, txtCategory, txtStock, txtSold, txtRating, txtStatus, txtDescription;
+    private TextView tvViewReviews;
     private ViewPager2 viewPagerImages;
     private ImageView ivBack;
     private WormDotsIndicator dotsIndicator;
@@ -47,7 +50,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
         });
 
         initViews();
-        handleBack();
+        initListeners();
 
         // init API
         TokenManager tokenManager = TokenManager.getInstance(this);
@@ -77,10 +80,16 @@ public class SellerProductDetailActivity extends AppCompatActivity {
         viewPagerImages = findViewById(R.id.viewPagerImages);
         dotsIndicator = findViewById(R.id.dotsIndicator);
         ivBack = findViewById(R.id.ivBack);
+        tvViewReviews = findViewById(R.id.tvViewReviews);
     }
 
-    private void handleBack() {
+    private void initListeners() {
         ivBack.setOnClickListener(v -> finish());
+
+        tvViewReviews.setOnClickListener(v -> {
+            Intent it = new Intent(SellerProductDetailActivity.this, SellerReviewActivity.class);
+            startActivity(it);
+        });
     }
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})

@@ -26,6 +26,7 @@
                 android:id="@+id/imgUserAvatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:contentDescription="@string/desc_image"
                 android:src="@drawable/ic_user"
                 android:scaleType="centerCrop" />
 
@@ -41,7 +42,7 @@
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="User name"
+                    android:text="@string/seller_review_default_full_name"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="@color/blue"
@@ -63,13 +64,16 @@
                         android:numStars="5"
                         android:stepSize="1"
                         android:isIndicator="true"
-                        android:layout_marginTop="2dp"/>
+                        android:layout_marginTop="2dp"
+                        android:progressTint="@color/yellow"
+                        android:secondaryProgressTint="@color/yellow"
+                        android:backgroundTint="@color/gray"/>
 
                     <TextView
                         android:id="@+id/tvCreatedAt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2 giờ trước"
+                        android:text="@string/seller_review_default_customer_created_at"
                         android:textSize="12sp"
                         android:textColor="@color/gray"
                         android:layout_marginStart="8dp"/>
@@ -85,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Comment content"
+            android:text="@string/seller_review_default_comment_content"
             android:textSize="14sp"
             android:textColor="#333"
             android:maxLines="1"
@@ -99,45 +103,79 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:padding="10dp"
-            android:background="#F4F6F8"
-            android:visibility="gone">
+            android:background="#F4F6F8">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shop phản hồi"
+                android:text="@string/seller_review_default_seller_title"
                 android:textStyle="bold"
-                android:textSize="13sp"
-                android:textColor="#333" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvSellerReply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Seller reply here"
+                android:text="@string/seller_review_default_seller_reply"
                 android:textSize="13sp"
-                android:textColor="#444"
                 android:layout_marginTop="4dp" />
 
             <TextView
                 android:id="@+id/tvSellerReplyAt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1 giờ trước"
+                android:text="@string/seller_review_default_seller_created_at"
                 android:textSize="11sp"
-                android:textColor="#888"
+                android:textColor="@color/gray"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
-        <!-- ===== ACTION ===== -->
-        <Button
-            android:id="@+id/btnReply"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/layoutSellerReplyInput"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Phản hồi"
-            android:textAllCaps="false"
+            android:orientation="vertical"
+            android:padding="10dp"
             android:layout_marginTop="10dp"
-            android:visibility="gone" />
+            android:background="#F4F6F8">
+
+            <EditText
+                android:id="@+id/etSellerReply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:hint="@string/seller_review_input_hint_seller_reply"
+                android:inputType="textCapSentences|textMultiLine"
+                android:textSize="14sp"
+                android:minHeight="40dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_review_btn_reply"
+                android:layout_marginTop="6dp"
+                app:cornerRadius="24dp"
+                app:iconGravity="textStart"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp">
+
+            <TextView
+                android:id="@+id/tvToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_review_toggle_show"
+                android:textColor="@color/blue"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
 
     </LinearLayout>
 
