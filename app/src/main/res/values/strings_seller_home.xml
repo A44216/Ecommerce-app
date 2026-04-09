@@ -31,7 +31,7 @@
     <!-- Default for product-->
     <string name="seller_product_default_id">#1</string>
     <string name="seller_product_default_name">Laptop Gamming</string>
-    <string name="seller_product_default_price">Tổng: 25000000đ</string>
+    <string name="seller_product_default_price">25000000đ</string>
     <string name="seller_product_default_category">Danh mục: Chưa có</string>
     <string name="seller_product_default_stock">Kho: 5</string>
     <string name="seller_product_default_sold_and_revenue">Đã bán: 1</string>

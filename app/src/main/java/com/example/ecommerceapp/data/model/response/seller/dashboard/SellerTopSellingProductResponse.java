@@ -9,7 +9,11 @@ public class SellerTopSellingProductResponse {
     private Integer soldQuantity;
     private BigDecimal revenue;
     private String image;
+    private BigDecimal price;
 
+    public BigDecimal getPrice() {
+        return price;
+    }
 
     public Integer getProductId() {
         return productId;
@@ -49,6 +53,10 @@ public class SellerTopSellingProductResponse {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
 }

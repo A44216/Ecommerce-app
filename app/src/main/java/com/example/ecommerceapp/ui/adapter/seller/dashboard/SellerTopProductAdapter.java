@@ -22,27 +22,32 @@ public class SellerTopProductAdapter extends RecyclerView.Adapter<SellerTopProdu
     public interface OnTopProductClickListener {
         void onClick(SellerTopSellingProductResponse product);
     }
+
     private OnTopProductClickListener listener;
 
-    private int displayMode = 0;
+    public static final int MODE_SOLD = 0;
+    public static final int MODE_REVENUE = 1;
+
+    private int displayMode = MODE_SOLD;
+
+    private final List<SellerTopSellingProductResponse> list = new ArrayList<>();
+
+    public void setListener(OnTopProductClickListener listener) {
+        this.listener = listener;
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public void setDisplayMode(int mode) {
         this.displayMode = mode;
         notifyDataSetChanged();
     }
 
-    public static final int MODE_SOLD = 0;
-    public static final int MODE_REVENUE = 1;
-
-    public void setListener(OnTopProductClickListener listener) {
-        this.listener = listener;
-    }
-
-    private List<SellerTopSellingProductResponse> list = new ArrayList<>();
-
     @SuppressLint("NotifyDataSetChanged")
     public void setData(List<SellerTopSellingProductResponse> newList) {
-        this.list = newList != null ? newList : new ArrayList<>();
+        list.clear();
+        if (newList != null) {
+            list.addAll(newList);
+        }
         notifyDataSetChanged();
     }
 
@@ -57,12 +62,13 @@ public class SellerTopProductAdapter extends RecyclerView.Adapter<SellerTopProdu
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull SellerTopProductVH holder, int position) {
+
         SellerTopSellingProductResponse item = list.get(position);
 
         int rank = position + 1;
         holder.getTvRank().setText("#" + rank);
-        int color;
 
+        int color;
         if (rank == 1) {
             color = android.graphics.Color.parseColor("#F5C542");
         } else if (rank == 2) {
@@ -74,16 +80,20 @@ public class SellerTopProductAdapter extends RecyclerView.Adapter<SellerTopProdu
         }
 
         holder.getTvRank().getBackground().setTint(color);
-        holder.getTvName().setText(item.getName());
-        holder.getTvPrice().setText(String.format("%,.0f",item.getRevenue()) + " đ");
 
-        String text;
+        holder.getTvName().setText(item.getName());
+
+        holder.getTvPrice().setText(String.format("%,.0f", item.getPrice()) + " đ");
+
         if (displayMode == MODE_SOLD) {
-            text = "Đã bán: " + item.getSoldQuantity();
+            holder.getTvSoldAndRevenue().setText(
+                    "Đã bán: " + item.getSoldQuantity()
+            );
         } else {
-            text = "Doanh thu: " + NumberUtils.formatCompact(item.getRevenue()) + " đ";
+            holder.getTvSoldAndRevenue().setText(
+                    "Doanh thu: " + NumberUtils.formatCompact(item.getRevenue()) + " đ"
+            );
         }
-        holder.getTvSoldAndRevenue().setText(text);
 
         ImageLoader.load(
                 holder.itemView.getContext(),
@@ -92,11 +102,8 @@ public class SellerTopProductAdapter extends RecyclerView.Adapter<SellerTopProdu
         );
 
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onClick(item);
-            }
+            if (listener != null) listener.onClick(item);
         });
-
     }
 
     @Override

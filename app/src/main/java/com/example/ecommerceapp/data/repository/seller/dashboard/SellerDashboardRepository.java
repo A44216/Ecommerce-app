@@ -17,12 +17,12 @@ public class SellerDashboardRepository {
         this.dashboardService = dashboardService;
     }
 
-    public Call<SellerDashboardResponse> getDashboard(int shopId) {
-        return dashboardService.getDashboard(shopId);
+    public Call<SellerDashboardResponse> getDashboard() {
+        return dashboardService.getDashboard();
     }
 
-    public Call<List<SellerRevenueChartResponse>> getRevenueChart(int shopId, ChartType type) {
-        return dashboardService.getRevenueChart(shopId, type);
+    public Call<List<SellerRevenueChartResponse>> getRevenueChart(ChartType type) {
+        return dashboardService.getRevenueChart(type);
     }
 
 }

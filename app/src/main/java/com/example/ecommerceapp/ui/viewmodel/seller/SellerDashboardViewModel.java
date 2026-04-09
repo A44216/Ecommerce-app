@@ -25,8 +25,8 @@ public class SellerDashboardViewModel extends ViewModel {
         return dashboardData;
     }
 
-    public void loadDashboard(int shopId) {
-        repository.getDashboard(shopId).enqueue(new Callback<SellerDashboardResponse>() {
+    public void loadDashboard() {
+        repository.getDashboard().enqueue(new Callback<SellerDashboardResponse>() {
             @Override
             public void onResponse(Call<SellerDashboardResponse> call, Response<SellerDashboardResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {

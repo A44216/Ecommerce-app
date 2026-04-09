@@ -13,13 +13,10 @@ import retrofit2.http.Query;
 public interface SellerDashboardService {
 
     @GET("seller/dashboard")
-    Call<SellerDashboardResponse> getDashboard(
-            @Query("shopId") int shopId
-    );
+    Call<SellerDashboardResponse> getDashboard();
 
     @GET("seller/dashboard/revenue-chart")
     Call<List<SellerRevenueChartResponse>> getRevenueChart(
-            @Query("shopId") int shopId,
             @Query("type") ChartType type
     );
 
