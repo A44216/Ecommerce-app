@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.ui.fragment.seller.review;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerReviewViewMode
 
 public class SellerReviewListFragment extends Fragment {
 
+    private static final String TAG = "SellerReviewListFragment";
+
     private SellerReviewViewModel viewModel;
     private SellerReviewAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -29,9 +32,9 @@ public class SellerReviewListFragment extends Fragment {
     private final int PAGE_SIZE = 10;
     private boolean isLastPage = false;
 
-    private Integer productId;
+    private int productId;
 
-    public static SellerReviewListFragment newInstance(Integer productId) {
+    public static SellerReviewListFragment newInstance(int productId) {
         SellerReviewListFragment fragment = new SellerReviewListFragment();
         Bundle args = new Bundle();
         args.putInt("productId", productId);
@@ -41,24 +44,31 @@ public class SellerReviewListFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_seller_review_list, container, false);
 
         RecyclerView rv = view.findViewById(R.id.rvReviews);
+
         layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
 
         adapter = new SellerReviewAdapter();
         rv.setAdapter(adapter);
 
+        Log.d(TAG, "RecyclerView + Adapter initialized");
+
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                int totalItemCount = layoutManager.getItemCount();
-                int lastVisible = layoutManager.findLastVisibleItemPosition();
 
-                if (!isLoadingMore && !isLastPage && lastVisible >= totalItemCount - 2) {
+                int total = layoutManager.getItemCount();
+                int last = layoutManager.findLastVisibleItemPosition();
+
+                if (!isLoadingMore && !isLastPage && last >= total - 2) {
+                    Log.d(TAG, "Load more triggered page=" + currentPage);
                     isLoadingMore = true;
                     loadReviews();
                 }
@@ -70,25 +80,45 @@ public class SellerReviewListFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        productId = getArguments().getInt("productId");
+
+        if (getArguments() != null) {
+            productId = getArguments().getInt("productId");
+        }
+
+        Log.d(TAG, "productId = " + productId);
+
         viewModel = new ViewModelProvider(this,
                 new SellerReviewViewModelFactory(TokenManager.getInstance(requireContext())))
                 .get(SellerReviewViewModel.class);
 
+        observeData(); // FIX: chỉ observe 1 lần
+
         loadReviews();
     }
 
-    private void loadReviews() {
-        viewModel.getReviews(productId, null, currentPage, PAGE_SIZE)
+    private void observeData() {
+        viewModel.getReviewsLiveData(productId)
                 .observe(getViewLifecycleOwner(), pageResponse -> {
+
                     isLoadingMore = false;
+
+                    Log.d(TAG, "Data received page=" + currentPage);
+
                     if (pageResponse != null) {
-                        if (currentPage == 0) adapter.setData(pageResponse.getContent());
-                        else adapter.addData(pageResponse.getContent());
+
+                        if (currentPage == 0) {
+                            adapter.setData(pageResponse.getContent());
+                        } else {
+                            adapter.addData(pageResponse.getContent());
+                        }
 
                         isLastPage = pageResponse.isLast();
                         currentPage = pageResponse.getNumber() + 1;
                     }
                 });
+    }
+
+    private void loadReviews() {
+        viewModel.loadReviews(productId, null, currentPage, PAGE_SIZE);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.adapter.seller.review;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +33,13 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setReplyVisible(boolean replyVisible) {
         isReplyVisible = replyVisible;
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setInputVisible(boolean inputVisible) {
         isInputVisible = inputVisible;
         notifyDataSetChanged();
@@ -52,22 +55,24 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
 
     @Override
     public void onBindViewHolder(@NonNull SellerReviewVH holder, int position) {
+
         SellerReviewResponse item = list.get(position);
 
-        // Dùng bind trong VH
         holder.bind(item, isReplyVisible, isInputVisible);
 
-        // Click item
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onClick(item);
         });
 
-        // Click reply button
         holder.getBtnReply().setOnClickListener(v -> {
-            if (listener != null) listener.onReplyClick(item, holder.getEtSellerReply().getText().toString());
+            if (listener != null) {
+                listener.onReplyClick(
+                        item,
+                        holder.getEtSellerReply().getText().toString()
+                );
+            }
         });
 
-        // Click toggle show/hide
         holder.getTvToggle().setOnClickListener(v -> {
             if (listener != null) listener.onToggleClick(item, position);
         });
@@ -78,6 +83,7 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
         return list.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<SellerReviewResponse> data) {
         list = data != null ? data : new ArrayList<>();
         notifyDataSetChanged();

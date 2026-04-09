@@ -14,11 +14,11 @@ public class SellerReviewResponse {
     // REVIEW DATA
     private int rating;
     private String comment;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     // SELLER REPLY
     private String sellerReply;
-    private LocalDateTime sellerReplyAt;
+    private String sellerReplyAt;
 
     // STATUS
     private Boolean isReplied;
@@ -46,7 +46,7 @@ public class SellerReviewResponse {
         return comment;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
@@ -54,7 +54,7 @@ public class SellerReviewResponse {
         return sellerReply;
     }
 
-    public LocalDateTime getSellerReplyAt() {
+    public String  getSellerReplyAt() {
         return sellerReplyAt;
     }
 

@@ -38,6 +38,8 @@ public class SellerProductDetailActivity extends AppCompatActivity {
 
     private boolean isIndicatorAttached = false;
 
+    private int productId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
         );
 
         // lấy productId
-        int productId = getIntent().getIntExtra("productId", -1);
+        productId = getIntent().getIntExtra("productId", -1);
 
         if (productId != -1) {
             fetchProduct(productId);
@@ -88,6 +90,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
 
         tvViewReviews.setOnClickListener(v -> {
             Intent it = new Intent(SellerProductDetailActivity.this, SellerReviewActivity.class);
+            it.putExtra("productId", productId);
             startActivity(it);
         });
     }

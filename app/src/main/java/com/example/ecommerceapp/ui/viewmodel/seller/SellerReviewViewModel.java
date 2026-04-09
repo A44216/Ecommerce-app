@@ -1,5 +1,7 @@
 package com.example.ecommerceapp.ui.viewmodel.seller;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,6 +21,8 @@ import retrofit2.Response;
 
 public class SellerReviewViewModel extends ViewModel {
 
+    private static final String TAG = "SellerReviewVM";
+
     private final SellerReviewRepository repository;
 
     private final Map<Integer, MutableLiveData<PageResponse<SellerReviewResponse>>> cache = new HashMap<>();
@@ -29,38 +33,27 @@ public class SellerReviewViewModel extends ViewModel {
         repository = new SellerReviewRepository(tm);
     }
 
-    // ===== GET REVIEWS =====
-    public LiveData<PageResponse<SellerReviewResponse>> getReviews(
-            Integer productId,
-            Boolean isReplied,
-            int page,
-            int size
-    ) {
+    // LIVE DATA ONLY (NO API CALL)
+    public LiveData<PageResponse<SellerReviewResponse>> getReviewsLiveData(int productId) {
 
         if (!cache.containsKey(productId)) {
             cache.put(productId, new MutableLiveData<>());
         }
 
-        loadReviews(productId, isReplied, page, size);
-
         return cache.get(productId);
     }
 
-    public void loadReviews(
-            Integer productId,
-            Boolean isReplied,
-            int page,
-            int size
-    ) {
+    // LOAD API (ONLY PLACE CALL API)
+    public void loadReviews(int productId, Boolean isReplied, int page, int size) {
+
+        Log.d(TAG, "loadReviews productId=" + productId + " page=" + page);
 
         repository.getReviews(productId, isReplied, page, size)
                 .enqueue(new Callback<PageResponse<SellerReviewResponse>>() {
 
                     @Override
-                    public void onResponse(
-                            Call<PageResponse<SellerReviewResponse>> call,
-                            Response<PageResponse<SellerReviewResponse>> response
-                    ) {
+                    public void onResponse(Call<PageResponse<SellerReviewResponse>> call,
+                                           Response<PageResponse<SellerReviewResponse>> response) {
 
                         MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(productId);
 
@@ -69,18 +62,20 @@ public class SellerReviewViewModel extends ViewModel {
                             cache.put(productId, liveData);
                         }
 
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Log.d(TAG, "API success page=" + page);
                             liveData.setValue(response.body());
                         } else {
+                            Log.e(TAG, "API failed");
                             liveData.setValue(null);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<PageResponse<SellerReviewResponse>> call, Throwable t) {
+                        Log.e(TAG, "API error: " + t.getMessage());
 
                         MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(productId);
-
                         if (liveData != null) {
                             liveData.setValue(null);
                         }
@@ -88,8 +83,10 @@ public class SellerReviewViewModel extends ViewModel {
                 });
     }
 
-    // ===== REPLY REVIEW =====
+    // REPLY REVIEW
     public void replyReview(int reviewId, int productId, String content) {
+
+        Log.d(TAG, "replyReview id=" + reviewId);
 
         SellerReplyRequest request = new SellerReplyRequest(content);
 
@@ -102,7 +99,8 @@ public class SellerReviewViewModel extends ViewModel {
                         if (response.isSuccessful()) {
                             replyResult.setValue(true);
 
-                            // reload page 0
+                            Log.d(TAG, "Reply success → reload page 0");
+
                             loadReviews(productId, null, 0, 10);
 
                         } else {
@@ -113,6 +111,7 @@ public class SellerReviewViewModel extends ViewModel {
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         replyResult.setValue(false);
+                        Log.e(TAG, "Reply error: " + t.getMessage());
                     }
                 });
     }

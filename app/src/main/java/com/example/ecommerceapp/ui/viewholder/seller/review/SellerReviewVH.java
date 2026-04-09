@@ -61,26 +61,38 @@ public class SellerReviewVH extends RecyclerView.ViewHolder {
     public void bind(SellerReviewResponse item, boolean isReplyVisible, boolean isInputVisible) {
 
         tvUserName.setText(item.getFullName());
-        tvCreatedAt.setText(item.getCreatedAt() != null ? item.getCreatedAt().toLocalDate().toString() : "");
+        tvCreatedAt.setText(item.getCreatedAt() != null ? item.getCreatedAt() : "");
         ratingBar.setRating(item.getRating());
-
         tvComment.setText(item.getComment() != null ? item.getComment() : "");
 
-        // Avatar
         ImageLoader.load(itemView.getContext(), imgUserAvatar, item.getUserAvatar());
 
-        // Seller reply
+        // RESET input tránh dính dữ liệu cũ khi recycle
+        etSellerReply.setText("");
+
+        // REPLY STATE
         if (item.getIsReplied() != null && item.getIsReplied()) {
+
             layoutSellerReply.setVisibility(View.VISIBLE);
-            tvSellerReply.setText(item.getSellerReply());
-            tvSellerReplyAt.setText(item.getSellerReplyAt() != null ? item.getSellerReplyAt().toLocalDate().toString() : "");
             layoutSellerReplyInput.setVisibility(View.GONE);
+
+            tvSellerReply.setText(
+                    item.getSellerReply() != null ? item.getSellerReply() : ""
+            );
+
+            tvSellerReplyAt.setText(
+                    item.getSellerReplyAt() != null ? item.getSellerReplyAt() : ""
+            );
+
         } else {
+
             layoutSellerReply.setVisibility(View.GONE);
-            layoutSellerReplyInput.setVisibility(isInputVisible ? View.VISIBLE : View.GONE);
+            layoutSellerReplyInput.setVisibility(
+                    isInputVisible ? View.VISIBLE : View.GONE
+            );
         }
 
-        // Toggle
+        // TOGGLE TEXT
         tvToggle.setText(isReplyVisible ? "Ẩn" : "Xem thêm");
     }
 
