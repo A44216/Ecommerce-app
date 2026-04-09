@@ -20,7 +20,7 @@ import com.example.ecommerceapp.ui.viewholder.seller.order.SellerOrderStatusVH;
 public class SellerOrderStatusAdapter extends RecyclerView.Adapter<SellerOrderStatusVH> {
 
     private List<OrderStatus> list = new ArrayList<>();
-    private OrderStatus selectedStatus;
+    private OrderStatus selectedStatus, pendingStatus, displayStatus;
 
     public interface OnStatusChangeListener {
         void onStatusChange(OrderStatus status);
@@ -36,6 +36,8 @@ public class SellerOrderStatusAdapter extends RecyclerView.Adapter<SellerOrderSt
     public void setData(List<OrderStatus> data, OrderStatus currentStatus) {
         this.list = data;
         this.selectedStatus = currentStatus;
+        this.displayStatus = currentStatus;
+        this.pendingStatus = null;
         notifyDataSetChanged();
     }
 
@@ -57,18 +59,34 @@ public class SellerOrderStatusAdapter extends RecyclerView.Adapter<SellerOrderSt
 
         holder.getTvStatus().setText(getStatusText(status));
 
-        if (status == OrderStatus.CANCELED) {
-            holder.getIvCircle().setImageResource(R.drawable.bg_order_status_circle_canceled);
-        } else if (status == selectedStatus) {
+        // trạng thái trước / hiện tại / tương lai
+        boolean isPast = status.ordinal() < selectedStatus.ordinal();
+        boolean isCurrent = status == selectedStatus;
+
+        if (isCurrent) {
             holder.getIvCircle().setImageResource(R.drawable.bg_order_status_circle_active);
         } else {
             holder.getIvCircle().setImageResource(R.drawable.bg_order_status_circle_inactive);
         }
 
-        holder.itemView.setOnClickListener(v -> {
-            if (selectedStatus == status) return;
+        // LÀM MỜ TRẠNG THÁI ĐÃ QUA
+        if (isPast) {
+            holder.itemView.setAlpha(0.5f);
+        } else {
+            holder.itemView.setAlpha(1f);
+        }
 
-            selectedStatus = status;
+        // CLICK LOGIC
+        boolean isClickable = status.ordinal() > selectedStatus.ordinal();
+
+        holder.itemView.setOnClickListener(v -> {
+
+            // chỉ cho click tiến
+            if (status.ordinal() <= selectedStatus.ordinal()) return;
+
+            pendingStatus = status;
+            displayStatus = status;
+
             notifyDataSetChanged();
 
             if (listener != null) {

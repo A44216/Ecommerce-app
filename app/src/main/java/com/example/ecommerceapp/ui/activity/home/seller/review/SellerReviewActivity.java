@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.activity.home.seller.order;
+package com.example.ecommerceapp.ui.activity.home.seller.review;
 
 import android.os.Bundle;
 import android.widget.ImageView;

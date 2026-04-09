@@ -35,10 +35,8 @@ public class SellerOrderListFragment extends Fragment {
 
     public static SellerOrderListFragment newInstance(String status) {
         SellerOrderListFragment fragment = new SellerOrderListFragment();
-
         Bundle args = new Bundle();
         args.putString(ARG_STATUS, status);
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,7 +66,6 @@ public class SellerOrderListFragment extends Fragment {
         adapter = new SellerOrderAdapter();
         rv.setAdapter(adapter);
 
-        // click item → detail
         adapter.setOnItemClickListener(item -> {
             Intent intent = new Intent(requireContext(), SellerOrderDetailActivity.class);
             intent.putExtra("orderId", item.getOrderId());
@@ -85,14 +82,9 @@ public class SellerOrderListFragment extends Fragment {
 
                 if (totalItemCount == 0) return;
 
-                int shopId = (int) TokenManager.getInstance(requireContext()).getShopId();
-
-                // gần cuối list → load more
                 if (!isLoadingMore && lastVisibleItem >= totalItemCount - 2) {
-
                     isLoadingMore = true;
-
-                    viewModel.loadOrders(status, shopId, true);
+                    viewModel.loadOrders(status, true);
                 }
             }
         });
@@ -105,18 +97,13 @@ public class SellerOrderListFragment extends Fragment {
 
         TokenManager tokenManager = TokenManager.getInstance(requireContext());
 
-        int shopId = (int) tokenManager.getShopId();
-
         viewModel = new ViewModelProvider(
                 this,
                 new SellerOrderViewModelFactory(tokenManager)
         ).get(SellerOrderViewModel.class);
 
-        // OBSERVE DATA (LIST)
-        viewModel.getOrders(status, shopId).observe(getViewLifecycleOwner(), data -> {
-
-            isLoadingMore = false; // reset load state
-
+        viewModel.getOrders(status).observe(getViewLifecycleOwner(), data -> {
+            isLoadingMore = false;
             if (data != null) {
                 adapter.setData(data);
             }
@@ -126,10 +113,6 @@ public class SellerOrderListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        int shopId = (int) TokenManager.getInstance(requireContext()).getShopId();
-
-        // 🔥 reload page 0
-        viewModel.loadOrders(status, shopId, false);
+        viewModel.loadOrders(status, false);
     }
 }

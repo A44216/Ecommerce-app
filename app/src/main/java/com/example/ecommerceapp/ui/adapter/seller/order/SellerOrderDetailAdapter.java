@@ -58,8 +58,6 @@ public class SellerOrderDetailAdapter extends RecyclerView.Adapter<SellerOrderDe
         holder.getQuantity().setText("x" + item.getQuantity());
         holder.getTotalPrice().setText("Tổng: " + String.format("%,.0f", item.getPrice()) + " đ");
 
-        Log.d("IMG_DEBUG", position + " - " + item.getProductImage());
-
         ImageLoader.load(
                 holder.itemView.getContext(),
                 holder.getIvProduct(),

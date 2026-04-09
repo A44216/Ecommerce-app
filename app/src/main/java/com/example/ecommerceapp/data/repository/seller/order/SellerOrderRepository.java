@@ -7,8 +7,6 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderDetailResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 
-import java.util.List;
-
 import retrofit2.Call;
 
 public class SellerOrderRepository {
@@ -20,16 +18,16 @@ public class SellerOrderRepository {
     }
 
     public Call<PageResponse<SellerOrderResponse>> getOrders(
-            String status, int shopId, int page, int size
+            String status, int page, int size
     ) {
-        return service.getOrdersByStatus(shopId, status, page, size);
+        return service.getOrdersByStatus(status, page, size);
     }
 
-    public Call<SellerOrderDetailResponse> getOrderDetail(int id, int shopId) {
-        return service.getOrderDetail(id, shopId);
+    public Call<SellerOrderDetailResponse> getOrderDetail(int id) {
+        return service.getOrderDetail(id);
     }
 
-    public Call<Void> updateOrderStatus(int orderId, int shopId, String status) {
-        return service.updateOrderStatus(orderId, shopId, status);
+    public Call<Void> updateOrderStatus(int orderId, String status) {
+        return service.updateOrderStatus(orderId, status);
     }
 }

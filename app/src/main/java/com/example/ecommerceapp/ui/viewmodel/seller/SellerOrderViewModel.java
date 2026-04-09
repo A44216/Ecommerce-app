@@ -36,21 +36,22 @@ public class SellerOrderViewModel extends ViewModel {
         repository = new SellerOrderRepository(tm);
     }
 
-    public LiveData<List<SellerOrderResponse>> getOrders(String status, int shopId) {
+    // GET ORDERS
+    public LiveData<List<SellerOrderResponse>> getOrders(String status) {
 
-        String key = status + "_" + shopId;
+        String key = status;
 
         if (!cache.containsKey(key)) {
             cache.put(key, new MutableLiveData<>());
-            loadOrders(status, shopId, false);
+            loadOrders(status, false);
         }
 
         return cache.get(key);
     }
 
-    public void loadOrders(String status, int shopId, boolean isLoadMore) {
+    public void loadOrders(String status, boolean isLoadMore) {
 
-        String key = status + "_" + shopId;
+        String key = status;
 
         int page = currentPageMap.getOrDefault(key, 0);
 
@@ -62,7 +63,7 @@ public class SellerOrderViewModel extends ViewModel {
 
         if (Boolean.TRUE.equals(lastPageMap.get(key))) return;
 
-        repository.getOrders(status, shopId, page, PAGE_SIZE)
+        repository.getOrders(status, page, PAGE_SIZE)
                 .enqueue(new Callback<PageResponse<SellerOrderResponse>>() {
 
                     @Override
@@ -99,11 +100,11 @@ public class SellerOrderViewModel extends ViewModel {
                 });
     }
 
-    public LiveData<SellerOrderDetailResponse> getOrderDetail(int orderId, int shopId) {
+    public LiveData<SellerOrderDetailResponse> getOrderDetail(int orderId) {
 
         MutableLiveData<SellerOrderDetailResponse> data = new MutableLiveData<>();
 
-        repository.getOrderDetail(orderId, shopId)
+        repository.getOrderDetail(orderId)
                 .enqueue(new Callback<SellerOrderDetailResponse>() {
                     @Override
                     public void onResponse(Call<SellerOrderDetailResponse> call,
@@ -125,18 +126,16 @@ public class SellerOrderViewModel extends ViewModel {
         return data;
     }
 
-    public void updateOrderStatus(int orderId, int shopId, OrderStatus status) {
+    public void updateOrderStatus(int orderId, OrderStatus status) {
 
-        repository.updateOrderStatus(orderId, shopId, status.name())
+        repository.updateOrderStatus(orderId, status.name())
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
 
                         if (response.isSuccessful()) {
-
                             updateStatusResult.setValue(true);
 
-                            // Chỉ reset list để reload lại tất cả tab
                             for (String key : cache.keySet()) {
                                 cache.get(key).setValue(null);
                             }

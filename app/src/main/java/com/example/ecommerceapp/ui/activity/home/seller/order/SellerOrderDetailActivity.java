@@ -43,8 +43,6 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     private TokenManager tokenManager;
 
     private int orderId;
-    private int shopId;
-
     private OrderStatus selectedStatus;
 
     @Override
@@ -93,7 +91,6 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         rvStatus.setAdapter(statusAdapter);
 
         orderId = getIntent().getIntExtra("orderId", 0);
-        shopId = (int) tokenManager.getShopId();
     }
 
     private void initViewModel() {
@@ -137,7 +134,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setMessage("Đổi sang: " + getStatusText(selectedStatus) + "?")
                     .setPositiveButton("OK", (dialog, which) -> {
 
-                        viewModel.updateOrderStatus(orderId, shopId, selectedStatus);
+                        viewModel.updateOrderStatus(orderId, selectedStatus);
                     })
                     .setNegativeButton("Huỷ", null)
                     .show();
@@ -150,7 +147,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setMessage("Bạn chắc chắn muốn huỷ đơn này?")
                     .setPositiveButton("Huỷ đơn", (dialog, which) -> {
 
-                        viewModel.updateOrderStatus(orderId, shopId, OrderStatus.CANCELED);
+                        viewModel.updateOrderStatus(orderId, OrderStatus.CANCELED);
                     })
                     .setNegativeButton("Không", null)
                     .show();
@@ -160,7 +157,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void observeData() {
 
-        viewModel.getOrderDetail(orderId, shopId)
+        viewModel.getOrderDetail(orderId)
                 .observe(this, data -> {
 
                     if (data == null) return;

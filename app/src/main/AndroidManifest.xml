@@ -15,7 +15,7 @@
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.activity.home.seller.order.SellerReviewActivity"
+            android:name=".ui.activity.home.seller.review.SellerReviewActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.seller.order.SellerOrderDetailActivity"

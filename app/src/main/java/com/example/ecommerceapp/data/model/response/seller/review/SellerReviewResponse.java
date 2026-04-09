@@ -4,14 +4,10 @@ import java.time.LocalDateTime;
 
 public class SellerReviewResponse {
 
+    // REVIEW ID
     private Integer reviewId;
 
-    // PRODUCT INFO
-    private Integer productId;
-    private String productName;
-
     // USER INFO
-    private Integer userId;
     private String fullName;
     private String userAvatar;
 
@@ -23,6 +19,8 @@ public class SellerReviewResponse {
     // SELLER REPLY
     private String sellerReply;
     private LocalDateTime sellerReplyAt;
+
+    // STATUS
     private Boolean isReplied;
 
     public SellerReviewResponse() {
@@ -30,18 +28,6 @@ public class SellerReviewResponse {
 
     public Integer getReviewId() {
         return reviewId;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public Integer getUserId() {
-        return userId;
     }
 
     public String getFullName() {
