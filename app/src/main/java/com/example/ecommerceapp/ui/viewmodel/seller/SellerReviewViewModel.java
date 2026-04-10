@@ -117,9 +117,9 @@ public class SellerReviewViewModel extends ViewModel {
 
                             replyResult.setValue(true);
 
-                            cache.remove(key(productId, isReplied));
-
-                            loadReviews(productId, isReplied, 0, 10);
+                            // 🔥 reload cả 2 tab
+                            loadReviews(productId, false, 0, 10);
+                            loadReviews(productId, true, 0, 10);
 
                         } else {
                             replyResult.setValue(false);

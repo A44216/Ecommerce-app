@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
 import com.example.ecommerceapp.ui.adapter.seller.review.SellerReviewAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerReviewViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerReviewViewModelFactory;
@@ -86,6 +87,35 @@ public class SellerReviewListFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity(),
                 new SellerReviewViewModelFactory(TokenManager.getInstance(requireContext())))
                 .get(SellerReviewViewModel.class);
+
+        adapter.setOnItemClickListener(new SellerReviewAdapter.OnItemClickListener() {
+
+            @Override
+            public void onClick(SellerReviewResponse item) {
+                // optional: mở detail
+            }
+
+            @Override
+            public void onReplyClick(SellerReviewResponse item, String replyContent) {
+
+                if (replyContent.trim().isEmpty()) {
+                    // show error UI (Toast / TextInputLayout)
+                    return;
+                }
+
+                viewModel.replyReview(
+                        item.getReviewId(),
+                        productId,
+                        isReplied,
+                        replyContent
+                );
+            }
+
+            @Override
+            public void onToggleClick(SellerReviewResponse item, int position) {
+                // expand/collapse
+            }
+        });
 
         observeData();
 

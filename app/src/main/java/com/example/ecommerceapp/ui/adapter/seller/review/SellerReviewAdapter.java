@@ -65,18 +65,17 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
 
         holder.getBtnReply().setOnClickListener(v -> {
 
+            String reply = holder.getEtSellerReply()
+                    .getText()
+                    .toString()
+                    .trim();
+
+            if (reply.isEmpty()) {
+                holder.getEtSellerReply().setError("Nhập nội dung phản hồi");
+                return;
+            }
+
             if (listener != null) {
-
-                String reply = holder.getEtSellerReply()
-                        .getText()
-                        .toString()
-                        .trim();
-
-                if (reply.isEmpty()) {
-                    holder.getEtSellerReply().setError("Nhập nội dung phản hồi");
-                    return;
-                }
-
                 listener.onReplyClick(item, reply);
             }
         });
