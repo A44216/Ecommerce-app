@@ -111,30 +111,27 @@ public class SellerReviewListFragment extends Fragment {
 
                     if (pageResponse != null) {
 
-                        isLastPage = pageResponse.isLast();
+                        isLastPage = pageResponse.getItems() == null
+                                || pageResponse.getItems().isEmpty()
+                                || pageResponse.getItems().size() < PAGE_SIZE;
 
                         if (currentPage == 0) {
-                            adapter.setData(pageResponse.getContent());
+                            adapter.setData(pageResponse.getItems());
                         } else {
-                            adapter.addData(pageResponse.getContent());
+                            adapter.addData(pageResponse.getItems());
                         }
-
-                        currentPage++;
-
                     }
                 });
     }
 
     private void loadReviews() {
 
-        if (isLoadingMore) return;
-
-        if (isLastPage) {
-            return;
-        }
+        if (isLoadingMore || isLastPage) return;
 
         isLoadingMore = true;
 
         viewModel.loadReviews(productId, isReplied, currentPage, PAGE_SIZE);
+
+        currentPage++;
     }
 }

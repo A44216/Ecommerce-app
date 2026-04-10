@@ -15,7 +15,8 @@ public interface SellerReviewService {
             @Query("productId") Integer productId,
             @Query("isReplied") Boolean isReplied,
             @Query("page") int page,
-            @Query("size") int size
+            @Query("size") int size,
+            @Query("sort") String sort
     );
 
     // POST /api/seller/reviews/{reviewId}/reply

@@ -50,7 +50,7 @@ public class SellerReviewViewModel extends ViewModel {
     // ===== LOAD API (FIX PAGING) =====
     public void loadReviews(int productId, Boolean isReplied, int page, int size) {
 
-        repository.getReviews(productId, isReplied, page, size)
+        repository.getReviews(productId, isReplied, page, size, "rating_desc,time_desc")
                 .enqueue(new Callback<PageResponse<SellerReviewResponse>>() {
 
                     @Override
@@ -58,7 +58,6 @@ public class SellerReviewViewModel extends ViewModel {
                                            Response<PageResponse<SellerReviewResponse>> response) {
 
                         String k = key(productId, isReplied);
-
                         MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(k);
 
                         if (liveData == null) {
@@ -71,21 +70,16 @@ public class SellerReviewViewModel extends ViewModel {
                             PageResponse<SellerReviewResponse> newData = response.body();
 
                             if (page == 0) {
-                                // load lần đầu
                                 liveData.setValue(newData);
-
                             } else {
-                                // merge dữ liệu paging
+
                                 PageResponse<SellerReviewResponse> current = liveData.getValue();
 
-                                if (current != null && current.getContent() != null) {
+                                if (current != null && current.getItems() != null) {
 
-                                    if (newData.getContent() != null && !newData.getContent().isEmpty()) {
-                                        current.getContent().addAll(newData.getContent());
+                                    if (newData.getItems() != null) {
+                                        current.getItems().addAll(newData.getItems());
                                     }
-
-                                    current.setLast(newData.isLast());
-                                    current.setNumber(newData.getNumber());
 
                                     liveData.setValue(current);
 
@@ -105,9 +99,7 @@ public class SellerReviewViewModel extends ViewModel {
                         MutableLiveData<PageResponse<SellerReviewResponse>> liveData =
                                 cache.get(key(productId, isReplied));
 
-                        if (liveData != null) {
-                            liveData.setValue(null);
-                        }
+                        if (liveData != null) liveData.setValue(null);
                     }
                 });
     }

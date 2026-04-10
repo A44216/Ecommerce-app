@@ -17,14 +17,14 @@ public class SellerReviewRepository {
         service = ApiClient.getReviewService(tm);
     }
 
-    // FIX: Page thay vì List
     public Call<PageResponse<SellerReviewResponse>> getReviews(
             Integer productId,
             Boolean isReplied,
             int page,
-            int size
+            int size,
+            String sort
     ) {
-        return service.getReviews(productId, isReplied, page, size);
+        return service.getReviews(productId, isReplied, page, size, sort);
     }
 
     public Call<Void> replyReview(int reviewId, SellerReplyRequest request) {

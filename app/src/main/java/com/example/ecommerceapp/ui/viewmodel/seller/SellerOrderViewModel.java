@@ -83,16 +83,25 @@ public class SellerOrderViewModel extends ViewModel {
                         List<SellerOrderResponse> current = liveData.getValue();
                         if (current == null) current = new java.util.ArrayList<>();
 
+                        List<SellerOrderResponse> newItems = body.getItems();
+                        if (newItems == null) newItems = new java.util.ArrayList<>();
+
                         if (isLoadMore) {
-                            current.addAll(body.getContent());
+                            current.addAll(newItems);
                         } else {
-                            current = new java.util.ArrayList<>(body.getContent());
+                            current = new java.util.ArrayList<>(newItems);
                         }
 
                         liveData.setValue(current);
 
-                        currentPageMap.put(key, body.getNumber() + 1);
-                        lastPageMap.put(key, body.isLast());
+                        // FIX PAGE
+                        currentPageMap.put(key, body.getPage() + 1);
+
+                        // FIX LAST PAGE (tự tính)
+                        boolean isLast = newItems.size() < PAGE_SIZE
+                                || current.size() >= body.getTotalElements();
+
+                        lastPageMap.put(key, isLast);
                     }
 
                     @Override
