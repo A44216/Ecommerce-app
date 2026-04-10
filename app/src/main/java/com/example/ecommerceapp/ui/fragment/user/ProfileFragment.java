@@ -14,6 +14,11 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
 import com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity;
 import com.example.ecommerceapp.utils.CartManager;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 
 public class ProfileFragment extends Fragment {
     private TextView tvCartBadge;
@@ -46,6 +51,34 @@ public class ProfileFragment extends Fragment {
         if (btnShipping != null) btnShipping.setOnClickListener(v -> openOrderHistory("SHIPPING"));
         if (btnDelivered != null) btnDelivered.setOnClickListener(v -> openOrderHistory("DELIVERED"));
 
+
+        TextView tvUsername = view.findViewById(R.id.tvUsername);
+        TokenManager tokenManager = TokenManager.getInstance(getContext());
+
+        long currentUserId = tokenManager.getUserId();
+        if (currentUserId != -1) {
+            // Tạm thời hiển thị ID vì chúng ta chưa lấy được Tên từ Backend
+            tvUsername.setText("Khách hàng #" + currentUserId);
+        } else {
+            tvUsername.setText("Chưa đăng nhập");
+        }
+
+        //  CHỨC NĂNG ĐĂNG XUẤT
+        Button btnLogout = view.findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(v -> {
+            // 1. Xóa toàn bộ dữ liệu đăng nhập
+            tokenManager.clearAllData();
+
+            // 2. Xóa sạch giỏ hàng
+            CartManager.getInstance().clearCart();
+
+            // 3. Chuyển hướng về màn hình Đăng nhập & Xóa lịch sử trang cũ
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+
+            Toast.makeText(getContext(), "Đã đăng xuất thành công!", Toast.LENGTH_SHORT).show();
+        });
         return view;
     }
     @Override

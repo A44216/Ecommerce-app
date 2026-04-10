@@ -45,4 +45,9 @@ public class CartManager {
         }
         return total;
     }
+    public void clearCart() {
+        if (cartList != null) {
+            cartList.clear();
+        }
+    }
 }

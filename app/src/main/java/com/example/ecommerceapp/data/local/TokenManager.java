@@ -77,4 +77,7 @@ public class TokenManager {
         prefs.edit().remove(KEY_SHOP_ID).apply();
     }
 
+    public void clearAllData() {
+        prefs.edit().clear().apply();
+    }
 }
