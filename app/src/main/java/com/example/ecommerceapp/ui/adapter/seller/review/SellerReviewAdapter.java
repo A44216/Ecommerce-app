@@ -64,11 +64,20 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
         });
 
         holder.getBtnReply().setOnClickListener(v -> {
+
             if (listener != null) {
-                listener.onReplyClick(
-                        item,
-                        holder.getEtSellerReply().getText().toString()
-                );
+
+                String reply = holder.getEtSellerReply()
+                        .getText()
+                        .toString()
+                        .trim();
+
+                if (reply.isEmpty()) {
+                    holder.getEtSellerReply().setError("Nhập nội dung phản hồi");
+                    return;
+                }
+
+                listener.onReplyClick(item, reply);
             }
         });
 
