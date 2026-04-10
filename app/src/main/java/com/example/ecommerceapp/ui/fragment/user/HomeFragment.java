@@ -30,6 +30,7 @@ import com.example.ecommerceapp.ui.adapter.user.UserProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.UserHomeViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.UserHomeViewModelFactory;
 import com.example.ecommerceapp.utils.CartManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -47,6 +48,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_dark);
         tvCartBadge = view.findViewById(R.id.tvCartBadgeHome);
 
         // 1. Nút Giỏ hàng
@@ -116,6 +119,12 @@ public class HomeFragment extends Fragment {
         UserHomeViewModelFactory factory = new UserHomeViewModelFactory(productRepository, categoryRepository);
         viewModel = new ViewModelProvider(this, factory).get(UserHomeViewModel.class);
 
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Khi vuốt, ta gọi lại 2 API này để lấy dữ liệu mới nhất
+            viewModel.fetchCategories();
+            viewModel.fetchProducts();
+        });
         // 5. LẮNG NGHE DỮ LIỆU TỪ VIEWMODEL
 
         // Lắng nghe Danh mục
@@ -129,6 +138,9 @@ public class HomeFragment extends Fragment {
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
             if (products != null) {
                 productAdapter.updateData(products);
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
 
@@ -136,6 +148,9 @@ public class HomeFragment extends Fragment {
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
 
