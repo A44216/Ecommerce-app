@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
 import com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity;
+import com.example.ecommerceapp.ui.activity.home.user.editprofile.EditUserProfileActivity;
 import com.example.ecommerceapp.utils.CartManager;
 import android.widget.Button;
 import android.widget.Toast;
@@ -20,8 +21,17 @@ import android.widget.Toast;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 
+import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.service.UserService;
+import com.example.ecommerceapp.data.model.response.UserProfileResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ProfileFragment extends Fragment {
     private TextView tvCartBadge;
+    private TextView tvUsername;
+    private TextView tvFollowers;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,14 +63,39 @@ public class ProfileFragment extends Fragment {
 
 
         TextView tvUsername = view.findViewById(R.id.tvUsername);
+        tvFollowers = view.findViewById(R.id.tvFollowers);
         TokenManager tokenManager = TokenManager.getInstance(getContext());
-
         long currentUserId = tokenManager.getUserId();
+
         if (currentUserId != -1) {
-            // Tạm thời hiển thị ID vì chúng ta chưa lấy được Tên từ Backend
-            tvUsername.setText("Khách hàng #" + currentUserId);
+            UserService apiService = ApiClient.getUserService(tokenManager);
+
+            // Gọi API
+            apiService.getUserProfile(currentUserId).enqueue(new Callback<UserProfileResponse>() {
+                @Override
+                public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        UserProfileResponse user = response.body();
+
+                        // Ưu tiên hiển thị Tên đầy đủ (fullName), nếu không có thì hiện Username
+                        String displayName = user.getFullName() != null ? user.getFullName() : user.getUsername();
+                        tvUsername.setText(displayName);
+
+                        // Tận dụng dòng ở dưới để hiển thị Email hoặc SĐT thay cho "0 người theo dõi"
+                        String extraInfo = user.getEmail() != null ? user.getEmail() : (user.getPhone() != null ? user.getPhone() : "");
+                        tvFollowers.setText(extraInfo);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+                    tvUsername.setText("Khách hàng #" + currentUserId);
+                    Toast.makeText(getContext(), "Không thể tải thông tin: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             tvUsername.setText("Chưa đăng nhập");
+            tvFollowers.setText("Vui lòng đăng nhập");
         }
 
         //  CHỨC NĂNG ĐĂNG XUẤT
@@ -79,6 +114,21 @@ public class ProfileFragment extends Fragment {
 
             Toast.makeText(getContext(), "Đã đăng xuất thành công!", Toast.LENGTH_SHORT).show();
         });
+
+        ImageView ivSettings = view.findViewById(R.id.ivSettings);
+
+        ivSettings.setOnClickListener(v -> {
+            // Nhớ đảm bảo bạn đã import Intent và EditProfileActivity ở trên cùng file nhé!
+            Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.editprofile.EditUserProfileActivity.class);
+            startActivity(intent);
+        });
+
+        tvUsername.setOnClickListener(v -> ivSettings.performClick());
+
+        ImageView ivAvatar = view.findViewById(R.id.ivAvatar);
+        if (ivAvatar != null) {
+            ivAvatar.setOnClickListener(v -> ivSettings.performClick());
+        }
         return view;
     }
     @Override
