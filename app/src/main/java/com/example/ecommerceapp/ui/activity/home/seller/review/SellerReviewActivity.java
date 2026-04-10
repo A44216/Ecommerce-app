@@ -3,15 +3,17 @@ package com.example.ecommerceapp.ui.activity.home.seller.review;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.ui.adapter.seller.review.SellerReviewPagerAdapter;
+import com.example.ecommerceapp.ui.fragment.seller.review.SellerReviewListFragment;
+import com.example.ecommerceapp.ui.viewmodel.seller.SellerReviewViewModel;
+import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerReviewViewModelFactory;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -23,30 +25,30 @@ public class SellerReviewActivity extends AppCompatActivity {
     private TabLayout tabReview;
     private ViewPager2 vpReview;
 
-    private SellerReviewPagerAdapter pagerAdapter;
+    private SellerReviewViewModel viewModel;
 
     private int productId;
+
+    private boolean isSortRatingDesc = true;
+    private boolean isSortTimeDesc = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_seller_review);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         productId = getIntent().getIntExtra("productId", -1);
-
         if (productId == -1) {
             finish();
             return;
         }
 
         initViews();
+
+        viewModel = new ViewModelProvider(this,
+                new SellerReviewViewModelFactory(TokenManager.getInstance(this)))
+                .get(SellerReviewViewModel.class);
+
         setupViewPager();
         setListeners();
     }
@@ -61,20 +63,52 @@ public class SellerReviewActivity extends AppCompatActivity {
 
     private void setupViewPager() {
 
-        pagerAdapter = new SellerReviewPagerAdapter(this, productId);
+        SellerReviewPagerAdapter pagerAdapter = new SellerReviewPagerAdapter(this, productId);
         vpReview.setAdapter(pagerAdapter);
 
         new TabLayoutMediator(tabReview, vpReview, (tab, position) -> {
-            if (position == 0) {
-                tab.setText("Chưa trả lời");
-            } else {
-                tab.setText("Đã trả lời");
-            }
+            tab.setText(position == 0 ? "Chưa trả lời" : "Đã trả lời");
         }).attach();
     }
 
     private void setListeners() {
 
         ivBack.setOnClickListener(v -> finish());
+
+        btnSortRating.setOnClickListener(v -> {
+
+            String sort = isSortRatingDesc
+                    ? "rating_asc,time_desc"
+                    : "rating_desc,time_desc";
+
+            isSortRatingDesc = !isSortRatingDesc;
+
+            updateSort(sort);
+        });
+
+        btnSortTime.setOnClickListener(v -> {
+
+            String sort = isSortTimeDesc
+                    ? "time_asc,rating_desc"
+                    : "time_desc,rating_desc";
+
+            isSortTimeDesc = !isSortTimeDesc;
+
+            updateSort(sort);
+        });
+    }
+
+    private void updateSort(String sort) {
+
+        int position = vpReview.getCurrentItem();
+        boolean isReplied = (position == 1);
+
+        viewModel.setSort(sort, productId, isReplied);
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("f" + position);
+
+        if (fragment instanceof SellerReviewListFragment) {
+            ((SellerReviewListFragment) fragment).resetAndReload();
+        }
     }
 }

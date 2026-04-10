@@ -21,23 +21,20 @@ public class SellerReviewViewModel extends ViewModel {
 
     private final SellerReviewRepository repository;
 
-    // cache theo productId + isReplied
     private final Map<String, MutableLiveData<PageResponse<SellerReviewResponse>>> cache = new HashMap<>();
-
     private final MutableLiveData<Boolean> replyResult = new MutableLiveData<>();
+
+    private String currentSort = "rating_desc,time_desc";
 
     public SellerReviewViewModel(TokenManager tm) {
         repository = new SellerReviewRepository(tm);
     }
 
-    // tạo key riêng cho từng tab
     private String key(int productId, Boolean isReplied) {
         return productId + "_" + isReplied;
     }
 
-    // ===== GET LIVE DATA =====
     public LiveData<PageResponse<SellerReviewResponse>> getReviewsLiveData(int productId, Boolean isReplied) {
-
         String k = key(productId, isReplied);
 
         if (!cache.containsKey(k)) {
@@ -47,10 +44,9 @@ public class SellerReviewViewModel extends ViewModel {
         return cache.get(k);
     }
 
-    // ===== LOAD API (FIX PAGING) =====
     public void loadReviews(int productId, Boolean isReplied, int page, int size) {
 
-        repository.getReviews(productId, isReplied, page, size, "rating_desc,time_desc")
+        repository.getReviews(productId, isReplied, page, size, currentSort)
                 .enqueue(new Callback<PageResponse<SellerReviewResponse>>() {
 
                     @Override
@@ -75,10 +71,22 @@ public class SellerReviewViewModel extends ViewModel {
 
                                 PageResponse<SellerReviewResponse> current = liveData.getValue();
 
-                                if (current != null && current.getItems() != null) {
+                                if (current != null && current.getItems() != null && newData.getItems() != null) {
 
-                                    if (newData.getItems() != null) {
-                                        current.getItems().addAll(newData.getItems());
+                                    for (SellerReviewResponse item : newData.getItems()) {
+
+                                        boolean exists = false;
+
+                                        for (SellerReviewResponse old : current.getItems()) {
+                                            if (old.getReviewId() == item.getReviewId()) {
+                                                exists = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!exists) {
+                                            current.getItems().add(item);
+                                        }
                                     }
 
                                     liveData.setValue(current);
@@ -104,7 +112,21 @@ public class SellerReviewViewModel extends ViewModel {
                 });
     }
 
-    // ===== REPLY REVIEW =====
+    public void setSort(String sort, int productId, Boolean isReplied) {
+        currentSort = sort;
+
+        String k = key(productId, isReplied);
+
+        MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(k);
+
+        if (liveData == null) {
+            liveData = new MutableLiveData<>();
+            cache.put(k, liveData);
+        }
+
+        liveData.setValue(null); // clear data
+    }
+
     public void replyReview(int reviewId, int productId, Boolean isReplied, String content) {
 
         SellerReplyRequest request = new SellerReplyRequest(content);
@@ -119,10 +141,8 @@ public class SellerReviewViewModel extends ViewModel {
 
                             replyResult.setValue(true);
 
-                            // clear cache tab hiện tại
                             cache.remove(key(productId, isReplied));
 
-                            // reload từ page 0
                             loadReviews(productId, isReplied, 0, 10);
 
                         } else {

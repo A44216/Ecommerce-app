@@ -22,8 +22,6 @@ import java.util.ArrayList;
 
 public class SellerReviewListFragment extends Fragment {
 
-    private static final String TAG = "SellerReviewListFragment";
-
     private SellerReviewViewModel viewModel;
     private SellerReviewAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -89,14 +87,8 @@ public class SellerReviewListFragment extends Fragment {
                 new SellerReviewViewModelFactory(TokenManager.getInstance(requireContext())))
                 .get(SellerReviewViewModel.class);
 
-        // reset state
-        currentPage = 0;
-        isLastPage = false;
-        isLoadingMore = false;
-
-        adapter.setData(new ArrayList<>());
-
         observeData();
+        resetAndReload();
 
         if (viewModel.getReviewsLiveData(productId, isReplied).getValue() == null) {
             loadReviews();
@@ -111,15 +103,15 @@ public class SellerReviewListFragment extends Fragment {
 
                     if (pageResponse != null) {
 
-                        isLastPage = pageResponse.getItems() == null
-                                || pageResponse.getItems().isEmpty()
-                                || pageResponse.getItems().size() < PAGE_SIZE;
-
                         if (currentPage == 0) {
                             adapter.setData(pageResponse.getItems());
                         } else {
                             adapter.addData(pageResponse.getItems());
                         }
+
+                        isLastPage = pageResponse.getItems() == null
+                                || pageResponse.getItems().isEmpty()
+                                || pageResponse.getItems().size() < PAGE_SIZE;
                     }
                 });
     }
@@ -133,5 +125,15 @@ public class SellerReviewListFragment extends Fragment {
         viewModel.loadReviews(productId, isReplied, currentPage, PAGE_SIZE);
 
         currentPage++;
+    }
+
+    public void resetAndReload() {
+        currentPage = 0;
+        isLastPage = false;
+        isLoadingMore = false;
+
+        adapter.setData(new ArrayList<>());
+
+        loadReviews();
     }
 }
