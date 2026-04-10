@@ -88,11 +88,7 @@ public class SellerReviewListFragment extends Fragment {
                 .get(SellerReviewViewModel.class);
 
         observeData();
-        resetAndReload();
 
-        if (viewModel.getReviewsLiveData(productId, isReplied).getValue() == null) {
-            loadReviews();
-        }
     }
 
     private void observeData() {

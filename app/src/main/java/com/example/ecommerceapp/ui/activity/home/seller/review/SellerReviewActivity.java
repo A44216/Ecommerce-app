@@ -66,6 +66,20 @@ public class SellerReviewActivity extends AppCompatActivity {
         SellerReviewPagerAdapter pagerAdapter = new SellerReviewPagerAdapter(this, productId);
         vpReview.setAdapter(pagerAdapter);
 
+        vpReview.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+
+                Fragment fragment = getSupportFragmentManager()
+                        .findFragmentByTag("f" + position);
+
+                if (fragment instanceof SellerReviewListFragment) {
+                    ((SellerReviewListFragment) fragment).resetAndReload();
+                }
+            }
+        });
+
         new TabLayoutMediator(tabReview, vpReview, (tab, position) -> {
             tab.setText(position == 0 ? "Chưa trả lời" : "Đã trả lời");
         }).attach();
