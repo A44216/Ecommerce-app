@@ -71,12 +71,10 @@ public class SellerReviewActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
 
-                Fragment fragment = getSupportFragmentManager()
-                        .findFragmentByTag("f" + position);
+                boolean isReplied = (position == 1);
 
-                if (fragment instanceof SellerReviewListFragment) {
-                    ((SellerReviewListFragment) fragment).resetAndReload();
-                }
+                // luôn reload tab mỗi lần chuyển
+                viewModel.loadReviews(productId, isReplied, 0, 10);
             }
         });
 
@@ -137,11 +135,7 @@ public class SellerReviewActivity extends AppCompatActivity {
 
         viewModel.setSort(sort, productId, isReplied);
 
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("f" + position);
-
-        if (fragment instanceof SellerReviewListFragment) {
-            ((SellerReviewListFragment) fragment).resetAndReload();
-        }
+        viewModel.loadReviews(productId, isReplied, 0, 10);
     }
 
     // Hàm đổi màu btnSort được chọn

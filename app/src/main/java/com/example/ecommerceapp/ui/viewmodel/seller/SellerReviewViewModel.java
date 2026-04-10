@@ -46,6 +46,15 @@ public class SellerReviewViewModel extends ViewModel {
 
     public void loadReviews(int productId, Boolean isReplied, int page, int size) {
 
+        if (page == 0) {
+            String k = key(productId, isReplied);
+            MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(k);
+
+            if (liveData != null) {
+                liveData.setValue(null); // reset UI
+            }
+        }
+
         repository.getReviews(productId, isReplied, page, size, currentSort)
                 .enqueue(new Callback<PageResponse<SellerReviewResponse>>() {
 
@@ -62,40 +71,7 @@ public class SellerReviewViewModel extends ViewModel {
                         }
 
                         if (response.isSuccessful() && response.body() != null) {
-
-                            PageResponse<SellerReviewResponse> newData = response.body();
-
-                            if (page == 0) {
-                                liveData.setValue(newData);
-                            } else {
-
-                                PageResponse<SellerReviewResponse> current = liveData.getValue();
-
-                                if (current != null && current.getItems() != null && newData.getItems() != null) {
-
-                                    for (SellerReviewResponse item : newData.getItems()) {
-
-                                        boolean exists = false;
-
-                                        for (SellerReviewResponse old : current.getItems()) {
-                                            if (old.getReviewId() == item.getReviewId()) {
-                                                exists = true;
-                                                break;
-                                            }
-                                        }
-
-                                        if (!exists) {
-                                            current.getItems().add(item);
-                                        }
-                                    }
-
-                                    liveData.setValue(current);
-
-                                } else {
-                                    liveData.setValue(newData);
-                                }
-                            }
-
+                            liveData.setValue(response.body());
                         } else {
                             liveData.setValue(null);
                         }
