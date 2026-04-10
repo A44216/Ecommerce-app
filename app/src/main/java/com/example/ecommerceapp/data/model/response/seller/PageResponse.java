@@ -17,6 +17,8 @@ public class PageResponse<T> {
 
     private int numberOfElements;
 
+    // ===== GETTER =====
+
     public List<T> getContent() {
         return content;
     }
@@ -47,5 +49,39 @@ public class PageResponse<T> {
 
     public int getNumberOfElements() {
         return numberOfElements;
+    }
+
+    // ===== SETTER (QUAN TRỌNG) =====
+
+    public void setContent(List<T> content) {
+        this.content = content;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setTotalElements(long totalElements) {
+        this.totalElements = totalElements;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public void setFirst(boolean first) {
+        this.first = first;
+    }
+
+    public void setLast(boolean last) {
+        this.last = last;
+    }
+
+    public void setNumberOfElements(int numberOfElements) {
+        this.numberOfElements = numberOfElements;
     }
 }

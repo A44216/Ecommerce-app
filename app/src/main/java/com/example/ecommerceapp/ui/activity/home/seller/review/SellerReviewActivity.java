@@ -1,7 +1,6 @@
 package com.example.ecommerceapp.ui.activity.home.seller.review;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -19,8 +18,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class SellerReviewActivity extends AppCompatActivity {
 
-    private static final String TAG = "SellerReviewActivity";
-
     private ImageView ivBack;
     private MaterialButton btnSortRating, btnSortTime;
     private TabLayout tabReview;
@@ -28,7 +25,7 @@ public class SellerReviewActivity extends AppCompatActivity {
 
     private SellerReviewPagerAdapter pagerAdapter;
 
-    private int productId = 1; // TODO: lấy từ intent nếu bạn truyền
+    private int productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +39,12 @@ public class SellerReviewActivity extends AppCompatActivity {
             return insets;
         });
 
-        Log.d(TAG, "onCreate called");
+        productId = getIntent().getIntExtra("productId", -1);
+
+        if (productId == -1) {
+            finish();
+            return;
+        }
 
         initViews();
         setupViewPager();
@@ -62,30 +64,17 @@ public class SellerReviewActivity extends AppCompatActivity {
         pagerAdapter = new SellerReviewPagerAdapter(this, productId);
         vpReview.setAdapter(pagerAdapter);
 
-        Log.d(TAG, "ViewPager adapter set");
-
         new TabLayoutMediator(tabReview, vpReview, (tab, position) -> {
-            tab.setText("Reviews"); // hiện tại 1 tab
+            if (position == 0) {
+                tab.setText("Chưa trả lời");
+            } else {
+                tab.setText("Đã trả lời");
+            }
         }).attach();
-
-        Log.d(TAG, "TabLayoutMediator attached");
     }
 
     private void setListeners() {
 
         ivBack.setOnClickListener(v -> finish());
-
-        btnSortRating.setOnClickListener(v ->
-                Log.d(TAG, "Sort by rating clicked"));
-
-        btnSortTime.setOnClickListener(v ->
-                Log.d(TAG, "Sort by time clicked"));
-
-        vpReview.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                Log.d(TAG, "Page selected: " + position);
-            }
-        });
     }
 }

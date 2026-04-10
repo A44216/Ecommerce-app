@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
 import com.example.ecommerceapp.utils.ImageLoader;
+import com.example.ecommerceapp.utils.TimeUtils;
 
 public class SellerReviewVH extends RecyclerView.ViewHolder {
 
@@ -58,31 +59,47 @@ public class SellerReviewVH extends RecyclerView.ViewHolder {
     }
 
     // Bind dữ liệu
-    public void bind(SellerReviewResponse item, boolean isReplyVisible, boolean isInputVisible) {
+    public void bind(SellerReviewResponse item, boolean isInputVisible) {
 
         tvUserName.setText(item.getFullName());
-        tvCreatedAt.setText(item.getCreatedAt() != null ? item.getCreatedAt() : "");
+        tvCreatedAt.setText(TimeUtils.formatDateTime(item.getCreatedAt()));
         ratingBar.setRating(item.getRating());
         tvComment.setText(item.getComment() != null ? item.getComment() : "");
 
+        boolean isExpanded = isInputVisible;
+
+        if (isExpanded) {
+            tvComment.setMaxLines(Integer.MAX_VALUE);
+            tvComment.setEllipsize(null);
+        } else {
+            tvComment.setMaxLines(1);
+            tvComment.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        }
+
         ImageLoader.load(itemView.getContext(), imgUserAvatar, item.getUserAvatar());
 
-        // RESET input tránh dính dữ liệu cũ khi recycle
         etSellerReply.setText("");
 
-        // REPLY STATE
         if (item.getIsReplied() != null && item.getIsReplied()) {
 
-            layoutSellerReply.setVisibility(View.VISIBLE);
-            layoutSellerReplyInput.setVisibility(View.GONE);
+            boolean hasReply = item.getIsReplied() != null && item.getIsReplied();
 
-            tvSellerReply.setText(
-                    item.getSellerReply() != null ? item.getSellerReply() : ""
-            );
+            // REPLY
+            if (hasReply) {
 
-            tvSellerReplyAt.setText(
-                    item.getSellerReplyAt() != null ? item.getSellerReplyAt() : ""
-            );
+                // chỉ hiện khi expand
+                layoutSellerReply.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                layoutSellerReplyInput.setVisibility(View.GONE);
+
+                tvSellerReply.setText(item.getSellerReply() != null ? item.getSellerReply() : "");
+                tvSellerReplyAt.setText(TimeUtils.formatDateTime(item.getSellerReplyAt()));
+
+            } else {
+
+                // chưa reply → chỉ hiện input khi expand
+                layoutSellerReply.setVisibility(View.GONE);
+                layoutSellerReplyInput.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+            }
 
         } else {
 
@@ -92,8 +109,10 @@ public class SellerReviewVH extends RecyclerView.ViewHolder {
             );
         }
 
-        // TOGGLE TEXT
-        tvToggle.setText(isReplyVisible ? "Ẩn" : "Xem thêm");
+        boolean hasReply = item.getIsReplied() != null && item.getIsReplied();
+
+        tvToggle.setText(isExpanded ? "Ẩn" : (hasReply ? "Xem thêm" : "Phản hồi"));
+
     }
 
     // GETTERS & SETTERS

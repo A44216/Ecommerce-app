@@ -110,7 +110,7 @@
     <string name="seller_review_btn_reply">Gửi</string>
     <string name="seller_product_default_view_reviews"><u>Xem đánh giá</u></string>
 
-    <string name="seller_review_toggle_show"><u>Xem thêm</u></string>
+    <string name="seller_review_toggle_show"><u>Phản hồi</u></string>
     <string name="seller_review_toggle_hide"><u>Ẩn</u></string>
 
 </resources>

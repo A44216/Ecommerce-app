@@ -49,25 +49,24 @@
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:layout_height="wrap_content">
 
                     <RatingBar
                         android:id="@+id/ratingBar"
                         style="?android:attr/ratingBarStyleSmall"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:numStars="5"
                         android:stepSize="1"
                         android:isIndicator="true"
-                        android:layout_marginTop="2dp"
                         android:progressTint="@color/yellow"
                         android:secondaryProgressTint="@color/yellow"
-                        android:backgroundTint="@color/gray"/>
+                        android:backgroundTint="@color/gray"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
 
                     <TextView
                         android:id="@+id/tvCreatedAt"
@@ -76,8 +75,11 @@
                         android:text="@string/seller_review_default_customer_created_at"
                         android:textSize="12sp"
                         android:textColor="@color/gray"
-                        android:layout_marginStart="8dp"/>
-                </LinearLayout>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ratingBar"
+                        app:layout_constraintBottom_toBottomOf="@id/ratingBar"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 
@@ -90,8 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/seller_review_default_comment_content"
-            android:textSize="14sp"
-            android:textColor="#333"
+            android:textSize="15sp"
             android:maxLines="1"
             android:ellipsize="end"/>
 
@@ -110,14 +111,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/seller_review_default_seller_title"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvSellerReply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/seller_review_default_seller_reply"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:layout_marginTop="4dp" />
 
             <TextView
@@ -125,7 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/seller_review_default_seller_created_at"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:textColor="@color/gray"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
@@ -144,6 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints=""
+                android:maxLength="1000"
                 android:hint="@string/seller_review_input_hint_seller_reply"
                 android:inputType="textCapSentences|textMultiLine"
                 android:textSize="14sp"

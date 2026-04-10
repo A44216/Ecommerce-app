@@ -7,11 +7,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.ecommerceapp.ui.fragment.seller.review.SellerReviewListFragment;
 
-import android.util.Log;
-
 public class SellerReviewPagerAdapter extends FragmentStateAdapter {
 
-    private static final String TAG = "SellerReviewPagerAdapter";
     private final int productId;
 
     public SellerReviewPagerAdapter(@NonNull FragmentActivity fragmentActivity, int productId) {
@@ -22,12 +19,13 @@ public class SellerReviewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        Log.d(TAG, "createFragment position=" + position);
-        return SellerReviewListFragment.newInstance(productId);
+        boolean isReplied = (position == 1);
+
+        return SellerReviewListFragment.newInstance(productId, isReplied);
     }
 
     @Override
     public int getItemCount() {
-        return 1; // hiện tại 1 tab
+        return 2;
     }
 }

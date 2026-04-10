@@ -26,8 +26,7 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
     private List<SellerReviewResponse> list = new ArrayList<>();
     private OnItemClickListener listener;
 
-    private boolean isReplyVisible = false;
-    private boolean isInputVisible = false;
+    private int expandedPosition = -1;
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
@@ -35,13 +34,11 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
 
     @SuppressLint("NotifyDataSetChanged")
     public void setReplyVisible(boolean replyVisible) {
-        isReplyVisible = replyVisible;
         notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void setInputVisible(boolean inputVisible) {
-        isInputVisible = inputVisible;
         notifyDataSetChanged();
     }
 
@@ -53,12 +50,14 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
         return new SellerReviewVH(view);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onBindViewHolder(@NonNull SellerReviewVH holder, int position) {
+    public void onBindViewHolder(@NonNull SellerReviewVH holder, @SuppressLint("RecyclerView") int position) {
 
         SellerReviewResponse item = list.get(position);
 
-        holder.bind(item, isReplyVisible, isInputVisible);
+        boolean isInputVisible = (position == expandedPosition);
+        holder.bind(item, isInputVisible);
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onClick(item);
@@ -74,7 +73,14 @@ public class SellerReviewAdapter extends RecyclerView.Adapter<SellerReviewVH> {
         });
 
         holder.getTvToggle().setOnClickListener(v -> {
-            if (listener != null) listener.onToggleClick(item, position);
+
+            if (expandedPosition == position) {
+                expandedPosition = -1; // đóng
+            } else {
+                expandedPosition = position; // mở
+            }
+
+            notifyDataSetChanged();
         });
     }
 

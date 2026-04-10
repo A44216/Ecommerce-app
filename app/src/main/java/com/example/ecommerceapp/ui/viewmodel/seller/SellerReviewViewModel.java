@@ -1,7 +1,5 @@
 package com.example.ecommerceapp.ui.viewmodel.seller;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -21,11 +19,10 @@ import retrofit2.Response;
 
 public class SellerReviewViewModel extends ViewModel {
 
-    private static final String TAG = "SellerReviewVM";
-
     private final SellerReviewRepository repository;
 
-    private final Map<Integer, MutableLiveData<PageResponse<SellerReviewResponse>>> cache = new HashMap<>();
+    // cache theo productId + isReplied
+    private final Map<String, MutableLiveData<PageResponse<SellerReviewResponse>>> cache = new HashMap<>();
 
     private final MutableLiveData<Boolean> replyResult = new MutableLiveData<>();
 
@@ -33,20 +30,25 @@ public class SellerReviewViewModel extends ViewModel {
         repository = new SellerReviewRepository(tm);
     }
 
-    // LIVE DATA ONLY (NO API CALL)
-    public LiveData<PageResponse<SellerReviewResponse>> getReviewsLiveData(int productId) {
-
-        if (!cache.containsKey(productId)) {
-            cache.put(productId, new MutableLiveData<>());
-        }
-
-        return cache.get(productId);
+    // tạo key riêng cho từng tab
+    private String key(int productId, Boolean isReplied) {
+        return productId + "_" + isReplied;
     }
 
-    // LOAD API (ONLY PLACE CALL API)
-    public void loadReviews(int productId, Boolean isReplied, int page, int size) {
+    // ===== GET LIVE DATA =====
+    public LiveData<PageResponse<SellerReviewResponse>> getReviewsLiveData(int productId, Boolean isReplied) {
 
-        Log.d(TAG, "loadReviews productId=" + productId + " page=" + page);
+        String k = key(productId, isReplied);
+
+        if (!cache.containsKey(k)) {
+            cache.put(k, new MutableLiveData<>());
+        }
+
+        return cache.get(k);
+    }
+
+    // ===== LOAD API (FIX PAGING) =====
+    public void loadReviews(int productId, Boolean isReplied, int page, int size) {
 
         repository.getReviews(productId, isReplied, page, size)
                 .enqueue(new Callback<PageResponse<SellerReviewResponse>>() {
@@ -55,27 +57,54 @@ public class SellerReviewViewModel extends ViewModel {
                     public void onResponse(Call<PageResponse<SellerReviewResponse>> call,
                                            Response<PageResponse<SellerReviewResponse>> response) {
 
-                        MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(productId);
+                        String k = key(productId, isReplied);
+
+                        MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(k);
 
                         if (liveData == null) {
                             liveData = new MutableLiveData<>();
-                            cache.put(productId, liveData);
+                            cache.put(k, liveData);
                         }
 
                         if (response.isSuccessful() && response.body() != null) {
-                            Log.d(TAG, "API success page=" + page);
-                            liveData.setValue(response.body());
+
+                            PageResponse<SellerReviewResponse> newData = response.body();
+
+                            if (page == 0) {
+                                // load lần đầu
+                                liveData.setValue(newData);
+
+                            } else {
+                                // merge dữ liệu paging
+                                PageResponse<SellerReviewResponse> current = liveData.getValue();
+
+                                if (current != null && current.getContent() != null) {
+
+                                    if (newData.getContent() != null && !newData.getContent().isEmpty()) {
+                                        current.getContent().addAll(newData.getContent());
+                                    }
+
+                                    current.setLast(newData.isLast());
+                                    current.setNumber(newData.getNumber());
+
+                                    liveData.setValue(current);
+
+                                } else {
+                                    liveData.setValue(newData);
+                                }
+                            }
+
                         } else {
-                            Log.e(TAG, "API failed");
                             liveData.setValue(null);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<PageResponse<SellerReviewResponse>> call, Throwable t) {
-                        Log.e(TAG, "API error: " + t.getMessage());
 
-                        MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(productId);
+                        MutableLiveData<PageResponse<SellerReviewResponse>> liveData =
+                                cache.get(key(productId, isReplied));
+
                         if (liveData != null) {
                             liveData.setValue(null);
                         }
@@ -83,10 +112,8 @@ public class SellerReviewViewModel extends ViewModel {
                 });
     }
 
-    // REPLY REVIEW
-    public void replyReview(int reviewId, int productId, String content) {
-
-        Log.d(TAG, "replyReview id=" + reviewId);
+    // ===== REPLY REVIEW =====
+    public void replyReview(int reviewId, int productId, Boolean isReplied, String content) {
 
         SellerReplyRequest request = new SellerReplyRequest(content);
 
@@ -97,11 +124,14 @@ public class SellerReviewViewModel extends ViewModel {
                     public void onResponse(Call<Void> call, Response<Void> response) {
 
                         if (response.isSuccessful()) {
+
                             replyResult.setValue(true);
 
-                            Log.d(TAG, "Reply success → reload page 0");
+                            // clear cache tab hiện tại
+                            cache.remove(key(productId, isReplied));
 
-                            loadReviews(productId, null, 0, 10);
+                            // reload từ page 0
+                            loadReviews(productId, isReplied, 0, 10);
 
                         } else {
                             replyResult.setValue(false);
@@ -111,7 +141,6 @@ public class SellerReviewViewModel extends ViewModel {
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         replyResult.setValue(false);
-                        Log.e(TAG, "Reply error: " + t.getMessage());
                     }
                 });
     }

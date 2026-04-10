@@ -1,7 +1,6 @@
 package com.example.ecommerceapp.ui.fragment.seller.review;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,8 @@ import com.example.ecommerceapp.ui.adapter.seller.review.SellerReviewAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerReviewViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerReviewViewModelFactory;
 
+import java.util.ArrayList;
+
 public class SellerReviewListFragment extends Fragment {
 
     private static final String TAG = "SellerReviewListFragment";
@@ -33,11 +34,13 @@ public class SellerReviewListFragment extends Fragment {
     private boolean isLastPage = false;
 
     private int productId;
+    private boolean isReplied;
 
-    public static SellerReviewListFragment newInstance(int productId) {
+    public static SellerReviewListFragment newInstance(int productId, boolean isReplied) {
         SellerReviewListFragment fragment = new SellerReviewListFragment();
         Bundle args = new Bundle();
         args.putInt("productId", productId);
+        args.putBoolean("isReplied", isReplied);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,8 +61,6 @@ public class SellerReviewListFragment extends Fragment {
         adapter = new SellerReviewAdapter();
         rv.setAdapter(adapter);
 
-        Log.d(TAG, "RecyclerView + Adapter initialized");
-
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -68,8 +69,6 @@ public class SellerReviewListFragment extends Fragment {
                 int last = layoutManager.findLastVisibleItemPosition();
 
                 if (!isLoadingMore && !isLastPage && last >= total - 2) {
-                    Log.d(TAG, "Load more triggered page=" + currentPage);
-                    isLoadingMore = true;
                     loadReviews();
                 }
             }
@@ -83,28 +82,36 @@ public class SellerReviewListFragment extends Fragment {
 
         if (getArguments() != null) {
             productId = getArguments().getInt("productId");
+            isReplied = getArguments().getBoolean("isReplied", false);
         }
 
-        Log.d(TAG, "productId = " + productId);
-
-        viewModel = new ViewModelProvider(this,
+        viewModel = new ViewModelProvider(requireActivity(),
                 new SellerReviewViewModelFactory(TokenManager.getInstance(requireContext())))
                 .get(SellerReviewViewModel.class);
 
-        observeData(); // FIX: chỉ observe 1 lần
+        // reset state
+        currentPage = 0;
+        isLastPage = false;
+        isLoadingMore = false;
 
-        loadReviews();
+        adapter.setData(new ArrayList<>());
+
+        observeData();
+
+        if (viewModel.getReviewsLiveData(productId, isReplied).getValue() == null) {
+            loadReviews();
+        }
     }
 
     private void observeData() {
-        viewModel.getReviewsLiveData(productId)
+        viewModel.getReviewsLiveData(productId, isReplied)
                 .observe(getViewLifecycleOwner(), pageResponse -> {
 
                     isLoadingMore = false;
 
-                    Log.d(TAG, "Data received page=" + currentPage);
-
                     if (pageResponse != null) {
+
+                        isLastPage = pageResponse.isLast();
 
                         if (currentPage == 0) {
                             adapter.setData(pageResponse.getContent());
@@ -112,13 +119,22 @@ public class SellerReviewListFragment extends Fragment {
                             adapter.addData(pageResponse.getContent());
                         }
 
-                        isLastPage = pageResponse.isLast();
-                        currentPage = pageResponse.getNumber() + 1;
+                        currentPage++;
+
                     }
                 });
     }
 
     private void loadReviews() {
-        viewModel.loadReviews(productId, null, currentPage, PAGE_SIZE);
+
+        if (isLoadingMore) return;
+
+        if (isLastPage) {
+            return;
+        }
+
+        isLoadingMore = true;
+
+        viewModel.loadReviews(productId, isReplied, currentPage, PAGE_SIZE);
     }
 }
