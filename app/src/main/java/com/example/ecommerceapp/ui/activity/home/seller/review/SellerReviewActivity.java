@@ -81,7 +81,16 @@ public class SellerReviewActivity extends AppCompatActivity {
                     ? "rating_asc,time_desc"
                     : "rating_desc,time_desc";
 
+            // Đổi icon
+            if (isSortRatingDesc) {
+                btnSortRating.setIconResource(R.drawable.ic_arrow_up);
+            } else {
+                btnSortRating.setIconResource(R.drawable.ic_arrow_down);
+            }
+
             isSortRatingDesc = !isSortRatingDesc;
+
+            updateSortUI(true);
 
             updateSort(sort);
         });
@@ -92,7 +101,16 @@ public class SellerReviewActivity extends AppCompatActivity {
                     ? "time_asc,rating_desc"
                     : "time_desc,rating_desc";
 
+            // Đổi icon
+            if (isSortTimeDesc) {
+                btnSortTime.setIconResource(R.drawable.ic_arrow_up);
+            } else {
+                btnSortTime.setIconResource(R.drawable.ic_arrow_down);
+            }
+
             isSortTimeDesc = !isSortTimeDesc;
+
+            updateSortUI(false);
 
             updateSort(sort);
         });
@@ -111,4 +129,33 @@ public class SellerReviewActivity extends AppCompatActivity {
             ((SellerReviewListFragment) fragment).resetAndReload();
         }
     }
+
+    // Hàm đổi màu btnSort được chọn
+    private void updateSortUI(boolean isRatingActive) {
+
+        if (isRatingActive) {
+
+            // Rating ACTIVE
+            btnSortRating.setBackgroundTintList(getColorStateList(R.color.blue));
+            btnSortRating.setTextColor(getColor(R.color.white));
+            btnSortRating.setIconTintResource(R.color.white);
+
+            // Time INACTIVE
+            btnSortTime.setBackgroundTintList(getColorStateList(R.color.background_light));
+            btnSortTime.setTextColor(getColor(R.color.blue));
+            btnSortTime.setIconTintResource(R.color.blue);
+
+        } else {
+
+            // Time ACTIVE
+            btnSortTime.setBackgroundTintList(getColorStateList(R.color.blue));
+            btnSortTime.setTextColor(getColor(R.color.white));
+            btnSortTime.setIconTintResource(R.color.white);
+            // Rating INACTIVE
+            btnSortRating.setBackgroundTintList(getColorStateList(R.color.background_light));
+            btnSortRating.setTextColor(getColor(R.color.blue));
+            btnSortRating.setIconTintResource(R.color.blue);
+        }
+    }
+
 }
