@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,16 +17,21 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.ui.NotificationItem;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
 import com.example.ecommerceapp.ui.adapter.user.NotificationAdapter;
+import com.example.ecommerceapp.utils.CartManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationFragment extends Fragment {
+
+    private TextView tvCartBadge;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
+        tvCartBadge = view.findViewById(R.id.tvCartBadgeNotification);
 
         //Ánh xạ icon Giỏ hàng trên Header
         ImageView ivUserCartNotification = view.findViewById(R.id.ivUserCartNotification);
@@ -49,5 +56,19 @@ public class NotificationFragment extends Fragment {
         rvNotifications.setAdapter(adapter);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (tvCartBadge != null) {
+            int totalItems = CartManager.getInstance().getTotalQuantity();
+            if (totalItems > 0) {
+                tvCartBadge.setVisibility(View.VISIBLE);
+                tvCartBadge.setText(totalItems > 99 ? "99+" : String.valueOf(totalItems));
+            } else {
+                tvCartBadge.setVisibility(View.GONE);
+            }
+        }
     }
 }

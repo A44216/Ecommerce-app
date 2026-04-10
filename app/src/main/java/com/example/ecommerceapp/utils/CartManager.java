@@ -34,6 +34,15 @@ public class CartManager {
         cartList.add(new UserCartItem(product, 1));
     }
 
+
     public List<UserCartItem> getCartItems() { return cartList; }
     public void removeCartItem(UserCartItem item) { cartList.remove(item); }
+
+    public int getTotalQuantity() {
+        int total = 0;
+        for (UserCartItem item : cartList) {
+            total += item.getQuantity(); // Cộng dồn số lượng từng món
+        }
+        return total;
+    }
 }

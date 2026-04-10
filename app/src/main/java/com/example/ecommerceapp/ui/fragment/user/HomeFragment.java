@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import com.example.ecommerceapp.ui.adapter.user.UserCategoryAdapter;
 import com.example.ecommerceapp.ui.adapter.user.UserProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.UserHomeViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.UserHomeViewModelFactory;
+import com.example.ecommerceapp.utils.CartManager;
 
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -36,12 +38,16 @@ public class HomeFragment extends Fragment {
 
     private UserHomeViewModel viewModel;
     private UserProductAdapter productAdapter;
-    private UserCategoryAdapter categoryAdapter; // Thêm Adapter cho Danh mục
+    private UserCategoryAdapter categoryAdapter;
+
+    private TextView tvCartBadge;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        tvCartBadge = view.findViewById(R.id.tvCartBadgeHome);
 
         // 1. Nút Giỏ hàng
         ImageView ivCartHome = view.findViewById(R.id.ivCartHome);
@@ -138,5 +144,19 @@ public class HomeFragment extends Fragment {
         viewModel.fetchProducts();   // Kéo lưới sản phẩm mặc định
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (tvCartBadge != null) {
+            int totalItems = CartManager.getInstance().getTotalQuantity();
+            if (totalItems > 0) {
+                tvCartBadge.setVisibility(View.VISIBLE);
+                tvCartBadge.setText(totalItems > 99 ? "99+" : String.valueOf(totalItems));
+            } else {
+                tvCartBadge.setVisibility(View.GONE);
+            }
+        }
     }
 }
