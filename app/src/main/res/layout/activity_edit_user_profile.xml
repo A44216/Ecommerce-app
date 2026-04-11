@@ -68,39 +68,63 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tên đầy đủ"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
                 <EditText
                     android:id="@+id/etFullName"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="Tên đầy đủ"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:inputType="textPersonName"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tên đăng nhập"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
                 <EditText
                     android:id="@+id/etUsername"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="Tên đăng nhập"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:inputType="text"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Số điện thoại"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
                 <EditText
                     android:id="@+id/etPhone"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="Số điện thoại"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:inputType="phone"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
                 <EditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="Email"
+                    android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
             </LinearLayout>
