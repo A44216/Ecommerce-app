@@ -24,7 +24,6 @@ public class SellerProductFragment extends Fragment {
     private TabLayout tabLayout;
     private TextInputEditText etSearch;
 
-    private String currentKeyword = "";
     private SellerProductPagerAdapter adapter;
 
     @Override
@@ -51,17 +50,9 @@ public class SellerProductFragment extends Fragment {
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            switch (position) {
-                case 0:
-                    tab.setText("Chờ duyệt");
-                    break;
-                case 1:
-                    tab.setText("Đã duyệt");
-                    break;
-                case 2:
-                    tab.setText("Từ chối");
-                    break;
-            }
+            if (position == 0) tab.setText("Chờ duyệt");
+            else if (position == 1) tab.setText("Đã duyệt");
+            else tab.setText("Từ chối");
         }).attach();
     }
 
@@ -69,24 +60,13 @@ public class SellerProductFragment extends Fragment {
 
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
 
-            boolean isEnter =
-                    actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH ||
-                            actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE ||
-                            (event != null && event.getKeyCode() == android.view.KeyEvent.KEYCODE_ENTER);
+            String keyword = etSearch.getText() != null
+                    ? etSearch.getText().toString().trim()
+                    : "";
 
-            if (isEnter) {
+            adapter.setKeywordToAll(keyword);
 
-                currentKeyword = etSearch.getText().toString().trim();
-
-                adapter.setKeyword(currentKeyword);
-
-                // giữ tab hiện tại
-                viewPager.setCurrentItem(viewPager.getCurrentItem(), false);
-
-                return true;
-            }
-
-            return false;
+            return true;
         });
     }
 

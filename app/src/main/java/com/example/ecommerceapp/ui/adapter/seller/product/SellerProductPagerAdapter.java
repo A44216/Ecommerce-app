@@ -1,7 +1,5 @@
 package com.example.ecommerceapp.ui.adapter.seller.product;
 
-import android.annotation.SuppressLint;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -9,41 +7,39 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.ecommerceapp.ui.fragment.seller.product.SellerProductListFragment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SellerProductPagerAdapter extends FragmentStateAdapter {
 
-    private String keyword = "";
+    private final Map<Integer, SellerProductListFragment> fragmentMap = new HashMap<>();
 
     public SellerProductPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void setKeyword(String keyword) {
-        this.keyword = (keyword == null) ? "" : keyword;
-        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
 
-        String status;
+        SellerProductListFragment fragment;
 
         switch (position) {
             case 0:
-                status = "PENDING";
+                fragment = SellerProductListFragment.newInstance("PENDING");
                 break;
             case 1:
-                status = "APPROVED";
+                fragment = SellerProductListFragment.newInstance("APPROVED");
                 break;
             case 2:
-                status = "REJECTED";
+                fragment = SellerProductListFragment.newInstance("REJECTED");
                 break;
             default:
-                status = "PENDING";
+                fragment = SellerProductListFragment.newInstance("PENDING");
         }
 
-        return SellerProductListFragment.newInstance(status, keyword);
+        fragmentMap.put(position, fragment);
+        return fragment;
     }
 
     @Override
@@ -51,13 +47,11 @@ public class SellerProductPagerAdapter extends FragmentStateAdapter {
         return 3;
     }
 
-    @Override
-    public long getItemId(int position) {
-        return (position + keyword).hashCode();
-    }
-
-    @Override
-    public boolean containsItem(long itemId) {
-        return false;
+    public void setKeywordToAll(String keyword) {
+        for (SellerProductListFragment f : fragmentMap.values()) {
+            if (f != null) {
+                f.setKeyword(keyword);
+            }
+        }
     }
 }

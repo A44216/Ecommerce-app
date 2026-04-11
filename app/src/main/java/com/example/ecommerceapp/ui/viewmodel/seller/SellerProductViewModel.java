@@ -21,18 +21,19 @@ public class SellerProductViewModel extends ViewModel {
     private String keyword = "";
     private String status = "";
 
+    private final MutableLiveData<PageResponse<SellerProductResponse>> productPage =
+            new MutableLiveData<>();
+
     public SellerProductViewModel(SellerProductRepository repository) {
         this.repository = repository;
     }
-
-    private final MutableLiveData<PageResponse<SellerProductResponse>> productPage = new MutableLiveData<>();
 
     public LiveData<PageResponse<SellerProductResponse>> getProducts() {
         return productPage;
     }
 
     public void setKeyword(String keyword) {
-        this.keyword = (keyword == null) ? "" : keyword;
+        this.keyword = keyword;
     }
 
     public void setStatus(String status) {

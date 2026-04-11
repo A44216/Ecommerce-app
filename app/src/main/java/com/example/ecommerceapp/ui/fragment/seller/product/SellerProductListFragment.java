@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
@@ -35,14 +35,10 @@ public class SellerProductListFragment extends Fragment {
     private String status = "";
     private String keyword = "";
 
-    public SellerProductListFragment() {
-    }
-
-    public static SellerProductListFragment newInstance(String status, String keyword) {
+    public static SellerProductListFragment newInstance(String status) {
         SellerProductListFragment fragment = new SellerProductListFragment();
         Bundle args = new Bundle();
         args.putString("status", status);
-        args.putString("keyword", keyword);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,7 +49,6 @@ public class SellerProductListFragment extends Fragment {
 
         if (getArguments() != null) {
             status = getArguments().getString("status", "");
-            keyword = getArguments().getString("keyword", "");
         }
     }
 
@@ -131,6 +126,22 @@ public class SellerProductListFragment extends Fragment {
             isLoading = false;
             isLastPage = page.getItems().size() < pageSize;
         });
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+
+        if (viewModel != null) {
+            viewModel.setKeyword(keyword);
+        }
+
+        currentPage = 0;
+        isLoading = false;
+        isLastPage = false;
+
+        adapter.setData(null); // clear UI trước khi load
+
+        loadData();
     }
 
     private void loadData() {
