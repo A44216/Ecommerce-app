@@ -8,7 +8,6 @@ public class SellerProductRequest {
     private BigDecimal price;
     private int stock;
     private String description;
-    private int shopId;
 
     public Integer getCategoryId() { return categoryId; }
     public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
@@ -24,8 +23,5 @@ public class SellerProductRequest {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-
-    public Integer getShopId() { return shopId; }
-    public void setShopId(Integer shopId) { this.shopId = shopId; }
 
 }

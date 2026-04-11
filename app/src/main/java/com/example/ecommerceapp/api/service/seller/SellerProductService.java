@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.api.service.seller;
 
 import com.example.ecommerceapp.data.model.request.seller.product.SellerProductRequest;
+import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 
 import java.util.List;
@@ -17,16 +18,19 @@ import retrofit2.http.Query;
 public interface SellerProductService {
 
     @GET("seller/products")
-    Call<List<SellerProductResponse>> getProducts();
+    Call<PageResponse<SellerProductResponse>> getProducts(
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @GET("seller/products/{id}")
     Call<SellerProductResponse> getProductById(@Path("id") int id);
 
-    @GET("seller/products/shop/{shopId}")
-    Call<List<SellerProductResponse>> getProductsByShop(@Path("shopId") int shopId);
-
     @GET("seller/products/deleted")
-    Call<List<SellerProductResponse>> getDeletedProducts();
+    Call<PageResponse<SellerProductResponse>> getDeletedProducts(
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @DELETE("seller/products/{id}")
     Call<Void> deleteProduct(@Path("id") int id);
@@ -41,9 +45,9 @@ public interface SellerProductService {
     );
 
     @GET("seller/products/search")
-    Call<List<SellerProductResponse>> searchProducts(
+    Call<PageResponse<SellerProductResponse>> searchProducts(
             @Query("keyword") String keyword,
-            @Query("shopId") Integer shopId
+            @Query("page") int page,
+            @Query("size") int size
     );
-
 }

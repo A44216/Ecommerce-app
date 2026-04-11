@@ -2,9 +2,8 @@ package com.example.ecommerceapp.data.repository.seller.product;
 
 import com.example.ecommerceapp.api.service.seller.SellerProductService;
 import com.example.ecommerceapp.data.model.request.seller.product.SellerProductRequest;
+import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
-
-import java.util.List;
 
 import retrofit2.Call;
 
@@ -16,32 +15,38 @@ public class SellerProductRepository {
         this.apiService = apiService;
     }
 
-    public Call<List<SellerProductResponse>> getProducts() {
-        return apiService.getProducts();
+    // GET ALL PRODUCTS
+    public Call<PageResponse<SellerProductResponse>> getProducts(int page, int size) {
+        return apiService.getProducts(page, size);
     }
 
+    // GET DETAIL
     public Call<SellerProductResponse> getProductById(int id) {
         return apiService.getProductById(id);
     }
 
-    public Call<List<SellerProductResponse>> getProductsByShop(int shopId) {
-        return apiService.getProductsByShop(shopId);
+    // GET DELETED
+    public Call<PageResponse<SellerProductResponse>> getDeletedProducts(int page, int size) {
+        return apiService.getDeletedProducts(page, size);
     }
 
-    public Call<SellerProductResponse> createProduct(SellerProductRequest request) {
-        return apiService.createProduct(request);
-    }
-
-    public Call<SellerProductResponse> updateProduct(int id, SellerProductRequest request) {
-        return apiService.updateProduct(id, request);
-    }
-
+    // DELETE
     public Call<Void> deleteProduct(int id) {
         return apiService.deleteProduct(id);
     }
 
-    public Call<List<SellerProductResponse>> search(String keyword, Integer shopId) {
-        return apiService.searchProducts(keyword, shopId);
+    // CREATE
+    public Call<SellerProductResponse> createProduct(SellerProductRequest request) {
+        return apiService.createProduct(request);
     }
 
+    // UPDATE
+    public Call<SellerProductResponse> updateProduct(int id, SellerProductRequest request) {
+        return apiService.updateProduct(id, request);
+    }
+
+    // SEARCH
+    public Call<PageResponse<SellerProductResponse>> search(String keyword, int page, int size) {
+        return apiService.searchProducts(keyword, page, size);
+    }
 }

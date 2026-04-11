@@ -348,7 +348,6 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
             request.setStock(Integer.parseInt(stockStr));
             request.setDescription(Objects.requireNonNull(etDescription.getText()).toString());
             request.setCategoryId(selectedCategoryId);
-            request.setShopId((int) tokenManager.getShopId());
 
             showConfirmDialog(request);
         });

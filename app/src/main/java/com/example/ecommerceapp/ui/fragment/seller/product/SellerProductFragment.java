@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class SellerProductFragment extends Fragment {
@@ -42,6 +44,14 @@ public class SellerProductFragment extends Fragment {
 
     TokenManager tokenManager;
     private long shopId;
+    private int currentPage = 0;
+    private final int pageSize = 10;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+
+    private boolean isSearching = false;
+    private String currentKeyword = "";
+
     public static SellerProductFragment newInstance() {
         return new SellerProductFragment();
     }
@@ -68,14 +78,27 @@ public class SellerProductFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        updateShopId();
+        currentPage = 0;
+        isLastPage = false;
+        isLoading = false;
 
-        if (getContext() != null && tokenManager == null) {
-            tokenManager = TokenManager.getInstance(getContext());
+        if (isSearching) {
+            viewModel.searchProducts(currentKeyword, 0, pageSize);
+        } else {
+            viewModel.fetchProducts(0, pageSize);
         }
+    }
 
-        if (shopId > 0) {
-            viewModel.fetchProductsByShop((int) shopId);
+    private void loadMore() {
+        if (isLoading || isLastPage) return;
+
+        isLoading = true;
+        currentPage++;
+
+        if (isSearching) {
+            viewModel.searchProducts(currentKeyword, currentPage, pageSize);
+        } else {
+            viewModel.fetchProducts(currentPage, pageSize);
         }
     }
 
@@ -86,6 +109,22 @@ public class SellerProductFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                LinearLayoutManager lm = (LinearLayoutManager) rv.getLayoutManager();
+
+                int visible = lm.getChildCount();
+                int total = lm.getItemCount();
+                int first = lm.findFirstVisibleItemPosition();
+
+                if (!isLoading && !isLastPage && (visible + first) >= total) {
+                    loadMore();
+                }
+            }
+        });
+
     }
 
     private void setupViewModel() {
@@ -98,18 +137,24 @@ public class SellerProductFragment extends Fragment {
                 .get(SellerProductViewModel.class);
 
         observeProducts();
+
+        viewModel.fetchProducts(0, 10);
     }
 
     private void observeProducts() {
 
-        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+        viewModel.getProducts().observe(getViewLifecycleOwner(), page -> {
 
-            if (products == null) {
-                adapter.setData(new ArrayList<>());
-                return;
+            if (page == null || page.getItems() == null) return;
+
+            if (currentPage == 0) {
+                adapter.setData(page.getItems());
+            } else {
+                adapter.addData(page.getItems());
             }
 
-            adapter.setData(products);
+            isLoading = false;
+            isLastPage = page.getItems().size() < pageSize;
         });
     }
 
@@ -152,12 +197,19 @@ public class SellerProductFragment extends Fragment {
 
             if (isEnter) {
 
-                String keyword = Objects.requireNonNull(etSearch.getText()).toString().trim();
+                currentKeyword = Objects.requireNonNull(etSearch.getText())
+                        .toString().trim();
 
-                if (keyword.isEmpty()) {
-                    viewModel.fetchProductsByShop((int) shopId);
+                currentPage = 0;
+                isLoading = false;
+                isLastPage = false;
+
+                if (currentKeyword.isEmpty()) {
+                    isSearching = false;
+                    viewModel.fetchProducts(0, pageSize);
                 } else {
-                    viewModel.searchProducts(keyword, (int) shopId);
+                    isSearching = true;
+                    viewModel.searchProducts(currentKeyword, 0, pageSize);
                 }
 
                 return true;
@@ -165,6 +217,7 @@ public class SellerProductFragment extends Fragment {
 
             return false;
         });
+
     }
 
     // Dialog xác nhận delete
@@ -180,7 +233,7 @@ public class SellerProductFragment extends Fragment {
     }
 
     private void deleteProduct(Integer productId) {
-        viewModel.deleteProduct(productId, (int)shopId);
+        viewModel.deleteProduct(productId);
     }
 
     private void updateShopId() {

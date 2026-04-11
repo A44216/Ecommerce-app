@@ -105,6 +105,15 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
         });
     }
 
+    public void addData(List<SellerProductResponse> newList) {
+        if (newList == null || newList.isEmpty()) return;
+
+        int oldSize = list.size();
+        list.addAll(newList);
+
+        notifyItemRangeInserted(oldSize, newList.size());
+    }
+
     @Override
     public int getItemCount() {
         return list != null ? list.size() : 0;
