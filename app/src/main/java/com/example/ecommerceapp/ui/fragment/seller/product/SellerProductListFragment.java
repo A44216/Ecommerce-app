@@ -32,6 +32,31 @@ public class SellerProductListFragment extends Fragment {
     private boolean isLoading = false;
     private boolean isLastPage = false;
 
+    private String status = "";
+    private String keyword = "";
+
+    public SellerProductListFragment() {
+    }
+
+    public static SellerProductListFragment newInstance(String status, String keyword) {
+        SellerProductListFragment fragment = new SellerProductListFragment();
+        Bundle args = new Bundle();
+        args.putString("status", status);
+        args.putString("keyword", keyword);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            status = getArguments().getString("status", "");
+            keyword = getArguments().getString("keyword", "");
+        }
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
@@ -81,8 +106,11 @@ public class SellerProductListFragment extends Fragment {
         SellerProductViewModelFactory factory =
                 new SellerProductViewModelFactory(repo);
 
-        viewModel = new ViewModelProvider(requireActivity(), factory)
+        viewModel = new ViewModelProvider(this, factory)
                 .get(SellerProductViewModel.class);
+
+        viewModel.setStatus(status);
+        viewModel.setKeyword(keyword);
 
         observeData();
         loadData();
@@ -105,26 +133,8 @@ public class SellerProductListFragment extends Fragment {
         });
     }
 
-    public void setKeyword(String keyword) {
-
-        viewModel.setKeyword(keyword);
-
-        currentPage = 0;
-        isLoading = false;
-        isLastPage = false;
-
-        loadData();
-    }
-
     private void loadData() {
-
-        String keyword = viewModel.getKeyword();
-
-        if (keyword == null || keyword.isEmpty()) {
-            viewModel.fetchProducts(currentPage, pageSize);
-        } else {
-            viewModel.searchProducts(keyword, currentPage, pageSize);
-        }
+        viewModel.fetchProducts(currentPage, pageSize);
     }
 
     private void loadMore() {
@@ -134,18 +144,6 @@ public class SellerProductListFragment extends Fragment {
         isLoading = true;
         currentPage++;
 
-        String keyword = viewModel.getKeyword();
-
-        if (keyword == null || keyword.isEmpty()) {
-            viewModel.fetchProducts(currentPage, pageSize);
-        } else {
-            viewModel.searchProducts(keyword, currentPage, pageSize);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadData();
+        viewModel.fetchProducts(currentPage, pageSize);
     }
 }

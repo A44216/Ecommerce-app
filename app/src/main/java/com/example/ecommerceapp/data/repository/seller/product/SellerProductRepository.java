@@ -15,9 +15,13 @@ public class SellerProductRepository {
         this.apiService = apiService;
     }
 
-    // GET ALL PRODUCTS
-    public Call<PageResponse<SellerProductResponse>> getProducts(int page, int size) {
-        return apiService.getProducts(page, size);
+    public Call<PageResponse<SellerProductResponse>> getProducts(
+            String status,
+            String keyword,
+            int page,
+            int size
+    ) {
+        return apiService.getProducts(status, keyword, page, size);
     }
 
     // GET DETAIL
@@ -43,10 +47,5 @@ public class SellerProductRepository {
     // UPDATE
     public Call<SellerProductResponse> updateProduct(int id, SellerProductRequest request) {
         return apiService.updateProduct(id, request);
-    }
-
-    // SEARCH
-    public Call<PageResponse<SellerProductResponse>> search(String keyword, int page, int size) {
-        return apiService.searchProducts(keyword, page, size);
     }
 }

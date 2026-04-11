@@ -63,7 +63,6 @@ public class SellerProductFragment extends Fragment {
                     break;
             }
         }).attach();
-
     }
 
     private void setupSearch() {
@@ -79,13 +78,10 @@ public class SellerProductFragment extends Fragment {
 
                 currentKeyword = etSearch.getText().toString().trim();
 
-                int pos = viewPager.getCurrentItem();
+                adapter.setKeyword(currentKeyword);
 
-                SellerProductListFragment fragment = adapter.getFragment(pos);
-
-                if (fragment != null) {
-                    fragment.setKeyword(currentKeyword);
-                }
+                // giữ tab hiện tại
+                viewPager.setCurrentItem(viewPager.getCurrentItem(), false);
 
                 return true;
             }
