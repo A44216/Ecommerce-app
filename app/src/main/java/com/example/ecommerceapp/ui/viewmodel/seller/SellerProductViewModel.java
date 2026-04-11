@@ -19,6 +19,15 @@ import retrofit2.Response;
 public class SellerProductViewModel extends ViewModel {
 
     private final SellerProductRepository repository;
+    private String keyword = "";
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
 
     public SellerProductViewModel(SellerProductRepository repository) {
         this.repository = repository;
