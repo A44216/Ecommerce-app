@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.fragment.admin;
+package com.example.ecommerceapp.ui.fragment.admin.profile;
 
 import androidx.lifecycle.ViewModel;
 

@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.fragment.admin;
+package com.example.ecommerceapp.ui.fragment.admin.profile;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,24 +14,24 @@ import android.view.ViewGroup;
 
 import com.example.ecommerceapp.R;
 
-public class AdminProductFragment extends Fragment {
+public class AdminProfileFragment extends Fragment {
 
-    private AdminProductViewModel mViewModel;
+    private AdminProfileViewModel mViewModel;
 
-    public static AdminProductFragment newInstance() {
-        return new AdminProductFragment();
+    public static AdminProfileFragment newInstance() {
+        return new AdminProfileFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_admin_product, container, false);
+        return inflater.inflate(R.layout.fragment_admin_profile, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(AdminProductViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AdminProfileViewModel.class);
         // TODO: Use the ViewModel
     }
 
