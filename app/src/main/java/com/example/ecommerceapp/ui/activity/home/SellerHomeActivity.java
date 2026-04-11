@@ -48,6 +48,8 @@ public class SellerHomeActivity extends AppCompatActivity {
                 (NavHostFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.navHost);
 
+        if (navHostFragment == null) return;
+
         NavController navController = navHostFragment.getNavController();
 
         // 3. connect BottomNav với Navigation
