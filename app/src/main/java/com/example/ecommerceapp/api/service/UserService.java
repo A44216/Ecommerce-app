@@ -5,8 +5,12 @@ import com.example.ecommerceapp.data.model.response.UserResponse;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 
@@ -22,6 +26,10 @@ public interface UserService {
     @GET("users/{id}")
     Call<UserProfileResponse> getUserProfile(@Path("id") long id);
 
-    @PUT("users/{id}")
+    @PUT("users/{id}/profile")
     Call<UserProfileResponse> updateUserProfile(@Path("id") long id, @Body UserUpdateRequest request);
+
+    @Multipart
+    @POST("users/{id}/avatar") // Đường dẫn phải khớp y hệt với Backend
+    Call<UserProfileResponse> uploadAvatar(@Path("id") long id, @Part MultipartBody.Part file);
 }

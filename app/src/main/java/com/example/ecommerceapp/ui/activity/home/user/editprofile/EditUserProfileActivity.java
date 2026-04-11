@@ -13,8 +13,20 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.UserService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.UserUpdateRequest;
-import com.example.ecommerceapp.data.model.request.UserUpdateRequest;
 import com.example.ecommerceapp.data.model.response.UserProfileResponse;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import com.example.ecommerceapp.utils.ImageLoader;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,12 +41,35 @@ public class EditUserProfileActivity extends AppCompatActivity {
     private UserService userService;
     private TokenManager tokenManager;
     private long currentUserId;
+    private ImageView ivAvatarEdit; // Khai báo biến giao diện
 
+    // Trình lắng nghe kết quả khi người dùng chọn ảnh xong
+    private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri imageUri = result.getData().getData();
+                    if (imageUri != null) {
+                        // 1. DÙNG IMAGELOADER ĐỂ HIỂN THỊ ẢNH NGAY LẬP TỨC
+                        ImageLoader.load(this, ivAvatarEdit, imageUri);
+
+                        // 2. Gửi ảnh lên server
+                        uploadAvatarToServer(imageUri);
+                    }
+                }
+            }
+    );
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_profile);
+        ivAvatarEdit = findViewById(R.id.ivAvatarEdit);
 
+        // Khi bấm vào hình avatar thì mở thư viện ảnh
+        ivAvatarEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImageLauncher.launch(intent);
+        });
         // 1. Ánh xạ View
         etFullName = findViewById(R.id.etFullName);
         etUsername = findViewById(R.id.etUsername);
@@ -44,6 +79,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
         btnBack.setOnClickListener(v -> finish());
+
 
         // 2. Cài đặt API
         tokenManager = TokenManager.getInstance(this);
@@ -106,6 +142,59 @@ public class EditUserProfileActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserProfileResponse> call, Throwable t) {
                 Toast.makeText(EditUserProfileActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Hàm phụ trợ 1: Chuyển Uri của Android thành 1 File vật lý để gửi mạng
+    private File getFileFromUri(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            File tempFile = new File(getCacheDir(), "temp_avatar.jpg"); // Lưu vào cache
+            FileOutputStream outputStream = new FileOutputStream(tempFile);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+            return tempFile;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Hàm phụ trợ 2: Gói File lại và Bắn lên Server
+    private void uploadAvatarToServer(Uri imageUri) {
+        File file = getFileFromUri(imageUri);
+        if (file == null) {
+            Toast.makeText(this, "Không thể đọc file ảnh!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Tạo Multipart Body chuẩn bị gửi
+        RequestBody requestFile = RequestBody.create(file, MediaType.parse("image/*"));
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+        Toast.makeText(this, "Đang tải ảnh lên...", Toast.LENGTH_SHORT).show();
+
+        // Gọi API của bạn (Nhớ đổi tên userService nếu bạn đặt khác)
+        userService.uploadAvatar(currentUserId, body).enqueue(new retrofit2.Callback<UserProfileResponse>() {
+            @Override
+            public void onResponse(retrofit2.Call<UserProfileResponse> call, retrofit2.Response<UserProfileResponse> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(EditUserProfileActivity.this, "Cập nhật ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(EditUserProfileActivity.this, "Lỗi Server: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<UserProfileResponse> call, Throwable t) {
+                Toast.makeText(EditUserProfileActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
