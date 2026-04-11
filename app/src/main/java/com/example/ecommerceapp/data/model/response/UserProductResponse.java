@@ -11,6 +11,7 @@ public class UserProductResponse {
     private String description;
     private List<UserProductImageResponse> images; // Dùng ImageResponse của User
     private String categoryName;
+    private Integer shopId;
     private String shopName;
     private BigDecimal ratingAvg;
     private int soldCount;
@@ -23,6 +24,7 @@ public class UserProductResponse {
     public String getDescription() { return description; }
     public List<UserProductImageResponse> getImages() { return images; }
     public String getCategoryName() { return categoryName; }
+    public Integer getShopId() { return shopId; }
     public String getShopName() { return shopName; }
     public BigDecimal getRatingAvg() { return ratingAvg; }
     public int getSoldCount() { return soldCount; }
@@ -32,4 +34,5 @@ public class UserProductResponse {
     public void setName(String name) { this.name = name; }
     public void setPrice(BigDecimal price) { this.price = price; }
     public void setImages(List<UserProductImageResponse> images) { this.images = images; }
+    public void setShopId(Integer shopId) { this.shopId = shopId; }
 }

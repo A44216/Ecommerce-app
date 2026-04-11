@@ -135,7 +135,7 @@ public class UserCheckoutActivity extends AppCompatActivity {
             if (isSuccess) {
                 new AlertDialog.Builder(this)
                         .setTitle("Đặt hàng thành công!")
-                        .setMessage("Cảm ơn bạn đã mua sắm. Đơn hàng sẽ sớm được giao đến bạn.")
+                        .setMessage("Cảm ơn bạn đã mua sắm. Đơn hàng đang chờ được xác nhận.")
                         .setCancelable(false)
                         .setPositiveButton("Về Trang chủ", (dialog, which) -> {
                             CartManager.getInstance().getCartItems().removeAll(selectedItems);
@@ -166,7 +166,7 @@ public class UserCheckoutActivity extends AppCompatActivity {
                 return;
             }
 
-            // --- BƯỚC MỚI: GÓI CÁC SẢN PHẨM TRONG GIỎ HÀNG LẠI ---
+            // --- GÓI CÁC SẢN PHẨM TRONG GIỎ HÀNG LẠI ---
             List<UserOrderRequest.OrderItemRequest> itemsRequest = new ArrayList<>();
             for (UserCartItem cartItem : selectedItems) {
                 itemsRequest.add(new UserOrderRequest.OrderItemRequest(
@@ -176,10 +176,32 @@ public class UserCheckoutActivity extends AppCompatActivity {
                 ));
             }
 
-            int dummyShopId = 2;
+            // ==========================================
+            // LẤY SHOP_ID THẬT TỪ MÓN HÀNG TRONG GIỎ
+            // ==========================================
+            int realShopId = -1;
+            if (!selectedItems.isEmpty()) {
+                Integer extractedShopId = selectedItems.get(0).getProduct().getShopId();
+                if (extractedShopId != null) {
+                    realShopId = extractedShopId;
+                }
+            }
 
-            // Truyền itemsRequest vào OrderRequest
-            UserOrderRequest request = new UserOrderRequest(realAddressId, method, realUserId, dummyShopId, finalTotal, itemsRequest);
+            // Đề phòng trường hợp lỗi không lấy được ID shop, báo lỗi không cho đặt
+            if (realShopId == -1) {
+                Toast.makeText(this, "Lỗi dữ liệu: Không tìm thấy thông tin Cửa hàng!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Truyền realShopId vào OrderRequest thay vì số ảo
+            UserOrderRequest request = new UserOrderRequest(
+                    realAddressId,
+                    method,
+                    realUserId,
+                    realShopId,
+                    finalTotal,
+                    itemsRequest
+            );
 
             viewModel.placeOrder(request);
         });

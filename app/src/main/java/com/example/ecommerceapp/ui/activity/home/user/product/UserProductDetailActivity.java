@@ -39,6 +39,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
 
         // 2. Nhận dữ liệu từ Intent gửi sang
         int productId = getIntent().getIntExtra("product_id", -1);
+        int shopId = getIntent().getIntExtra("shop_id", -1);
         String name = getIntent().getStringExtra("product_name");
         String priceString = getIntent().getStringExtra("product_price");
         String imageUrl = getIntent().getStringExtra("product_image");
@@ -68,6 +69,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
         if (productId != -1) {
             currentProduct.setId(productId);
         }
+        if (shopId != -1) currentProduct.setShopId(shopId);
         if (name != null) currentProduct.setName(name);
         if (priceString != null) {
             try {

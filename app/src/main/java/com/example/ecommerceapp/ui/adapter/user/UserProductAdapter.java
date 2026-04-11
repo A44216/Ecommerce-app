@@ -81,6 +81,10 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
             if (finalImageUrl != null) {
                 intent.putExtra("product_image", finalImageUrl);
             }
+
+            if (product.getShopId() != null) {
+                intent.putExtra("shop_id", product.getShopId());
+            }
             context.startActivity(intent);
         });
     }
