@@ -2,9 +2,11 @@ package com.example.ecommerceapp.ui.fragment.seller.product;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -32,7 +34,10 @@ public class SellerProductFragment extends Fragment {
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
-
+                        if (result.getResultCode() == getActivity().RESULT_OK) {
+                            int currentTab = viewPager.getCurrentItem();
+                            adapter.getFragment(currentTab).reload();
+                        }
                     }
             );
 
@@ -68,14 +73,35 @@ public class SellerProductFragment extends Fragment {
 
     private void setupSearch() {
 
+        etSearch.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
 
-            String keyword = etSearch.getText() != null ? etSearch.getText().toString().trim() : "";
+            if (actionId == EditorInfo.IME_ACTION_SEARCH
+                    || actionId == EditorInfo.IME_ACTION_DONE) {
 
-            adapter.setKeywordToAll(keyword);
+                triggerSearch();
+                return true;
+            }
 
-            return true;
+            return false;
         });
+    }
+
+    private void triggerSearch() {
+
+        String keyword = etSearch.getText() != null
+                ? etSearch.getText().toString().trim()
+                : "";
+
+        if (adapter == null) return;
+
+        // reset toàn bộ state search
+        if (TextUtils.isEmpty(keyword)) {
+            adapter.setKeywordToAll("");
+        } else {
+            adapter.setKeywordToAll(keyword);
+        }
     }
 
     private void setupFab(View view) {

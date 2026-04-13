@@ -50,8 +50,6 @@ public class SellerProductViewModel extends ViewModel {
 
                         if (response.isSuccessful() && response.body() != null) {
                             productPage.setValue(response.body());
-                        } else {
-                            Log.e("API", "ERROR = " + response.code());
                         }
                     }
 

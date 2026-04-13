@@ -1,7 +1,6 @@
 package com.example.ecommerceapp.ui.adapter.seller.product;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,9 +58,9 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull SellerProductVH holder, int position) {
+
         SellerProductResponse product = list.get(position);
 
-        // ===== TEXT =====
         holder.getName().setText(product.getName());
         holder.getPrice().setText(String.format("%,.0f", product.getPrice()) + " đ");
 
@@ -72,16 +71,12 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
         );
 
         holder.getRating().setText("⭐ " + product.getRatingAvg());
-
         holder.getSold().setText("Đã bán " + product.getSoldCount());
-
         holder.getStatus().setText("Trạng thái: " + product.getStatus());
 
-        // Ảnh sản phẩm
         List<ProductImageResponse> images = product.getImages();
 
         String imageUrl = null;
-
         if (images != null && !images.isEmpty()) {
             imageUrl = images.get(0).getImageUrl();
         }
@@ -92,27 +87,18 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
                 imageUrl
         );
 
-        // ITEM CLICK
         holder.itemView.setOnClickListener(v -> {
-            int productId = product.getId();
-
             Intent intent = new Intent(v.getContext(), SellerProductDetailActivity.class);
-            intent.putExtra("productId", productId);
+            intent.putExtra("productId", product.getId());
             v.getContext().startActivity(intent);
         });
 
-        // EDIT
         holder.itemView.findViewById(R.id.ivEditProduct).setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onEdit(product);
-            }
+            if (listener != null) listener.onEdit(product);
         });
 
-        // DELETE
         holder.itemView.findViewById(R.id.ivDeleteProduct).setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDelete(product);
-            }
+            if (listener != null) listener.onDelete(product);
         });
     }
 
@@ -121,7 +107,6 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
 
         int oldSize = list.size();
         list.addAll(newList);
-
         notifyItemRangeInserted(oldSize, newList.size());
     }
 
@@ -130,4 +115,21 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
         return list != null ? list.size() : 0;
     }
 
+    public void removeItem(SellerProductResponse product) {
+        int position = list.indexOf(product);
+        if (position != -1) {
+            list.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void updateItem(SellerProductResponse updatedProduct) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId() == updatedProduct.getId()) {
+                list.set(i, updatedProduct);
+                notifyItemChanged(i);
+                return;
+            }
+        }
+    }
 }

@@ -43,21 +43,12 @@ public class SellerProductListFragment extends Fragment {
     private String status = "";
     private String keyword = "";
 
-    private final ActivityResultLauncher<Intent> launcher =
+    private final ActivityResultLauncher<Intent> editLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
                         if (result.getResultCode() == getActivity().RESULT_OK) {
-
-                            currentPage = 0;
-                            isLoading = false;
-                            isLastPage = false;
-
-                            if (adapter != null) {
-                                adapter.setData(new ArrayList<>());
-                            }
-
-                            loadData();
+                            reload();
                         }
                     }
             );
@@ -134,7 +125,7 @@ public class SellerProductListFragment extends Fragment {
             public void onEdit(SellerProductResponse product) {
                 Intent intent = new Intent(requireContext(), SellerAddAndEditProductActivity.class);
                 intent.putExtra("productId", product.getId());
-                launcher.launch(intent);
+                startActivity(intent);
             }
 
             @Override
@@ -142,9 +133,12 @@ public class SellerProductListFragment extends Fragment {
 
                 new android.app.AlertDialog.Builder(requireContext())
                         .setTitle("Xóa sản phẩm")
-                        .setMessage("Bạn có chắc muốn xóa sản phẩm \"" + product.getName() + "\" không?")
+                        .setMessage("Bạn có chắc muốn xóa \"" + product.getName() + "\"?")
                         .setPositiveButton("Xóa", (dialog, which) -> {
+
                             viewModel.deleteProduct(product.getId());
+                            adapter.removeItem(product);
+
                         })
                         .setNegativeButton("Hủy", null)
                         .show();
@@ -169,8 +163,6 @@ public class SellerProductListFragment extends Fragment {
         viewModel.setKeyword(keyword);
 
         observeData();
-        observeDelete();
-
         loadData();
     }
 
@@ -191,24 +183,13 @@ public class SellerProductListFragment extends Fragment {
         });
     }
 
-    private void observeDelete() {
-
-        viewModel.getDeleteResult().observe(getViewLifecycleOwner(), success -> {
-
-            if (success == null) return;
-
-            if (success) {
-                reload();
-            }
-        });
-    }
-
     public void setKeyword(String keyword) {
+
         this.keyword = keyword;
 
-        if (viewModel != null) {
-            viewModel.setKeyword(keyword);
-        }
+        if (viewModel == null) return;
+
+        viewModel.setKeyword(keyword);
 
         currentPage = 0;
         isLoading = false;
@@ -222,9 +203,8 @@ public class SellerProductListFragment extends Fragment {
     }
 
     private void loadData() {
-        if (viewModel != null) {
-            viewModel.fetchProducts(currentPage, pageSize);
-        }
+        isLoading = true;
+        viewModel.fetchProducts(currentPage, pageSize);
     }
 
     private void loadMore() {
@@ -238,20 +218,14 @@ public class SellerProductListFragment extends Fragment {
     }
 
     public void reload() {
+
+        if (adapter == null || viewModel == null) return;
+
         currentPage = 0;
         isLoading = false;
         isLastPage = false;
 
-        if (adapter != null) {
-            adapter.setData(new ArrayList<>());
-        }
-
+        adapter.setData(new ArrayList<>());
         loadData();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        reload();
     }
 }

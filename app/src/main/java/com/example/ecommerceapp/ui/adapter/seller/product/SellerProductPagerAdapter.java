@@ -22,6 +22,10 @@ public class SellerProductPagerAdapter extends FragmentStateAdapter {
         fragmentList.add(SellerProductListFragment.newInstance("REJECTED"));
     }
 
+    public SellerProductListFragment getFragment(int position) {
+        return fragmentList.get(position);
+    }
+
     @NonNull
     @Override
     public Fragment createFragment(int position) {
@@ -33,15 +37,15 @@ public class SellerProductPagerAdapter extends FragmentStateAdapter {
         return fragmentList.size();
     }
 
-    // Lấy fragment hiện tại
-    public SellerProductListFragment getFragment(int position) {
-        return fragmentList.get(position);
-    }
-
     public void setKeywordToAll(String keyword) {
         for (SellerProductListFragment f : fragmentList) {
             f.setKeyword(keyword);
         }
     }
 
+    public void reloadAll() {
+        for (SellerProductListFragment f : fragmentList) {
+            f.reload();
+        }
+    }
 }
