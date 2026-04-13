@@ -2,7 +2,6 @@ package com.example.ecommerceapp.ui.fragment.seller.product;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +33,23 @@ public class SellerProductFragment extends Fragment {
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
+
                         if (getActivity() == null) return;
 
                         if (result.getResultCode() == getActivity().RESULT_OK) {
-                            int currentTab = viewPager.getCurrentItem();
-                            adapter.createFragment(currentTab);
+
+                            // chỉ reload tab 0 (PENDING)
+                            if (adapter != null) {
+                                adapter.setKeywordToAll(""); // giữ search đồng bộ (nếu có)
+                            }
+
+                            // gọi reload tab đầu tiên thông qua FragmentManager
+                            Fragment fragment = getChildFragmentManager()
+                                    .findFragmentByTag("f0");
+
+                            if (fragment instanceof SellerProductListFragment) {
+                                ((SellerProductListFragment) fragment).reload();
+                            }
                         }
                     }
             );
