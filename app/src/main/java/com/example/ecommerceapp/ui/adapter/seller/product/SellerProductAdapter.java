@@ -1,6 +1,8 @@
 package com.example.ecommerceapp.ui.adapter.seller.product;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
+import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.viewholder.seller.product.SellerProductVH;
 import com.example.ecommerceapp.utils.ImageLoader;
 
@@ -89,19 +92,27 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
                 imageUrl
         );
 
-        // Click item
+        // ITEM CLICK
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onClick(product);
+            int productId = product.getId();
+
+            Intent intent = new Intent(v.getContext(), SellerProductDetailActivity.class);
+            intent.putExtra("productId", productId);
+            v.getContext().startActivity(intent);
         });
 
-        // Edit
+        // EDIT
         holder.itemView.findViewById(R.id.ivEditProduct).setOnClickListener(v -> {
-            if (listener != null) listener.onEdit(product);
+            if (listener != null) {
+                listener.onEdit(product);
+            }
         });
 
-        // Delete
+        // DELETE
         holder.itemView.findViewById(R.id.ivDeleteProduct).setOnClickListener(v -> {
-            if (listener != null) listener.onDelete(product);
+            if (listener != null) {
+                listener.onDelete(product);
+            }
         });
     }
 

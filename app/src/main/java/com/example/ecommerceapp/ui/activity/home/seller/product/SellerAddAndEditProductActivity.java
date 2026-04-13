@@ -200,7 +200,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
 
                     etCategory.setAdapter(adapter);
 
-                    if (onDone != null) onDone.run(); // ✅ thêm dòng này
+                    if (onDone != null) onDone.run();
                 }
             }
 
@@ -220,6 +220,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
         if (localImages == null || localImages.isEmpty()) {
             runOnUiThread(() -> {
                 Toast.makeText(this, "Thành công", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
                 finish();
             });
             return;
@@ -261,6 +262,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
                 finish();
             });
         }

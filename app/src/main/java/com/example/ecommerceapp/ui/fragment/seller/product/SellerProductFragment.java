@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -25,6 +27,14 @@ public class SellerProductFragment extends Fragment {
     private TextInputEditText etSearch;
 
     private SellerProductPagerAdapter adapter;
+
+    private final ActivityResultLauncher<Intent> launcher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+
+                    }
+            );
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,9 +70,7 @@ public class SellerProductFragment extends Fragment {
 
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
 
-            String keyword = etSearch.getText() != null
-                    ? etSearch.getText().toString().trim()
-                    : "";
+            String keyword = etSearch.getText() != null ? etSearch.getText().toString().trim() : "";
 
             adapter.setKeywordToAll(keyword);
 
@@ -74,8 +82,9 @@ public class SellerProductFragment extends Fragment {
 
         FloatingActionButton fab = view.findViewById(R.id.fabAddNew);
 
-        fab.setOnClickListener(v ->
-                startActivity(new Intent(getContext(),
-                        SellerAddAndEditProductActivity.class)));
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SellerAddAndEditProductActivity.class);
+            launcher.launch(intent);
+        });
     }
 }

@@ -1,10 +1,13 @@
 package com.example.ecommerceapp.ui.fragment.seller.product;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,10 +18,15 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerProductService;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
+import com.example.ecommerceapp.ui.activity.home.seller.product.SellerAddAndEditProductActivity;
+import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.product.SellerProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerProductViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerProductViewModelFactory;
+
+import java.util.ArrayList;
 
 public class SellerProductListFragment extends Fragment {
 
@@ -34,6 +42,25 @@ public class SellerProductListFragment extends Fragment {
 
     private String status = "";
     private String keyword = "";
+
+    private final ActivityResultLauncher<Intent> launcher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == getActivity().RESULT_OK) {
+
+                            currentPage = 0;
+                            isLoading = false;
+                            isLastPage = false;
+
+                            if (adapter != null) {
+                                adapter.setData(new ArrayList<>());
+                            }
+
+                            loadData();
+                        }
+                    }
+            );
 
     public static SellerProductListFragment newInstance(String status) {
         SellerProductListFragment fragment = new SellerProductListFragment();
@@ -63,6 +90,7 @@ public class SellerProductListFragment extends Fragment {
 
         initRecycler();
         setupViewModel();
+        setupListeners();
 
         return view;
     }
@@ -91,6 +119,39 @@ public class SellerProductListFragment extends Fragment {
         });
     }
 
+    private void setupListeners() {
+
+        adapter.setListener(new SellerProductAdapter.OnProductActionListener() {
+
+            @Override
+            public void onClick(SellerProductResponse product) {
+                Intent intent = new Intent(requireContext(), SellerProductDetailActivity.class);
+                intent.putExtra("productId", product.getId());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onEdit(SellerProductResponse product) {
+                Intent intent = new Intent(requireContext(), SellerAddAndEditProductActivity.class);
+                intent.putExtra("productId", product.getId());
+                launcher.launch(intent);
+            }
+
+            @Override
+            public void onDelete(SellerProductResponse product) {
+
+                new android.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Xóa sản phẩm")
+                        .setMessage("Bạn có chắc muốn xóa sản phẩm \"" + product.getName() + "\" không?")
+                        .setPositiveButton("Xóa", (dialog, which) -> {
+                            viewModel.deleteProduct(product.getId());
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+            }
+        });
+    }
+
     private void setupViewModel() {
 
         SellerProductService api =
@@ -108,6 +169,8 @@ public class SellerProductListFragment extends Fragment {
         viewModel.setKeyword(keyword);
 
         observeData();
+        observeDelete();
+
         loadData();
     }
 
@@ -128,6 +191,18 @@ public class SellerProductListFragment extends Fragment {
         });
     }
 
+    private void observeDelete() {
+
+        viewModel.getDeleteResult().observe(getViewLifecycleOwner(), success -> {
+
+            if (success == null) return;
+
+            if (success) {
+                reload();
+            }
+        });
+    }
+
     public void setKeyword(String keyword) {
         this.keyword = keyword;
 
@@ -139,13 +214,17 @@ public class SellerProductListFragment extends Fragment {
         isLoading = false;
         isLastPage = false;
 
-        adapter.setData(null); // clear UI trước khi load
+        if (adapter != null) {
+            adapter.setData(new ArrayList<>());
+        }
 
         loadData();
     }
 
     private void loadData() {
-        viewModel.fetchProducts(currentPage, pageSize);
+        if (viewModel != null) {
+            viewModel.fetchProducts(currentPage, pageSize);
+        }
     }
 
     private void loadMore() {
@@ -156,5 +235,23 @@ public class SellerProductListFragment extends Fragment {
         currentPage++;
 
         viewModel.fetchProducts(currentPage, pageSize);
+    }
+
+    public void reload() {
+        currentPage = 0;
+        isLoading = false;
+        isLastPage = false;
+
+        if (adapter != null) {
+            adapter.setData(new ArrayList<>());
+        }
+
+        loadData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        reload();
     }
 }

@@ -61,4 +61,59 @@ public class SellerProductViewModel extends ViewModel {
                     }
                 });
     }
+
+
+    public LiveData<SellerProductResponse> getProductById(int id) {
+
+        MutableLiveData<SellerProductResponse> data = new MutableLiveData<>();
+
+        repository.getProductById(id)
+                .enqueue(new Callback<SellerProductResponse>() {
+                    @Override
+                    public void onResponse(Call<SellerProductResponse> call,
+                                           Response<SellerProductResponse> response) {
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            data.setValue(response.body());
+                        } else {
+                            data.setValue(null);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SellerProductResponse> call, Throwable t) {
+                        data.setValue(null);
+                    }
+                });
+
+        return data;
+    }
+
+    private final MutableLiveData<Boolean> deleteResult = new MutableLiveData<>();
+
+    public void deleteProduct(int id) {
+
+        repository.deleteProduct(id)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                        if (response.isSuccessful()) {
+                            deleteResult.setValue(true);
+                        } else {
+                            deleteResult.setValue(false);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        deleteResult.setValue(false);
+                    }
+                });
+    }
+
+    public LiveData<Boolean> getDeleteResult() {
+        return deleteResult;
+    }
+
 }

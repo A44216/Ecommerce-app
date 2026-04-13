@@ -7,51 +7,41 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.ecommerceapp.ui.fragment.seller.product.SellerProductListFragment;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SellerProductPagerAdapter extends FragmentStateAdapter {
 
-    private final Map<Integer, SellerProductListFragment> fragmentMap = new HashMap<>();
+    private final List<SellerProductListFragment> fragmentList = new ArrayList<>();
 
-    public SellerProductPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-        super(fragmentActivity);
+    public SellerProductPagerAdapter(@NonNull FragmentActivity fa) {
+        super(fa);
+
+        fragmentList.add(SellerProductListFragment.newInstance("PENDING"));
+        fragmentList.add(SellerProductListFragment.newInstance("APPROVED"));
+        fragmentList.add(SellerProductListFragment.newInstance("REJECTED"));
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-
-        SellerProductListFragment fragment;
-
-        switch (position) {
-            case 0:
-                fragment = SellerProductListFragment.newInstance("PENDING");
-                break;
-            case 1:
-                fragment = SellerProductListFragment.newInstance("APPROVED");
-                break;
-            case 2:
-                fragment = SellerProductListFragment.newInstance("REJECTED");
-                break;
-            default:
-                fragment = SellerProductListFragment.newInstance("PENDING");
-        }
-
-        fragmentMap.put(position, fragment);
-        return fragment;
+        return fragmentList.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return fragmentList.size();
+    }
+
+    // Lấy fragment hiện tại
+    public SellerProductListFragment getFragment(int position) {
+        return fragmentList.get(position);
     }
 
     public void setKeywordToAll(String keyword) {
-        for (SellerProductListFragment f : fragmentMap.values()) {
-            if (f != null) {
-                f.setKeyword(keyword);
-            }
+        for (SellerProductListFragment f : fragmentList) {
+            f.setKeyword(keyword);
         }
     }
+
 }
