@@ -125,7 +125,7 @@ public class SellerProductListFragment extends Fragment {
             public void onEdit(SellerProductResponse product) {
                 Intent intent = new Intent(requireContext(), SellerAddAndEditProductActivity.class);
                 intent.putExtra("productId", product.getId());
-                startActivity(intent);
+                editLauncher.launch(intent);
             }
 
             @Override

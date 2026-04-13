@@ -218,11 +218,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
         List<Uri> localImages = imageAdapter.getLocalImages();
 
         if (localImages == null || localImages.isEmpty()) {
-            runOnUiThread(() -> {
-                Toast.makeText(this, "Thành công", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
-                finish();
-            });
+            finishSuccess();
             return;
         }
 
@@ -240,7 +236,6 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(String url) {
                             addProductImage(productId, url);
-
                             done[0]++;
                             checkDone(total, done[0]);
                         }
@@ -260,11 +255,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
 
             imageAdapter.getLocalImages().clear();
 
-            runOnUiThread(() -> {
-                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
-                finish();
-            });
+            finishSuccess();
         }
     }
 
@@ -538,6 +529,11 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Huỷ", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    private void finishSuccess() {
+        setResult(RESULT_OK);
+        finish();
     }
 
 }
