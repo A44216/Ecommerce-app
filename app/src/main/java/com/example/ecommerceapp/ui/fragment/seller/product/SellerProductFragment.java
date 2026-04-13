@@ -34,9 +34,11 @@ public class SellerProductFragment extends Fragment {
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
+                        if (getActivity() == null) return;
+
                         if (result.getResultCode() == getActivity().RESULT_OK) {
                             int currentTab = viewPager.getCurrentItem();
-                            adapter.getFragment(currentTab).reload();
+                            adapter.createFragment(currentTab);
                         }
                     }
             );
@@ -63,6 +65,9 @@ public class SellerProductFragment extends Fragment {
 
         adapter = new SellerProductPagerAdapter(requireActivity());
         viewPager.setAdapter(adapter);
+
+        // FIX QUAN TRỌNG: tránh fragment bị recreate sai state
+        viewPager.setOffscreenPageLimit(3);
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (position == 0) tab.setText("Chờ duyệt");
@@ -96,12 +101,7 @@ public class SellerProductFragment extends Fragment {
 
         if (adapter == null) return;
 
-        // reset toàn bộ state search
-        if (TextUtils.isEmpty(keyword)) {
-            adapter.setKeywordToAll("");
-        } else {
-            adapter.setKeywordToAll(keyword);
-        }
+        adapter.setKeywordToAll(keyword);
     }
 
     private void setupFab(View view) {

@@ -3,49 +3,57 @@ package com.example.ecommerceapp.ui.adapter.seller.product;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.ecommerceapp.ui.fragment.seller.product.SellerProductListFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SellerProductPagerAdapter extends FragmentStateAdapter {
 
-    private final List<SellerProductListFragment> fragmentList = new ArrayList<>();
+    private final FragmentManager fragmentManager;
 
     public SellerProductPagerAdapter(@NonNull FragmentActivity fa) {
         super(fa);
-
-        fragmentList.add(SellerProductListFragment.newInstance("PENDING"));
-        fragmentList.add(SellerProductListFragment.newInstance("APPROVED"));
-        fragmentList.add(SellerProductListFragment.newInstance("REJECTED"));
-    }
-
-    public SellerProductListFragment getFragment(int position) {
-        return fragmentList.get(position);
+        this.fragmentManager = fa.getSupportFragmentManager();
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return fragmentList.get(position);
+
+        switch (position) {
+            case 0:
+                return SellerProductListFragment.newInstance("PENDING");
+            case 1:
+                return SellerProductListFragment.newInstance("APPROVED");
+            default:
+                return SellerProductListFragment.newInstance("REJECTED");
+        }
     }
 
     @Override
     public int getItemCount() {
-        return fragmentList.size();
+        return 3;
     }
 
     public void setKeywordToAll(String keyword) {
-        for (SellerProductListFragment f : fragmentList) {
-            f.setKeyword(keyword);
+
+        for (Fragment fragment : fragmentManager.getFragments()) {
+
+            if (fragment instanceof SellerProductListFragment) {
+                ((SellerProductListFragment) fragment).setKeyword(keyword);
+            }
         }
     }
 
     public void reloadAll() {
-        for (SellerProductListFragment f : fragmentList) {
-            f.reload();
+
+        for (Fragment fragment : fragmentManager.getFragments()) {
+
+            if (fragment instanceof SellerProductListFragment) {
+                ((SellerProductListFragment) fragment).reload();
+            }
         }
     }
 }
