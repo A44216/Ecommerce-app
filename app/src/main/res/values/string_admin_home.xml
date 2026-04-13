@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- NAV -->
+    <string name="admin_nav_dashboard">Tổng quan</string>
+    <string name="admin_nav_products">Sản phẩm</string>
+    <string name="admin_nav_orders">Đơn hàng</string>
+    <string name="admin_nav_users">Người dùng</string>
+    <string name="admin_nav_profile">Tài khoản</string>
+
+</resources>

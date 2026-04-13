@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- NAV -->
+    <string name="seller_nav_dashboard">Tổng quan</string>
+    <string name="seller_nav_product">Sản phẩm</string>
+    <string name="seller_nav_order">Đơn hàng</string>
+    <string name="seller_nav_shop">Cửa hàng</string>
+
+    <string name="seller_stat_revenue">Doanh thu</string>
+    <string name="seller_stat_orders">Đơn hàng</string>
+    <string name="seller_stat_reviews">Đánh giá</string>
+
+    <!-- Dashboard-->
+    <string name="seller_dashboard_overview">TỔNG QUAN</string>
+    <string name="seller_dashboard_best_selling_products">🔥 Top sản phẩm</string>
+    <string name="seller_dashboard_chart_title">Biểu đồ thống kê</string>
+    <string-array name="seller_filter_top_product">
+        <item>Bán chạy</item>
+        <item>Doanh thu</item>
+    </string-array>
+
+    <string-array name="seller_filter_time">
+        <item>Ngày</item>
+        <item>Tháng</item>
+        <item>Năm</item>
+    </string-array>
+
+    <!-- Product-->
+    <string name="seller_product_search_hint">Nhập tên hoặc danh mục cần tìm</string>
+    <!-- Default for product-->
+    <string name="seller_product_default_id">#1</string>
+    <string name="seller_product_default_name">Laptop Gamming</string>
+    <string name="seller_product_default_price">25000000đ</string>
+    <string name="seller_product_default_category">Danh mục: Chưa có</string>
+    <string name="seller_product_default_stock">Kho: 5</string>
+    <string name="seller_product_default_sold_and_revenue">Đã bán: 1</string>
+    <string name="seller_product_default_rating">Đánh giá: ⭐ 5.0</string>
+    <string name="seller_product_default_status">Trạng thái: Có sẵn</string>
+    <string name="seller_product_default_description">Chưa có mô tả</string>
+    <!-- Add / Edit Product -->
+    <string name="seller_product_add_title">Thêm sản phẩm</string>
+    <string name="seller_product_hint_name">Nhập tên sản phẩm</string>
+    <string name="seller_product_hint_price">Giá</string>
+    <string name="seller_product_hint_stock">Số lượng</string>
+    <string name="seller_product_hint_category">Danh mục</string>
+    <string name="seller_product_hint_description">Mô tả</string>
+    <string name="seller_product_hint_status">Trạng thái</string>
+    <string name="seller_product_action_add">Thêm sản phẩm</string>
+
+    <string name="seller_product_select_image">Chọn ảnh</string>
+
+    <!-- Order -->
+    <string name="seller_order_default_description">Mô tả hóa đơn</string>
+    <string name="seller_order_default_tracking">Theo dõi đơn hàng</string>
+    <string name="seller_order_default_id">#1</string>
+    <string name="seller_product_default_subtotal">25,000 đ</string>
+    <string name="seller_order_default_quantity">x1</string>
+    <string name="seller_order_default_created_at">05/04/2026</string>
+    <string name="seller_order_default_customer_name">Khách hàng: User 1</string>
+
+    <!-- Order Detail-->
+    <string name="seller_order_detail_title">CHI TIẾT ĐƠN HÀNG</string>
+    <string name="seller_order_detail_order_">#Mã đơn: #123</string>
+    <string name="seller_order_detail_default_id">Mã đơn: 1</string>
+    <string name="seller_order_detail_default_created_at">Ngày tạo: 05/04/2026</string>
+    <string name="seller_order_detail_default_customer_name">Khách hàng: Nguyễn Văn A</string>
+    <string name="seller_order_detail_default_shipping_name">Người nhận: Nguyễn Văn A</string>
+    <string name="seller_order_detail_default_shipping_phone">SĐT: 0123456789</string>
+    <string name="seller_order_detail_default_shipping_address">Địa chỉ nhận hàng: Hà Nội</string>
+    <string name="seller_order_detail_default_total_price">Thanh toán:</string>
+    <string name="seller_order_detail_default_payment_method">Phương thức thanh toán:</string>
+    <string name="seller_order_detail_default_status_payment">Trạng thái:</string>
+    <string name="seller_order_detail_default_status_order">Trạng thái đơn hàng</string>
+    <string name="seller_order_detail_cancel_button">Hủy đơn</string>
+    <string name="seller_order_detail_confirm_button">Xác nhận</string>
+
+    <!-- SHOP DEFAULT -->
+    <string name="seller_shop_default_name">Shop Name</string>
+    <string name="seller_shop_default_address">Hà Nội</string>
+    <string name="seller_shop_default_rating">⭐ 4.8</string>
+    <string name="seller_shop_action_edit">Chỉnh sửa shop</string>
+
+    <string name="seller_shop_desc_avatar">Ảnh đại diện shop</string>
+    <string name="seller_shop_info">Thông tin cửa hàng</string>
+    <string name="seller_shop_back">Trở về</string>
+
+    <!-- Shop Info -->
+    <string name="seller_shop_hint_select_image">Chọn ảnh</string>
+    <string name="seller_shop_hint_name">Tên cửa hàng</string>
+    <string name="seller_shop_hint_address">Địa chỉ</string>
+    <string name="seller_shop_hint_phone">Số điện thoại</string>
+    <string name="seller_shop_hint_email">Email</string>
+    <string name="seller_shop_hint_description">Mô tả cửa hàng</string>
+    <string name="seller_shop_button_update">Cập nhật</string>
+
+    <string name="seller_review_title">ĐÁNH GIÁ KHÁCH HÀNG</string>
+    <string name="seller_review_sort_star_button">⭐ Đánh giá</string>
+    <string name="seller_review_sort_time_button">📅 Thời gian</string>
+
+    <!-- Review / Comment -->
+    <string name="seller_review_default_full_name">Nguyễn Văn A</string>
+    <string name="seller_review_default_customer_created_at">2 giờ trước</string>
+    <string name="seller_review_default_comment_content">Giao nhanh sản phẩm đẹp và đúng mô tả. Yêu shop lần sau còn ủng hộ.</string>
+    <string name="seller_review_default_seller_title">Shop phản hồi</string>
+    <string name="seller_review_default_seller_reply">Shop rất vui khi bạn hài lòng với sản phẩm này ạ.</string>
+    <string name="seller_review_default_seller_created_at">1 giờ trước</string>
+
+    <string name="seller_review_input_hint_seller_reply">Nhập phản hồi…</string>
+    <string name="seller_review_btn_reply">Gửi</string>
+    <string name="seller_product_default_view_reviews"><u>Xem đánh giá</u></string>
+
+    <string name="seller_review_toggle_show"><u>Phản hồi</u></string>
+    <string name="seller_review_toggle_hide"><u>Ẩn</u></string>
+
+</resources>
