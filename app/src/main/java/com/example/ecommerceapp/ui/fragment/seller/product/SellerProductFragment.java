@@ -38,17 +38,14 @@ public class SellerProductFragment extends Fragment {
 
                         if (result.getResultCode() == getActivity().RESULT_OK) {
 
-                            // chỉ reload tab 0 (PENDING)
                             if (adapter != null) {
-                                adapter.setKeywordToAll(""); // giữ search đồng bộ (nếu có)
-                            }
 
-                            // gọi reload tab đầu tiên thông qua FragmentManager
-                            Fragment fragment = getChildFragmentManager()
-                                    .findFragmentByTag("f0");
+                                String currentKeyword = etSearch.getText() != null
+                                        ? etSearch.getText().toString().trim()
+                                        : "";
 
-                            if (fragment instanceof SellerProductListFragment) {
-                                ((SellerProductListFragment) fragment).reload();
+                                adapter.setKeywordToAll(currentKeyword);
+                                adapter.reloadAll();
                             }
                         }
                     }
