@@ -15,6 +15,12 @@
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.activity.home.user.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.user.settings.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.home.user.editprofile.EditUserProfileActivity"
             android:exported="false" />
         <activity

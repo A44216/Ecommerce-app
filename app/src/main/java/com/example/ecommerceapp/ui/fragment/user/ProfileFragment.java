@@ -22,6 +22,7 @@ import com.example.ecommerceapp.data.model.response.UserProfileResponse;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
 import com.example.ecommerceapp.ui.activity.home.user.editprofile.EditUserProfileActivity;
 import com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity;
+import com.example.ecommerceapp.ui.activity.home.user.settings.SettingsActivity;
 import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 import com.example.ecommerceapp.utils.CartManager;
 import com.example.ecommerceapp.utils.ImageLoader;
@@ -80,7 +81,7 @@ public class ProfileFragment extends Fragment {
 
         ImageView ivSettings = view.findViewById(R.id.ivSettings);
         ivSettings.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), EditUserProfileActivity.class));
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
         });
 
         tvUsername.setOnClickListener(v -> ivSettings.performClick());

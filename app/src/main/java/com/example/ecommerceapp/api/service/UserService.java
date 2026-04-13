@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.api.service;
 
+import com.example.ecommerceapp.data.model.request.ChangePasswordRequest;
 import com.example.ecommerceapp.data.model.response.UserProfileResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
@@ -30,6 +31,9 @@ public interface UserService {
     Call<UserProfileResponse> updateUserProfile(@Path("id") long id, @Body UserUpdateRequest request);
 
     @Multipart
-    @POST("users/{id}/avatar") // Đường dẫn phải khớp y hệt với Backend
+    @POST("users/{id}/avatar")
     Call<UserProfileResponse> uploadAvatar(@Path("id") long id, @Part MultipartBody.Part file);
+
+    @PUT("users/{id}/change-password")
+    Call<Void> changePassword(@Path("id") long id, @Body ChangePasswordRequest request);
 }

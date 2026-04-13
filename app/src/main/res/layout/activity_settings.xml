@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:text="Cài Đặt"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="@color/white" />
+
+    <Button
+        android:id="@+id/btnEditProfile"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_margin="16dp"
+        android:text="Cập nhật Hồ sơ cá nhân"
+        android:backgroundTint="@color/white"
+        android:textColor="#333333" />
+
+    <Button
+        android:id="@+id/btnChangePassword"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="16dp"
+        android:text="Đổi mật khẩu bảo mật"
+        android:backgroundTint="@color/white"
+        android:textColor="#333333" />
+</LinearLayout>
