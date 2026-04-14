@@ -11,9 +11,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.UserProductImageResponse;
 import com.example.ecommerceapp.data.model.response.UserProductResponse;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
+import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 import com.example.ecommerceapp.utils.CartManager;
 import com.example.ecommerceapp.utils.ImageLoader;
 
@@ -86,11 +88,21 @@ public class UserProductDetailActivity extends AppCompatActivity {
 
         // Đảm bảo sự kiện Click ở đây vẫn tồn tại
         btnAddToCart.setOnClickListener(v -> {
+            TokenManager tokenManager = TokenManager.getInstance(this);
+            if (tokenManager.getUserId() == -1) {
+                showLoginRequireDialog();
+                return;
+            }
             CartManager.getInstance().addToCart(currentProduct);
             Toast.makeText(UserProductDetailActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
         });
 
         btnBuyNow.setOnClickListener(v -> {
+            TokenManager tokenManager = TokenManager.getInstance(this);
+            if (tokenManager.getUserId() == -1) {
+                showLoginRequireDialog();
+                return;
+            }
             CartManager.getInstance().addToCart(currentProduct);
             Intent intent = new Intent(UserProductDetailActivity.this, UserCartActivity.class);
             startActivity(intent);
@@ -98,5 +110,18 @@ public class UserProductDetailActivity extends AppCompatActivity {
 
         // 5. Nút Back
         btnBack.setOnClickListener(v -> finish());
+    }
+    private void showLoginRequireDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Yêu cầu đăng nhập")
+                .setMessage("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Đăng nhập ngay?")
+                .setCancelable(true)
+                .setPositiveButton("Đăng nhập", (dialog, which) -> {
+                    startActivity(new Intent(this, LoginActivity.class));
+                })
+                .setNegativeButton("Để sau", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 }

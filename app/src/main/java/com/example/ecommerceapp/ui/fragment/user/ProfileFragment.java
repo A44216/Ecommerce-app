@@ -20,9 +20,8 @@ import com.example.ecommerceapp.api.service.UserService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.UserProfileResponse;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
-import com.example.ecommerceapp.ui.activity.home.user.editprofile.EditUserProfileActivity;
-import com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity;
 import com.example.ecommerceapp.ui.activity.home.user.settings.SettingsActivity;
+import com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity;
 import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 import com.example.ecommerceapp.utils.CartManager;
 import com.example.ecommerceapp.utils.ImageLoader;
@@ -37,6 +36,11 @@ public class ProfileFragment extends Fragment {
     private TextView tvUsername;
     private TextView tvFollowers;
     private ImageView ivAvatar;
+
+    // Đưa 2 View này lên làm biến toàn cục để có thể thay đổi trạng thái linh hoạt
+    private Button btnLogout;
+    private ImageView ivSettings;
+
     private TokenManager tokenManager;
 
     @Nullable
@@ -48,6 +52,9 @@ public class ProfileFragment extends Fragment {
         tvFollowers = view.findViewById(R.id.tvFollowers);
         ivAvatar = view.findViewById(R.id.ivAvatar);
         tvCartBadge = view.findViewById(R.id.tvCartBadge);
+        btnLogout = view.findViewById(R.id.btnLogout);
+        ivSettings = view.findViewById(R.id.ivSettings);
+
         tokenManager = TokenManager.getInstance(getContext());
 
         ImageView ivCartProfile = view.findViewById(R.id.ivCartProfile);
@@ -67,23 +74,7 @@ public class ProfileFragment extends Fragment {
         if (btnShipping != null) btnShipping.setOnClickListener(v -> openOrderHistory("SHIPPING"));
         if (btnDelivered != null) btnDelivered.setOnClickListener(v -> openOrderHistory("DELIVERED"));
 
-        Button btnLogout = view.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(v -> {
-            tokenManager.clearAllData();
-            CartManager.getInstance().clearCart();
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            if (getContext() != null) {
-                Toast.makeText(getContext(), "Đã đăng xuất thành công!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        ImageView ivSettings = view.findViewById(R.id.ivSettings);
-        ivSettings.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), SettingsActivity.class));
-        });
-
+        // Cho phép bấm vào tên hoặc ảnh cũng kích hoạt chức năng như nút Cài đặt
         tvUsername.setOnClickListener(v -> ivSettings.performClick());
         if (ivAvatar != null) {
             ivAvatar.setOnClickListener(v -> ivSettings.performClick());
@@ -103,12 +94,33 @@ public class ProfileFragment extends Fragment {
         long currentUserId = tokenManager.getUserId();
 
         if (currentUserId != -1) {
-            UserService apiService = ApiClient.getUserService(tokenManager);
+            // ==========================================
+            // TRẠNG THÁI 1: ĐÃ ĐĂNG NHẬP
+            // ==========================================
 
+            // 1. Cài đặt nút thành "Đăng xuất"
+            btnLogout.setText("Đăng xuất");
+            btnLogout.setOnClickListener(v -> {
+                tokenManager.clearAllData();
+                CartManager.getInstance().clearCart();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Đã đăng xuất thành công!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // 2. Mở khóa nút Cài đặt
+            ivSettings.setOnClickListener(v -> {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+            });
+
+            // 3. Gọi API lấy thông tin người dùng
+            UserService apiService = ApiClient.getUserService(tokenManager);
             apiService.getUserProfile(currentUserId).enqueue(new Callback<UserProfileResponse>() {
                 @Override
                 public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
-                    // Check isAdded() để tránh lỗi crash khi Fragment đã bị hủy nhưng API mới gọi xong
                     if (isAdded() && getContext() != null && response.isSuccessful() && response.body() != null) {
                         UserProfileResponse user = response.body();
 
@@ -136,10 +148,27 @@ public class ProfileFragment extends Fragment {
                     }
                 }
             });
+
         } else {
+            // ==========================================
+            // TRẠNG THÁI 2: CHƯA ĐĂNG NHẬP (KHÁCH VÃNG LAI)
+            // ==========================================
             if (isAdded()) {
+                // 1. Cài đặt thông tin mặc định
                 tvUsername.setText("Chưa đăng nhập");
                 tvFollowers.setText("Vui lòng đăng nhập");
+                ivAvatar.setImageResource(R.drawable.bg_avatar_placeholder); // Ảnh xám
+
+                // 2. Cài đặt nút thành "Đăng nhập"
+                btnLogout.setText("Đăng nhập");
+                btnLogout.setOnClickListener(v -> {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                });
+
+                // 3. Khóa nút Cài đặt (Bắt đăng nhập)
+                ivSettings.setOnClickListener(v -> {
+                    showLoginRequireDialog();
+                });
             }
         }
     }
@@ -157,8 +186,29 @@ public class ProfileFragment extends Fragment {
     }
 
     private void openOrderHistory(String status) {
+        if (tokenManager.getUserId() == -1) {
+            showLoginRequireDialog();
+            return;
+        }
         Intent intent = new Intent(getActivity(), UserOrderHistoryActivity.class);
         intent.putExtra("ORDER_STATUS", status);
         startActivity(intent);
+    }
+
+    // --- HÀM PHỤ TRỢ: HIỂN THỊ HỘP THOẠI YÊU CẦU ĐĂNG NHẬP ---
+    private void showLoginRequireDialog() {
+        if (getContext() == null) return;
+
+        new androidx.appcompat.app.AlertDialog.Builder(getContext())
+                .setTitle("Yêu cầu đăng nhập")
+                .setMessage("Bạn cần đăng nhập để sử dụng tính năng này. Đi đến trang đăng nhập ngay?")
+                .setCancelable(true) // Cho phép bấm ra ngoài để đóng
+                .setPositiveButton("Đăng nhập", (dialog, which) -> {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                })
+                .setNegativeButton("Để sau", (dialog, which) -> {
+                    dialog.dismiss(); // Đóng hộp thoại, ở lại trang cũ
+                })
+                .show();
     }
 }
