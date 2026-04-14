@@ -17,4 +17,7 @@ public interface UserOrderApiService {
 
     @GET("orders/user/{userId}")
     Call<List<UserOrderResponse>> getOrdersByUser(@Path("userId") int userId);
+
+    @GET("orders/{id}")
+    Call<UserOrderResponse> getOrderById(@Path("id") int orderId);
 }

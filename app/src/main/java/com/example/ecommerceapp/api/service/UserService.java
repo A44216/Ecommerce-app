@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.api.service;
 
 import com.example.ecommerceapp.data.model.request.ChangePasswordRequest;
+import com.example.ecommerceapp.data.model.response.NotificationResponse;
 import com.example.ecommerceapp.data.model.response.UserProfileResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
@@ -36,4 +37,10 @@ public interface UserService {
 
     @PUT("users/{id}/change-password")
     Call<Void> changePassword(@Path("id") long id, @Body ChangePasswordRequest request);
+
+    @GET("notifications/user/{userId}")
+    Call<List<NotificationResponse>> getMyNotifications(@Path("userId") long userId);
+
+    @PUT("notifications/{id}/read")
+    Call<Void> markNotificationAsRead(@Path("id") int notificationId);
 }

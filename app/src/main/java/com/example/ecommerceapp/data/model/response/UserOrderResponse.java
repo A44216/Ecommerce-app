@@ -7,18 +7,19 @@ public class UserOrderResponse {
     private Integer id;
     private Integer userId;
     private Integer shopId;
-    private String status; // Trạng thái đơn hàng (PENDING, PROCESSING, SHIPPING, DELIVERED...)
+    private String status;
     private BigDecimal totalPrice;
     private String createdAt;
 
-    // Phần địa chỉ
+    // Phần địa chỉ (Dữ liệu phẳng)
     private String shippingName;
     private String shippingPhone;
     private String addressLine;
 
+    // Danh sách sản phẩm
     private List<UserOrderItemResponse> orderItems;
 
-    // Getters
+    // --- GETTERS ---
     public Integer getId() { return id; }
     public Integer getUserId() { return userId; }
     public Integer getShopId() { return shopId; }
@@ -28,7 +29,17 @@ public class UserOrderResponse {
     public String getShippingName() { return shippingName; }
     public String getShippingPhone() { return shippingPhone; }
     public String getAddressLine() { return addressLine; }
-
-    // Getter mới
     public List<UserOrderItemResponse> getOrderItems() { return orderItems; }
+
+    // --- SETTERS (Thêm vào để Retrofit/Gson gán dữ liệu an toàn) ---
+    public void setId(Integer id) { this.id = id; }
+    public void setUserId(Integer userId) { this.userId = userId; }
+    public void setShopId(Integer shopId) { this.shopId = shopId; }
+    public void setStatus(String status) { this.status = status; }
+    public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public void setShippingName(String shippingName) { this.shippingName = shippingName; }
+    public void setShippingPhone(String shippingPhone) { this.shippingPhone = shippingPhone; }
+    public void setAddressLine(String addressLine) { this.addressLine = addressLine; }
+    public void setOrderItems(List<UserOrderItemResponse> orderItems) { this.orderItems = orderItems; }
 }

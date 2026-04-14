@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.activity.home.user.order;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -17,6 +18,8 @@ import com.example.ecommerceapp.data.repository.UserOrderRepository;
 import com.example.ecommerceapp.ui.adapter.user.UserOrderAdapter;
 import com.example.ecommerceapp.ui.viewmodel.UserOrderViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.UserOrderViewModelFactory;
+// Nếu có Activity chi tiết, hãy import nó vào đây, ví dụ:
+// import com.example.ecommerceapp.ui.activity.home.user.order.OrderDetailActivity;
 
 public class UserOrderHistoryActivity extends AppCompatActivity {
 
@@ -24,17 +27,25 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
     private UserOrderAdapter adapter;
 
     private String currentStatus = "ALL";
+    private int specificOrderId = -1; // Thêm biến hứng ID đơn hàng cụ thể
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_order_history);
 
-        // --- NHẬN TÍN HIỆU TỪ TRANG PROFILE ---
-        if (getIntent() != null && getIntent().hasExtra("ORDER_STATUS")) {
-            currentStatus = getIntent().getStringExtra("ORDER_STATUS");
-            // Hiện Toast để bạn test xem tín hiệu đã thông chưa
-            Toast.makeText(this, "Đang lọc: " + currentStatus, Toast.LENGTH_SHORT).show();
+        // --- NHẬN TÍN HIỆU TỪ TRANG KHÁC (PROFILE HOẶC THÔNG BÁO) ---
+        if (getIntent() != null) {
+            // Trường hợp 1: Từ Profile truyền qua Trạng thái
+            if (getIntent().hasExtra("ORDER_STATUS")) {
+                currentStatus = getIntent().getStringExtra("ORDER_STATUS");
+                Toast.makeText(this, "Đang lọc: " + currentStatus, Toast.LENGTH_SHORT).show();
+            }
+
+            // Trường hợp 2: Từ Thông báo truyền qua ID Đơn hàng
+            if (getIntent().hasExtra("ORDER_ID")) {
+                specificOrderId = getIntent().getIntExtra("ORDER_ID", -1);
+            }
         }
 
         // 1. Ánh xạ View
@@ -70,15 +81,31 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
         );
 
         // ==========================================
-        // 5. GỌI API LẤY ĐƠN HÀNG VỚI ID THẬT
-        // ==========================================
-        // ==========================================
-        // 5. GỌI API VÀ TRUYỀN VÀO BỘ LỌC
+        // 5. GỌI API THEO LUỒNG ĐIỀU HƯỚNG
         // ==========================================
         int realUserId = (int) tokenManager.getUserId();
 
         if (realUserId != -1) {
-            viewModel.fetchOrdersByUserAndStatus(realUserId, currentStatus);
+            // Nếu có specificOrderId, tức là đi từ Thông báo sang -> Chuyển hướng hoặc xử lý đặc biệt
+            if (specificOrderId != -1) {
+                // LỰA CHỌN 1: Nếu bạn có Activity xem chi tiết đơn hàng riêng
+                // Hãy bỏ comment đoạn code dưới đây và xóa phần "Lựa chọn 2"
+                /*
+                Intent intent = new Intent(this, OrderDetailActivity.class);
+                intent.putExtra("ORDER_ID", specificOrderId);
+                startActivity(intent);
+                finish(); // Đóng Activity danh sách này lại
+                */
+
+                // LỰA CHỌN 2: Nếu bạn chưa có Activity chi tiết, tạm thời gọi API lấy danh sách
+                // (Sau này bạn nên làm chức năng scroll đến đúng vị trí đơn hàng đó trong list)
+                Toast.makeText(this, "Đang mở đơn hàng: " + specificOrderId, Toast.LENGTH_SHORT).show();
+                viewModel.fetchOrdersByUserAndStatus(realUserId, currentStatus);
+
+            } else {
+                // Nếu không có specificOrderId, tức là đi từ Profile sang -> Lọc danh sách bình thường
+                viewModel.fetchOrdersByUserAndStatus(realUserId, currentStatus);
+            }
         } else {
             Toast.makeText(this, "Vui lòng đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show();
         }
