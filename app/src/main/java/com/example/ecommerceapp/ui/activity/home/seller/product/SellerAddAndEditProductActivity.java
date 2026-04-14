@@ -365,6 +365,9 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        etCategory.setError(null);
+
     }
 
     private void createProduct(SellerProductRequest request) {
@@ -506,6 +509,13 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
         } catch (Exception e) {
             etStock.setError("Số lượng không hợp lệ");
             isValid = false;
+        }
+
+        if (selectedCategoryId == null) {
+            etCategory.setError("Danh mục không được để trống");
+            isValid = false;
+        } else {
+            etCategory.setError(null);
         }
 
         return isValid;
