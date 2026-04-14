@@ -15,6 +15,18 @@
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.activity.home.admin.profile.AdminVoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.profile.AdminProfileInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.profile.AdminChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.profile.AdminCategoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.home.seller.review.SellerReviewActivity"
             android:exported="false" />
         <activity

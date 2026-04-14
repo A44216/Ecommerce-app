@@ -26,24 +26,8 @@ public class CategoryRepository {
         return apiService.getCategories(keyword);
     }
 
-    // CREATE
-    public Call<CategoryResponse> createCategory(CategoryRequest request) {
-        return apiService.createCategory(request);
-    }
-
-    // UPDATE
-    public Call<CategoryResponse> updateCategory(int id, CategoryRequest request) {
-        return apiService.updateCategory(id, request);
-    }
-
-    // DELETE
-    public Call<Void> deleteCategory(int id) {
-        return apiService.deleteCategory(id);
-    }
-
     // GET BY ID
     public Call<CategoryResponse> getCategoryById(int id) {
         return apiService.getCategoryById(id);
     }
-
 }

@@ -17,6 +17,11 @@ public class CategoryViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new CategoryViewModel(repository);
+
+        if (modelClass.isAssignableFrom(CategoryViewModel.class)) {
+            return (T) new CategoryViewModel(repository);
+        }
+
+        throw new IllegalArgumentException("Unknown ViewModel class");
     }
 }
