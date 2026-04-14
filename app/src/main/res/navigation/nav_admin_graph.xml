@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_admin_graph"
+    app:startDestination="@id/adminHomeFragment">
+
+    <fragment
+        android:id="@+id/adminHomeFragment"
+        android:name="com.example.ecommerceapp.ui.fragment.admin.dashboard.AdminDashboardFragment"
+        android:label="Dashboard" />
+
+    <fragment
+        android:id="@+id/adminProductFragment"
+        android:name="com.example.ecommerceapp.ui.fragment.admin.product.AdminProductFragment"
+        android:label="Product" />
+
+    <fragment
+        android:id="@+id/adminOrderFragment"
+        android:name="com.example.ecommerceapp.ui.fragment.admin.order.AdminOrderFragment"
+        android:label="Order" />
+
+    <fragment
+        android:id="@+id/adminUserFragment"
+        android:name="com.example.ecommerceapp.ui.fragment.admin.user.AdminUserFragment"
+        android:label="User" />
+
+    <fragment
+        android:id="@+id/adminProfileFragment"
+        android:name="com.example.ecommerceapp.ui.fragment.admin.profile.AdminProfileFragment"
+        android:label="Profile" />
+
+</navigation>
