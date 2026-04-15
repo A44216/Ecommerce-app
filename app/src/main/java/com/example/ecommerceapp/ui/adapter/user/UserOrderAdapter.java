@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.adapter.user;
 
+import android.content.Intent; // THÊM IMPORT NÀY
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.UserOrderItemResponse;
 import com.example.ecommerceapp.data.model.response.UserOrderResponse;
+import com.example.ecommerceapp.ui.activity.home.user.order.OrderDetailActivity; // THÊM IMPORT NÀY
 import com.example.ecommerceapp.utils.ImageLoader;
 
 import java.text.DecimalFormat;
@@ -75,23 +77,19 @@ public class UserOrderAdapter extends RecyclerView.Adapter<UserOrderAdapter.Orde
         // ==========================================
         // 3. BƠM DANH SÁCH SẢN PHẨM VÀO CONTAINER
         // ==========================================
-        // Dọn dẹp sạch sẽ rác cũ trước khi bơm (Rất quan trọng trong RecyclerView)
         holder.llOrderItemsContainer.removeAllViews();
 
         if (order.getOrderItems() != null && !order.getOrderItems().isEmpty()) {
             LayoutInflater inflater = LayoutInflater.from(holder.itemView.getContext());
 
             for (UserOrderItemResponse item : order.getOrderItems()) {
-                // Tạo một View "Món đồ" từ file XML item_user_order_product
                 View productView = inflater.inflate(R.layout.item_user_order_product, holder.llOrderItemsContainer, false);
 
-                // Ánh xạ các thành phần bên trong View "Món đồ" đó
                 ImageView ivProductImage = productView.findViewById(R.id.ivProductImage);
                 TextView tvProductName = productView.findViewById(R.id.tvProductName);
                 TextView tvProductPrice = productView.findViewById(R.id.tvProductPrice);
                 TextView tvProductQuantity = productView.findViewById(R.id.tvProductQuantity);
 
-                // Đổ dữ liệu vào
                 tvProductName.setText(item.getProductName());
                 tvProductQuantity.setText("x" + item.getQuantity());
 
@@ -99,17 +97,22 @@ public class UserOrderAdapter extends RecyclerView.Adapter<UserOrderAdapter.Orde
                     tvProductPrice.setText(df.format(item.getPrice()) + "đ");
                 }
 
-                // --- SỬ DỤNG IMAGELOADER CỦA BẠN ĐỂ LOAD ẢNH ---
                 if (item.getProductImage() != null && !item.getProductImage().isEmpty()) {
-                    // Nhớ import com.example.ecommerceapp.utils.ImageLoader; ở đầu file nhé!
                     ImageLoader.load(holder.itemView.getContext(), ivProductImage, item.getProductImage());
                 }
-                // -----------------------------------------------
 
-                //nhét View "Món đồ" này vào khung Container của thẻ Đơn hàng
                 holder.llOrderItemsContainer.addView(productView);
             }
         }
+
+        // ==========================================
+        // 4. SỰ KIỆN CLICK ĐỂ MỞ CHI TIẾT ĐƠN HÀNG
+        // ==========================================
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), OrderDetailActivity.class);
+            intent.putExtra("ORDER_ID", order.getId());
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -127,7 +130,7 @@ public class UserOrderAdapter extends RecyclerView.Adapter<UserOrderAdapter.Orde
             tvOrderStatus = itemView.findViewById(R.id.tvOrderStatus);
             tvOrderDate = itemView.findViewById(R.id.tvOrderDate);
             tvOrderTotal = itemView.findViewById(R.id.tvOrderTotal);
-            llOrderItemsContainer = itemView.findViewById(R.id.llOrderItemsContainer); // ÁNH XẠ NÓ
+            llOrderItemsContainer = itemView.findViewById(R.id.llOrderItemsContainer);
         }
     }
 }
