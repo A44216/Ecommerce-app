@@ -27,7 +27,7 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
     private UserOrderAdapter adapter;
 
     private String currentStatus = "ALL";
-    private int specificOrderId = -1; // Thêm biến hứng ID đơn hàng cụ thể
+    private int specificOrderId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,17 +88,6 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
         if (realUserId != -1) {
             // Nếu có specificOrderId, tức là đi từ Thông báo sang -> Chuyển hướng hoặc xử lý đặc biệt
             if (specificOrderId != -1) {
-                // LỰA CHỌN 1: Nếu bạn có Activity xem chi tiết đơn hàng riêng
-                // Hãy bỏ comment đoạn code dưới đây và xóa phần "Lựa chọn 2"
-                /*
-                Intent intent = new Intent(this, OrderDetailActivity.class);
-                intent.putExtra("ORDER_ID", specificOrderId);
-                startActivity(intent);
-                finish(); // Đóng Activity danh sách này lại
-                */
-
-                // LỰA CHỌN 2: Nếu bạn chưa có Activity chi tiết, tạm thời gọi API lấy danh sách
-                // (Sau này bạn nên làm chức năng scroll đến đúng vị trí đơn hàng đó trong list)
                 Toast.makeText(this, "Đang mở đơn hàng: " + specificOrderId, Toast.LENGTH_SHORT).show();
                 viewModel.fetchOrdersByUserAndStatus(realUserId, currentStatus);
 

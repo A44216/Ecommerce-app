@@ -28,7 +28,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,7 +54,7 @@
                     android:id="@+id/tvOrderDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ngày đặt: 15/04/2026"
+                    android:text="Ngày đặt: Đang tải..."
                     android:textColor="@color/white"
                     android:layout_marginTop="4dp" />
             </LinearLayout>
@@ -110,4 +111,15 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <Button
+        android:id="@+id/btnCancelOrder"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="#F44336"
+        android:text="Hủy Đơn Hàng"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 </LinearLayout>

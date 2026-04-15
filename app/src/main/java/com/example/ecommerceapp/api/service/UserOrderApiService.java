@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface UserOrderApiService {
@@ -20,4 +21,7 @@ public interface UserOrderApiService {
 
     @GET("orders/{id}")
     Call<UserOrderResponse> getOrderById(@Path("id") int orderId);
+
+    @PUT("orders/{id}/cancel")
+    Call<UserOrderResponse> cancelOrder(@Path("id") int orderId);
 }
