@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.model.response.admin;
+package com.example.ecommerceapp.data.model.response.admin.profile;
 
 public class CategoryAdminResponse {
     private Integer id;

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.model.response.admin.CategoryAdminResponse;
+import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
 import com.example.ecommerceapp.ui.adapter.admin.category.AdminCategoryAdapter;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminCategoryViewModel;
 

@@ -3,6 +3,7 @@ package com.example.ecommerceapp.api;
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.api.service.CategoryService;
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
+import com.example.ecommerceapp.api.service.admin.AdminProfileService;
 import com.example.ecommerceapp.api.service.seller.SellerDashboardService;
 import com.example.ecommerceapp.api.service.seller.SellerOrderService;
 import com.example.ecommerceapp.api.service.ProductImageService;
@@ -48,12 +49,12 @@ public class ApiClient {
                 .build();
     }
 
-    // ===== PUBLIC API =====
+    // PUBLIC API
     public static AuthService getAuthService() {
         return getPublicRetrofit().create(AuthService.class);
     }
 
-    // ===== AUTH API =====
+    // AUTH API
 
     public static AuthService getAuthService(TokenManager tm) {
         return createAuthRetrofit(tm).create(AuthService.class);
@@ -92,6 +93,10 @@ public class ApiClient {
 
     public static AdminCategoryService getAdminCategoryService(TokenManager tm) {
         return createAuthRetrofit(tm).create(AdminCategoryService.class);
+    }
+
+    public static AdminProfileService getAdminProfileService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(AdminProfileService.class);
     }
 
 }

@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.data.model.response.admin.CategoryAdminResponse;
+import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
 
 import java.util.List;
 

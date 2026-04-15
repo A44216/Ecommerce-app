@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.model.response.admin.CategoryAdminResponse;
-import com.example.ecommerceapp.data.repository.admin.category.AdminCategoryRepository;
+import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
+import com.example.ecommerceapp.data.repository.admin.profile.AdminCategoryRepository;
 
 import java.util.List;
 

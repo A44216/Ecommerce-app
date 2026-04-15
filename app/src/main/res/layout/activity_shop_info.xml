@@ -45,6 +45,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:hint="@string/seller_shop_hint_name">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -57,7 +58,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/seller_shop_hint_address">
+            android:hint="@string/seller_shop_hint_address"
+            android:layout_marginTop="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtAddress"
@@ -69,7 +71,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/seller_shop_hint_phone">
+            android:hint="@string/seller_shop_hint_phone"
+            android:layout_marginTop="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtPhone"
@@ -81,7 +84,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/seller_shop_hint_email">
+            android:hint="@string/seller_shop_hint_email"
+            android:layout_marginTop="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtEmail"
@@ -93,7 +97,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/seller_shop_hint_description">
+            android:hint="@string/seller_shop_hint_description"
+            android:layout_marginTop="6dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtDescription"
@@ -108,6 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/seller_shop_button_update"
+            android:padding="10dp"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/white"

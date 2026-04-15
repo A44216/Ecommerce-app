@@ -1,7 +1,7 @@
 package com.example.ecommerceapp.api.service.admin;
 
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.model.response.admin.CategoryAdminResponse;
+import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
 
 import java.util.List;
 

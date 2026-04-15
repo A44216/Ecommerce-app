@@ -1,9 +1,8 @@
-package com.example.ecommerceapp.data.repository.admin.category;
+package com.example.ecommerceapp.data.repository.admin.profile;
 
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.model.response.CategoryResponse;
-import com.example.ecommerceapp.data.model.response.admin.CategoryAdminResponse;
+import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
 
 import java.util.List;
 
