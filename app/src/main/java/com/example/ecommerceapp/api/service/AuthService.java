@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.api.service;
 
+import com.example.ecommerceapp.data.model.request.admin.profile.AdminChangePasswordRequest;
 import com.example.ecommerceapp.data.model.request.auth.LoginRequest;
 import com.example.ecommerceapp.data.model.request.auth.ResetPasswordRequest;
 import com.example.ecommerceapp.data.model.request.UserRequest;
@@ -8,6 +9,8 @@ import com.example.ecommerceapp.data.model.request.auth.GoogleLoginRequest;
 import com.example.ecommerceapp.data.model.request.auth.SendOtpRequest;
 import com.example.ecommerceapp.data.model.response.auth.LoginResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
+
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -35,4 +38,8 @@ public interface AuthService {
 
     @POST("auth/verify-otp")
     Call<Void> verifyOtp(@Body VerifyOtpRequest request);
+
+    @POST("auth/change-password")
+    Call<Map<String, String>> changePassword(@Body AdminChangePasswordRequest request);
+
 }

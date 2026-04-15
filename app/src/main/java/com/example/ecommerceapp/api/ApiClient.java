@@ -19,7 +19,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://192.168.1.239:8081/api/";
+    private static final String BASE_URL = "http://10.0.2.2:8081/api/";
     private static Retrofit publicRetrofit;
 
     // PUBLIC
@@ -54,6 +54,11 @@ public class ApiClient {
     }
 
     // ===== AUTH API =====
+
+    public static AuthService getAuthService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(AuthService.class);
+    }
+
     public static SellerProductService getProductService(TokenManager tm) {
         return createAuthRetrofit(tm).create(SellerProductService.class);
     }
