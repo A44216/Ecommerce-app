@@ -12,7 +12,12 @@
     <string name="admin_profile_change_password_button">Đổi mật khẩu</string>
     <string name="admin_profile_logout">Đăng xuất</string>
 
+    <!-- Category -->
     <string name="admin_profile_category_search">Tìm kiếm danh mục</string>
     <string name="admin_profile_category_name">Tên danh mục</string>
+
+    <!-- Change Password -->
+    <string name="admin_profile_change_password_title">ĐỔI MẬT KHẨU</string>
+    <string name="admin_profile_hint_current_password">Mật khẩu hiện tại</string>
 
 </resources>
