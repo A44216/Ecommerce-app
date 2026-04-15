@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.request.ConversationRequest;
+import com.example.ecommerceapp.data.model.response.ConversationResponse;
 import com.example.ecommerceapp.data.model.response.ReviewResponse;
 import com.example.ecommerceapp.data.model.response.UserProductImageResponse;
 import com.example.ecommerceapp.data.model.response.UserProductResponse;
@@ -25,6 +27,7 @@ import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 import com.example.ecommerceapp.ui.adapter.user.ReviewAdapter;
 import com.example.ecommerceapp.utils.CartManager;
 import com.example.ecommerceapp.utils.ImageLoader;
+import com.example.ecommerceapp.ui.activity.home.user.chat.ChatActivity;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -62,6 +65,8 @@ public class UserProductDetailActivity extends AppCompatActivity {
         TextView tvDetailSoldCount = findViewById(R.id.tvDetailSoldCount);
         TextView tvDetailStock = findViewById(R.id.tvDetailStock);
 
+        LinearLayout bottomActionbar = findViewById(R.id.bottomActionbar);
+        View btnChatNow = bottomActionbar.getChildAt(0); // Lấy item đầu tiên là nút "Chat ngay"
         LinearLayout btnAddToCart = findViewById(R.id.btnViewCart);
         Button btnBuyNow = findViewById(R.id.btnBuyNow);
 
@@ -121,8 +126,52 @@ public class UserProductDetailActivity extends AppCompatActivity {
         }
 
         // ==========================================
-        // 4. XỬ LÝ LOGIC GIỎ HÀNG
+        // 4. XỬ LÝ LOGIC GIỎ HÀNG & CHAT
         // ==========================================
+
+        // --- LOGIC CHAT NGAY ---
+        btnChatNow.setOnClickListener(v -> {
+            if (tokenManager.getUserId() == -1) {
+                showLoginRequireDialog();
+                return;
+            }
+
+            if (shopId != -1) {
+                ConversationRequest req = new ConversationRequest(shopId, (int) tokenManager.getUserId());
+                ApiClient.getChatApiService(tokenManager).createConversation(req).enqueue(new Callback<ConversationResponse>() {
+                    @Override
+                    public void onResponse(Call<ConversationResponse> call, Response<ConversationResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            int conversationId = response.body().getId();
+                            String shopName = response.body().getShopName();
+                            Intent intent = new Intent(UserProductDetailActivity.this, ChatActivity.class);
+                            intent.putExtra("CONVERSATION_ID", conversationId);
+                            intent.putExtra("SHOP_NAME", shopName != null ? shopName : "Shop");
+                            startActivity(intent);
+
+                            Toast.makeText(UserProductDetailActivity.this, "Đã lấy thành công phòng Chat ID: " + conversationId, Toast.LENGTH_SHORT).show();
+                        } else {
+                            try {
+                                String errorDetail = response.errorBody() != null ? response.errorBody().string() : "Không rõ lỗi";
+                                android.util.Log.e("API_CHAT_ERROR", "Mã lỗi: " + response.code() + " - Chi tiết: " + errorDetail);
+                                Toast.makeText(UserProductDetailActivity.this, "Lỗi " + response.code() + ": " + errorDetail, Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ConversationResponse> call, Throwable t) {
+                        Toast.makeText(UserProductDetailActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(UserProductDetailActivity.this, "Không tìm thấy thông tin Shop!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // --- LOGIC GIỎ HÀNG ---
         UserProductResponse currentProduct = new UserProductResponse();
         if (productId != -1) currentProduct.setId(productId);
         if (shopId != -1) currentProduct.setShopId(shopId);
@@ -166,7 +215,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
     // 5. HÀM TẢI ĐÁNH GIÁ (REVIEW)
     // ==========================================
     private void loadReviews(int productId) {
-        // Lưu ý: Đảm bảo bạn đã khai báo API getReviewsByProduct trong file chứa API của bạn
+        // ĐÃ SỬA LẠI THÀNH getUserService() / getUserApiService() ĐỂ LẤY ĐÁNH GIÁ
         ApiClient.getUserService(tokenManager).getReviewsByProduct(productId).enqueue(new Callback<List<ReviewResponse>>() {
             @Override
             public void onResponse(Call<List<ReviewResponse>> call, Response<List<ReviewResponse>> response) {
@@ -174,18 +223,15 @@ public class UserProductDetailActivity extends AppCompatActivity {
                     List<ReviewResponse> reviews = response.body();
 
                     if (reviews.isEmpty()) {
-                        // Không có đánh giá
                         rvReviews.setVisibility(View.GONE);
                         tvNoReviews.setVisibility(View.VISIBLE);
                         tvAverageRating.setText("0/5 (0 đánh giá)");
                         mainRatingBar.setRating(0);
                     } else {
-                        // Tính trung bình sao
                         float averageRating = calculateAverage(reviews);
                         tvAverageRating.setText(String.format("%.1f/5 (%d đánh giá)", averageRating, reviews.size()));
                         mainRatingBar.setRating(averageRating);
 
-                        // Hiển thị danh sách
                         tvNoReviews.setVisibility(View.GONE);
                         rvReviews.setVisibility(View.VISIBLE);
                         rvReviews.setAdapter(new ReviewAdapter(reviews));
