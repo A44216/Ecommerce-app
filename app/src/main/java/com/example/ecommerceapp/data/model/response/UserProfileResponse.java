@@ -9,7 +9,7 @@ public class UserProfileResponse {
     private String email;
     private String phone;
     private String avatar;
-
+    private boolean isGoogleAccount;
 
     public String getFullName() { return fullName; }
     public String getUsername() { return username; }
@@ -23,5 +23,11 @@ public class UserProfileResponse {
     private boolean hasPassword;
     public boolean isHasPassword() {
         return hasPassword;
+    }
+    public boolean isGoogleAccount() {
+        return isGoogleAccount;
+    }
+    public void setGoogleAccount(boolean googleAccount) {
+        isGoogleAccount = googleAccount;
     }
 }
