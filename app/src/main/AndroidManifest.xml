@@ -15,6 +15,9 @@
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.activity.home.user.review.ReviewActivity"
+            android:exported="false"/>
+        <activity
             android:name=".ui.activity.home.user.order.OrderDetailActivity"
             android:exported="false" />
         <activity

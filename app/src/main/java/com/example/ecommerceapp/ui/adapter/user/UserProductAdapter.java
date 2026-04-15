@@ -85,6 +85,21 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
             if (product.getShopId() != null) {
                 intent.putExtra("shop_id", product.getShopId());
             }
+
+            // ==========================================
+            // TRUYỀN THÊM DỮ LIỆU ĐÁNH GIÁ, ĐÃ BÁN, KHO, MÔ TẢ
+            // ==========================================
+            // Xử lý an toàn tránh lỗi NullPointerException nếu dữ liệu từ DB trả về null
+            float rating = product.getRatingAvg() != null ? product.getRatingAvg() : 0f;
+            int soldCount = product.getSoldCount() != null ? product.getSoldCount() : 0;
+            int stock = product.getStock() != null ? product.getStock() : 0;
+            String desc = product.getDescription() != null ? product.getDescription() : "";
+
+            intent.putExtra("product_rating_avg", rating);
+            intent.putExtra("product_sold_count", soldCount);
+            intent.putExtra("product_stock", stock);
+            intent.putExtra("product_desc", desc);
+
             context.startActivity(intent);
         });
     }

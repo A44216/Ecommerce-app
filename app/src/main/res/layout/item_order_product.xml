@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="12dp"
     android:background="@color/white"
@@ -58,4 +59,16 @@
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
     </LinearLayout>
+    <Button
+        android:id="@+id/btnReviewProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/white"
+        android:text="Đánh giá"
+        android:textColor="@color/shopee_orange"
+        android:textSize="12sp"
+        app:strokeColor="@color/shopee_orange"
+        app:strokeWidth="1dp" />
 </LinearLayout>

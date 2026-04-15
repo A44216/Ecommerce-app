@@ -43,9 +43,16 @@ public class UserOrderItemAdapter extends RecyclerView.Adapter<UserOrderItemAdap
         if (item.getProductImage() != null && !item.getProductImage().isEmpty()) {
             ImageLoader.load(holder.itemView.getContext(), holder.ivImage, item.getProductImage());
         } else {
-            // Lưu ý: Nếu máy bạn không có file ic_image_placeholder, hãy đổi thành tên ảnh mặc định khác (ví dụ: ic_cart)
             holder.ivImage.setImageResource(R.drawable.ic_cart);
         }
+        holder.btnReview.setOnClickListener(v -> {
+            // Lấy Context (Môi trường hiện tại của nút bấm)
+            android.content.Context context = holder.itemView.getContext();
+
+            android.content.Intent intent = new android.content.Intent(context, com.example.ecommerceapp.ui.activity.home.user.review.ReviewActivity.class);
+            intent.putExtra("PRODUCT_ID", item.getProductId()); // Gửi ID của sản phẩm này sang
+            context.startActivity(intent); // Bắt đầu bay sang màn hình Đánh giá
+        });
     }
 
     @Override
@@ -56,13 +63,15 @@ public class UserOrderItemAdapter extends RecyclerView.Adapter<UserOrderItemAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivImage;
         TextView tvName, tvQuantity, tvPrice;
-
+        android.widget.Button btnReview;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.ivProductImage);
             tvName = itemView.findViewById(R.id.tvProductName);
             tvQuantity = itemView.findViewById(R.id.tvProductQuantity);
             tvPrice = itemView.findViewById(R.id.tvProductPrice);
+
+            btnReview = itemView.findViewById(R.id.btnReviewProduct);
         }
     }
 }

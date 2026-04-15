@@ -1,7 +1,9 @@
 package com.example.ecommerceapp.api.service;
 
 import com.example.ecommerceapp.data.model.request.ChangePasswordRequest;
+import com.example.ecommerceapp.data.model.request.ReviewRequest;
 import com.example.ecommerceapp.data.model.response.NotificationResponse;
+import com.example.ecommerceapp.data.model.response.ReviewResponse;
 import com.example.ecommerceapp.data.model.response.UserProfileResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
@@ -43,4 +45,10 @@ public interface UserService {
 
     @PUT("notifications/{id}/read")
     Call<Void> markNotificationAsRead(@Path("id") int notificationId);
+
+    @POST("reviews")
+    Call<ReviewResponse> submitReview(@Body ReviewRequest request);
+
+    @GET("reviews/product/{productId}")
+    Call<List<ReviewResponse>> getReviewsByProduct(@Path("productId") int productId);
 }
