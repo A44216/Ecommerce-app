@@ -2,6 +2,7 @@ package com.example.ecommerceapp.api.service;
 
 import com.example.ecommerceapp.data.model.request.ChangePasswordRequest;
 import com.example.ecommerceapp.data.model.request.ReviewRequest;
+import com.example.ecommerceapp.data.model.request.SetPasswordRequest;
 import com.example.ecommerceapp.data.model.response.NotificationResponse;
 import com.example.ecommerceapp.data.model.response.ReviewResponse;
 import com.example.ecommerceapp.data.model.response.UserProfileResponse;
@@ -51,4 +52,7 @@ public interface UserService {
 
     @GET("reviews/product/{productId}")
     Call<List<ReviewResponse>> getReviewsByProduct(@Path("productId") int productId);
+
+    @PUT("users/{id}/set-password")
+    Call<Void> setPassword(@Path("id") int userId, @Body SetPasswordRequest request);
 }

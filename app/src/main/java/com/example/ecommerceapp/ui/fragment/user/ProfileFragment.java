@@ -18,6 +18,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.UserService;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.request.SetPasswordRequest;
 import com.example.ecommerceapp.data.model.response.UserProfileResponse;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
 import com.example.ecommerceapp.ui.activity.home.user.settings.SettingsActivity;
@@ -37,9 +38,9 @@ public class ProfileFragment extends Fragment {
     private TextView tvFollowers;
     private ImageView ivAvatar;
 
-    // Đưa 2 View này lên làm biến toàn cục để có thể thay đổi trạng thái linh hoạt
     private Button btnLogout;
     private ImageView ivSettings;
+    private Button btnSetPassword;
 
     private TokenManager tokenManager;
 
@@ -54,6 +55,7 @@ public class ProfileFragment extends Fragment {
         tvCartBadge = view.findViewById(R.id.tvCartBadge);
         btnLogout = view.findViewById(R.id.btnLogout);
         ivSettings = view.findViewById(R.id.ivSettings);
+        btnSetPassword = view.findViewById(R.id.btnSetPassword);
 
         tokenManager = TokenManager.getInstance(getContext());
 
@@ -74,11 +76,13 @@ public class ProfileFragment extends Fragment {
         if (btnShipping != null) btnShipping.setOnClickListener(v -> openOrderHistory("SHIPPING"));
         if (btnDelivered != null) btnDelivered.setOnClickListener(v -> openOrderHistory("DELIVERED"));
 
-        // Cho phép bấm vào tên hoặc ảnh cũng kích hoạt chức năng như nút Cài đặt
         tvUsername.setOnClickListener(v -> ivSettings.performClick());
         if (ivAvatar != null) {
             ivAvatar.setOnClickListener(v -> ivSettings.performClick());
         }
+
+        // Bắt sự kiện mở Popup đặt mật khẩu
+        btnSetPassword.setOnClickListener(v -> showSetPasswordDialog());
 
         return view;
     }
@@ -94,11 +98,6 @@ public class ProfileFragment extends Fragment {
         long currentUserId = tokenManager.getUserId();
 
         if (currentUserId != -1) {
-            // ==========================================
-            // TRẠNG THÁI 1: ĐÃ ĐĂNG NHẬP
-            // ==========================================
-
-            // 1. Cài đặt nút thành "Đăng xuất"
             btnLogout.setText("Đăng xuất");
             btnLogout.setOnClickListener(v -> {
                 tokenManager.clearAllData();
@@ -111,12 +110,10 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
-            // 2. Mở khóa nút Cài đặt
             ivSettings.setOnClickListener(v -> {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
             });
 
-            // 3. Gọi API lấy thông tin người dùng
             UserService apiService = ApiClient.getUserService(tokenManager);
             apiService.getUserProfile(currentUserId).enqueue(new Callback<UserProfileResponse>() {
                 @Override
@@ -130,12 +127,20 @@ public class ProfileFragment extends Fragment {
                         String extraInfo = user.getEmail() != null ? user.getEmail() : (user.getPhone() != null ? user.getPhone() : "");
                         tvFollowers.setText(extraInfo);
 
-                        // Load Avatar
                         String avatarUrl = user.getAvatar();
                         if (avatarUrl != null && !avatarUrl.isEmpty()) {
                             ImageLoader.load(getContext(), ivAvatar, avatarUrl);
                         } else {
                             ivAvatar.setImageResource(R.drawable.bg_avatar_placeholder);
+                        }
+
+                        // ==========================================
+                        // LOGIC ẨN/HIỆN NÚT ĐẶT MẬT KHẨU MỚI (CHUẨN 100%)
+                        // ==========================================
+                        if (!user.isHasPassword()) {
+                            btnSetPassword.setVisibility(View.VISIBLE);
+                        } else {
+                            btnSetPassword.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -150,27 +155,98 @@ public class ProfileFragment extends Fragment {
             });
 
         } else {
-            // ==========================================
-            // TRẠNG THÁI 2: CHƯA ĐĂNG NHẬP (KHÁCH VÃNG LAI)
-            // ==========================================
             if (isAdded()) {
-                // 1. Cài đặt thông tin mặc định
                 tvUsername.setText("Chưa đăng nhập");
                 tvFollowers.setText("Vui lòng đăng nhập");
-                ivAvatar.setImageResource(R.drawable.bg_avatar_placeholder); // Ảnh xám
+                ivAvatar.setImageResource(R.drawable.bg_avatar_placeholder);
 
-                // 2. Cài đặt nút thành "Đăng nhập"
                 btnLogout.setText("Đăng nhập");
                 btnLogout.setOnClickListener(v -> {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                 });
 
-                // 3. Khóa nút Cài đặt (Bắt đăng nhập)
                 ivSettings.setOnClickListener(v -> {
                     showLoginRequireDialog();
                 });
+
+                btnSetPassword.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void showSetPasswordDialog() {
+        if (getContext() == null) return;
+
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        builder.setTitle("Thiết lập mật khẩu");
+        builder.setMessage("Tạo mật khẩu để có thể đăng nhập bằng Email cho những lần sau.");
+
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(getContext());
+        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        layout.setPadding(60, 40, 60, 10);
+
+        final android.widget.EditText edtPassword = new android.widget.EditText(getContext());
+        edtPassword.setHint("Nhập mật khẩu mới (ít nhất 6 ký tự)");
+        edtPassword.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        layout.addView(edtPassword);
+
+        final android.widget.EditText edtConfirm = new android.widget.EditText(getContext());
+        edtConfirm.setHint("Xác nhận lại mật khẩu");
+        edtConfirm.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        layout.addView(edtConfirm);
+
+        builder.setView(layout);
+
+        builder.setNegativeButton("Hủy bỏ", (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton("Lưu mật khẩu", null);
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String pass = edtPassword.getText().toString().trim();
+            String confirm = edtConfirm.getText().toString().trim();
+
+            if (pass.length() < 6) {
+                Toast.makeText(getContext(), "Mật khẩu phải từ 6 ký tự trở lên!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!pass.equals(confirm)) {
+                Toast.makeText(getContext(), "Mật khẩu xác nhận không khớp!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            executeSetPassword(pass, dialog);
+        });
+    }
+
+    private void executeSetPassword(String newPassword, androidx.appcompat.app.AlertDialog dialog) {
+        long userId = tokenManager.getUserId();
+        if (userId == -1) return;
+
+        SetPasswordRequest request = new SetPasswordRequest(newPassword);
+
+        ApiClient.getUserService(tokenManager).setPassword((int) userId, request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (isAdded() && getContext() != null) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Thiết lập mật khẩu thành công!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        loadUserProfile();
+                    } else {
+                        Toast.makeText(getContext(), "Cập nhật thất bại. Vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                if (isAdded() && getContext() != null) {
+                    Toast.makeText(getContext(), "Lỗi kết nối mạng!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void updateCartBadge() {
@@ -195,20 +271,16 @@ public class ProfileFragment extends Fragment {
         startActivity(intent);
     }
 
-    // --- HÀM PHỤ TRỢ: HIỂN THỊ HỘP THOẠI YÊU CẦU ĐĂNG NHẬP ---
     private void showLoginRequireDialog() {
         if (getContext() == null) return;
-
         new androidx.appcompat.app.AlertDialog.Builder(getContext())
                 .setTitle("Yêu cầu đăng nhập")
                 .setMessage("Bạn cần đăng nhập để sử dụng tính năng này. Đi đến trang đăng nhập ngay?")
-                .setCancelable(true) // Cho phép bấm ra ngoài để đóng
+                .setCancelable(true)
                 .setPositiveButton("Đăng nhập", (dialog, which) -> {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                 })
-                .setNegativeButton("Để sau", (dialog, which) -> {
-                    dialog.dismiss(); // Đóng hộp thoại, ở lại trang cũ
-                })
+                .setNegativeButton("Để sau", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 }
