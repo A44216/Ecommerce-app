@@ -9,21 +9,43 @@
 
     <string name="seller_stat_revenue">Doanh thu</string>
     <string name="seller_stat_orders">Đơn hàng</string>
-    <string name="seller_stat_reviews">Đánh giá</string>
+    <string name="seller_stat_sold">Đã bán</string>
 
     <!-- Dashboard-->
     <string name="seller_dashboard_overview">TỔNG QUAN</string>
     <string name="seller_dashboard_best_selling_products">🔥 Top sản phẩm</string>
+    <string name="seller_dashboard_kpi_title">Chỉ số thống kê</string>
     <string name="seller_dashboard_chart_title">Biểu đồ thống kê</string>
+
+    <!-- FILTER TOP PRODUCT BY REVENUE AND SOLD -->
     <string-array name="seller_filter_top_product">
         <item>Bán chạy</item>
         <item>Doanh thu</item>
     </string-array>
 
+    <!-- FILTER CHART -->
     <string-array name="seller_filter_time">
         <item>Ngày</item>
         <item>Tháng</item>
         <item>Năm</item>
+    </string-array>
+
+    <!-- FILTER KPI -->
+    <string-array name="seller_filter_kpi">
+        <item>Hôm nay</item>
+        <item>7 ngày qua</item>
+        <item>30 ngày qua</item>
+        <item>Tháng này</item>
+        <item>Năm nay</item>
+    </string-array>
+
+    <!-- FILTER TOP PRODUCT TIME -->
+    <string-array name="seller_filter_top_product_time">
+        <item>Tháng này</item>
+        <item>Tháng trước</item>
+        <item>3 tháng gần đây</item>
+        <item>6 tháng gần đây</item>
+        <item>Năm nay</item>
     </string-array>
 
     <!-- Product-->

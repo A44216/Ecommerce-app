@@ -89,116 +89,163 @@
                 android:layout_height="match_parent"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- KPI 3 COLUMNS -->
-        <LinearLayout
+        <!-- KPI SECTION -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            android:layout_marginTop="18dp">
+            android:layout_marginTop="18dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white">
 
-            <!-- REVENUE -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="75dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="3dp"
-                app:cardBackgroundColor="@color/white">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
 
+                <!-- HEADER -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
-                        android:id="@+id/tvRevenue"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/default_money"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/seller_stat_revenue"
+                        android:layout_weight="1"
+                        android:text="@string/seller_dashboard_kpi_title"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/green"/>
+                        android:textColor="@color/black"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="140dp"
+                        android:layout_height="wrap_content">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actFilterKpi"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:inputType="none"
+                            tools:ignore="LabelFor" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
-            <!-- ORDERS -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="75dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="3dp"
-                app:cardBackgroundColor="@color/white">
-
+                <!-- KPI ROW -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
 
-                    <TextView
-                        android:id="@+id/tvOrders"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_number"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                    <!-- REVENUE -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/background_light">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/seller_stat_orders"
-                        android:textSize="18sp"
-                        android:textColor="@color/orange"
-                        android:textStyle="bold"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvRevenue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/default_money"
+                                android:textSize="18sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/seller_stat_revenue"
+                                android:textColor="@color/green"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- ORDERS -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/background_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvOrders"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/default_number"
+                                android:textSize="18sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/seller_stat_orders"
+                                android:textColor="@color/orange"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- SOLD -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/background_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvSold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/default_number"
+                                android:textSize="18sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/seller_stat_sold"
+                                android:textColor="@color/purple"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
-            <!-- ITEMS SOLD -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="75dp"
-                android:layout_weight="1"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="3dp"
-                app:cardBackgroundColor="@color/white">
+            </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvSoldAndRevenue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_number"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/seller_stat_reviews"
-                        android:textSize="18sp"
-                        android:textColor="@color/purple"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <!-- LIST SECTION (CARD WRAPPER) -->
         <androidx.cardview.widget.CardView
@@ -215,29 +262,57 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
+                <!-- TITLE -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/seller_dashboard_best_selling_products"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp"/>
+
                 <!-- TITLE + FILTER -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
+                    android:baselineAligned="false"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <!-- TITLE -->
-                    <TextView
+                    <!-- FILTER -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/seller_dashboard_best_selling_products"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:layout_marginEnd="3dp">
 
-                    <!-- FILTER -->
-                    <Spinner
-                        android:id="@+id/spFilterTopProduct"
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content" />
+                        <AutoCompleteTextView
+                            android:id="@+id/actFilterTopProduct"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:inputType="none"
+                            tools:ignore="LabelFor" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="3dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actFilterTopProductTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:inputType="none"
+                            tools:ignore="LabelFor" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                 </LinearLayout>
 
                 <!-- LIST -->
