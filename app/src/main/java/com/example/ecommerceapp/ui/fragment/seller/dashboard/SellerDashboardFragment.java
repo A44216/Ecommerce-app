@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.enums.ChartType;
+import com.example.ecommerceapp.data.enums.DateRange;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardKPIResponse;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardTopProductResponse;
@@ -53,6 +54,9 @@ public class SellerDashboardFragment extends Fragment {
     private SellerDashboardTopProductResponse topProductData;
     private TokenManager tokenManager;
     private SellerDashboardRepository dashboardRepository;
+
+    private DateRange currentRange = DateRange.THIS_MONTH;
+    private ChartType currentChartType = ChartType.DAY;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -95,8 +99,8 @@ public class SellerDashboardFragment extends Fragment {
 
         observeData();
 
-        // CALL API (NO shopId)
-        viewModel.loadDashboard(null, null, ChartType.DAY);
+        // CALL API
+        viewModel.loadDashboard(currentRange, currentChartType);
     }
 
     private void initViews(View view) {
@@ -188,133 +192,46 @@ public class SellerDashboardFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                ChartType type;
-
                 switch (position) {
-                    case 1: type = ChartType.MONTH; break;
-                    case 2: type = ChartType.YEAR; break;
-                    default: type = ChartType.DAY;
+                    case 1: currentChartType = ChartType.MONTH; break;
+                    case 2: currentChartType = ChartType.YEAR; break;
+                    default: currentChartType = ChartType.DAY;
                 }
 
-                viewModel.loadDashboard(null, null, type);
+                viewModel.loadDashboard(currentRange, currentChartType);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        // FILTER KPI
         actFilterKpi.setOnItemClickListener((parent, view, position, id) -> {
 
-            String startDate = null;
-            String endDate = null;
-
-            java.time.LocalDateTime now = java.time.LocalDateTime.now();
-
-            java.time.format.DateTimeFormatter formatter =
-                    java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
             switch (position) {
-
-                case 0: // Hôm nay
-                    startDate = now.toLocalDate()
-                            .atStartOfDay()
-                            .format(formatter);
-
-                    endDate = now.format(formatter);
-                    break;
-
-                case 1: // 7 ngày
-                    startDate = now.minusDays(7).format(formatter);
-                    endDate = now.format(formatter);
-                    break;
-
-                case 2: // 30 ngày
-                    startDate = now.minusDays(30).format(formatter);
-                    endDate = now.format(formatter);
-                    break;
-
-                case 3: // Tháng này
-                    startDate = now.withDayOfMonth(1)
-                            .toLocalDate()
-                            .atStartOfDay()
-                            .format(formatter);
-
-                    endDate = now.format(formatter);
-                    break;
-
-                case 4: // Năm nay
-                    startDate = now.withDayOfYear(1)
-                            .toLocalDate()
-                            .atStartOfDay()
-                            .format(formatter);
-
-                    endDate = now.format(formatter);
-                    break;
+                case 0: currentRange = DateRange.TODAY; break;
+                case 1: currentRange = DateRange.LAST_7_DAYS; break;
+                case 2: currentRange = DateRange.LAST_30_DAYS; break;
+                case 3: currentRange = DateRange.THIS_MONTH; break;
+                case 4: currentRange = DateRange.THIS_YEAR; break;
             }
 
-            viewModel.loadDashboard(startDate, endDate, ChartType.DAY);
+            viewModel.loadDashboard(currentRange, currentChartType);
         });
 
+        // FILTER TOP PRODUCT TIME
         actFilterTopProductTime.setOnItemClickListener((parent, view, position, id) -> {
 
-            String startDate = null;
-            String endDate = null;
-
-            java.time.LocalDateTime now = java.time.LocalDateTime.now();
-
-            java.time.format.DateTimeFormatter formatter =
-                    java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
             switch (position) {
-
-                case 0: // Tháng này
-                    startDate = now.withDayOfMonth(1)
-                            .toLocalDate()
-                            .atStartOfDay()
-                            .format(formatter);
-
-                    endDate = now.format(formatter);
-                    break;
-
-                case 1: // Tháng trước
-                    java.time.LocalDateTime lastMonth = now.minusMonths(1);
-
-                    startDate = lastMonth.withDayOfMonth(1)
-                            .toLocalDate()
-                            .atStartOfDay()
-                            .format(formatter);
-
-                    endDate = lastMonth.withDayOfMonth(
-                                    lastMonth.toLocalDate().lengthOfMonth())
-                            .withHour(23)
-                            .withMinute(59)
-                            .withSecond(59)
-                            .format(formatter);
-                    break;
-
-                case 2: // 3 tháng
-                    startDate = now.minusMonths(3).format(formatter);
-                    endDate = now.format(formatter);
-                    break;
-
-                case 3: // 6 tháng
-                    startDate = now.minusMonths(6).format(formatter);
-                    endDate = now.format(formatter);
-                    break;
-
-                case 4: // Năm nay
-                    startDate = now.withDayOfYear(1)
-                            .toLocalDate()
-                            .atStartOfDay()
-                            .format(formatter);
-
-                    endDate = now.format(formatter);
-                    break;
+                case 0: currentRange = DateRange.THIS_MONTH; break;
+                case 1: currentRange = DateRange.LAST_MONTH; break;
+                case 2: currentRange = DateRange.LAST_3_MONTHS; break;
+                case 3: currentRange = DateRange.LAST_6_MONTHS; break;
+                case 4: currentRange = DateRange.THIS_YEAR; break;
             }
 
-            viewModel.loadDashboard(startDate, endDate, ChartType.DAY);
+            viewModel.loadDashboard(currentRange, currentChartType);
         });
-
     }
 
     private void drawChart(List<SellerRevenueChartResponse> list, ChartType type) {
@@ -388,7 +305,7 @@ public class SellerDashboardFragment extends Fragment {
         viewModel.getChartData().observe(getViewLifecycleOwner(), list -> {
             if (list == null) return;
 
-            drawChart(list, ChartType.DAY);
+            drawChart(list, currentChartType);
         });
     }
 }

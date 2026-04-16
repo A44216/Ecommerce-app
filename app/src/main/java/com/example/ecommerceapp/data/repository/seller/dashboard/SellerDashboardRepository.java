@@ -2,6 +2,7 @@ package com.example.ecommerceapp.data.repository.seller.dashboard;
 
 import com.example.ecommerceapp.api.service.seller.SellerDashboardService;
 import com.example.ecommerceapp.data.enums.ChartType;
+import com.example.ecommerceapp.data.enums.DateRange;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardKPIResponse;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardTopProductResponse;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerRevenueChartResponse;
@@ -19,13 +20,13 @@ public class SellerDashboardRepository {
     }
 
     // KPI
-    public Call<SellerDashboardKPIResponse> getKPI(String startDate, String endDate) {
-        return dashboardService.getKPI(startDate, endDate);
+    public Call<SellerDashboardKPIResponse> getKPI(DateRange range) {
+        return dashboardService.getKPI(range);
     }
 
     // TOP PRODUCTS
-    public Call<SellerDashboardTopProductResponse> getTopProducts(String startDate, String endDate) {
-        return dashboardService.getTopProducts(startDate, endDate);
+    public Call<SellerDashboardTopProductResponse> getTopProducts(DateRange range) {
+        return dashboardService.getTopProducts(range);
     }
 
     // REVENUE CHART

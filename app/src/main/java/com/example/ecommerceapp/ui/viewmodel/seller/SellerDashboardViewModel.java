@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.enums.ChartType;
+import com.example.ecommerceapp.data.enums.DateRange;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardKPIResponse;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardTopProductResponse;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerRevenueChartResponse;
@@ -24,32 +25,29 @@ public class SellerDashboardViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    // ===== KPI =====
+    // KPI
     private final MutableLiveData<SellerDashboardKPIResponse> kpiData = new MutableLiveData<>();
-
     public LiveData<SellerDashboardKPIResponse> getKpiData() {
         return kpiData;
     }
 
-    // ===== TOP PRODUCTS =====
+    // TOP PRODUCTS
     private final MutableLiveData<SellerDashboardTopProductResponse> topProductData = new MutableLiveData<>();
-
     public LiveData<SellerDashboardTopProductResponse> getTopProductData() {
         return topProductData;
     }
 
-    // ===== CHART =====
+    // CHART
     private final MutableLiveData<List<SellerRevenueChartResponse>> chartData = new MutableLiveData<>();
-
     public LiveData<List<SellerRevenueChartResponse>> getChartData() {
         return chartData;
     }
 
-    // ===== LOAD ALL =====
-    public void loadDashboard(String startDate, String endDate, ChartType type) {
+    // LOAD ALL
+    public void loadDashboard(DateRange range, ChartType type) {
 
         // KPI
-        repository.getKPI(startDate, endDate).enqueue(new Callback<SellerDashboardKPIResponse>() {
+        repository.getKPI(range).enqueue(new Callback<SellerDashboardKPIResponse>() {
             @Override
             public void onResponse(Call<SellerDashboardKPIResponse> call, Response<SellerDashboardKPIResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -66,7 +64,7 @@ public class SellerDashboardViewModel extends ViewModel {
         });
 
         // TOP PRODUCTS
-        repository.getTopProducts(startDate, endDate).enqueue(new Callback<SellerDashboardTopProductResponse>() {
+        repository.getTopProducts(range).enqueue(new Callback<SellerDashboardTopProductResponse>() {
             @Override
             public void onResponse(Call<SellerDashboardTopProductResponse> call, Response<SellerDashboardTopProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
