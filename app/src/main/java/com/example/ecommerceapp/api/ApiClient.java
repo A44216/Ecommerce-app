@@ -1,7 +1,7 @@
 package com.example.ecommerceapp.api;
 
 import com.example.ecommerceapp.api.service.AuthService;
-import com.example.ecommerceapp.api.service.CategoryService;
+import com.example.ecommerceapp.api.service.seller.SellerCategoryService;
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
 import com.example.ecommerceapp.api.service.admin.AdminProfileService;
 import com.example.ecommerceapp.api.service.seller.SellerDashboardService;
@@ -64,8 +64,8 @@ public class ApiClient {
         return createAuthRetrofit(tm).create(SellerProductService.class);
     }
 
-    public static CategoryService getCategoryService(TokenManager tm) {
-        return createAuthRetrofit(tm).create(CategoryService.class);
+    public static SellerCategoryService getCategoryService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(SellerCategoryService.class);
     }
 
     public static UserService getUserService(TokenManager tm) {

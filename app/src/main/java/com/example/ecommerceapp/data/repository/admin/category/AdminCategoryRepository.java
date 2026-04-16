@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.data.repository.admin.profile;
+package com.example.ecommerceapp.data.repository.admin.category;
 
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
 import com.example.ecommerceapp.data.model.request.CategoryRequest;

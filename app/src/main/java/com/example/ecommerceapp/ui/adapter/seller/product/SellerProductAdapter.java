@@ -72,7 +72,7 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
 
         holder.getRating().setText("⭐ " + product.getRatingAvg());
         holder.getSold().setText("Đã bán " + product.getSoldCount());
-        holder.getStatus().setText("Trạng thái: " + product.getStatus());
+        holder.getStatus().setText("Trạng thái: " + product.getStatus().getLabel());
 
         List<ProductImageResponse> images = product.getImages();
 

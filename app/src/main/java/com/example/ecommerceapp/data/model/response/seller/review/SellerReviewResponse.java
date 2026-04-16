@@ -1,7 +1,5 @@
 package com.example.ecommerceapp.data.model.response.seller.review;
 
-import java.time.LocalDateTime;
-
 public class SellerReviewResponse {
 
     // REVIEW ID

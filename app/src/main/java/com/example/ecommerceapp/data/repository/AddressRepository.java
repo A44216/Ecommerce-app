@@ -1,6 +1,6 @@
 package com.example.ecommerceapp.data.repository;
 
-import com.example.ecommerceapp.api.service.seller.SellerAddressService;
+import com.example.ecommerceapp.api.service.AddressService;
 import com.example.ecommerceapp.data.model.response.AddressResponse;
 
 import java.util.List;
@@ -9,9 +9,9 @@ import retrofit2.Call;
 
 public class AddressRepository {
 
-    private final SellerAddressService apiService;
+    private final AddressService apiService;
 
-    public AddressRepository(SellerAddressService apiService) {
+    public AddressRepository(AddressService apiService) {
         this.apiService = apiService;
     }
 

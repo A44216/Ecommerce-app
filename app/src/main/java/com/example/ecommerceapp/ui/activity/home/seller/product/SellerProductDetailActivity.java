@@ -108,7 +108,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
         } else {
             txtRating.setText("⭐ 0.0");
         }
-        txtStatus.setText("Trạng thái: " + product.getStatus());
+        txtStatus.setText("Trạng thái: " + product.getStatus().getLabel());
         txtDescription.setText(product.getDescription() != null
                 ? "Mô tả: " +product.getDescription()
                 : "Chưa có mô tả");

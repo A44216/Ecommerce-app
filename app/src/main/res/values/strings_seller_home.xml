@@ -76,6 +76,7 @@
     <string name="seller_order_default_description">Mô tả hóa đơn</string>
     <string name="seller_order_default_tracking">Theo dõi đơn hàng</string>
     <string name="seller_order_default_id">#1</string>
+    <string name="seller_order_default_payment_status">Trạng thái: Đã thanh toán</string>
     <string name="seller_product_default_subtotal">25,000 đ</string>
     <string name="seller_order_default_quantity">x1</string>
     <string name="seller_order_default_created_at">05/04/2026</string>
@@ -86,6 +87,7 @@
     <string name="seller_order_detail_order_">#Mã đơn: #123</string>
     <string name="seller_order_detail_default_id">Mã đơn: 1</string>
     <string name="seller_order_detail_default_created_at">Ngày tạo: 05/04/2026</string>
+    <string name="seller_order_detail_default_completed_at">Hoàn tất: 05/04/2026</string>
     <string name="seller_order_detail_default_customer_name">Khách hàng: Nguyễn Văn A</string>
     <string name="seller_order_detail_default_shipping_name">Người nhận: Nguyễn Văn A</string>
     <string name="seller_order_detail_default_shipping_phone">SĐT: 0123456789</string>

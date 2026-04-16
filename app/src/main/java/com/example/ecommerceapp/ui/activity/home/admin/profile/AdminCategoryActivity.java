@@ -16,7 +16,7 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.repository.admin.profile.AdminCategoryRepository;
+import com.example.ecommerceapp.data.repository.admin.category.AdminCategoryRepository;
 import com.example.ecommerceapp.ui.adapter.admin.category.AdminCategoryPagerAdapter;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminCategoryViewModel;
 import com.example.ecommerceapp.ui.viewmodel.admin.factory.AdminCategoryViewModelFactory;

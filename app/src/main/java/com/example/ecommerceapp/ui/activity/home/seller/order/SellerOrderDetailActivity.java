@@ -175,8 +175,8 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     tvPhone.setText("Sđt: " + data.getShippingPhone());
                     tvAddress.setText("Địa chỉ: " + data.getShippingAddress());
 
-                    tvPaymentMethod.setText(String.valueOf(data.getPaymentMethod()));
-                    tvPaymentStatus.setText(String.valueOf(data.getPaymentStatus()));
+                    tvPaymentMethod.setText(String.valueOf(data.getPaymentMethod().getLabel()));
+                    tvPaymentStatus.setText(String.valueOf(data.getPaymentStatus().getLabel()));
 
                     if (data.getTotalPrice() != null) {
                         tvTotalPrice.setText(String.format("%,.0f", data.getTotalPrice()) + " đ");

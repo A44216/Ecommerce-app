@@ -68,6 +68,20 @@
             app:layout_constraintTop_toBottomOf="@id/tvOrderId"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <TextView
+            android:id="@+id/tvPaymentStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_default_payment_status"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/green"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="6dp"
+            app:layout_constraintStart_toStartOf="@id/tvCustomerName"
+            app:layout_constraintTop_toBottomOf="@id/tvCustomerName"/>
+
         <!-- TOTAL PRICE (BOTTOM) -->
         <TextView
             android:id="@+id/tvTotalPrice"
@@ -80,8 +94,8 @@
             android:textSize="18sp"
             android:textColor="@color/red"
             android:layout_marginTop="6dp"
-            app:layout_constraintStart_toStartOf="@id/tvCustomerName"
-            app:layout_constraintTop_toBottomOf="@id/tvCustomerName" />
+            app:layout_constraintStart_toStartOf="@id/tvPaymentStatus"
+            app:layout_constraintTop_toBottomOf="@id/tvPaymentStatus" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

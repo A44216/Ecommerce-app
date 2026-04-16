@@ -26,6 +26,11 @@ public class SellerOrderDetailResponse {
 
     private String customerName;
 
+    private BigDecimal subtotal;
+    private BigDecimal discountAmount;
+    private BigDecimal commissionRate;
+    private BigDecimal commissionAmount;
+
     private List<SellerOrderItemResponse> items;
 
     public Integer getOrderId() {
@@ -66,6 +71,22 @@ public class SellerOrderDetailResponse {
 
     public String getCustomerName() {
         return customerName;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public BigDecimal getCommissionRate() {
+        return commissionRate;
+    }
+
+    public BigDecimal getCommissionAmount() {
+        return commissionAmount;
     }
 
     public List<SellerOrderItemResponse> getItems() {

@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.api.service;
+package com.example.ecommerceapp.api.service.seller;
 
 import com.example.ecommerceapp.data.model.response.CategoryResponse;
 
@@ -9,16 +9,16 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface CategoryService {
+public interface SellerCategoryService {
 
     // GET ALL + SEARCH (USER)
-    @GET("categories")
+    @GET("seller/categories")
     Call<List<CategoryResponse>> getCategories(
             @Query("keyword") String keyword
     );
 
     // GET BY ID (USER)
-    @GET("categories/{id}")
+    @GET("seller/categories/{id}")
     Call<CategoryResponse> getCategoryById(
             @Path("id") int id
     );

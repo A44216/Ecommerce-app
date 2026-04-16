@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +88,8 @@ public class SellerShopFragment extends Fragment {
     private void observeData() {
         mViewModel.getShop().observe(getViewLifecycleOwner(), shop -> {
             if (shop == null) return;
+
+            Log.e("SHOP_NAME = ", shop.getShopName());
 
             tvShopName.setText(shop.getShopName());
             tvShopAddress.setText(shop.getAddress());
