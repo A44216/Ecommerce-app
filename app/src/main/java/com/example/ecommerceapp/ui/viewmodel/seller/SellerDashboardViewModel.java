@@ -27,34 +27,17 @@ public class SellerDashboardViewModel extends ViewModel {
 
     // KPI
     private final MutableLiveData<SellerDashboardKPIResponse> kpiData = new MutableLiveData<>();
+
     public LiveData<SellerDashboardKPIResponse> getKpiData() {
         return kpiData;
     }
 
-    // TOP PRODUCTS
-    private final MutableLiveData<SellerDashboardTopProductResponse> topProductData = new MutableLiveData<>();
-    public LiveData<SellerDashboardTopProductResponse> getTopProductData() {
-        return topProductData;
-    }
-
-    // CHART
-    private final MutableLiveData<List<SellerRevenueChartResponse>> chartData = new MutableLiveData<>();
-    public LiveData<List<SellerRevenueChartResponse>> getChartData() {
-        return chartData;
-    }
-
-    // LOAD ALL
-    public void loadDashboard(DateRange range, ChartType type) {
-
-        // KPI
+    public void loadKpi(DateRange range) {
         repository.getKPI(range).enqueue(new Callback<SellerDashboardKPIResponse>() {
             @Override
-            public void onResponse(Call<SellerDashboardKPIResponse> call, Response<SellerDashboardKPIResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    kpiData.setValue(response.body());
-                } else {
-                    kpiData.setValue(null);
-                }
+            public void onResponse(Call<SellerDashboardKPIResponse> call,
+                                   Response<SellerDashboardKPIResponse> response) {
+                kpiData.setValue(response.isSuccessful() ? response.body() : null);
             }
 
             @Override
@@ -62,16 +45,21 @@ public class SellerDashboardViewModel extends ViewModel {
                 kpiData.setValue(null);
             }
         });
+    }
 
-        // TOP PRODUCTS
+    // TOP PRODUCTS
+    private final MutableLiveData<SellerDashboardTopProductResponse> topProductData = new MutableLiveData<>();
+
+    public LiveData<SellerDashboardTopProductResponse> getTopProductData() {
+        return topProductData;
+    }
+
+    public void loadTopProducts(DateRange range) {
         repository.getTopProducts(range).enqueue(new Callback<SellerDashboardTopProductResponse>() {
             @Override
-            public void onResponse(Call<SellerDashboardTopProductResponse> call, Response<SellerDashboardTopProductResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    topProductData.setValue(response.body());
-                } else {
-                    topProductData.setValue(null);
-                }
+            public void onResponse(Call<SellerDashboardTopProductResponse> call,
+                                   Response<SellerDashboardTopProductResponse> response) {
+                topProductData.setValue(response.isSuccessful() ? response.body() : null);
             }
 
             @Override
@@ -79,16 +67,21 @@ public class SellerDashboardViewModel extends ViewModel {
                 topProductData.setValue(null);
             }
         });
+    }
 
-        // CHART
+    // CHART
+    private final MutableLiveData<List<SellerRevenueChartResponse>> chartData = new MutableLiveData<>();
+
+    public LiveData<List<SellerRevenueChartResponse>> getChartData() {
+        return chartData;
+    }
+
+    public void loadChart(ChartType type) {
         repository.getRevenueChart(type).enqueue(new Callback<List<SellerRevenueChartResponse>>() {
             @Override
-            public void onResponse(Call<List<SellerRevenueChartResponse>> call, Response<List<SellerRevenueChartResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    chartData.setValue(response.body());
-                } else {
-                    chartData.setValue(null);
-                }
+            public void onResponse(Call<List<SellerRevenueChartResponse>> call,
+                                   Response<List<SellerRevenueChartResponse>> response) {
+                chartData.setValue(response.isSuccessful() ? response.body() : null);
             }
 
             @Override

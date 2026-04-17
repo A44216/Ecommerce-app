@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background_light"
-    tools:context=".ui.fragment.seller.dashboard.SellerDashboardFragment"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context=".ui.fragment.seller.dashboard.SellerDashboardFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,18 +14,18 @@
         android:orientation="vertical"
         android:padding="@dimen/screen_padding_small">
 
+        <!-- TITLE -->
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
-            android:layout_weight="1"
             android:text="@string/seller_dashboard_overview"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <!-- Title bar-chart-->
+        <!-- CHART HEADER -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold"/>
 
-            <!-- FILTER -->
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,14 +67,10 @@
                     <Spinner
                         android:id="@+id/spFilterTime"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:singleLine="true"/>
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-
         </LinearLayout>
 
         <!-- CHART -->
@@ -92,7 +87,7 @@
                 android:layout_height="match_parent"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- KPI SECTION -->
+        <!-- KPI -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,7 +102,6 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
-                <!-- HEADER -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -130,16 +124,16 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/actFilterKpi"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            tools:ignore="LabelFor"
                             android:maxLines="1"
                             android:ellipsize="end"
                             android:singleLine="true"
-                            android:scrollHorizontally="true" />
+                            android:inputType="none"
+                            android:focusable="true"
+                            android:clickable="true"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
@@ -151,7 +145,7 @@
                     android:orientation="horizontal"
                     android:weightSum="3">
 
-                    <!-- REVENUE -->
+                    <!-- Revenue -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="80dp"
@@ -179,12 +173,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/seller_stat_revenue"
-                                android:textColor="@color/green"
-                                android:textStyle="bold"/>
+                                android:textColor="@color/green"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- ORDERS -->
+                    <!-- Orders -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="80dp"
@@ -212,12 +205,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/seller_stat_orders"
-                                android:textColor="@color/orange"
-                                android:textStyle="bold"/>
+                                android:textColor="@color/orange"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- SOLD -->
+                    <!-- Sold -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="80dp"
@@ -244,18 +236,16 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/seller_stat_sold"
-                                android:textColor="@color/purple"
-                                android:textStyle="bold"/>
+                                android:textColor="@color/purple"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
 
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
-        <!-- LIST SECTION (CARD WRAPPER) -->
+        <!-- TOP PRODUCT -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -266,11 +256,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp">
 
-                <!-- TITLE -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -280,16 +269,12 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="6dp"/>
 
-                <!-- TITLE + FILTER -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:baselineAligned="false"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                    <!-- FILTER -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
@@ -297,18 +282,17 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="3dp">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/actFilterTopProduct"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            tools:ignore="LabelFor"
                             android:maxLines="1"
                             android:ellipsize="end"
                             android:singleLine="true"
-                            android:scrollHorizontally="true" />
+                            android:inputType="none"
+                            android:focusable="true"
+                            android:clickable="true"/>
                     </com.google.android.material.textfield.TextInputLayout>
-
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -317,26 +301,25 @@
                         android:layout_weight="1"
                         android:layout_marginStart="3dp">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/actFilterTopProductTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="none"
-                            tools:ignore="LabelFor"
                             android:maxLines="1"
                             android:ellipsize="end"
                             android:singleLine="true"
-                            android:scrollHorizontally="true" />
+                            android:focusable="true"
+                            android:clickable="true"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
-                <!-- LIST -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvTopProducts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false" />
+                    android:nestedScrollingEnabled="false"/>
 
             </LinearLayout>
 

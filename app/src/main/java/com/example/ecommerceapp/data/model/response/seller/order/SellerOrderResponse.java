@@ -12,7 +12,7 @@ public class SellerOrderResponse {
 
     private String customerName;
 
-    private BigDecimal totalPrice;
+    private BigDecimal sellerRevenue;
 
     private String  createdAt;
     private String imageOrder;
@@ -30,8 +30,8 @@ public class SellerOrderResponse {
         return customerName;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public BigDecimal getSellerRevenue() {
+        return sellerRevenue;
     }
 
     public String  getCreatedAt() {

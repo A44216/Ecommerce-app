@@ -7,9 +7,9 @@ public class SellerOrderItemResponse {
     private Integer productId;
     private String productName;
     private String productImage;
-    private BigDecimal price;
+    private BigDecimal unitPrice;
     private Integer quantity;
-    private BigDecimal subtotal;
+    private BigDecimal totalPrice;
 
     public Integer getProductId() {
         return productId;
@@ -23,15 +23,15 @@ public class SellerOrderItemResponse {
         return productImage;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
     }
 
     public Integer getQuantity() {
         return quantity;
     }
 
-    public BigDecimal getSubtotal() {
-        return subtotal;
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
     }
 }

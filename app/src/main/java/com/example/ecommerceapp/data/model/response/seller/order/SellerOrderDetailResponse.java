@@ -16,9 +16,10 @@ public class SellerOrderDetailResponse {
     private PaymentMethod paymentMethod;
     private PaymentStatus paymentStatus;
 
-    private BigDecimal totalPrice;
+    private BigDecimal sellerRevenue;
 
     private String createdAt;
+    private String completedAt;
 
     private String shippingName;
     private String shippingPhone;
@@ -27,9 +28,9 @@ public class SellerOrderDetailResponse {
     private String customerName;
 
     private BigDecimal subtotal;
-    private BigDecimal discountAmount;
-    private BigDecimal commissionRate;
-    private BigDecimal commissionAmount;
+
+    private BigDecimal platformFeeRate;
+    private BigDecimal platformFeeAmount;
 
     private List<SellerOrderItemResponse> items;
 
@@ -49,12 +50,16 @@ public class SellerOrderDetailResponse {
         return paymentStatus;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public BigDecimal getSellerRevenue() {
+        return sellerRevenue;
     }
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    public String getCompletedAt() {
+        return completedAt;
     }
 
     public String getShippingName() {
@@ -77,24 +82,16 @@ public class SellerOrderDetailResponse {
         return subtotal;
     }
 
-    public BigDecimal getDiscountAmount() {
-        return discountAmount;
+    public BigDecimal getPlatformFeeRate() {
+        return platformFeeRate;
     }
 
-    public BigDecimal getCommissionRate() {
-        return commissionRate;
-    }
-
-    public BigDecimal getCommissionAmount() {
-        return commissionAmount;
+    public BigDecimal getPlatformFeeAmount() {
+        return platformFeeAmount;
     }
 
     public List<SellerOrderItemResponse> getItems() {
         return items;
-    }
-
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
     }
 
     public void setStatus(OrderStatus status) {
@@ -109,32 +106,8 @@ public class SellerOrderDetailResponse {
         this.paymentStatus = paymentStatus;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setShippingName(String shippingName) {
-        this.shippingName = shippingName;
-    }
-
-    public void setShippingPhone(String shippingPhone) {
-        this.shippingPhone = shippingPhone;
-    }
-
-    public void setShippingAddress(String shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public void setItems(List<SellerOrderItemResponse> items) {
-        this.items = items;
+    public void setSellerRevenue(BigDecimal sellerRevenue) {
+        this.sellerRevenue = sellerRevenue;
     }
 
 }

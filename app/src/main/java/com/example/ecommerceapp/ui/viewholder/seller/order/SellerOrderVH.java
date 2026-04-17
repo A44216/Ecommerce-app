@@ -20,7 +20,7 @@ public class SellerOrderVH extends RecyclerView.ViewHolder {
         orderId = itemView.findViewById(R.id.tvOrderId);
         customerName = itemView.findViewById(R.id.tvCustomerName);
         paymentStatus = itemView.findViewById(R.id.tvPaymentStatus);
-        totalPrice = itemView.findViewById(R.id.tvTotalPrice);
+        totalPrice = itemView.findViewById(R.id.tvSellerRevenue);
         createdAt = itemView.findViewById(R.id.tvCreatedAt);
         ivOrder = itemView.findViewById(R.id.ivOrder);
     }

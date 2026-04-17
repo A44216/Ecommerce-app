@@ -59,7 +59,7 @@
 
         <!-- Subtotal -->
         <TextView
-            android:id="@+id/tvSubtotal"
+            android:id="@+id/tvUnitPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/seller_product_default_subtotal"
@@ -81,7 +81,7 @@
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/black"
-            app:layout_constraintTop_toTopOf="@id/tvSubtotal"
+            app:layout_constraintTop_toTopOf="@id/tvUnitPrice"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <!-- TOTAL PRICE (BOTTOM) -->
@@ -96,7 +96,7 @@
             android:textSize="20sp"
             android:textColor="@color/red"
             android:layout_marginTop="6dp"
-            app:layout_constraintTop_toBottomOf="@id/tvSubtotal"
+            app:layout_constraintTop_toBottomOf="@id/tvUnitPrice"
             app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

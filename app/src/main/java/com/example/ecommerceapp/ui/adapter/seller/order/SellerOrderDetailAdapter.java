@@ -1,7 +1,6 @@
 package com.example.ecommerceapp.ui.adapter.seller.order;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderItemResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.order.SellerOrderDetailVH;
@@ -54,9 +52,9 @@ public class SellerOrderDetailAdapter extends RecyclerView.Adapter<SellerOrderDe
 
         holder.getProductId().setText("ID = " + String.valueOf(item.getProductId()));
         holder.getProductName().setText(item.getProductName());
-        holder.getSubtotal().setText(String.format("%,.0f", item.getSubtotal()) + " đ");
+        holder.getUnitPrice().setText(String.format("%,.0f", item.getUnitPrice()) + " đ");
         holder.getQuantity().setText("x" + item.getQuantity());
-        holder.getTotalPrice().setText("Tổng: " + String.format("%,.0f", item.getPrice()) + " đ");
+        holder.getTvTotalPrice().setText("Tổng: " + String.format("%,.0f", item.getTotalPrice()) + " đ");
 
         ImageLoader.load(
                 holder.itemView.getContext(),

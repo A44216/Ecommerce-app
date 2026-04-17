@@ -26,10 +26,10 @@ import java.util.List;
 
 public class SellerOrderDetailActivity extends AppCompatActivity {
 
-    private TextView tvOrderId;
-    private TextView tvCreatedAt;
-    private TextView tvCustomer;
-    private TextView tvShippingName, tvPhone, tvAddress, tvPaymentMethod, tvPaymentStatus, tvTotalPrice;
+    private TextView tvOrderId, tvCreatedAt, tvCompletedAt;
+    private TextView tvCustomer, tvShippingName, tvPhone, tvAddress;
+    private TextView tvSubtotal, txtDiscount, tvDiscount, txtPlatformFee, tvPlatformFee, tvSellerRevenue;
+    private TextView tvPaymentMethod, tvPaymentStatus;
 
     private RecyclerView rvOrder, rvStatus;
     private ImageView ivBack;
@@ -61,21 +61,27 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        ivBack = findViewById(R.id.ivBack);
 
         rvOrder = findViewById(R.id.rvOrderItems);
         rvStatus = findViewById(R.id.rvOrderStatus);
 
-        ivBack = findViewById(R.id.ivBack);
-
         tvOrderId = findViewById(R.id.tvOrderId);
         tvCreatedAt = findViewById(R.id.tvCreatedAt);
+        tvCompletedAt = findViewById(R.id.tvCompletedAt);
+
         tvCustomer = findViewById(R.id.tvCustomer);
         tvShippingName = findViewById(R.id.tvShippingName);
         tvPhone = findViewById(R.id.tvPhone);
         tvAddress = findViewById(R.id.tvAddress);
+
+        tvSubtotal = findViewById(R.id.tvSubtotal);
+        txtPlatformFee = findViewById(R.id.txtPlatformFee);
+        tvPlatformFee = findViewById(R.id.tvPlatformFee);
+        tvSellerRevenue = findViewById(R.id.tvSellerRevenue);
+
         tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
         tvPaymentStatus = findViewById(R.id.tvPaymentStatus);
-        tvTotalPrice = findViewById(R.id.tvTotalPrice);
 
         btnCancel = findViewById(R.id.btnCancel);
         btnConfirm = findViewById(R.id.btnConfirm);
@@ -162,31 +168,57 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
                     if (data == null) return;
 
-                    tvOrderId.setText("Đơn #" + data.getOrderId());
+                    // OrderId
+                    tvOrderId.setText("Đơn: #" + data.getOrderId());
 
+                    // CreatedAt
                     String createdAt = data.getCreatedAt();
                     if (createdAt != null && createdAt.contains("T")) {
                         createdAt = createdAt.split("T")[0];
                     }
-                    tvCreatedAt.setText("Ngày: " + createdAt);
+                    tvCreatedAt.setText("Ngày tạo: " + createdAt);
 
+                    // CompletedAt
+                    String completedAt = data.getCompletedAt();
+                    if (completedAt != null) {
+                        if (completedAt.contains("T")) {
+                            completedAt = completedAt.split("T")[0];
+                        }
+                        tvCompletedAt.setText("Hoàn tất: " + completedAt);
+                        tvCompletedAt.setVisibility(View.VISIBLE);
+                    } else {
+                        tvCompletedAt.setVisibility(View.GONE);
+                    }
+
+                    // Customer info
                     tvCustomer.setText("Khách hàng: " + data.getCustomerName());
                     tvShippingName.setText("Người nhận: " + data.getShippingName());
                     tvPhone.setText("Sđt: " + data.getShippingPhone());
                     tvAddress.setText("Địa chỉ: " + data.getShippingAddress());
 
+                    // Finance
+                    if (data.getSubtotal() != null) {
+                        tvSubtotal.setText(String.format("%,.0f", data.getSubtotal()) + " đ");
+                    }
+
+                    if (data.getPlatformFeeRate() != null && data.getPlatformFeeAmount() != null) {
+
+                        tvPlatformFee.setText(String.format("- %,.0f đ", data.getPlatformFeeAmount()));
+
+                        txtPlatformFee.setText("Phí nền tảng (" + data.getPlatformFeeRate().stripTrailingZeros().toPlainString() + "%):");
+                    }
+
+                    if (data.getSellerRevenue() != null) {
+                        tvSellerRevenue.setText(String.format("%,.0f", data.getSellerRevenue()) + " đ");
+                    }
+
+                    // Payment method
                     tvPaymentMethod.setText(String.valueOf(data.getPaymentMethod().getLabel()));
                     tvPaymentStatus.setText(String.valueOf(data.getPaymentStatus().getLabel()));
 
-                    if (data.getTotalPrice() != null) {
-                        tvTotalPrice.setText(String.format("%,.0f", data.getTotalPrice()) + " đ");
-                    }
-
+                    // Order Status
                     adapter.setData(data.getItems());
-
-                    OrderStatus currentStatus =
-                            data.getStatus() != null ? data.getStatus() : OrderStatus.PENDING;
-
+                    OrderStatus currentStatus = data.getStatus() != null ? data.getStatus() : OrderStatus.PENDING;
                     selectedStatus = currentStatus;
 
                     // CANCELED (FINAL - RED)

@@ -84,7 +84,7 @@
 
         <!-- TOTAL PRICE (BOTTOM) -->
         <TextView
-            android:id="@+id/tvTotalPrice"
+            android:id="@+id/tvSellerRevenue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/seller_product_default_price"

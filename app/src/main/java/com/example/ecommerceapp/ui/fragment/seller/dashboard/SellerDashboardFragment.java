@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -34,6 +33,7 @@ import com.example.ecommerceapp.ui.viewmodel.seller.SellerDashboardViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerDashboardViewModelFactory;
 import com.example.ecommerceapp.utils.NumberUtils;
 import com.github.mikephil.charting.charts.BarChart;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -44,19 +44,31 @@ public class SellerDashboardFragment extends Fragment {
     private SellerDashboardViewModel viewModel;
 
     private TextView tvRevenue, tvOrders, tvSold;
-    Spinner spFilterTime;
-    private AutoCompleteTextView actFilterKpi, actFilterTopProduct, actFilterTopProductTime;
+    private Spinner spFilterTime;
+
+    private MaterialAutoCompleteTextView actFilterKpi, actFilterTopProduct, actFilterTopProductTime;
+
     private RecyclerView rvTopProduct;
     private BarChart chartRevenue;
 
     private SellerTopProductAdapter topProductAdapter;
-    private SellerDashboardKPIResponse kpiData;
+
     private SellerDashboardTopProductResponse topProductData;
+
     private TokenManager tokenManager;
     private SellerDashboardRepository dashboardRepository;
 
-    private DateRange currentRange = DateRange.THIS_MONTH;
+    private DateRange currentKpiRange = DateRange.THIS_MONTH;
+    private DateRange currentTopRange = DateRange.THIS_MONTH;
     private ChartType currentChartType = ChartType.DAY;
+
+    private int currentTopMode = SellerTopProductAdapter.MODE_SOLD;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        resetFilters();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -74,6 +86,7 @@ public class SellerDashboardFragment extends Fragment {
         tokenManager = TokenManager.getInstance(requireContext());
 
         setInits();
+        setDefaultFilters();
         setListeners();
 
         // Adapter
@@ -87,20 +100,19 @@ public class SellerDashboardFragment extends Fragment {
             startActivity(intent);
         });
 
-        // Repository + ViewModel
         dashboardRepository =
                 new SellerDashboardRepository(ApiClient.getDashboardService(tokenManager));
 
-        SellerDashboardViewModelFactory factory =
-                new SellerDashboardViewModelFactory(dashboardRepository);
-
-        viewModel = new ViewModelProvider(this, factory)
-                .get(SellerDashboardViewModel.class);
+        viewModel = new ViewModelProvider(
+                this,
+                new SellerDashboardViewModelFactory(dashboardRepository)
+        ).get(SellerDashboardViewModel.class);
 
         observeData();
 
-        // CALL API
-        viewModel.loadDashboard(currentRange, currentChartType);
+        viewModel.loadKpi(currentKpiRange);
+        viewModel.loadTopProducts(currentTopRange);
+        viewModel.loadChart(currentChartType);
     }
 
     private void initViews(View view) {
@@ -120,74 +132,103 @@ public class SellerDashboardFragment extends Fragment {
 
     private void setInits() {
 
-        // FILTER TOP PRODUCT BY SOLD AND REVENUE
-        ArrayAdapter<CharSequence> adapter =
-                ArrayAdapter.createFromResource(
-                        requireContext(),
-                        R.array.seller_filter_top_product,
-                        android.R.layout.simple_spinner_item
-                );
+        setupDropdown(actFilterKpi, R.array.seller_filter_kpi);
+        setupDropdown(actFilterTopProduct, R.array.seller_filter_top_product);
+        setupDropdown(actFilterTopProductTime, R.array.seller_filter_top_product_time);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        actFilterTopProduct.setAdapter(adapter);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.seller_filter_time,
+                android.R.layout.simple_spinner_item
+        );
 
-        // FILTER CHART TIME
-        ArrayAdapter<CharSequence> timeAdapter =
-                ArrayAdapter.createFromResource(
-                        requireContext(),
-                        R.array.seller_filter_time,
-                        android.R.layout.simple_spinner_item
-                );
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spFilterTime.setAdapter(spinnerAdapter);
+    }
 
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spFilterTime.setAdapter(timeAdapter);
+    private void setDefaultFilters() {
 
-        // FILTER KPI
-        ArrayAdapter<CharSequence> kpiAdapter =
-                ArrayAdapter.createFromResource(
-                        requireContext(),
-                        R.array.seller_filter_kpi,
-                        android.R.layout.simple_spinner_item
-                );
+        String[] kpiItems = getResources().getStringArray(R.array.seller_filter_kpi);
+        String[] topItems = getResources().getStringArray(R.array.seller_filter_top_product);
+        String[] timeItems = getResources().getStringArray(R.array.seller_filter_top_product_time);
 
-        kpiAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        actFilterKpi.setAdapter(kpiAdapter);
+        actFilterKpi.setText(kpiItems[3], false); // THIS_MONTH
+        actFilterTopProduct.setText(topItems[0], false);
+        actFilterTopProductTime.setText(timeItems[0], false);
 
-        // FILTER TOP PRODUCT TIME
-        ArrayAdapter<CharSequence> topProductTimeAdapter =
-                ArrayAdapter.createFromResource(
-                        requireContext(),
-                        R.array.seller_filter_top_product_time,
-                        android.R.layout.simple_spinner_item
-                );
+        spFilterTime.setSelection(0); // DAY
+    }
 
-        topProductTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        actFilterTopProductTime.setAdapter(topProductTimeAdapter);
+    private void resetFilters() {
 
-        // DEFAULT VALUE
-        actFilterTopProduct.setText(actFilterTopProduct.getAdapter().getItem(0).toString(), false);
-        actFilterKpi.setText(actFilterKpi.getAdapter().getItem(0).toString(), false);
-        actFilterTopProductTime.setText(actFilterTopProductTime.getAdapter().getItem(0).toString(), false);
+        setupDropdown(actFilterKpi, R.array.seller_filter_kpi);
+        setupDropdown(actFilterTopProduct, R.array.seller_filter_top_product);
+        setupDropdown(actFilterTopProductTime, R.array.seller_filter_top_product_time);
+    }
 
+    private void setupDropdown(MaterialAutoCompleteTextView view, int arrayRes) {
+        String[] items = getResources().getStringArray(arrayRes);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_list_item_1,
+                items
+        );
+
+        view.setAdapter(adapter);
     }
 
     private void setListeners() {
 
-        // FILTER TOP PRODUCT
+        // KPI FILTER
+        actFilterKpi.setOnItemClickListener((parent, view, position, id) -> {
+
+            switch (position) {
+                case 0: currentKpiRange = DateRange.TODAY; break;
+                case 1: currentKpiRange = DateRange.LAST_7_DAYS; break;
+                case 2: currentKpiRange = DateRange.LAST_30_DAYS; break;
+                case 3: currentKpiRange = DateRange.THIS_MONTH; break;
+                case 4: currentKpiRange = DateRange.THIS_YEAR; break;
+            }
+
+            viewModel.loadKpi(currentKpiRange);
+        });
+
+        // TOP PRODUCT SORT
         actFilterTopProduct.setOnItemClickListener((parent, view, position, id) -> {
 
             if (topProductData == null) return;
 
             if (position == 0) {
-                topProductAdapter.setDisplayMode(SellerTopProductAdapter.MODE_SOLD);
+                currentTopMode = SellerTopProductAdapter.MODE_SOLD;
+            } else {
+                currentTopMode = SellerTopProductAdapter.MODE_REVENUE;
+            }
+
+            topProductAdapter.setDisplayMode(currentTopMode);
+
+            if (currentTopMode == SellerTopProductAdapter.MODE_SOLD) {
                 topProductAdapter.setData(topProductData.getTopBySold());
             } else {
-                topProductAdapter.setDisplayMode(SellerTopProductAdapter.MODE_REVENUE);
                 topProductAdapter.setData(topProductData.getTopByRevenue());
             }
         });
 
-        // FILTER CHART TIME
+        // TOP PRODUCT TIME
+        actFilterTopProductTime.setOnItemClickListener((parent, view, position, id) -> {
+
+            switch (position) {
+                case 0: currentTopRange = DateRange.THIS_MONTH; break;
+                case 1: currentTopRange = DateRange.LAST_MONTH; break;
+                case 2: currentTopRange = DateRange.LAST_3_MONTHS; break;
+                case 3: currentTopRange = DateRange.LAST_6_MONTHS; break;
+                case 4: currentTopRange = DateRange.THIS_YEAR; break;
+            }
+
+            viewModel.loadTopProducts(currentTopRange);
+        });
+
+        // ================= CHART FILTER =================
         spFilterTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -198,39 +239,43 @@ public class SellerDashboardFragment extends Fragment {
                     default: currentChartType = ChartType.DAY;
                 }
 
-                viewModel.loadDashboard(currentRange, currentChartType);
+                viewModel.loadChart(currentChartType);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+    }
 
-        // FILTER KPI
-        actFilterKpi.setOnItemClickListener((parent, view, position, id) -> {
+    // OBSERVE
+    @SuppressLint("SetTextI18n")
+    private void observeData() {
 
-            switch (position) {
-                case 0: currentRange = DateRange.TODAY; break;
-                case 1: currentRange = DateRange.LAST_7_DAYS; break;
-                case 2: currentRange = DateRange.LAST_30_DAYS; break;
-                case 3: currentRange = DateRange.THIS_MONTH; break;
-                case 4: currentRange = DateRange.THIS_YEAR; break;
-            }
+        viewModel.getKpiData().observe(getViewLifecycleOwner(), data -> {
+            if (data == null) return;
 
-            viewModel.loadDashboard(currentRange, currentChartType);
+            tvRevenue.setText(NumberUtils.formatCompact(data.getRevenue()) + " ₫");
+            tvOrders.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getOrders())));
+            tvSold.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getSold())));
         });
 
-        // FILTER TOP PRODUCT TIME
-        actFilterTopProductTime.setOnItemClickListener((parent, view, position, id) -> {
+        viewModel.getTopProductData().observe(getViewLifecycleOwner(), data -> {
+            if (data == null) return;
 
-            switch (position) {
-                case 0: currentRange = DateRange.THIS_MONTH; break;
-                case 1: currentRange = DateRange.LAST_MONTH; break;
-                case 2: currentRange = DateRange.LAST_3_MONTHS; break;
-                case 3: currentRange = DateRange.LAST_6_MONTHS; break;
-                case 4: currentRange = DateRange.THIS_YEAR; break;
+            topProductData = data;
+            topProductAdapter.setDisplayMode(currentTopMode);
+
+            if (currentTopMode == SellerTopProductAdapter.MODE_SOLD) {
+                topProductAdapter.setData(data.getTopBySold());
+            } else {
+                topProductAdapter.setData(data.getTopByRevenue());
             }
+        });
 
-            viewModel.loadDashboard(currentRange, currentChartType);
+        viewModel.getChartData().observe(getViewLifecycleOwner(), list -> {
+            if (list == null) return;
+
+            drawChart(list, currentChartType);
         });
     }
 
@@ -263,10 +308,7 @@ public class SellerDashboardFragment extends Fragment {
         com.github.mikephil.charting.data.BarDataSet dataSet =
                 new com.github.mikephil.charting.data.BarDataSet(entries, "Doanh thu");
 
-        com.github.mikephil.charting.data.BarData barData =
-                new com.github.mikephil.charting.data.BarData(dataSet);
-
-        chartRevenue.setData(barData);
+        chartRevenue.setData(new com.github.mikephil.charting.data.BarData(dataSet));
 
         chartRevenue.getXAxis().setValueFormatter(
                 new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(labels)
@@ -277,35 +319,5 @@ public class SellerDashboardFragment extends Fragment {
         chartRevenue.getXAxis().setLabelCount(labels.size());
 
         chartRevenue.invalidate();
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void observeData() {
-
-        // KPI
-        viewModel.getKpiData().observe(getViewLifecycleOwner(), data -> {
-            if (data == null) return;
-
-            tvRevenue.setText(NumberUtils.formatCompact(data.getRevenue()) + " ₫");
-            tvOrders.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getOrders())));
-            tvSold.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getSold())));
-        });
-
-        // TOP PRODUCT
-        viewModel.getTopProductData().observe(getViewLifecycleOwner(), data -> {
-            if (data == null) return;
-
-            topProductData = data;
-
-            topProductAdapter.setDisplayMode(SellerTopProductAdapter.MODE_SOLD);
-            topProductAdapter.setData(data.getTopBySold());
-        });
-
-        // CHART
-        viewModel.getChartData().observe(getViewLifecycleOwner(), list -> {
-            if (list == null) return;
-
-            drawChart(list, currentChartType);
-        });
     }
 }
