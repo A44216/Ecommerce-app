@@ -1,8 +1,8 @@
-package com.example.ecommerceapp.data.repository.admin.category;
+package com.example.ecommerceapp.data.repository.admin.product;
 
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
+import com.example.ecommerceapp.data.model.response.admin.profile.AdminCategoryResponse;
 
 import java.util.List;
 
@@ -16,15 +16,15 @@ public class AdminCategoryRepository {
         this.apiService = apiService;
     }
 
-    public Call<List<CategoryAdminResponse>> getAllCategories(Boolean isDeleted, String keyword) {
+    public Call<List<AdminCategoryResponse>> getAllCategories(Boolean isDeleted, String keyword) {
         return apiService.getAllCategories(isDeleted, keyword);
     }
 
-    public Call<CategoryAdminResponse> createCategory(CategoryRequest request) {
+    public Call<AdminCategoryResponse> createCategory(CategoryRequest request) {
         return apiService.createCategory(request);
     }
 
-    public Call<CategoryAdminResponse> updateCategory(int id, CategoryRequest request) {
+    public Call<AdminCategoryResponse> updateCategory(int id, CategoryRequest request) {
         return apiService.updateCategory(id, request);
     }
 

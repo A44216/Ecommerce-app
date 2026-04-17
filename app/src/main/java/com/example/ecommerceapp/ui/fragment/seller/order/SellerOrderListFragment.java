@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.repository.seller.order.SellerOrderRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.order.SellerOrderDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerOrderViewModel;
@@ -95,12 +96,8 @@ public class SellerOrderListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        TokenManager tokenManager = TokenManager.getInstance(requireContext());
-
-        viewModel = new ViewModelProvider(
-                this,
-                new SellerOrderViewModelFactory(tokenManager)
-        ).get(SellerOrderViewModel.class);
+        SellerOrderRepository repository = new SellerOrderRepository(TokenManager.getInstance(requireContext()));
+        viewModel = new ViewModelProvider(this, new SellerOrderViewModelFactory(repository)).get(SellerOrderViewModel.class);
 
         viewModel.getOrders(status).observe(getViewLifecycleOwner(), data -> {
             isLoadingMore = false;

@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.fragment.admin.profile.category;
+package com.example.ecommerceapp.ui.fragment.admin.product;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
-import com.example.ecommerceapp.ui.adapter.admin.category.AdminCategoryAdapter;
+import com.example.ecommerceapp.data.model.response.admin.profile.AdminCategoryResponse;
+import com.example.ecommerceapp.ui.adapter.admin.product.AdminCategoryAdapter;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminCategoryViewModel;
 
 import java.util.ArrayList;
@@ -92,12 +92,12 @@ public class AdminCategoryListFragment extends Fragment {
                 new AdminCategoryAdapter.OnActionListener() {
 
                     @Override
-                    public void onEdit(CategoryAdminResponse category) {
+                    public void onEdit(AdminCategoryResponse category) {
                         showEditDialog(category);
                     }
 
                     @Override
-                    public void onDelete(CategoryAdminResponse category) {
+                    public void onDelete(AdminCategoryResponse category) {
                         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                                 .setTitle("Xác nhận xoá")
                                 .setMessage("Bạn có chắc muốn xoá danh mục: " + category.getName())
@@ -109,7 +109,7 @@ public class AdminCategoryListFragment extends Fragment {
                     }
 
                     @Override
-                    public void onRestore(CategoryAdminResponse category) {
+                    public void onRestore(AdminCategoryResponse category) {
 
                         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                                 .setTitle("Xác nhận khôi phục")
@@ -144,7 +144,7 @@ public class AdminCategoryListFragment extends Fragment {
         }
     }
 
-    private void showEditDialog(CategoryAdminResponse category) {
+    private void showEditDialog(AdminCategoryResponse category) {
 
         EditText inputName = new EditText(requireContext());
         inputName.setText(category.getName());

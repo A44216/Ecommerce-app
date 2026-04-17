@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.repository.admin.profile.AdminProfileRepository;
-import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminCategoryActivity;
+import com.example.ecommerceapp.ui.activity.home.admin.product.AdminCategoryActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminChangePasswordActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminProfileInfoActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminVoucherActivity;

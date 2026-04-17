@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.adapter.admin.category;
+package com.example.ecommerceapp.ui.adapter.admin.product;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -11,31 +11,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
+import com.example.ecommerceapp.data.model.response.admin.profile.AdminCategoryResponse;
 
 import java.util.List;
 
 public class AdminCategoryAdapter extends RecyclerView.Adapter<AdminCategoryAdapter.ViewHolder> {
 
-    private List<CategoryAdminResponse> list;
+    private List<AdminCategoryResponse> list;
     private final OnActionListener listener;
 
     private boolean isDeletedTab;
 
     public interface OnActionListener {
-        void onEdit(CategoryAdminResponse category);
-        void onDelete(CategoryAdminResponse category);
-        void onRestore(CategoryAdminResponse category);
+        void onEdit(AdminCategoryResponse category);
+        void onDelete(AdminCategoryResponse category);
+        void onRestore(AdminCategoryResponse category);
     }
 
-    public AdminCategoryAdapter(List<CategoryAdminResponse> list, OnActionListener listener, boolean isDeletedTab) {
+    public AdminCategoryAdapter(List<AdminCategoryResponse> list, OnActionListener listener, boolean isDeletedTab) {
         this.list = list;
         this.listener = listener;
         this.isDeletedTab = isDeletedTab;
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setData(List<CategoryAdminResponse> list) {
+    public void setData(List<AdminCategoryResponse> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -60,7 +60,7 @@ public class AdminCategoryAdapter extends RecyclerView.Adapter<AdminCategoryAdap
             holder.ivRestore.setVisibility(View.VISIBLE);
         }
 
-        CategoryAdminResponse item = list.get(position);
+        AdminCategoryResponse item = list.get(position);
 
         holder.tvName.setText(item.getName());
 

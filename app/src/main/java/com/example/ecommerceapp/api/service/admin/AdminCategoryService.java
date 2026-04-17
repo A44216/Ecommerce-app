@@ -1,7 +1,7 @@
 package com.example.ecommerceapp.api.service.admin;
 
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
+import com.example.ecommerceapp.data.model.response.admin.profile.AdminCategoryResponse;
 
 import java.util.List;
 
@@ -11,16 +11,16 @@ import retrofit2.http.*;
 public interface AdminCategoryService {
 
     @GET("admin/categories")
-    Call<List<CategoryAdminResponse>> getAllCategories(
+    Call<List<AdminCategoryResponse>> getAllCategories(
             @Query("isDeleted") Boolean isDeleted,
             @Query("keyword") String keyword
     );
 
     @POST("admin/categories")
-    Call<CategoryAdminResponse> createCategory(@Body CategoryRequest request);
+    Call<AdminCategoryResponse> createCategory(@Body CategoryRequest request);
 
     @PUT("admin/categories/{id}")
-    Call<CategoryAdminResponse> updateCategory(
+    Call<AdminCategoryResponse> updateCategory(
             @Path("id") int id,
             @Body CategoryRequest request
     );

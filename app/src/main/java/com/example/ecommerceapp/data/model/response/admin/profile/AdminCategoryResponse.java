@@ -1,6 +1,6 @@
 package com.example.ecommerceapp.data.model.response.admin.profile;
 
-public class CategoryAdminResponse {
+public class AdminCategoryResponse {
     private Integer id;
     private String name;
     private Boolean isDeleted;

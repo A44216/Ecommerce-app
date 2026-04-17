@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.model.response.admin.profile.CategoryAdminResponse;
-import com.example.ecommerceapp.data.repository.admin.category.AdminCategoryRepository;
+import com.example.ecommerceapp.data.model.response.admin.profile.AdminCategoryResponse;
+import com.example.ecommerceapp.data.repository.admin.product.AdminCategoryRepository;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class AdminCategoryViewModel extends ViewModel {
 
     private final AdminCategoryRepository repository;
 
-    private final MutableLiveData<List<CategoryAdminResponse>> all = new MutableLiveData<>();
-    private final MutableLiveData<List<CategoryAdminResponse>> deleted = new MutableLiveData<>();
+    private final MutableLiveData<List<AdminCategoryResponse>> all = new MutableLiveData<>();
+    private final MutableLiveData<List<AdminCategoryResponse>> deleted = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
 
     private String currentKeyword = "";
@@ -29,11 +29,11 @@ public class AdminCategoryViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public LiveData<List<CategoryAdminResponse>> getAll() {
+    public LiveData<List<AdminCategoryResponse>> getAll() {
         return all;
     }
 
-    public LiveData<List<CategoryAdminResponse>> getDeleted() {
+    public LiveData<List<AdminCategoryResponse>> getDeleted() {
         return deleted;
     }
 
@@ -46,8 +46,8 @@ public class AdminCategoryViewModel extends ViewModel {
         repository.getAllCategories(isDeleted, currentKeyword)
                 .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(Call<List<CategoryAdminResponse>> call,
-                                           Response<List<CategoryAdminResponse>> response) {
+                    public void onResponse(Call<List<AdminCategoryResponse>> call,
+                                           Response<List<AdminCategoryResponse>> response) {
 
                         if (response.isSuccessful() && response.body() != null) {
                             if (Boolean.TRUE.equals(isDeleted)) {
@@ -59,7 +59,7 @@ public class AdminCategoryViewModel extends ViewModel {
                     }
 
                     @Override
-                    public void onFailure(Call<List<CategoryAdminResponse>> call, Throwable t) {
+                    public void onFailure(Call<List<AdminCategoryResponse>> call, Throwable t) {
                         t.printStackTrace();
                     }
                 });

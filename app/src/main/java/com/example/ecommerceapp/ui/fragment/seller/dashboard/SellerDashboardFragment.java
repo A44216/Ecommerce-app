@@ -228,7 +228,7 @@ public class SellerDashboardFragment extends Fragment {
             viewModel.loadTopProducts(currentTopRange);
         });
 
-        // ================= CHART FILTER =================
+        // CHART FILTER
         spFilterTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

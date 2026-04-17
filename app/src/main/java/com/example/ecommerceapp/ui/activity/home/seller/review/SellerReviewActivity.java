@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.repository.seller.review.SellerReviewRepository;
 import com.example.ecommerceapp.ui.adapter.seller.review.SellerReviewPagerAdapter;
 import com.example.ecommerceapp.ui.fragment.seller.review.SellerReviewListFragment;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerReviewViewModel;
@@ -45,9 +46,8 @@ public class SellerReviewActivity extends AppCompatActivity {
 
         initViews();
 
-        viewModel = new ViewModelProvider(this,
-                new SellerReviewViewModelFactory(TokenManager.getInstance(this)))
-                .get(SellerReviewViewModel.class);
+        SellerReviewRepository repository = new SellerReviewRepository(TokenManager.getInstance(this));
+        viewModel = new ViewModelProvider(this, new SellerReviewViewModelFactory(repository)).get(SellerReviewViewModel.class);
 
         setupViewPager();
         setListeners();

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.seller.review.SellerReplyRequest;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
@@ -26,8 +25,8 @@ public class SellerReviewViewModel extends ViewModel {
 
     private String currentSort = "rating_desc,time_desc";
 
-    public SellerReviewViewModel(TokenManager tm) {
-        repository = new SellerReviewRepository(tm);
+    public SellerReviewViewModel(SellerReviewRepository repository) {
+        this.repository = repository;
     }
 
     private String key(int productId, Boolean isReplied) {

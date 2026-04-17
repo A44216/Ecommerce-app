@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_light"
-    tools:context=".ui.activity.home.admin.profile.AdminCategoryActivity">
+    tools:context=".ui.activity.home.admin.product.AdminCategoryActivity">
 
     <!-- SEARCH -->
     <com.google.android.material.textfield.TextInputLayout

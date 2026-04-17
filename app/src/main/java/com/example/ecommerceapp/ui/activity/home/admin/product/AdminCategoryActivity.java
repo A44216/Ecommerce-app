@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.activity.home.admin.profile;
+package com.example.ecommerceapp.ui.activity.home.admin.product;
 
 import android.os.Bundle;
 import android.widget.EditText;
@@ -16,8 +16,8 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
-import com.example.ecommerceapp.data.repository.admin.category.AdminCategoryRepository;
-import com.example.ecommerceapp.ui.adapter.admin.category.AdminCategoryPagerAdapter;
+import com.example.ecommerceapp.data.repository.admin.product.AdminCategoryRepository;
+import com.example.ecommerceapp.ui.adapter.admin.product.AdminCategoryPagerAdapter;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminCategoryViewModel;
 import com.example.ecommerceapp.ui.viewmodel.admin.factory.AdminCategoryViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

@@ -32,10 +32,9 @@ public class SellerOrderViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> updateStatusResult = new MutableLiveData<>();
 
-    public SellerOrderViewModel(TokenManager tm) {
-        repository = new SellerOrderRepository(tm);
+    public SellerOrderViewModel(SellerOrderRepository repository) {
+        this.repository = repository;
     }
-
     // GET ORDERS
     public LiveData<List<SellerOrderResponse>> getOrders(String status) {
 

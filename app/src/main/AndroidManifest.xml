@@ -24,7 +24,7 @@
             android:name=".ui.activity.home.admin.profile.AdminChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.profile.AdminCategoryActivity"
+            android:name=".ui.activity.home.admin.product.AdminCategoryActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.seller.review.SellerReviewActivity"

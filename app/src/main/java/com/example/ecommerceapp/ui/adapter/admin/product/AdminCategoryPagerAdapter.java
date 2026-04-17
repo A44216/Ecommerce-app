@@ -1,11 +1,11 @@
-package com.example.ecommerceapp.ui.adapter.admin.category;
+package com.example.ecommerceapp.ui.adapter.admin.product;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.ecommerceapp.ui.fragment.admin.profile.category.AdminCategoryListFragment;
+import com.example.ecommerceapp.ui.fragment.admin.product.AdminCategoryListFragment;
 
 public class AdminCategoryPagerAdapter extends FragmentStateAdapter {
 

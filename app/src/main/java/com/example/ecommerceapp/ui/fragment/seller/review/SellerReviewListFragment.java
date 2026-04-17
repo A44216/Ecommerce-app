@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
+import com.example.ecommerceapp.data.repository.seller.review.SellerReviewRepository;
 import com.example.ecommerceapp.ui.adapter.seller.review.SellerReviewAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerReviewViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerReviewViewModelFactory;
@@ -84,9 +85,8 @@ public class SellerReviewListFragment extends Fragment {
             isReplied = getArguments().getBoolean("isReplied", false);
         }
 
-        viewModel = new ViewModelProvider(requireActivity(),
-                new SellerReviewViewModelFactory(TokenManager.getInstance(requireContext())))
-                .get(SellerReviewViewModel.class);
+        SellerReviewRepository repository = new SellerReviewRepository(TokenManager.getInstance(requireContext()));
+        viewModel = new ViewModelProvider(requireActivity(), new SellerReviewViewModelFactory(repository)).get(SellerReviewViewModel.class);
 
         adapter.setOnItemClickListener(new SellerReviewAdapter.OnItemClickListener() {
 

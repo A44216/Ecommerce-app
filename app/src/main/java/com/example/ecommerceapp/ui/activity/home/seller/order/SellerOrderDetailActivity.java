@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.enums.OrderStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.repository.seller.order.SellerOrderRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderDetailAdapter;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderStatusAdapter;
@@ -100,10 +101,9 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     }
 
     private void initViewModel() {
-        viewModel = new ViewModelProvider(
-                this,
-                new SellerOrderViewModelFactory(tokenManager)
-        ).get(SellerOrderViewModel.class);
+
+        SellerOrderRepository repository = new SellerOrderRepository(tokenManager);
+        viewModel = new ViewModelProvider(this, new SellerOrderViewModelFactory(repository)).get(SellerOrderViewModel.class);
     }
 
     private void initListeners() {
