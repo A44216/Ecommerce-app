@@ -103,18 +103,13 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
             v.getContext().startActivity(intent);
         });
 
-        if ("DELETED".equals(currentStatus)) {
+        if (Boolean.TRUE.equals(product.getIsDeleted())) {
             holder.itemView.findViewById(R.id.ivDeleteProduct).setVisibility(View.GONE);
             holder.itemView.findViewById(R.id.ivRestoreProduct).setVisibility(View.VISIBLE);
         } else {
             holder.itemView.findViewById(R.id.ivDeleteProduct).setVisibility(View.VISIBLE);
             holder.itemView.findViewById(R.id.ivRestoreProduct).setVisibility(View.GONE);
         }
-        holder.itemView.findViewById(R.id.ivRestoreProduct).setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onRestore(product);
-            }
-        });
 
         if (product.getStatus() == ProductStatus.REJECTED) {
             holder.itemView.findViewById(R.id.ivResubmitProduct).setVisibility(View.VISIBLE);
@@ -133,6 +128,12 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
 
         holder.itemView.findViewById(R.id.ivDeleteProduct).setOnClickListener(v -> {
             if (listener != null) listener.onDelete(product);
+        });
+
+        holder.itemView.findViewById(R.id.ivRestoreProduct).setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onRestore(product);
+            }
         });
     }
 

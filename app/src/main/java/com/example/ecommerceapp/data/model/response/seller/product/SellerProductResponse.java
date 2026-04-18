@@ -22,6 +22,7 @@ public class SellerProductResponse {
     private int soldCount;
 
     private ProductStatus status;
+    private Boolean isDeleted;
 
     public String getName() { return name; }
     public BigDecimal getPrice() { return price; }
@@ -35,6 +36,9 @@ public class SellerProductResponse {
     public ProductStatus getStatus() { return status; }
     public String getDescription() {
         return description;
+    }
+    public Boolean getIsDeleted() {
+        return isDeleted;
     }
     public List<ProductImageResponse> getImages() {
         return images;

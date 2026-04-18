@@ -12,6 +12,7 @@ public interface SellerProductService {
     @GET("seller/products")
     Call<PageResponse<SellerProductResponse>> getProducts(
             @Query("status") String status,
+            @Query("isDeleted") Boolean isDeleted,
             @Query("keyword") String keyword,
             @Query("page") int page,
             @Query("size") int size
@@ -19,12 +20,6 @@ public interface SellerProductService {
 
     @GET("seller/products/{id}")
     Call<SellerProductResponse> getProductById(@Path("id") int id);
-
-    @GET("seller/products/deleted")
-    Call<PageResponse<SellerProductResponse>> getDeletedProducts(
-            @Query("page") int page,
-            @Query("size") int size
-    );
 
     @DELETE("seller/products/{id}")
     Call<Void> deleteProduct(@Path("id") int id);
@@ -43,5 +38,4 @@ public interface SellerProductService {
 
     @PUT("seller/products/submit/{id}")
     Call<Void> submitProduct(@Path("id") int id);
-
 }

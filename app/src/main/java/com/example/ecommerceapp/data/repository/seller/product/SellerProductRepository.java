@@ -17,46 +17,35 @@ public class SellerProductRepository {
 
     public Call<PageResponse<SellerProductResponse>> getProducts(
             String status,
+            Boolean isDeleted,
             String keyword,
             int page,
             int size
     ) {
-        return apiService.getProducts(status, keyword, page, size);
+        return apiService.getProducts(status, isDeleted, keyword, page, size);
     }
 
-    // GET DETAIL
     public Call<SellerProductResponse> getProductById(int id) {
         return apiService.getProductById(id);
     }
 
-    // GET DELETED
-    public Call<PageResponse<SellerProductResponse>> getDeletedProducts(int page, int size) {
-        return apiService.getDeletedProducts(page, size);
-    }
-
-    // DELETE
     public Call<Void> deleteProduct(int id) {
         return apiService.deleteProduct(id);
     }
 
-    // CREATE
     public Call<SellerProductResponse> createProduct(SellerProductRequest request) {
         return apiService.createProduct(request);
     }
 
-    // UPDATE
     public Call<SellerProductResponse> updateProduct(int id, SellerProductRequest request) {
         return apiService.updateProduct(id, request);
     }
 
-    // RESTORE
     public Call<Void> restoreProduct(int id) {
         return apiService.restoreProduct(id);
     }
 
-    // SUBMIT
     public Call<Void> submitProduct(int id) {
         return apiService.submitProduct(id);
     }
-
 }

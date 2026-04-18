@@ -20,6 +20,11 @@ public class SellerProductViewModel extends ViewModel {
 
     private String keyword = "";
     private String status = "";
+    private Boolean isDeleted = false;
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 
     private final MutableLiveData<PageResponse<SellerProductResponse>> productPage =
             new MutableLiveData<>();
@@ -42,44 +47,23 @@ public class SellerProductViewModel extends ViewModel {
 
     public void fetchProducts(int page, int size) {
 
-        if ("DELETED".equals(status)) {
+        repository.getProducts(status, isDeleted, keyword, page, size
+        ).enqueue(new Callback<PageResponse<SellerProductResponse>>() {
 
-            repository.getDeletedProducts(page, size)
-                    .enqueue(new Callback<PageResponse<SellerProductResponse>>() {
-                        @Override
-                        public void onResponse(Call<PageResponse<SellerProductResponse>> call,
-                                               Response<PageResponse<SellerProductResponse>> response) {
+            @Override
+            public void onResponse(Call<PageResponse<SellerProductResponse>> call,
+                                   Response<PageResponse<SellerProductResponse>> response) {
 
-                            if (response.isSuccessful() && response.body() != null) {
-                                productPage.setValue(response.body());
-                            }
-                        }
+                if (response.isSuccessful() && response.body() != null) {
+                    productPage.setValue(response.body());
+                }
+            }
 
-                        @Override
-                        public void onFailure(Call<PageResponse<SellerProductResponse>> call, Throwable t) {
-                            Log.e("API", "FAIL: " + t.getMessage());
-                        }
-                    });
-
-            return;
-        }
-
-        repository.getProducts(status, keyword, page, size)
-                .enqueue(new Callback<PageResponse<SellerProductResponse>>() {
-                    @Override
-                    public void onResponse(Call<PageResponse<SellerProductResponse>> call,
-                                           Response<PageResponse<SellerProductResponse>> response) {
-
-                        if (response.isSuccessful() && response.body() != null) {
-                            productPage.setValue(response.body());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PageResponse<SellerProductResponse>> call, Throwable t) {
-                        Log.e("API", "FAIL: " + t.getMessage());
-                    }
-                });
+            @Override
+            public void onFailure(Call<PageResponse<SellerProductResponse>> call, Throwable t) {
+                Log.e("API", "FAIL: " + t.getMessage());
+            }
+        });
     }
 
     public LiveData<SellerProductResponse> getProductById(int id) {

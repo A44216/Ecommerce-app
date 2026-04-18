@@ -42,6 +42,7 @@ public class SellerProductListFragment extends Fragment {
 
     private String status = "";
     private String keyword = "";
+    private Boolean isDeleted = false;
 
     private final ActivityResultLauncher<Intent> editLauncher =
             registerForActivityResult(
@@ -53,10 +54,11 @@ public class SellerProductListFragment extends Fragment {
                     }
             );
 
-    public static SellerProductListFragment newInstance(String status) {
+    public static SellerProductListFragment newInstance(String status, Boolean isDeleted) {
         SellerProductListFragment fragment = new SellerProductListFragment();
         Bundle args = new Bundle();
         args.putString("status", status);
+        args.putBoolean("isDeleted", isDeleted);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +79,7 @@ public class SellerProductListFragment extends Fragment {
 
         if (getArguments() != null) {
             status = getArguments().getString("status", "");
+            isDeleted = getArguments().getBoolean("isDeleted", false);
         }
     }
 
@@ -215,6 +218,7 @@ public class SellerProductListFragment extends Fragment {
                 .get(SellerProductViewModel.class);
 
         viewModel.setStatus(status);
+        viewModel.setIsDeleted(isDeleted);
         viewModel.setKeyword(keyword);
 
         observeData();

@@ -24,13 +24,13 @@ public class SellerProductPagerAdapter extends FragmentStateAdapter {
 
         switch (position) {
             case 0:
-                return SellerProductListFragment.newInstance("PENDING");
+                return SellerProductListFragment.newInstance("PENDING", false);
             case 1:
-                return SellerProductListFragment.newInstance("APPROVED");
+                return SellerProductListFragment.newInstance("APPROVED", false);
             case 2:
-                return SellerProductListFragment.newInstance("REJECTED");
+                return SellerProductListFragment.newInstance("REJECTED", false);
             default:
-                return SellerProductListFragment.newInstance("DELETED");
+                return SellerProductListFragment.newInstance("", true);
         }
     }
 
