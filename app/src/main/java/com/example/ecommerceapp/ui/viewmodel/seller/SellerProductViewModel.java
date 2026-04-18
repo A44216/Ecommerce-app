@@ -10,6 +10,10 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,15 +30,14 @@ public class SellerProductViewModel extends ViewModel {
         this.isDeleted = isDeleted;
     }
 
-    private final MutableLiveData<PageResponse<SellerProductResponse>> productPage =
-            new MutableLiveData<>();
+    private final Map<String, MutableLiveData<List<SellerProductResponse>>> cache = new HashMap<>();
+    private final Map<String, Integer> currentPageMap = new HashMap<>();
+    private final Map<String, Boolean> lastPageMap = new HashMap<>();
+
+    private static final int PAGE_SIZE = 10;
 
     public SellerProductViewModel(SellerProductRepository repository) {
         this.repository = repository;
-    }
-
-    public LiveData<PageResponse<SellerProductResponse>> getProducts() {
-        return productPage;
     }
 
     public void setKeyword(String keyword) {
@@ -45,25 +48,79 @@ public class SellerProductViewModel extends ViewModel {
         this.status = status;
     }
 
-    public void fetchProducts(int page, int size) {
 
-        repository.getProducts(status, isDeleted, keyword, page, size
-        ).enqueue(new Callback<PageResponse<SellerProductResponse>>() {
+    private String getKey() {
+        return status + "_" + isDeleted;
+    }
 
-            @Override
-            public void onResponse(Call<PageResponse<SellerProductResponse>> call,
-                                   Response<PageResponse<SellerProductResponse>> response) {
+    public LiveData<List<SellerProductResponse>> getProducts() {
+        String key = getKey();
 
-                if (response.isSuccessful() && response.body() != null) {
-                    productPage.setValue(response.body());
-                }
-            }
+        if (!cache.containsKey(key)) {
+            cache.put(key, new MutableLiveData<>());
+            fetchProducts(false);
+        }
 
-            @Override
-            public void onFailure(Call<PageResponse<SellerProductResponse>> call, Throwable t) {
-                Log.e("API", "FAIL: " + t.getMessage());
-            }
-        });
+        return cache.get(key);
+    }
+
+    public void fetchProducts(boolean isLoadMore) {
+        String key = getKey();
+
+        int page = currentPageMap.getOrDefault(key, 0);
+
+        if (!isLoadMore) {
+            page = 0;
+            currentPageMap.put(key, 0);
+            lastPageMap.put(key, false);
+        }
+
+        if (Boolean.TRUE.equals(lastPageMap.get(key))) return;
+
+        repository.getProducts(status, isDeleted, keyword, page, PAGE_SIZE)
+                .enqueue(new Callback<PageResponse<SellerProductResponse>>() {
+
+                    @Override
+                    public void onResponse(Call<PageResponse<SellerProductResponse>> call,
+                                           Response<PageResponse<SellerProductResponse>> response) {
+
+                        if (!response.isSuccessful() || response.body() == null) return;
+
+                        PageResponse<SellerProductResponse> body = response.body();
+
+                        MutableLiveData<List<SellerProductResponse>> liveData = cache.get(key);
+                        if (liveData == null) {
+                            liveData = new MutableLiveData<>();
+                            cache.put(key, liveData);
+                        }
+
+                        List<SellerProductResponse> current = liveData.getValue();
+                        if (current == null) current = new java.util.ArrayList<>();
+
+                        List<SellerProductResponse> newItems = body.getItems();
+                        if (newItems == null) newItems = new java.util.ArrayList<>();
+
+                        if (isLoadMore) {
+                            current.addAll(newItems);
+                        } else {
+                            current = new java.util.ArrayList<>(newItems);
+                        }
+
+                        liveData.setValue(current);
+
+                        currentPageMap.put(key, body.getPage() + 1);
+
+                        boolean isLast = newItems.size() < PAGE_SIZE
+                                || current.size() >= body.getTotalElements();
+
+                        lastPageMap.put(key, isLast);
+                    }
+
+                    @Override
+                    public void onFailure(Call<PageResponse<SellerProductResponse>> call, Throwable t) {
+                        Log.e("API", "FAIL: " + t.getMessage());
+                    }
+                });
     }
 
     public LiveData<SellerProductResponse> getProductById(int id) {
@@ -103,6 +160,9 @@ public class SellerProductViewModel extends ViewModel {
 
                         if (response.isSuccessful()) {
                             deleteResult.setValue(true);
+                            for (String key : cache.keySet()) {
+                                cache.get(key).setValue(null);
+                            }
                         } else {
                             deleteResult.setValue(false);
                         }
@@ -131,8 +191,14 @@ public class SellerProductViewModel extends ViewModel {
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-
-                        restoreResult.setValue(response.isSuccessful());
+                        if (response.isSuccessful()) {
+                            restoreResult.setValue(true);
+                            for (String key : cache.keySet()) {
+                                cache.get(key).setValue(null);
+                            }
+                        } else {
+                            restoreResult.setValue(false);
+                        }
                     }
 
                     @Override
@@ -154,7 +220,14 @@ public class SellerProductViewModel extends ViewModel {
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        submitResult.setValue(response.isSuccessful());
+                        if (response.isSuccessful()) {
+                            submitResult.setValue(true);
+                            for (String key : cache.keySet()) {
+                                cache.get(key).setValue(null);
+                            }
+                        } else {
+                            submitResult.setValue(false);
+                        }
                     }
 
                     @Override

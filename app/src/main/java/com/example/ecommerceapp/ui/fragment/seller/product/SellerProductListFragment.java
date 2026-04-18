@@ -34,11 +34,7 @@ public class SellerProductListFragment extends Fragment {
     private SellerProductAdapter adapter;
     private SellerProductViewModel viewModel;
 
-    private int currentPage = 0;
-    private final int pageSize = 10;
-
-    private boolean isLoading = false;
-    private boolean isLastPage = false;
+    private boolean isLoadingMore = false;
 
     private String status = "";
     private String keyword = "";
@@ -113,13 +109,14 @@ public class SellerProductListFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
 
                 LinearLayoutManager lm = (LinearLayoutManager) rv.getLayoutManager();
+                if (lm == null) return;
 
-                int visible = lm.getChildCount();
                 int total = lm.getItemCount();
-                int first = lm.findFirstVisibleItemPosition();
+                int lastVisibleItem = lm.findLastVisibleItemPosition();
 
-                if (!isLoading && !isLastPage && (visible + first) >= total) {
-                    loadMore();
+                if (!isLoadingMore && lastVisibleItem >= total - 2) {
+                    isLoadingMore = true;
+                    viewModel.fetchProducts(true);
                 }
             }
         });
@@ -222,69 +219,29 @@ public class SellerProductListFragment extends Fragment {
         viewModel.setKeyword(keyword);
 
         observeData();
-        loadData();
+        viewModel.fetchProducts(false);
     }
 
     private void observeData() {
 
-        viewModel.getProducts().observe(getViewLifecycleOwner(), page -> {
-
-            if (page == null || page.getItems() == null) return;
-
-            if (currentPage == 0) {
-                adapter.setData(page.getItems());
-            } else {
-                adapter.addData(page.getItems());
+        viewModel.getProducts().observe(getViewLifecycleOwner(), items -> {
+            isLoadingMore = false;
+            if (items != null) {
+                adapter.setData(items);
             }
-
-            isLoading = false;
-            isLastPage = page.getItems().size() < pageSize;
         });
     }
 
     public void setKeyword(String keyword) {
-
         this.keyword = keyword;
-
         if (viewModel == null) return;
 
         viewModel.setKeyword(keyword);
-
-        currentPage = 0;
-        isLoading = false;
-        isLastPage = false;
-
-        if (adapter != null) {
-            adapter.setData(new ArrayList<>());
-        }
-
-        loadData();
-    }
-
-    private void loadData() {
-        isLoading = true;
-        viewModel.fetchProducts(currentPage, pageSize);
-    }
-
-    private void loadMore() {
-
-        if (isLoading || isLastPage) return;
-
-        isLoading = true;
-        currentPage++;
-
-        viewModel.fetchProducts(currentPage, pageSize);
+        viewModel.fetchProducts(false);
     }
 
     public void reload() {
-
-        if (adapter == null || viewModel == null) return;
-
-        currentPage = 0;
-        isLoading = false;
-        isLastPage = false;
-
-        adapter.setData(new ArrayList<>());
-        loadData();
+        if (viewModel == null) return;
+        viewModel.fetchProducts(false);
     }
 }
