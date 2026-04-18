@@ -62,6 +62,12 @@ public class SellerProductListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        reload();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
