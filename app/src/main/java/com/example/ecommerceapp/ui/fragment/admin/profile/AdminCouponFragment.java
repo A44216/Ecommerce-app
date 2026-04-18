@@ -187,6 +187,9 @@ public class AdminCouponFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (getActivity() instanceof com.example.ecommerceapp.ui.activity.home.admin.profile.AdminCouponActivity) {
+            this.currentKeyword = ((com.example.ecommerceapp.ui.activity.home.admin.profile.AdminCouponActivity) getActivity()).getSearchKeyword();
+        }
         fetchData(!isFirstLoad);
         isFirstLoad = false;
     }

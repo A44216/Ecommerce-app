@@ -65,6 +65,7 @@ public class AdminCouponActivity extends AppCompatActivity {
     private void setupViewPager() {
         pagerAdapter = new AdminCouponPagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
         // Using 4 tabs based on UI design
         String[] tabTitles = new String[]{"Hoạt động", "Vô hiệu", "Hết hạn", "Đã xóa"};
         
