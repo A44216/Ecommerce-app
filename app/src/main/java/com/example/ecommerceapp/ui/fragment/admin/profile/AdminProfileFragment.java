@@ -24,7 +24,7 @@ import com.example.ecommerceapp.data.repository.admin.profile.AdminProfileReposi
 import com.example.ecommerceapp.ui.activity.home.admin.product.AdminCategoryActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminChangePasswordActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminProfileInfoActivity;
-import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminVoucherActivity;
+import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminCouponActivity;
 import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminProfileViewModel;
 import com.example.ecommerceapp.ui.viewmodel.admin.factory.AdminProfileViewModelFactory;
@@ -121,7 +121,7 @@ public class AdminProfileFragment extends Fragment {
     }
 
     private void openVoucher() {
-        startActivity(new Intent(requireContext(), AdminVoucherActivity.class));
+        startActivity(new Intent(requireContext(), AdminCouponActivity.class));
     }
 
     private void openCategory() {

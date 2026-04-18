@@ -15,7 +15,10 @@
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.activity.home.admin.profile.AdminVoucherActivity"
+            android:name=".ui.activity.home.admin.profile.AdminCouponActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.profile.AdminAddAndEditCouponActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.admin.profile.AdminProfileInfoActivity"

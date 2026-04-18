@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.ecommerceapp.data.enums.CouponStatus;
 import com.example.ecommerceapp.data.model.request.admin.profile.AdminCouponRequest;
 import com.example.ecommerceapp.data.model.response.admin.profile.AdminCouponResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
@@ -38,8 +39,8 @@ public class AdminCouponViewModel extends ViewModel {
         return error;
     }
 
-    public void getCoupons(int page, int size, String status, String keyword) {
-        loading.setValue(true);
+    public void getCoupons(int page, int size, CouponStatus status, String keyword, boolean isSilent) {
+        if (!isSilent) loading.setValue(true);
 
         repository.getCoupons(page, size, status, keyword)
                 .enqueue(new Callback<PageResponse<AdminCouponResponse>>() {
@@ -47,7 +48,7 @@ public class AdminCouponViewModel extends ViewModel {
                     public void onResponse(Call<PageResponse<AdminCouponResponse>> call,
                                            Response<PageResponse<AdminCouponResponse>> response) {
 
-                        loading.setValue(false);
+                        if (!isSilent) loading.setValue(false);
 
                         if (response.isSuccessful() && response.body() != null) {
                             couponsLiveData.setValue(response.body());
@@ -58,7 +59,7 @@ public class AdminCouponViewModel extends ViewModel {
 
                     @Override
                     public void onFailure(Call<PageResponse<AdminCouponResponse>> call, Throwable t) {
-                        loading.setValue(false);
+                        if (!isSilent) loading.setValue(false);
                         error.setValue(t.getMessage());
                     }
                 });

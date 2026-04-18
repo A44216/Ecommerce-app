@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.api.service.admin;
 
+import com.example.ecommerceapp.data.enums.CouponStatus;
 import com.example.ecommerceapp.data.model.request.admin.profile.AdminCouponRequest;
 import com.example.ecommerceapp.data.model.response.admin.profile.AdminCouponResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
@@ -14,7 +15,7 @@ public interface AdminCouponService {
     Call<PageResponse<AdminCouponResponse>> getCoupons(
             @Query("page") int page,
             @Query("size") int size,
-            @Query("status") String status,
+            @Query("status") CouponStatus status,
             @Query("keyword") String keyword
     );
 
