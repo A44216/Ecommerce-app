@@ -64,7 +64,11 @@ public class SellerProductListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        reload();
+
+        // reload lại dữ liệu khi fragment được focus lại
+        if (viewModel != null) {
+            reload();
+        }
     }
 
     @Override
