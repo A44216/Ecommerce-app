@@ -103,19 +103,33 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
             v.getContext().startActivity(intent);
         });
 
-        if (Boolean.TRUE.equals(product.getIsDeleted())) {
-            holder.itemView.findViewById(R.id.ivDeleteProduct).setVisibility(View.GONE);
-            holder.itemView.findViewById(R.id.ivRestoreProduct).setVisibility(View.VISIBLE);
+        boolean isDeleted = Boolean.TRUE.equals(product.getIsDeleted());
+
+        View ivDelete = holder.itemView.findViewById(R.id.ivDeleteProduct);
+        View ivRestore = holder.itemView.findViewById(R.id.ivRestoreProduct);
+        View ivEdit = holder.itemView.findViewById(R.id.ivEditProduct);
+        View ivResubmit = holder.itemView.findViewById(R.id.ivResubmitProduct);
+
+        if (isDeleted) {
+            ivDelete.setVisibility(View.GONE);
+            ivRestore.setVisibility(View.VISIBLE);
+
+            ivEdit.setVisibility(View.GONE);
+            ivResubmit.setVisibility(View.GONE);
         } else {
-            holder.itemView.findViewById(R.id.ivDeleteProduct).setVisibility(View.VISIBLE);
-            holder.itemView.findViewById(R.id.ivRestoreProduct).setVisibility(View.GONE);
+            ivDelete.setVisibility(View.VISIBLE);
+            ivRestore.setVisibility(View.GONE);
+
+            ivEdit.setVisibility(View.VISIBLE);
+
+            if (product.getStatus() == ProductStatus.REJECTED) {
+                ivResubmit.setVisibility(View.VISIBLE);
+            } else {
+                ivResubmit.setVisibility(View.GONE);
+            }
         }
 
-        if (product.getStatus() == ProductStatus.REJECTED) {
-            holder.itemView.findViewById(R.id.ivResubmitProduct).setVisibility(View.VISIBLE);
-        } else {
-            holder.itemView.findViewById(R.id.ivResubmitProduct).setVisibility(View.GONE);
-        }
+
         holder.itemView.findViewById(R.id.ivResubmitProduct).setOnClickListener(v -> {
             if (listener != null) {
                 listener.onResubmit(product);
