@@ -16,7 +16,8 @@ public interface AdminCouponService {
             @Query("page") int page,
             @Query("size") int size,
             @Query("status") CouponStatus status,
-            @Query("keyword") String keyword
+            @Query("keyword") String keyword,
+            @Query("isDeleted") Boolean isDeleted
     );
 
     // DETAIL
@@ -45,4 +46,8 @@ public interface AdminCouponService {
     // ENABLE
     @PATCH("admin/coupons/{id}/enable")
     Call<Void> enableCoupon(@Path("id") Integer id);
+
+    // RESTORE
+    @PATCH("admin/coupons/{id}/restore")
+    Call<Void> restoreCoupon(@Path("id") Integer id);
 }

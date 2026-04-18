@@ -23,9 +23,10 @@ public class AdminCouponRepository {
             int page,
             int size,
             CouponStatus status,
-            String keyword
+            String keyword,
+            Boolean isDeleted
     ) {
-        return service.getCoupons(page, size, status, keyword);
+        return service.getCoupons(page, size, status, keyword, isDeleted);
     }
 
     // DETAIL
@@ -56,5 +57,10 @@ public class AdminCouponRepository {
     // ENABLE
     public Call<Void> enableCoupon(Integer id) {
         return service.enableCoupon(id);
+    }
+
+    // RESTORE
+    public Call<Void> restoreCoupon(Integer id) {
+        return service.restoreCoupon(id);
     }
 }

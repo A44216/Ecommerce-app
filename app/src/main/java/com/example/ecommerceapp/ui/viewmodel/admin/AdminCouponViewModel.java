@@ -26,9 +26,14 @@ public class AdminCouponViewModel extends ViewModel {
     private final MutableLiveData<PageResponse<AdminCouponResponse>> couponsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> actionSuccess = new MutableLiveData<>();
 
     public LiveData<PageResponse<AdminCouponResponse>> getCouponsLiveData() {
         return couponsLiveData;
+    }
+
+    public LiveData<Boolean> getActionSuccess() {
+        return actionSuccess;
     }
 
     public LiveData<Boolean> getLoading() {
@@ -39,10 +44,10 @@ public class AdminCouponViewModel extends ViewModel {
         return error;
     }
 
-    public void getCoupons(int page, int size, CouponStatus status, String keyword, boolean isSilent) {
+    public void getCoupons(int page, int size, CouponStatus status, String keyword, Boolean isDeleted, boolean isSilent) {
         if (!isSilent) loading.setValue(true);
 
-        repository.getCoupons(page, size, status, keyword)
+        repository.getCoupons(page, size, status, keyword, isDeleted)
                 .enqueue(new Callback<PageResponse<AdminCouponResponse>>() {
                     @Override
                     public void onResponse(Call<PageResponse<AdminCouponResponse>> call,
@@ -110,6 +115,8 @@ public class AdminCouponViewModel extends ViewModel {
 
                         if (!response.isSuccessful()) {
                             error.setValue("Delete failed");
+                        } else {
+                            actionSuccess.setValue(true);
                         }
                     }
 
@@ -125,7 +132,11 @@ public class AdminCouponViewModel extends ViewModel {
     public void enableCoupon(Integer id) {
         repository.enableCoupon(id).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {}
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    actionSuccess.setValue(true);
+                }
+            }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
@@ -138,7 +149,30 @@ public class AdminCouponViewModel extends ViewModel {
     public void disableCoupon(Integer id) {
         repository.disableCoupon(id).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {}
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    actionSuccess.setValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                error.setValue(t.getMessage());
+            }
+        });
+    }
+
+    // RESTORE
+    public void restoreCoupon(Integer id) {
+        repository.restoreCoupon(id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    actionSuccess.setValue(true);
+                } else {
+                    error.setValue("Restore failed");
+                }
+            }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {

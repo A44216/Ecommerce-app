@@ -39,6 +39,7 @@ public class AdminCouponFragment extends Fragment {
     private TextView tvEmpty;
 
     private String currentKeyword = "";
+    private boolean isFirstLoad = true;
 
     public static AdminCouponFragment newInstance(int position) {
         AdminCouponFragment fragment = new AdminCouponFragment();
@@ -73,8 +74,6 @@ public class AdminCouponFragment extends Fragment {
         setupObservers();
 
         swipeRefreshLayout.setOnRefreshListener(() -> fetchData(false));
-        
-        fetchData(false);
     }
 
     private void initViews(View view) {
@@ -97,20 +96,24 @@ public class AdminCouponFragment extends Fragment {
             @Override
             public void onItemLongClick(com.example.ecommerceapp.data.model.response.admin.profile.AdminCouponResponse coupon, View view) {
                 android.widget.PopupMenu popup = new android.widget.PopupMenu(requireContext(), view);
-                popup.getMenu().add("Bật (Active)");
-                popup.getMenu().add("Tắt (Disable)");
-                popup.getMenu().add("Xóa");
+                
+                if (position == 3) {
+                    popup.getMenu().add("Khôi phục");
+                } else {
+                    popup.getMenu().add("Bật (Active)");
+                    popup.getMenu().add("Tắt (Disable)");
+                    popup.getMenu().add("Xóa");
+                }
                 
                 popup.setOnMenuItemClickListener(item -> {
                     if (item.getTitle().equals("Bật (Active)")) {
                         viewModel.enableCoupon(coupon.getId());
-                        fetchData(true);
                     } else if (item.getTitle().equals("Tắt (Disable)")) {
                         viewModel.disableCoupon(coupon.getId());
-                        fetchData(true);
                     } else if (item.getTitle().equals("Xóa")) {
                         viewModel.deleteCoupon(coupon.getId());
-                        fetchData(true);
+                    } else if (item.getTitle().equals("Khôi phục")) {
+                        viewModel.restoreCoupon(coupon.getId());
                     }
                     return true;
                 });
@@ -157,14 +160,22 @@ public class AdminCouponFragment extends Fragment {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
             }
         });
+
+        viewModel.getActionSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (success != null && success) {
+                fetchData(true);
+            }
+        });
     }
 
     private void fetchData(boolean isSilent) {
         CouponStatus status = getStatusByPosition(position);
+        Boolean isDeleted = false;
         if (position == 3) {
             status = null;
+            isDeleted = true;
         }
-        viewModel.getCoupons(0, 100, status, currentKeyword, isSilent);
+        viewModel.getCoupons(0, 100, status, currentKeyword, isDeleted, isSilent);
     }
 
     public void search(String keyword) {
@@ -175,7 +186,8 @@ public class AdminCouponFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        fetchData(true);
+        fetchData(!isFirstLoad);
+        isFirstLoad = false;
     }
 
     private CouponStatus getStatusByPosition(int position) {
