@@ -90,6 +90,8 @@ public class SellerProductListFragment extends Fragment {
 
         adapter = new SellerProductAdapter();
 
+        adapter.setCurrentStatus(status);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -143,6 +145,49 @@ public class SellerProductListFragment extends Fragment {
                         .setNegativeButton("Hủy", null)
                         .show();
             }
+
+            @Override
+            public void onRestore(SellerProductResponse product) {
+
+                new android.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Khôi phục sản phẩm")
+                        .setMessage("Bạn có chắc muốn khôi phục \"" + product.getName() + "\"?")
+                        .setPositiveButton("Khôi phục", (dialog, which) -> {
+
+                            viewModel.restoreProduct(product.getId());
+
+                            viewModel.getRestoreResult().observe(getViewLifecycleOwner(), success -> {
+                                if (success != null && success) {
+                                    reload();
+                                }
+                            });
+
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+            }
+
+            @Override
+            public void onResubmit(SellerProductResponse product) {
+
+                new android.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Gửi duyệt lại")
+                        .setMessage("Bạn có chắc muốn gửi lại \"" + product.getName() + "\" để duyệt?")
+                        .setPositiveButton("Gửi", (dialog, which) -> {
+
+                            viewModel.submitProduct(product.getId());
+
+                            viewModel.getSubmitResult().observe(getViewLifecycleOwner(), success -> {
+                                if (success != null && success) {
+                                    reload();
+                                }
+                            });
+
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+            }
+
         });
     }
 

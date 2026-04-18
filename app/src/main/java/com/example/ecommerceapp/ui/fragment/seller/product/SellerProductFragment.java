@@ -80,7 +80,8 @@ public class SellerProductFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (position == 0) tab.setText("Chờ duyệt");
             else if (position == 1) tab.setText("Đã duyệt");
-            else tab.setText("Từ chối");
+            else if (position == 2) tab.setText("Từ chối");
+            else tab.setText("Đã xoá");
         }).attach();
     }
 

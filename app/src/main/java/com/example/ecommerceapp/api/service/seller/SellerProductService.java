@@ -37,4 +37,11 @@ public interface SellerProductService {
             @Path("id") int id,
             @Body SellerProductRequest request
     );
+
+    @PUT("seller/products/restore/{id}")
+    Call<Void> restoreProduct(@Path("id") int id);
+
+    @PUT("seller/products/submit/{id}")
+    Call<Void> submitProduct(@Path("id") int id);
+
 }

@@ -48,4 +48,15 @@ public class SellerProductRepository {
     public Call<SellerProductResponse> updateProduct(int id, SellerProductRequest request) {
         return apiService.updateProduct(id, request);
     }
+
+    // RESTORE
+    public Call<Void> restoreProduct(int id) {
+        return apiService.restoreProduct(id);
+    }
+
+    // SUBMIT
+    public Call<Void> submitProduct(int id) {
+        return apiService.submitProduct(id);
+    }
+
 }

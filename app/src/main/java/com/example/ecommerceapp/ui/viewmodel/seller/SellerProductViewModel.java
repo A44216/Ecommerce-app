@@ -42,6 +42,28 @@ public class SellerProductViewModel extends ViewModel {
 
     public void fetchProducts(int page, int size) {
 
+        if ("DELETED".equals(status)) {
+
+            repository.getDeletedProducts(page, size)
+                    .enqueue(new Callback<PageResponse<SellerProductResponse>>() {
+                        @Override
+                        public void onResponse(Call<PageResponse<SellerProductResponse>> call,
+                                               Response<PageResponse<SellerProductResponse>> response) {
+
+                            if (response.isSuccessful() && response.body() != null) {
+                                productPage.setValue(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<PageResponse<SellerProductResponse>> call, Throwable t) {
+                            Log.e("API", "FAIL: " + t.getMessage());
+                        }
+                    });
+
+            return;
+        }
+
         repository.getProducts(status, keyword, page, size)
                 .enqueue(new Callback<PageResponse<SellerProductResponse>>() {
                     @Override
@@ -59,7 +81,6 @@ public class SellerProductViewModel extends ViewModel {
                     }
                 });
     }
-
 
     public LiveData<SellerProductResponse> getProductById(int id) {
 
@@ -112,6 +133,51 @@ public class SellerProductViewModel extends ViewModel {
 
     public LiveData<Boolean> getDeleteResult() {
         return deleteResult;
+    }
+
+    private final MutableLiveData<Boolean> restoreResult = new MutableLiveData<>();
+
+    public LiveData<Boolean> getRestoreResult() {
+        return restoreResult;
+    }
+
+    public void restoreProduct(int id) {
+
+        repository.restoreProduct(id)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                        restoreResult.setValue(response.isSuccessful());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        restoreResult.setValue(false);
+                    }
+                });
+    }
+
+    private final MutableLiveData<Boolean> submitResult = new MutableLiveData<>();
+
+    public LiveData<Boolean> getSubmitResult() {
+        return submitResult;
+    }
+
+    public void submitProduct(int id) {
+
+        repository.submitProduct(id)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        submitResult.setValue(response.isSuccessful());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        submitResult.setValue(false);
+                    }
+                });
     }
 
 }

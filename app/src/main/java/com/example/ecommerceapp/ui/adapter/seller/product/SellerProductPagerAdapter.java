@@ -27,14 +27,16 @@ public class SellerProductPagerAdapter extends FragmentStateAdapter {
                 return SellerProductListFragment.newInstance("PENDING");
             case 1:
                 return SellerProductListFragment.newInstance("APPROVED");
-            default:
+            case 2:
                 return SellerProductListFragment.newInstance("REJECTED");
+            default:
+                return SellerProductListFragment.newInstance("DELETED");
         }
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 4;
     }
 
     public void setKeywordToAll(String keyword) {

@@ -68,7 +68,7 @@
                 android:id="@+id/ivRestore"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_restore"
+                android:src="@drawable/ic_resubmit"
                 android:contentDescription="Restore"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"

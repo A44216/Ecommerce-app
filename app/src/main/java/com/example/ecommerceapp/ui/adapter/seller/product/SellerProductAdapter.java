@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.enums.ProductStatus;
 import com.example.ecommerceapp.data.model.response.ProductImageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
@@ -24,6 +25,12 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
     private List<SellerProductResponse> list = new ArrayList<>();
 
     private OnProductActionListener listener;
+
+    private String currentStatus = "";
+
+    public void setCurrentStatus(String status) {
+        this.currentStatus = status;
+    }
 
     public void setListener(OnProductActionListener listener) {
         this.listener = listener;
@@ -45,6 +52,9 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
         void onClick(SellerProductResponse product);
         void onEdit(SellerProductResponse product);
         void onDelete(SellerProductResponse product);
+        void onRestore(SellerProductResponse product);
+        void onResubmit(SellerProductResponse product);
+
     }
 
     @NonNull
@@ -91,6 +101,30 @@ public class SellerProductAdapter extends RecyclerView.Adapter<SellerProductVH> 
             Intent intent = new Intent(v.getContext(), SellerProductDetailActivity.class);
             intent.putExtra("productId", product.getId());
             v.getContext().startActivity(intent);
+        });
+
+        if ("DELETED".equals(currentStatus)) {
+            holder.itemView.findViewById(R.id.ivDeleteProduct).setVisibility(View.GONE);
+            holder.itemView.findViewById(R.id.ivRestoreProduct).setVisibility(View.VISIBLE);
+        } else {
+            holder.itemView.findViewById(R.id.ivDeleteProduct).setVisibility(View.VISIBLE);
+            holder.itemView.findViewById(R.id.ivRestoreProduct).setVisibility(View.GONE);
+        }
+        holder.itemView.findViewById(R.id.ivRestoreProduct).setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onRestore(product);
+            }
+        });
+
+        if (product.getStatus() == ProductStatus.REJECTED) {
+            holder.itemView.findViewById(R.id.ivResubmitProduct).setVisibility(View.VISIBLE);
+        } else {
+            holder.itemView.findViewById(R.id.ivResubmitProduct).setVisibility(View.GONE);
+        }
+        holder.itemView.findViewById(R.id.ivResubmitProduct).setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onResubmit(product);
+            }
         });
 
         holder.itemView.findViewById(R.id.ivEditProduct).setOnClickListener(v -> {
