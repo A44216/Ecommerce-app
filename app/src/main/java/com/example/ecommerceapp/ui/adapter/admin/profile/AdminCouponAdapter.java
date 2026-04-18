@@ -24,6 +24,7 @@ public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.
     private final Context context;
     private final List<AdminCouponResponse> list = new ArrayList<>();
     private OnItemClickListener listener;
+    private boolean isDeletedTab = false;
 
     public interface OnItemClickListener {
         void onItemClick(AdminCouponResponse coupon);
@@ -32,6 +33,10 @@ public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.
 
     public AdminCouponAdapter(Context context) {
         this.context = context;
+    }
+
+    public void setDeletedTab(boolean deletedTab) {
+        this.isDeletedTab = deletedTab;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -131,7 +136,13 @@ public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.
             }
             tvMinOrder.setText("Đơn tối thiểu: " + minOrder + " đ");
 
-            setupStatus(item.getStatus(), item);
+            if (isDeletedTab) {
+                tvStatus.setText("Đã xóa");
+                tvStatus.setTextColor(Color.parseColor("#9E9E9E")); // Gray
+                tvStatus.setBackgroundColor(Color.parseColor("#F5F5F5"));
+            } else {
+                setupStatus(item.getStatus(), item);
+            }
         }
 
         private void setupStatus(CouponStatus status, AdminCouponResponse item) {

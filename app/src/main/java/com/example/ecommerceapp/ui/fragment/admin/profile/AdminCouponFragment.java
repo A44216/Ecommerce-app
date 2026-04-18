@@ -85,6 +85,7 @@ public class AdminCouponFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new AdminCouponAdapter(requireContext());
+        adapter.setDeletedTab(position == 3);
         adapter.setOnItemClickListener(new AdminCouponAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(com.example.ecommerceapp.data.model.response.admin.profile.AdminCouponResponse coupon) {
