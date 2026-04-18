@@ -30,8 +30,8 @@ public class AdminCouponRepository {
     }
 
     // DETAIL
-    public Call<AdminCouponResponse> getCouponById(Integer id) {
-        return service.getCouponById(id);
+    public Call<AdminCouponResponse> getCouponById(Integer id, Boolean isDeleted) {
+        return service.getCouponById(id, isDeleted);
     }
 
     // CREATE

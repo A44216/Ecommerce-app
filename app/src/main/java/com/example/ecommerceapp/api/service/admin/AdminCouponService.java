@@ -22,7 +22,10 @@ public interface AdminCouponService {
 
     // DETAIL
     @GET("admin/coupons/{id}")
-    Call<AdminCouponResponse> getCouponById(@Path("id") Integer id);
+    Call<AdminCouponResponse> getCouponById(
+            @Path("id") Integer id,
+            @Query("isDeleted") Boolean isDeleted
+    );
 
     // CREATE
     @POST("admin/coupons")

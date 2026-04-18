@@ -48,11 +48,12 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
     private AutoCompleteTextView etStatus;
     private RadioGroup rgDiscountType;
     private RadioButton rbPercent, rbAmount;
-    private MaterialButton btnAddVoucher;
+    private MaterialButton btnAddVoucher, btnDeleteVoucher, btnRestoreVoucher;
 
     private AdminCouponService couponService;
     private int couponId = -1;
     private boolean isEdit = false;
+    private boolean isDeletedCoupon = false;
 
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
@@ -76,6 +77,7 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
 
         couponId = getIntent().getIntExtra("couponId", -1);
         isEdit = couponId != -1;
+        isDeletedCoupon = getIntent().getBooleanExtra("isDeleted", false);
 
         initViews();
         setupToolbar();
@@ -114,10 +116,12 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
         rbPercent = findViewById(R.id.rbPercent);
         rbAmount = findViewById(R.id.rbAmount);
         btnAddVoucher = findViewById(R.id.btnAddVoucher);
+        btnDeleteVoucher = findViewById(R.id.btnDeleteVoucher);
+        btnRestoreVoucher = findViewById(R.id.btnRestoreVoucher);
 
         if (isEdit) {
-            tvTitle.setText("Cập nhật Coupon");
-            btnAddVoucher.setText("CẬP NHẬT COUPON");
+            tvTitle.setText("CẬP NHẬT VOUCHER");
+            btnAddVoucher.setText("Cập nhật");
         }
     }
 
@@ -166,6 +170,99 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                 showConfirmDialog();
             }
         });
+
+        btnDeleteVoucher.setOnClickListener(v -> showDeleteConfirmDialog());
+        btnRestoreVoucher.setOnClickListener(v -> showRestoreConfirmDialog());
+    }
+
+    private void showDeleteConfirmDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Xác nhận")
+                .setMessage("Bạn có chắc chắn muốn xóa coupon này?")
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    couponService.deleteCoupon(couponId).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(AdminAddAndEditCouponActivity.this, "Đã xóa coupon", Toast.LENGTH_SHORT).show();
+                                setResult(RESULT_OK);
+                                finish();
+                            } else {
+                                Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi xóa coupon", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        @Override
+                        public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                            Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void showRestoreConfirmDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Xác nhận")
+                .setMessage("Bạn có chắc chắn muốn khôi phục coupon này?")
+                .setPositiveButton("Khôi phục", (dialog, which) -> {
+                    couponService.restoreCoupon(couponId).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(AdminAddAndEditCouponActivity.this, "Đã khôi phục coupon", Toast.LENGTH_SHORT).show();
+                                originalStatus = CouponStatus.ACTIVE;
+                                selectedStatus = CouponStatus.ACTIVE;
+                                isDeletedCoupon = false;
+                                etStatus.setText("Hoạt động", false);
+                                enableAllInputs();
+                                btnDeleteVoucher.setVisibility(View.VISIBLE);
+                                btnAddVoucher.setVisibility(View.VISIBLE);
+                                btnRestoreVoucher.setVisibility(View.GONE);
+                                setResult(RESULT_OK);
+                                finish();
+                            } else {
+                                Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi khôi phục coupon", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        @Override
+                        public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                            Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void disableAllInputs() {
+        etCode.setEnabled(false);
+        rgDiscountType.setEnabled(false);
+        rbPercent.setEnabled(false);
+        rbAmount.setEnabled(false);
+        etDiscountPercent.setEnabled(false);
+        etDiscountAmount.setEnabled(false);
+        etMaxDiscountAmount.setEnabled(false);
+        etMinOrderValue.setEnabled(false);
+        etMaxUsage.setEnabled(false);
+        etStartDate.setEnabled(false);
+        etEndDate.setEnabled(false);
+        tilStatus.setEnabled(false);
+    }
+
+    private void enableAllInputs() {
+        etCode.setEnabled(true);
+        rgDiscountType.setEnabled(true);
+        rbPercent.setEnabled(true);
+        rbAmount.setEnabled(true);
+        etDiscountPercent.setEnabled(true);
+        etDiscountAmount.setEnabled(true);
+        etMaxDiscountAmount.setEnabled(true);
+        etMinOrderValue.setEnabled(true);
+        etMaxUsage.setEnabled(true);
+        etStartDate.setEnabled(true);
+        etEndDate.setEnabled(true);
+        tilStatus.setEnabled(true);
     }
 
     private void showConfirmDialog() {
@@ -200,7 +297,7 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
     }
 
     private void loadCouponData() {
-        couponService.getCouponById(couponId).enqueue(new Callback<AdminCouponResponse>() {
+        couponService.getCouponById(couponId, isDeletedCoupon).enqueue(new Callback<AdminCouponResponse>() {
             @Override
             public void onResponse(@NonNull Call<AdminCouponResponse> call, @NonNull Response<AdminCouponResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -251,13 +348,26 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
 
         originalStatus = coupon.getStatus();
         selectedStatus = originalStatus;
-        if (originalStatus == CouponStatus.ACTIVE) {
-            etStatus.setText("Hoạt động", false);
-        } else if (originalStatus == CouponStatus.DISABLED) {
-            etStatus.setText("Vô hiệu", false);
-        } else if (originalStatus == CouponStatus.EXPIRED) {
-            etStatus.setText("Hết hạn", false);
-            // Vẫn cho phép chuyển về Hoạt động hoặc Vô hiệu nếu sửa lại ngày
+
+        if (isDeletedCoupon) {
+            etStatus.setText("Đã xóa", false);
+            disableAllInputs();
+            btnDeleteVoucher.setVisibility(View.GONE);
+            btnAddVoucher.setVisibility(View.GONE);
+            btnRestoreVoucher.setVisibility(View.VISIBLE);
+        } else {
+            if (originalStatus == CouponStatus.ACTIVE) {
+                etStatus.setText("Hoạt động", false);
+            } else if (originalStatus == CouponStatus.DISABLED) {
+                etStatus.setText("Vô hiệu", false);
+            } else if (originalStatus == CouponStatus.EXPIRED) {
+                etStatus.setText("Hết hạn", false);
+                // Vẫn cho phép chuyển về Hoạt động hoặc Vô hiệu nếu sửa lại ngày
+            }
+
+            if (isEdit) {
+                btnDeleteVoucher.setVisibility(View.VISIBLE);
+            }
         }
     }
 

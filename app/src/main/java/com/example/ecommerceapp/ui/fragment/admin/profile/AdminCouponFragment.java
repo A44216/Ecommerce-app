@@ -90,6 +90,7 @@ public class AdminCouponFragment extends Fragment {
             public void onItemClick(com.example.ecommerceapp.data.model.response.admin.profile.AdminCouponResponse coupon) {
                 android.content.Intent intent = new android.content.Intent(requireContext(), com.example.ecommerceapp.ui.activity.home.admin.profile.AdminAddAndEditCouponActivity.class);
                 intent.putExtra("couponId", coupon.getId());
+                intent.putExtra("isDeleted", position == 3);
                 startActivity(intent);
             }
 
