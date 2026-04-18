@@ -87,28 +87,11 @@ public class SellerDashboardFragment extends Fragment {
 
         setInits();
         setDefaultFilters();
-        setListeners();
-
-        // Adapter
-        topProductAdapter = new SellerTopProductAdapter();
-        rvTopProduct.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvTopProduct.setAdapter(topProductAdapter);
-
-        topProductAdapter.setListener(product -> {
-            Intent intent = new Intent(getContext(), SellerProductDetailActivity.class);
-            intent.putExtra("productId", product.getProductId());
-            startActivity(intent);
-        });
-
-        dashboardRepository =
-                new SellerDashboardRepository(ApiClient.getDashboardService(tokenManager));
-
-        viewModel = new ViewModelProvider(
-                this,
-                new SellerDashboardViewModelFactory(dashboardRepository)
-        ).get(SellerDashboardViewModel.class);
-
-        observeData();
+        
+        setupRecyclerView();
+        setupListeners();
+        initViewModel();
+        setupObservers();
 
         viewModel.loadKpi(currentKpiRange);
         viewModel.loadTopProducts(currentTopRange);
@@ -177,12 +160,38 @@ public class SellerDashboardFragment extends Fragment {
 
         view.setAdapter(adapter);
     }
+    
+    private void setupRecyclerView() {
+        topProductAdapter = new SellerTopProductAdapter();
+        rvTopProduct.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvTopProduct.setAdapter(topProductAdapter);
 
-    private void setListeners() {
+        topProductAdapter.setListener(product -> {
+            Intent intent = new Intent(getContext(), SellerProductDetailActivity.class);
+            intent.putExtra("productId", product.getProductId());
+            startActivity(intent);
+        });
+    }
 
-        // KPI FILTER
+    private void initViewModel() {
+        dashboardRepository =
+                new SellerDashboardRepository(ApiClient.getDashboardService(tokenManager));
+
+        viewModel = new ViewModelProvider(
+                this,
+                new SellerDashboardViewModelFactory(dashboardRepository)
+        ).get(SellerDashboardViewModel.class);
+    }
+
+    private void setupListeners() {
+        setupKpiFilterListener();
+        setupTopProductSortListener();
+        setupTopProductTimeListener();
+        setupChartFilterListener();
+    }
+
+    private void setupKpiFilterListener() {
         actFilterKpi.setOnItemClickListener((parent, view, position, id) -> {
-
             switch (position) {
                 case 0: currentKpiRange = DateRange.TODAY; break;
                 case 1: currentKpiRange = DateRange.LAST_7_DAYS; break;
@@ -190,13 +199,12 @@ public class SellerDashboardFragment extends Fragment {
                 case 3: currentKpiRange = DateRange.THIS_MONTH; break;
                 case 4: currentKpiRange = DateRange.THIS_YEAR; break;
             }
-
             viewModel.loadKpi(currentKpiRange);
         });
+    }
 
-        // TOP PRODUCT SORT
+    private void setupTopProductSortListener() {
         actFilterTopProduct.setOnItemClickListener((parent, view, position, id) -> {
-
             if (topProductData == null) return;
 
             if (position == 0) {
@@ -213,10 +221,10 @@ public class SellerDashboardFragment extends Fragment {
                 topProductAdapter.setData(topProductData.getTopByRevenue());
             }
         });
+    }
 
-        // TOP PRODUCT TIME
+    private void setupTopProductTimeListener() {
         actFilterTopProductTime.setOnItemClickListener((parent, view, position, id) -> {
-
             switch (position) {
                 case 0: currentTopRange = DateRange.THIS_MONTH; break;
                 case 1: currentTopRange = DateRange.LAST_MONTH; break;
@@ -224,21 +232,19 @@ public class SellerDashboardFragment extends Fragment {
                 case 3: currentTopRange = DateRange.LAST_6_MONTHS; break;
                 case 4: currentTopRange = DateRange.THIS_YEAR; break;
             }
-
             viewModel.loadTopProducts(currentTopRange);
         });
+    }
 
-        // CHART FILTER
+    private void setupChartFilterListener() {
         spFilterTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                 switch (position) {
                     case 1: currentChartType = ChartType.MONTH; break;
                     case 2: currentChartType = ChartType.YEAR; break;
                     default: currentChartType = ChartType.DAY;
                 }
-
                 viewModel.loadChart(currentChartType);
             }
 
@@ -247,10 +253,14 @@ public class SellerDashboardFragment extends Fragment {
         });
     }
 
-    // OBSERVE
-    @SuppressLint("SetTextI18n")
-    private void observeData() {
+    private void setupObservers() {
+        observeKpiData();
+        observeTopProductData();
+        observeChartData();
+    }
 
+    @SuppressLint("SetTextI18n")
+    private void observeKpiData() {
         viewModel.getKpiData().observe(getViewLifecycleOwner(), data -> {
             if (data == null) return;
 
@@ -258,7 +268,9 @@ public class SellerDashboardFragment extends Fragment {
             tvOrders.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getOrders())));
             tvSold.setText(NumberUtils.formatCompact(BigDecimal.valueOf(data.getSold())));
         });
+    }
 
+    private void observeTopProductData() {
         viewModel.getTopProductData().observe(getViewLifecycleOwner(), data -> {
             if (data == null) return;
 
@@ -271,7 +283,9 @@ public class SellerDashboardFragment extends Fragment {
                 topProductAdapter.setData(data.getTopByRevenue());
             }
         });
+    }
 
+    private void observeChartData() {
         viewModel.getChartData().observe(getViewLifecycleOwner(), list -> {
             if (list == null) return;
 

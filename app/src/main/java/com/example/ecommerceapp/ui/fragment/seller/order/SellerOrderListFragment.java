@@ -34,6 +34,8 @@ public class SellerOrderListFragment extends Fragment {
 
     private boolean isLoadingMore = false;
 
+    private RecyclerView rvOrders;
+
     public static SellerOrderListFragment newInstance(String status) {
         SellerOrderListFragment fragment = new SellerOrderListFragment();
         Bundle args = new Bundle();
@@ -56,16 +58,29 @@ public class SellerOrderListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_seller_order_list, container, false);
+        initViews(view);
+        setupRecyclerView();
+        return view;
+    }
 
-        RecyclerView rv = view.findViewById(R.id.rvOrders);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViewModel();
+        setupObservers();
+    }
 
+    private void initViews(View view) {
+        rvOrders = view.findViewById(R.id.rvOrders);
+    }
+
+    private void setupRecyclerView() {
         layoutManager = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(layoutManager);
+        rvOrders.setLayoutManager(layoutManager);
 
         adapter = new SellerOrderAdapter();
-        rv.setAdapter(adapter);
+        rvOrders.setAdapter(adapter);
 
         adapter.setOnItemClickListener(item -> {
             Intent intent = new Intent(requireContext(), SellerOrderDetailActivity.class);
@@ -73,7 +88,7 @@ public class SellerOrderListFragment extends Fragment {
             startActivity(intent);
         });
 
-        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvOrders.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -89,16 +104,14 @@ public class SellerOrderListFragment extends Fragment {
                 }
             }
         });
-
-        return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+    private void initViewModel() {
         SellerOrderRepository repository = new SellerOrderRepository(TokenManager.getInstance(requireContext()));
         viewModel = new ViewModelProvider(this, new SellerOrderViewModelFactory(repository)).get(SellerOrderViewModel.class);
+    }
 
+    private void setupObservers() {
         viewModel.getOrders(status).observe(getViewLifecycleOwner(), data -> {
             isLoadingMore = false;
             if (data != null) {
