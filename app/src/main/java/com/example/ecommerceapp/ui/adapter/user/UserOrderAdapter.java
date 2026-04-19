@@ -59,13 +59,13 @@ public class UserOrderAdapter extends RecyclerView.Adapter<UserOrderAdapter.Orde
         if (order.getStatus() != null) {
             switch (order.getStatus()) {
                 case "PENDING": statusText = "Chờ xác nhận"; break;
-                case "PROCESSING": statusText = "Chờ lấy hàng"; break;
+                case "CONFIRMED": statusText = "Chờ lấy hàng"; break;
                 case "SHIPPING": statusText = "Đang giao hàng"; break;
-                case "DELIVERED":
+                case "COMPLETED":
                     statusText = "Đã giao";
                     holder.tvOrderStatus.setTextColor(Color.parseColor("#4CAF50"));
                     break;
-                case "CANCELLED":
+                case "CANCELED":
                     statusText = "Đã hủy";
                     holder.tvOrderStatus.setTextColor(Color.parseColor("#F44336"));
                     break;

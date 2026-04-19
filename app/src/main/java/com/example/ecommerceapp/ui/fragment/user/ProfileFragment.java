@@ -81,9 +81,9 @@ public class ProfileFragment extends Fragment {
 
         tvViewOrderHistory.setOnClickListener(v -> openOrderHistory("ALL"));
         if (btnPending != null) btnPending.setOnClickListener(v -> openOrderHistory("PENDING"));
-        if (btnProcessing != null) btnProcessing.setOnClickListener(v -> openOrderHistory("PROCESSING"));
+        if (btnProcessing != null) btnProcessing.setOnClickListener(v -> openOrderHistory("CONFIRMED"));
         if (btnShipping != null) btnShipping.setOnClickListener(v -> openOrderHistory("SHIPPING"));
-        if (btnDelivered != null) btnDelivered.setOnClickListener(v -> openOrderHistory("DELIVERED"));
+        if (btnDelivered != null) btnDelivered.setOnClickListener(v -> openOrderHistory("COMPLETED"));
 
         tvUsername.setOnClickListener(v -> ivSettings.performClick());
         if (ivAvatar != null) {

@@ -128,10 +128,10 @@ public class OrderDetailActivity extends AppCompatActivity {
                         // Dịch các trạng thái khác sang tiếng Việt cho đẹp
                         if (currentStatus != null) {
                             switch (currentStatus.toUpperCase()) {
-                                case "PROCESSING": tvStatus.setText("Đang chuẩn bị hàng"); break;
+                                case "CONFIRMED": tvStatus.setText("Đang chuẩn bị hàng"); break;
                                 case "SHIPPING": tvStatus.setText("Đang giao hàng"); break;
-                                case "DELIVERED": tvStatus.setText("Đã giao thành công"); break;
-                                case "CANCELLED": tvStatus.setText("Đã hủy"); break;
+                                case "COMPLETED": tvStatus.setText("Đã giao thành công"); break;
+                                case "CANCELED": tvStatus.setText("Đã hủy"); break;
                                 default: tvStatus.setText(currentStatus); break;
                             }
                         }
@@ -205,7 +205,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             case "PENDING":
                 ivStepPending.setAlpha(1.0f);
                 break;
-            case "PROCESSING":
+            case "CONFIRMED":
                 ivStepPending.setAlpha(1.0f);
                 ivStepProcessing.setAlpha(1.0f);
                 line1.setBackgroundColor(activeColor);
@@ -217,7 +217,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                 line1.setBackgroundColor(activeColor);
                 line2.setBackgroundColor(activeColor);
                 break;
-            case "DELIVERED":
+            case "COMPLETED":
                 ivStepPending.setAlpha(1.0f);
                 ivStepProcessing.setAlpha(1.0f);
                 ivStepShipping.setAlpha(1.0f);
