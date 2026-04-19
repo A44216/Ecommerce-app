@@ -1,4 +1,4 @@
-package com.example.ecommerceapp.ui.adapter.admin.user;
+package com.example.ecommerceapp.ui.viewholder.admin.user;
 
 import android.view.View;
 import android.widget.TextView;

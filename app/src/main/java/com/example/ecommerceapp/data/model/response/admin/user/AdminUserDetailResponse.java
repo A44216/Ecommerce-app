@@ -1,9 +1,10 @@
 package com.example.ecommerceapp.data.model.response.admin.user;
 
+import com.example.ecommerceapp.data.enums.Provider;
 import com.example.ecommerceapp.data.enums.Role;
 import com.example.ecommerceapp.data.enums.UserStatus;
 
-import java.security.Provider;
+
 import java.time.LocalDateTime;
 
 public class AdminUserDetailResponse {

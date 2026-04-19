@@ -5,6 +5,7 @@ import com.example.ecommerceapp.api.service.admin.AdminUserService;
 import com.example.ecommerceapp.data.enums.Role;
 import com.example.ecommerceapp.data.enums.UserStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.admin.user.AdminUserDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.user.AdminUserResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 
@@ -20,5 +21,13 @@ public class AdminUserRepository {
 
     public Call<PageResponse<AdminUserResponse>> getUsers(int page, int size, Role role, UserStatus status, String keyword) {
         return service.getUsers(page, size, role, status, keyword);
+    }
+
+    public Call<AdminUserDetailResponse> getUserById(int id) {
+        return service.getUserById(id);
+    }
+
+    public Call<Void> changeStatus(int id, UserStatus status) {
+        return service.changeStatus(id, status);
     }
 }
