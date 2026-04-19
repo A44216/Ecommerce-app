@@ -123,6 +123,30 @@ public class AdminCouponFragment extends Fragment {
             }
         });
         rvCoupons.setAdapter(adapter);
+
+        rvCoupons.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    androidx.recyclerview.widget.LinearLayoutManager layoutManager = (androidx.recyclerview.widget.LinearLayoutManager) rvCoupons.getLayoutManager();
+                    if (layoutManager != null) {
+                        int visibleItemCount = layoutManager.getChildCount();
+                        int totalItemCount = layoutManager.getItemCount();
+                        int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount - 2) {
+                            CouponStatus status = getStatusByPosition(position);
+                            Boolean isDeleted = false;
+                            if (position == 3) {
+                                status = null;
+                                isDeleted = true;
+                            }
+                            viewModel.loadCoupons(status, currentKeyword, isDeleted, true, true);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void initViewModel() {
@@ -135,10 +159,17 @@ public class AdminCouponFragment extends Fragment {
     }
 
     private void setupObservers() {
-        viewModel.getCouponsLiveData().observe(getViewLifecycleOwner(), pageResponse -> {
+        CouponStatus status = getStatusByPosition(position);
+        Boolean isDeleted = false;
+        if (position == 3) {
+            status = null;
+            isDeleted = true;
+        }
+
+        viewModel.getCouponsLiveData(status, isDeleted).observe(getViewLifecycleOwner(), list -> {
             swipeRefreshLayout.setRefreshing(false);
-            if (pageResponse != null && pageResponse.getItems() != null && !pageResponse.getItems().isEmpty()) {
-                adapter.submitList(pageResponse.getItems());
+            if (list != null && !list.isEmpty()) {
+                adapter.submitList(list);
                 tvEmpty.setVisibility(View.GONE);
                 rvCoupons.setVisibility(View.VISIBLE);
             } else {
@@ -177,7 +208,7 @@ public class AdminCouponFragment extends Fragment {
             status = null;
             isDeleted = true;
         }
-        viewModel.getCoupons(0, 100, status, currentKeyword, isDeleted, isSilent);
+        viewModel.loadCoupons(status, currentKeyword, isDeleted, false, isSilent);
     }
 
     public void search(String keyword) {

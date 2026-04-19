@@ -143,8 +143,8 @@ public class AdminUserFragment extends Fragment {
     }
 
     public void fetchData(boolean isSilent) {
-        // Fetch users using the ViewModel (size 1000 to get enough data for both tabs without backend role filter)
-        viewModel.getUsers(0, 1000, viewModel.getCurrentStatus(), viewModel.getCurrentKeyword(), isSilent);
+        viewModel.fetchUsers(com.example.ecommerceapp.data.enums.Role.CUSTOMER, false, isSilent);
+        viewModel.fetchUsers(com.example.ecommerceapp.data.enums.Role.SELLER, false, isSilent);
     }
 
     private static class AdminUserPagerAdapter extends FragmentStateAdapter {

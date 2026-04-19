@@ -10,6 +10,9 @@ import com.example.ecommerceapp.data.model.response.admin.profile.AdminCouponRes
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.repository.admin.profile.AdminCouponRepository;
 
+import java.util.List;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,14 +25,25 @@ public class AdminCouponViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    // LIST
-    private final MutableLiveData<PageResponse<AdminCouponResponse>> couponsLiveData = new MutableLiveData<>();
+    private final Map<String, MutableLiveData<List<AdminCouponResponse>>> cache = new java.util.HashMap<>();
+    private final Map<String, Integer> currentPageMap = new java.util.HashMap<>();
+    private final Map<String, Boolean> lastPageMap = new java.util.HashMap<>();
+    private static final int PAGE_SIZE = 10;
+
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final MutableLiveData<Boolean> actionSuccess = new MutableLiveData<>();
 
-    public LiveData<PageResponse<AdminCouponResponse>> getCouponsLiveData() {
-        return couponsLiveData;
+    private String getKey(CouponStatus status, Boolean isDeleted) {
+        return status + "_" + isDeleted;
+    }
+
+    public LiveData<java.util.List<AdminCouponResponse>> getCouponsLiveData(CouponStatus status, Boolean isDeleted) {
+        String key = getKey(status, isDeleted);
+        if (!cache.containsKey(key)) {
+            cache.put(key, new MutableLiveData<>());
+        }
+        return cache.get(key);
     }
 
     public LiveData<Boolean> getActionSuccess() {
@@ -44,10 +58,21 @@ public class AdminCouponViewModel extends ViewModel {
         return error;
     }
 
-    public void getCoupons(int page, int size, CouponStatus status, String keyword, Boolean isDeleted, boolean isSilent) {
+    public void loadCoupons(CouponStatus status, String keyword, Boolean isDeleted, boolean isLoadMore, boolean isSilent) {
+        String key = getKey(status, isDeleted);
+        int page = currentPageMap.getOrDefault(key, 0);
+
+        if (!isLoadMore) {
+            page = 0;
+            currentPageMap.put(key, 0);
+            lastPageMap.put(key, false);
+        }
+
+        if (Boolean.TRUE.equals(lastPageMap.get(key))) return;
+
         if (!isSilent) loading.setValue(true);
 
-        repository.getCoupons(page, size, status, keyword, isDeleted)
+        repository.getCoupons(page, PAGE_SIZE, status, keyword, isDeleted)
                 .enqueue(new Callback<PageResponse<AdminCouponResponse>>() {
                     @Override
                     public void onResponse(Call<PageResponse<AdminCouponResponse>> call,
@@ -56,7 +81,44 @@ public class AdminCouponViewModel extends ViewModel {
                         if (!isSilent) loading.setValue(false);
 
                         if (response.isSuccessful() && response.body() != null) {
-                            couponsLiveData.setValue(response.body());
+                            PageResponse<AdminCouponResponse> body = response.body();
+
+                            MutableLiveData<java.util.List<AdminCouponResponse>> liveData = cache.get(key);
+                            if (liveData == null) {
+                                liveData = new MutableLiveData<>();
+                                cache.put(key, liveData);
+                            }
+
+                            java.util.List<AdminCouponResponse> current = liveData.getValue();
+                            if (current == null) current = new java.util.ArrayList<>();
+
+                            java.util.List<AdminCouponResponse> newItems = body.getItems();
+                            if (newItems == null) newItems = new java.util.ArrayList<>();
+
+                            // Lọc các item bị sai trạng thái (ví dụ API trả về EXPIRED trong query ACTIVE)
+                            if (status != null) {
+                                java.util.Iterator<AdminCouponResponse> it = newItems.iterator();
+                                while (it.hasNext()) {
+                                    AdminCouponResponse item = it.next();
+                                    if (item.getStatus() != status) {
+                                        it.remove();
+                                    }
+                                }
+                            }
+
+                            if (isLoadMore) {
+                                current.addAll(newItems);
+                            } else {
+                                current = new java.util.ArrayList<>(newItems);
+                            }
+
+                            liveData.setValue(current);
+
+                            currentPageMap.put(key, body.getPage() + 1);
+
+                            boolean isLast = newItems.size() < PAGE_SIZE || current.size() >= body.getTotalElements();
+                            lastPageMap.put(key, isLast);
+
                         } else {
                             error.setValue("Failed to load coupons");
                         }

@@ -11,7 +11,9 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.repository.admin.user.AdminUserRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,14 +60,27 @@ public class AdminUserViewModel extends ViewModel {
         return error;
     }
 
+    private final Map<Role, Integer> currentPageMap = new HashMap<>();
+    private final Map<Role, Boolean> lastPageMap = new HashMap<>();
+    private static final int PAGE_SIZE = 10;
     private int pendingRequests = 0;
 
-    public void getUsers(int page, int size, UserStatus status, String keyword, boolean isSilent) {
+    public void fetchUsers(Role role, boolean isLoadMore, boolean isSilent) {
+        int page = currentPageMap.getOrDefault(role, 0);
+
+        if (!isLoadMore) {
+            page = 0;
+            currentPageMap.put(role, 0);
+            lastPageMap.put(role, false);
+            isDataLoaded = true;
+        }
+
+        if (Boolean.TRUE.equals(lastPageMap.get(role))) return;
+
         if (!isSilent) loading.setValue(true);
-        pendingRequests = 2;
-        isDataLoaded = true;
+        pendingRequests++;
 
-        repository.getUsers(page, size, Role.CUSTOMER, status, keyword)
+        repository.getUsers(page, PAGE_SIZE, role, currentStatus, currentKeyword)
                 .enqueue(new Callback<PageResponse<AdminUserResponse>>() {
                     @Override
                     public void onResponse(Call<PageResponse<AdminUserResponse>> call, Response<PageResponse<AdminUserResponse>> response) {
@@ -73,31 +88,31 @@ public class AdminUserViewModel extends ViewModel {
                         if (!isSilent && pendingRequests == 0) loading.setValue(false);
 
                         if (response.isSuccessful() && response.body() != null) {
-                            customersLiveData.setValue(response.body().getItems());
+                            PageResponse<AdminUserResponse> body = response.body();
+                            
+                            MutableLiveData<List<AdminUserResponse>> liveData = 
+                                    (role == Role.CUSTOMER) ? customersLiveData : sellersLiveData;
+                                    
+                            List<AdminUserResponse> current = liveData.getValue();
+                            if (current == null) current = new ArrayList<>();
+
+                            List<AdminUserResponse> newItems = body.getItems();
+                            if (newItems == null) newItems = new ArrayList<>();
+
+                            if (isLoadMore) {
+                                current.addAll(newItems);
+                            } else {
+                                current = new ArrayList<>(newItems);
+                            }
+
+                            liveData.setValue(current);
+
+                            currentPageMap.put(role, body.getPage() + 1);
+
+                            boolean isLast = newItems.size() < PAGE_SIZE || current.size() >= body.getTotalElements();
+                            lastPageMap.put(role, isLast);
                         } else {
-                            error.setValue("Failed to load customers");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PageResponse<AdminUserResponse>> call, Throwable t) {
-                        pendingRequests--;
-                        if (!isSilent && pendingRequests == 0) loading.setValue(false);
-                        error.setValue(t.getMessage());
-                    }
-                });
-
-        repository.getUsers(page, size, Role.SELLER, status, keyword)
-                .enqueue(new Callback<PageResponse<AdminUserResponse>>() {
-                    @Override
-                    public void onResponse(Call<PageResponse<AdminUserResponse>> call, Response<PageResponse<AdminUserResponse>> response) {
-                        pendingRequests--;
-                        if (!isSilent && pendingRequests == 0) loading.setValue(false);
-
-                        if (response.isSuccessful() && response.body() != null) {
-                            sellersLiveData.setValue(response.body().getItems());
-                        } else {
-                            error.setValue("Failed to load sellers");
+                            error.setValue("Failed to load " + role.name());
                         }
                     }
 

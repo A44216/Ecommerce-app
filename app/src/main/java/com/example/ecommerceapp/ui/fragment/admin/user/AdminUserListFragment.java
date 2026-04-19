@@ -88,6 +88,27 @@ public class AdminUserListFragment extends Fragment {
             startActivity(intent);
         });
         rvUsers.setAdapter(adapter);
+
+        rvUsers.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) { // scrolling down
+                    androidx.recyclerview.widget.LinearLayoutManager layoutManager = (androidx.recyclerview.widget.LinearLayoutManager) rvUsers.getLayoutManager();
+                    if (layoutManager != null) {
+                        int visibleItemCount = layoutManager.getChildCount();
+                        int totalItemCount = layoutManager.getItemCount();
+                        int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount - 2) {
+                            com.example.ecommerceapp.data.enums.Role role = (position == 0) ? 
+                                    com.example.ecommerceapp.data.enums.Role.CUSTOMER : 
+                                    com.example.ecommerceapp.data.enums.Role.SELLER;
+                            viewModel.fetchUsers(role, true, true);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void initViewModel() {
