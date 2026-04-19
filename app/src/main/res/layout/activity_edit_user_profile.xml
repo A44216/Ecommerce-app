@@ -20,7 +20,7 @@
             android:layout_marginStart="8dp"
             android:padding="8dp"
             android:src="@android:drawable/ic_menu_revert"
-            app:tint="@color/shopee_orange" />
+            app:tint="@color/primary_blue" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tên đăng nhập (Không thể thay đổi)"
+                    android:text="Tên đăng nhập"
                     android:textColor="#888888"
                     android:textSize="12sp" />
 
@@ -120,18 +120,37 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Email"
-                    android:textColor="#888888"
-                    android:textSize="12sp" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Email"
+                        android:textColor="#888888"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/tvChangeEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thay đổi"
+                        android:textColor="@color/primary_blue"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
                 <EditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:textColor="#333333"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:enabled="false"
+                    android:textColor="#999999"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -141,7 +160,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="32dp"
-                android:backgroundTint="@color/shopee_orange"
+                android:backgroundTint="@color/primary_blue"
                 android:text="Lưu Thay Đổi"
                 android:textColor="@color/white"
                 android:textSize="16sp"

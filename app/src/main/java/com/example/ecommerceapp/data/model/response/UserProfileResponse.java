@@ -9,6 +9,8 @@ public class UserProfileResponse {
     private String email;
     private String phone;
     private String avatar;
+    
+    @com.google.gson.annotations.SerializedName("googleAccount")
     private boolean isGoogleAccount;
 
     public String getFullName() { return fullName; }

@@ -6,10 +6,12 @@ public class ConversationResponse {
     private String customerName;
     private Integer shopId;
     private String shopName;
+    private String createdAt;
 
     public Integer getId() { return id; }
     public Integer getCustomerId() { return customerId; }
     public String getCustomerName() { return customerName; }
     public Integer getShopId() { return shopId; }
     public String getShopName() { return shopName; }
+    public String getCreatedAt() { return createdAt; }
 }

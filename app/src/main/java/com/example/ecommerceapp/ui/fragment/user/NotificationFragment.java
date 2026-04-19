@@ -56,6 +56,16 @@ public class NotificationFragment extends Fragment {
             startActivity(new Intent(getActivity(), UserCartActivity.class));
         });
 
+        ImageView ivChatNotification = view.findViewById(R.id.ivChatNotification);
+        ivChatNotification.setOnClickListener(v -> {
+            TokenManager tm = TokenManager.getInstance(getContext());
+            if (tm.getUserId() == -1) {
+                Toast.makeText(getContext(), "Vui lòng đăng nhập để xem tin nhắn", Toast.LENGTH_SHORT).show();
+            } else {
+                startActivity(new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.chat.UserConversationListActivity.class));
+            }
+        });
+
         // --- 1. SETUP DANH SÁCH TĨNH (Giữ nguyên code của bạn) ---
         RecyclerView rvNotifications = view.findViewById(R.id.rvNotifications);
         rvNotifications.setLayoutManager(new LinearLayoutManager(requireContext()));

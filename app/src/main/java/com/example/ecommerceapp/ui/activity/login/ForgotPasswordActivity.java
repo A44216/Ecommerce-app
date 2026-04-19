@@ -35,6 +35,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private MaterialButton btnSendCode, btnConfirm;
 
     private AuthService authService;
+    private android.os.CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,13 +110,23 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         authService.sendForgotPasswordOtp(request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                btnSendCode.setEnabled(true);
-                btnSendCode.setText("Gửi mã");
-
                 if (response.isSuccessful()) {
                     Toast.makeText(ForgotPasswordActivity.this, "Đã gửi mã xác nhận đến email của bạn", Toast.LENGTH_SHORT).show();
                     etCode.requestFocus(); // Tự động trỏ con trỏ chuột sang ô nhập mã
+                    
+                    countDownTimer = new android.os.CountDownTimer(60000, 1000) {
+                        public void onTick(long millisUntilFinished) {
+                            btnSendCode.setText("Gửi lại (" + millisUntilFinished / 1000 + "s)");
+                        }
+
+                        public void onFinish() {
+                            btnSendCode.setEnabled(true);
+                            btnSendCode.setText("Gửi lại");
+                        }
+                    }.start();
                 } else {
+                    btnSendCode.setEnabled(true);
+                    btnSendCode.setText("Gửi mã");
                     String error = parseError(response);
 
                     // XỬ LÝ LOGIC TÀI KHOẢN GOOGLE Ở ĐÂY
@@ -206,13 +217,20 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
-    // Hàm phụ trợ để dịch lỗi từ Backend
     private String parseError(Response<?> response) {
         try {
             if (response.errorBody() == null) return "UNKNOWN_ERROR";
             return response.errorBody().string().trim();
         } catch (Exception e) {
             return "PARSE_ERROR";
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
         }
     }
 }

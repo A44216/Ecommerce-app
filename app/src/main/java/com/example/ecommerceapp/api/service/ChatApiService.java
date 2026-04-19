@@ -22,4 +22,7 @@ public interface ChatApiService {
 
     @POST("messages")
     Call<MessageResponse> sendMessage(@Body MessageRequest request);
+
+    @GET("conversations/customer/{customerId}")
+    Call<List<ConversationResponse>> getConversationsByCustomer(@Path("customerId") int customerId);
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.ecommerceapp.R;
@@ -32,6 +33,7 @@ import retrofit2.Response;
 public class EditUserProfileActivity extends AppCompatActivity {
 
     private EditText etFullName, etUsername, etPhone, etEmail;
+    private TextView tvChangeEmail;
     private Button btnSaveProfile;
     private ImageView btnBack, ivAvatarEdit;
 
@@ -62,6 +64,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         etPhone = findViewById(R.id.etPhone);
         etEmail = findViewById(R.id.etEmail);
+        tvChangeEmail = findViewById(R.id.tvChangeEmail);
         btnSaveProfile = findViewById(R.id.btnSaveProfile);
         btnBack = findViewById(R.id.btnBack);
 
@@ -80,8 +83,13 @@ public class EditUserProfileActivity extends AppCompatActivity {
             pickImageLauncher.launch(intent);
         });
 
-        loadCurrentProfile();
         btnSaveProfile.setOnClickListener(v -> saveProfile());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadCurrentProfile();
     }
 
     private void loadCurrentProfile() {
@@ -99,13 +107,15 @@ public class EditUserProfileActivity extends AppCompatActivity {
                     // QUAN TRỌNG: KIỂM TRA CỜ GOOGLE ACCOUNT TỪ SERVER
                     if (user.isGoogleAccount()) {
                         // Khóa ô Email tương tự Username
-                        etEmail.setEnabled(false);
-                        etEmail.setKeyListener(null); // Triệt tiêu bàn phím
-                        etEmail.setTextColor(Color.GRAY);
                         etEmail.setHint("Email Google (Cố định)");
+                        tvChangeEmail.setVisibility(android.view.View.GONE);
                     } else {
-                        etEmail.setEnabled(true);
-                        etEmail.setTextColor(Color.BLACK);
+                        tvChangeEmail.setVisibility(android.view.View.VISIBLE);
+                        tvChangeEmail.setOnClickListener(v -> {
+                            Intent intent = new Intent(EditUserProfileActivity.this, ChangeEmailActivity.class);
+                            intent.putExtra("CURRENT_EMAIL", user.getEmail());
+                            startActivity(intent);
+                        });
                     }
                 }
             }

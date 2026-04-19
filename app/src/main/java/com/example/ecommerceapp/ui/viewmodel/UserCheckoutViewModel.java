@@ -70,4 +70,41 @@ public class UserCheckoutViewModel extends ViewModel {
             }
         });
     }
+
+    // API đặt nhiều đơn hàng cùng lúc
+    public void placeMultipleOrders(List<UserOrderRequest> requests) {
+        if (requests == null || requests.isEmpty()) return;
+        
+        java.util.concurrent.atomic.AtomicInteger successCount = new java.util.concurrent.atomic.AtomicInteger(0);
+        java.util.concurrent.atomic.AtomicInteger errorCount = new java.util.concurrent.atomic.AtomicInteger(0);
+        int totalRequests = requests.size();
+
+        for (UserOrderRequest request : requests) {
+            orderRepository.createOrder(request).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        checkCompletion(successCount.incrementAndGet(), errorCount.get(), totalRequests);
+                    } else {
+                        checkCompletion(successCount.get(), errorCount.incrementAndGet(), totalRequests);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    checkCompletion(successCount.get(), errorCount.incrementAndGet(), totalRequests);
+                }
+            });
+        }
+    }
+
+    private void checkCompletion(int success, int error, int total) {
+        if (success + error == total) {
+            if (error == 0) {
+                orderSuccess.setValue(true);
+            } else {
+                orderError.setValue("Có " + error + " đơn hàng bị lỗi trong quá trình xử lý!");
+            }
+        }
+    }
 }

@@ -35,4 +35,10 @@ public interface AuthService {
 
     @POST("auth/verify-otp")
     Call<Void> verifyOtp(@Body VerifyOtpRequest request);
+
+    @POST("auth/send-unlink-email-otp")
+    Call<Void> sendUnlinkEmailOtp(@Body SendOtpRequest request);
+
+    @POST("auth/send-verify-new-email-otp")
+    Call<Void> sendVerifyNewEmailOtp(@Body SendOtpRequest request);
 }

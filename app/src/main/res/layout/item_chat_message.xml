@@ -44,7 +44,7 @@
             android:id="@+id/tvRightMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/shopee_orange"
+            android:background="@color/primary_blue"
             android:padding="12dp"
             android:text="Tôi muốn hỏi về sản phẩm này"
             android:textColor="@color/white"

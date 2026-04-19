@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
@@ -32,8 +33,12 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
 
     // Hàm này dùng để cập nhật lại dữ liệu khi gọi API thành công
     public void updateData(List<UserProductResponse> newProductList) {
-        this.productList = newProductList;
-        notifyDataSetChanged(); // Báo cho RecyclerView vẽ lại giao diện
+        ProductDiffCallback diffCallback = new ProductDiffCallback(this.productList, newProductList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        
+        this.productList.clear();
+        this.productList.addAll(newProductList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull

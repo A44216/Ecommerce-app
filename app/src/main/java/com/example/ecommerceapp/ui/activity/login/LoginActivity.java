@@ -116,6 +116,9 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        
+        // Tối ưu hóa: Đăng xuất ngầm ngay khi mở màn hình để tránh giật lag khi người dùng bấm nút
+        mGoogleSignInClient.signOut();
         // -----------------------------
 
         initViews();
@@ -149,13 +152,11 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> handleLogin());
 
         // --- GOOGLE SIGN IN EVENT ---
-        // Giả sử nếu bạn chưa thêm nút vào XML thì đoạn này sẽ bị null, nhớ kiểm tra nhé!
         if(btnLoginGoogle != null) {
             btnLoginGoogle.setOnClickListener(v -> {
-                mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
-                    Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                    googleSignInLauncher.launch(signInIntent);
-                });
+                // Đã bỏ signOut() ở đây để màn hình chọn tài khoản hiện lên lập tức
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                googleSignInLauncher.launch(signInIntent);
             });
         }
         // ----------------------------

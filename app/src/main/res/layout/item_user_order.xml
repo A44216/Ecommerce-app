@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:text="Chờ xác nhận"
-                android:textColor="@color/shopee_orange"
+                android:textColor="@color/primary_blue"
                 android:textStyle="bold"
                 android:textSize="14sp" />
         </RelativeLayout>

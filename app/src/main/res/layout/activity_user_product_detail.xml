@@ -25,7 +25,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_chat"
-                app:tint="@color/shopee_orange" />
+                app:tint="@color/primary_blue" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_cart"
-                app:tint="@color/shopee_orange" />
+                app:tint="@color/primary_blue" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:backgroundTint="@color/shopee_orange"
+            android:backgroundTint="@color/primary_blue"
             android:text="Mua ngay"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="150.000đ"
-                    android:textColor="@color/shopee_orange"
+                    android:textColor="@color/primary_blue"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -225,7 +225,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="0/5 (0 đánh giá)"
-                        android:textColor="@color/shopee_orange"
+                        android:textColor="@color/primary_blue"
                         android:textStyle="bold" />
                 </LinearLayout>
 

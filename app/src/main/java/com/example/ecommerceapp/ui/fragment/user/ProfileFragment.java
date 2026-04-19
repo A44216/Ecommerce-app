@@ -64,6 +64,15 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(getActivity(), UserCartActivity.class));
         });
 
+        ImageView ivChatProfile = view.findViewById(R.id.ivChatProfile);
+        ivChatProfile.setOnClickListener(v -> {
+            if (tokenManager.getUserId() == -1) {
+                showLoginRequireDialog();
+            } else {
+                startActivity(new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.chat.UserConversationListActivity.class));
+            }
+        });
+
         TextView tvViewOrderHistory = view.findViewById(R.id.tvViewOrderHistory);
         View btnPending = view.findViewById(R.id.btnPending);
         View btnProcessing = view.findViewById(R.id.btnProcessing);

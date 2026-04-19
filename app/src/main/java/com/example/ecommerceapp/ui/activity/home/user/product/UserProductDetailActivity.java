@@ -194,8 +194,11 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 showLoginRequireDialog();
                 return;
             }
-            CartManager.getInstance().addToCart(currentProduct);
-            Toast.makeText(UserProductDetailActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet bottomSheet = new com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet(currentProduct, stock, quantity -> {
+                CartManager.getInstance().addToCart(currentProduct, quantity);
+                Toast.makeText(UserProductDetailActivity.this, "Đã thêm " + quantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            });
+            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
         });
 
         btnBuyNow.setOnClickListener(v -> {
@@ -203,9 +206,12 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 showLoginRequireDialog();
                 return;
             }
-            CartManager.getInstance().addToCart(currentProduct);
-            Intent intent = new Intent(UserProductDetailActivity.this, UserCartActivity.class);
-            startActivity(intent);
+            com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet bottomSheet = new com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet(currentProduct, stock, quantity -> {
+                CartManager.getInstance().addToCart(currentProduct, quantity);
+                Intent intent = new Intent(UserProductDetailActivity.this, UserCartActivity.class);
+                startActivity(intent);
+            });
+            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
         });
 
         btnBack.setOnClickListener(v -> finish());

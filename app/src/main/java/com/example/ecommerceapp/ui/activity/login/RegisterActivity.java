@@ -38,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     private AuthService authService;
     private TextInputEditText etCode;
     private MaterialButton btnSendCode;
+    private android.os.CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +103,17 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(RegisterActivity.this, "Mã OTP đã được gửi đến Email của bạn!", Toast.LENGTH_LONG).show();
-                        btnSendCode.setText("Đã gửi");
-                        // Thường ở đây người ta sẽ làm bộ đếm ngược 60s, nhưng tạm thời để "Đã gửi" cho đơn giản
+                        
+                        countDownTimer = new android.os.CountDownTimer(60000, 1000) {
+                            public void onTick(long millisUntilFinished) {
+                                btnSendCode.setText("Gửi lại (" + millisUntilFinished / 1000 + "s)");
+                            }
+
+                            public void onFinish() {
+                                btnSendCode.setEnabled(true);
+                                btnSendCode.setText("Gửi lại");
+                            }
+                        }.start();
                     } else {
                         btnSendCode.setEnabled(true);
                         btnSendCode.setText("Gửi mã");
@@ -352,4 +362,11 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
 }

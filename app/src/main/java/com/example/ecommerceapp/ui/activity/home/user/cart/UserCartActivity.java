@@ -63,6 +63,9 @@ public class UserCartActivity extends AppCompatActivity implements UserCartAdapt
                 startActivity(intent);
             }
         });
+
+        // Tính toán lại tổng tiền khi vừa mở lại giỏ hàng
+        onPriceChanged();
     }
 
     @Override

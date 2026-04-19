@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 
 public class TokenManager {
 
-    private static final String PREF_NAME = "app_prefs";
+    private static final String PREF_NAME = "app_prefs"; // Dùng lại tên cũ để ổn định
     private static TokenManager instance;
-    private final SharedPreferences prefs;
+    private SharedPreferences prefs;
 
     private static final String KEY_TOKEN = "token";
     private static final String KEY_REMEMBER = "remember_login";
@@ -16,8 +16,7 @@ public class TokenManager {
     private static final String KEY_SHOP_ID = "shop_id";
 
     private TokenManager(Context context) {
-        prefs = context.getApplicationContext()
-                .getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        prefs = context.getApplicationContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
     public static synchronized TokenManager getInstance(Context context) {

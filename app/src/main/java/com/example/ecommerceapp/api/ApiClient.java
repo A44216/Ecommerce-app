@@ -9,6 +9,7 @@ import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.api.service.ShopService;
 import com.example.ecommerceapp.api.service.UserAddressApiService;
 import com.example.ecommerceapp.api.service.UserCategoryApiService;
+import com.example.ecommerceapp.api.service.UserCouponApiService;
 import com.example.ecommerceapp.api.service.UserOrderApiService;
 import com.example.ecommerceapp.api.service.UserProductService;
 import com.example.ecommerceapp.api.service.UserService;
@@ -95,6 +96,10 @@ public class ApiClient {
 
     public static UserAddressApiService getUserAddressApiService(TokenManager tm) {
         return createAuthRetrofit(tm).create(UserAddressApiService.class);
+    }
+
+    public static UserCouponApiService getUserCouponApiService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(UserCouponApiService.class);
     }
 
     public static ChatApiService getChatApiService(TokenManager tokenManager) {

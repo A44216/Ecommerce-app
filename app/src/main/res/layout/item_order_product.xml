@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="150,000đ"
-                android:textColor="@color/shopee_orange"
+                android:textColor="@color/primary_blue"
                 android:textStyle="bold"
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
@@ -67,8 +67,8 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/white"
         android:text="Đánh giá"
-        android:textColor="@color/shopee_orange"
+        android:textColor="@color/primary_blue"
         android:textSize="12sp"
-        app:strokeColor="@color/shopee_orange"
+        app:strokeColor="@color/primary_blue"
         app:strokeWidth="1dp" />
 </LinearLayout>

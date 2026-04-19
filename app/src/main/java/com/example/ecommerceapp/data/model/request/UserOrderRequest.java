@@ -11,17 +11,20 @@ public class UserOrderRequest {
     private Integer couponId;
     private Integer userId;
     private BigDecimal totalPrice;
+    private BigDecimal subtotal;
+    private BigDecimal discountAmount;
     private List<OrderItemRequest> orderItems;
 
-    // ĐÃ SỬA LẠI CONSTRUCTOR ĐỂ NHẬN THÊM orderItems
-    public UserOrderRequest(Integer addressId, PaymentMethod paymentMethod, Integer userId, Integer shopId, BigDecimal totalPrice, List<OrderItemRequest> orderItems) {
+    public UserOrderRequest(Integer addressId, PaymentMethod paymentMethod, Integer userId, Integer shopId, BigDecimal totalPrice, BigDecimal subtotal, BigDecimal discountAmount, Integer couponId, List<OrderItemRequest> orderItems) {
         this.addressId = addressId;
         this.paymentMethod = paymentMethod;
         this.userId = userId;
         this.shopId = shopId;
         this.totalPrice = totalPrice;
+        this.subtotal = subtotal;
+        this.discountAmount = discountAmount;
+        this.couponId = couponId;
         this.orderItems = orderItems;
-        this.couponId = null;
     }
 
     // Getters and Setters...
@@ -31,6 +34,8 @@ public class UserOrderRequest {
     public Integer getCouponId() { return couponId; }
     public Integer getUserId() { return userId; }
     public BigDecimal getTotalPrice() { return totalPrice; }
+    public BigDecimal getSubtotal() { return subtotal; }
+    public BigDecimal getDiscountAmount() { return discountAmount; }
 
     public List<OrderItemRequest> getOrderItems() { return orderItems; }
 

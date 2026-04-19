@@ -16,6 +16,10 @@ public class UserProductRepository {
         return apiService.getProducts();
     }
 
+    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsPaginated(int page, int size) {
+        return apiService.getProductsPaginated(page, size);
+    }
+
     public Call<UserProductResponse> getProductById(int id) {
         return apiService.getProductById(id);
     }
@@ -24,7 +28,23 @@ public class UserProductRepository {
         return apiService.getProductsByCategory(categoryId);
     }
 
+    public Call<List<String>> suggestProducts(String keyword) {
+        return apiService.suggestProducts(keyword);
+    }
+
+    public Call<List<UserProductResponse>> getTrendingProducts() {
+        return apiService.getTrendingProducts();
+    }
+
     public Call<List<UserProductResponse>> searchProducts(String keyword, Integer shopId) {
         return apiService.searchProducts(keyword, shopId);
+    }
+
+    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> searchProductsPaginated(String keyword, int page, int size) {
+        return apiService.searchProductsPaginated(keyword, page, size);
+    }
+
+    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsByCategoryPaginated(int categoryId, int page, int size) {
+        return apiService.getProductsByCategoryPaginated(categoryId, page, size);
     }
 }

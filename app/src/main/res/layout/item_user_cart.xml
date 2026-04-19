@@ -12,7 +12,7 @@
         android:id="@+id/cbUserCart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="@color/shopee_orange" />
+        android:buttonTint="@color/primary_blue" />
 
     <ImageView
         android:id="@+id/ivUserCartImage"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:text="0đ"
-            android:textColor="@color/shopee_orange"
+            android:textColor="@color/primary_blue"
             android:textSize="15sp"
             android:textStyle="bold" />
 

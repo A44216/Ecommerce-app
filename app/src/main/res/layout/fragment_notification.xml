@@ -38,7 +38,7 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:src="@drawable/ic_cart"
-                    app:tint="@color/shopee_orange" />
+                    app:tint="@color/primary_blue" />
 
                 <TextView
                     android:id="@+id/tvCartBadgeNotification"
@@ -57,10 +57,11 @@
             </FrameLayout>
 
             <ImageView
+                android:id="@+id/ivChatNotification"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_chat"
-                app:tint="@color/shopee_orange" />
+                app:tint="@color/primary_blue" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -127,8 +128,8 @@
                 android:layout_marginBottom="32dp"
                 android:backgroundTint="@color/white"
                 android:text="Mua sắm ngay"
-                android:textColor="@color/shopee_orange"
-                app:strokeColor="@color/shopee_orange"
+                android:textColor="@color/primary_blue"
+                app:strokeColor="@color/primary_blue"
                 app:strokeWidth="1dp" />
         </LinearLayout>
     </LinearLayout>

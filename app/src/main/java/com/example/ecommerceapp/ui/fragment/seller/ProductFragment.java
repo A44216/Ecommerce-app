@@ -23,7 +23,7 @@ import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.repository.ProductRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.AddAndEditProductActivity;
-import com.example.ecommerceapp.ui.activity.home.seller.product.ProductDetailActivity;
+import com.example.ecommerceapp.ui.activity.home.user.product.UserProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.ProductAdapter;
 import com.example.ecommerceapp.ui.viewmodel.ProductViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.ProductViewModelFactory;
@@ -109,7 +109,7 @@ public class ProductFragment extends Fragment {
         adapter.setListener(new ProductAdapter.OnProductActionListener() {
             @Override
             public void onClick(ProductResponse product) {
-                Intent intent = new Intent(getContext(), ProductDetailActivity.class);
+                Intent intent = new Intent(getContext(), UserProductDetailActivity.class);
                 intent.putExtra("productId", product.getId());
                 startActivity(intent);
             }

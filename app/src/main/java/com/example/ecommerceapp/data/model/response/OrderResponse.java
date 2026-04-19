@@ -10,6 +10,11 @@ public class OrderResponse {
     public int id;
     public OrderStatus status;
     public BigDecimal totalPrice;
+    public BigDecimal subtotal;
+    public BigDecimal discountAmount;
+    public BigDecimal platformFeeRate;
+    public BigDecimal platformFeeAmount;
+    public Integer couponId;
     public PaymentMethod paymentMethod;
     public PaymentStatus paymentStatus;
 }

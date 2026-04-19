@@ -28,6 +28,8 @@ public class OrderDetailActivity extends AppCompatActivity {
     private TextView tvStatus, tvAddress, tvTotal, tvOrderDate, tvSubTotal;
     private RecyclerView rvItems;
     private Button btnCancelOrder;
+    private View ivStepPending, ivStepProcessing, ivStepShipping, ivStepDelivered;
+    private View line1, line2, line3;
     private int orderId;
     private TokenManager tokenManager;
 
@@ -48,6 +50,15 @@ public class OrderDetailActivity extends AppCompatActivity {
         rvItems = findViewById(R.id.rvOrderDetailItems);
         btnCancelOrder = findViewById(R.id.btnCancelOrder);
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+
+        // Ánh xạ Stepper
+        ivStepPending = findViewById(R.id.ivStepPending);
+        ivStepProcessing = findViewById(R.id.ivStepProcessing);
+        ivStepShipping = findViewById(R.id.ivStepShipping);
+        ivStepDelivered = findViewById(R.id.ivStepDelivered);
+        line1 = findViewById(R.id.linePendingToProcessing);
+        line2 = findViewById(R.id.lineProcessingToShipping);
+        line3 = findViewById(R.id.lineShippingToDelivered);
 
         // 2. Lấy ID từ Intent
         orderId = getIntent().getIntExtra("ORDER_ID", -1);
@@ -100,6 +111,9 @@ public class OrderDetailActivity extends AppCompatActivity {
                     if (order.getOrderItems() != null) {
                         rvItems.setAdapter(new UserOrderItemAdapter(order.getOrderItems()));
                     }
+
+                    // Cập nhật Stepper
+                    updateTrackingStepper(order.getStatus());
 
                     // ==========================================
                     // LOGIC ẨN/HIỆN NÚT HỦY ĐƠN HÀNG
@@ -170,5 +184,48 @@ public class OrderDetailActivity extends AppCompatActivity {
                 Toast.makeText(OrderDetailActivity.this, "Lỗi kết nối mạng", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateTrackingStepper(String status) {
+        if (status == null) return;
+
+        int activeColor = getResources().getColor(R.color.primary_blue);
+        int inactiveColor = android.graphics.Color.parseColor("#EEEEEE");
+
+        // Reset
+        ivStepPending.setAlpha(0.2f);
+        ivStepProcessing.setAlpha(0.2f);
+        ivStepShipping.setAlpha(0.2f);
+        ivStepDelivered.setAlpha(0.2f);
+        line1.setBackgroundColor(inactiveColor);
+        line2.setBackgroundColor(inactiveColor);
+        line3.setBackgroundColor(inactiveColor);
+
+        switch (status.toUpperCase()) {
+            case "PENDING":
+                ivStepPending.setAlpha(1.0f);
+                break;
+            case "PROCESSING":
+                ivStepPending.setAlpha(1.0f);
+                ivStepProcessing.setAlpha(1.0f);
+                line1.setBackgroundColor(activeColor);
+                break;
+            case "SHIPPING":
+                ivStepPending.setAlpha(1.0f);
+                ivStepProcessing.setAlpha(1.0f);
+                ivStepShipping.setAlpha(1.0f);
+                line1.setBackgroundColor(activeColor);
+                line2.setBackgroundColor(activeColor);
+                break;
+            case "DELIVERED":
+                ivStepPending.setAlpha(1.0f);
+                ivStepProcessing.setAlpha(1.0f);
+                ivStepShipping.setAlpha(1.0f);
+                ivStepDelivered.setAlpha(1.0f);
+                line1.setBackgroundColor(activeColor);
+                line2.setBackgroundColor(activeColor);
+                line3.setBackgroundColor(activeColor);
+                break;
+        }
     }
 }

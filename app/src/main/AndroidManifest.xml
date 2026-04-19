@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,6 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.activity.home.user.chat.UserConversationListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.EcommerceApp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.home.user.chat.ChatActivity"
             android:exported="false"
@@ -33,6 +48,10 @@
         <activity
             android:name=".ui.activity.home.user.editprofile.EditUserProfileActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.user.editprofile.ChangeEmailActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.activity.home.user.checkout.UserAddAddressActivity"
             android:exported="false" />
@@ -62,13 +81,13 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.activity.home.user.search.UserSearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysVisible"/>
+
+        <activity
             android:name=".ui.activity.home.UserHomeActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
 
         <activity
             android:name=".ui.activity.login.RegisterActivity"

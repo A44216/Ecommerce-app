@@ -73,6 +73,7 @@ public class UserCartAdapter extends RecyclerView.Adapter<UserCartAdapter.UserCa
         holder.btnUserCartPlus.setOnClickListener(v -> {
             item.setQuantity(item.getQuantity() + 1);
             holder.tvUserCartQty.setText(String.valueOf(item.getQuantity()));
+            CartManager.getInstance().saveCart();
             if (item.isChecked()) listener.onPriceChanged();
         });
 
@@ -80,6 +81,7 @@ public class UserCartAdapter extends RecyclerView.Adapter<UserCartAdapter.UserCa
             if (item.getQuantity() > 1) {
                 item.setQuantity(item.getQuantity() - 1);
                 holder.tvUserCartQty.setText(String.valueOf(item.getQuantity()));
+                CartManager.getInstance().saveCart();
                 if (item.isChecked()) listener.onPriceChanged();
             }
         });
@@ -97,10 +99,9 @@ public class UserCartAdapter extends RecyclerView.Adapter<UserCartAdapter.UserCa
                         if (actualPosition != RecyclerView.NO_POSITION) {
 
                             cartItems.remove(actualPosition);
-
                             notifyItemRemoved(actualPosition);
-
                             notifyItemRangeChanged(actualPosition, cartItems.size());
+                            CartManager.getInstance().saveCart();
 
                             listener.onPriceChanged();
                         }

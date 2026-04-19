@@ -31,9 +31,13 @@ import com.example.ecommerceapp.ui.viewmodel.UserHomeViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.UserHomeViewModelFactory;
 import com.example.ecommerceapp.utils.CartManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager2.widget.ViewPager2;
+import com.example.ecommerceapp.ui.adapter.user.BannerAdapter;
 
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
+import java.util.ArrayList;
+import java.util.List;
+import android.os.Handler;
+import android.os.Looper;
 
 public class HomeFragment extends Fragment {
 
@@ -42,6 +46,21 @@ public class HomeFragment extends Fragment {
     private UserCategoryAdapter categoryAdapter;
 
     private TextView tvCartBadge;
+    private ViewPager2 vpBanners;
+    private final Handler bannerHandler = new Handler(Looper.getMainLooper());
+    private final Runnable bannerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (vpBanners != null && vpBanners.getAdapter() != null) {
+                int currentItem = vpBanners.getCurrentItem();
+                int totalItems = vpBanners.getAdapter().getItemCount();
+                if (totalItems > 0) {
+                    vpBanners.setCurrentItem((currentItem + 1) % totalItems, true);
+                    bannerHandler.postDelayed(this, 4000);
+                }
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -59,30 +78,41 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-        // --- CHỨC NĂNG TÌM KIẾM ---
-        android.widget.EditText etSearch = view.findViewById(R.id.tvSearch);
-
-        etSearch.setOnEditorActionListener((v, actionId, event) -> {
-            // Khi người dùng bấm nút Kính Lúp (Search) trên bàn phím ảo
-            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
-                String keyword = etSearch.getText().toString().trim();
-
-                if (!keyword.isEmpty()) {
-                    // Gọi API tìm kiếm
-                    viewModel.searchProducts(keyword);
-                } else {
-                    // Nếu xóa trắng ô tìm kiếm rồi ấn Search -> Tải lại toàn bộ sản phẩm
-                    viewModel.fetchProducts();
-                }
-
-                // Ẩn bàn phím đi sau khi bấm tìm kiếm cho đỡ vướng
-                android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-                return true;
+        // Nút Chat
+        ImageView ivChat = view.findViewById(R.id.ivChat);
+        ivChat.setOnClickListener(v -> {
+            TokenManager tm = TokenManager.getInstance(getContext());
+            if (tm.getUserId() == -1) {
+                Toast.makeText(getContext(), "Vui lòng đăng nhập để xem tin nhắn", Toast.LENGTH_SHORT).show();
+            } else {
+                startActivity(new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.chat.UserConversationListActivity.class));
             }
-            return false;
+        });
+
+        // --- CHỨC NĂNG TÌM KIẾM ---
+        TextView tvSearch = view.findViewById(R.id.tvSearch);
+        tvSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.search.UserSearchActivity.class);
+            startActivity(intent);
+        });
+
+        // --- SETUP BANNER ---
+        vpBanners = view.findViewById(R.id.vpBanners);
+        List<Integer> banners = new ArrayList<>();
+        banners.add(R.drawable.img_banner_1);
+        banners.add(R.drawable.img_banner_2);
+        banners.add(R.drawable.img_banner_3);
+
+        BannerAdapter bannerAdapter = new BannerAdapter(banners);
+        vpBanners.setAdapter(bannerAdapter);
+
+        // Hiệu ứng lướt mượt mà cho banner
+        vpBanners.setOffscreenPageLimit(3);
+        vpBanners.setClipToPadding(false);
+        vpBanners.setClipChildren(false);
+        vpBanners.setPageTransformer((page, position) -> {
+            float r = 1 - Math.abs(position);
+            page.setScaleY(0.85f + r * 0.15f);
         });
 
         // 2. Setup RecyclerView Sản phẩm
@@ -91,50 +121,57 @@ public class HomeFragment extends Fragment {
         productAdapter = new UserProductAdapter(getContext());
         rvProducts.setAdapter(productAdapter);
 
-        // 3. Setup RecyclerView Danh mục (Thêm mới)
+        // Lắng nghe sự kiện cuộn để tải thêm (Pagination)
+        rvProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) { // Cuộn xuống
+                    GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+                    if (layoutManager != null) {
+                        int visibleItemCount = layoutManager.getChildCount();
+                        int totalItemCount = layoutManager.getItemCount();
+                        int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
+
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            viewModel.fetchProducts(false); // Gọi thêm trang tiếp theo
+                        }
+                    }
+                }
+            }
+        });
+
+        // 3. Setup RecyclerView Danh mục
         RecyclerView rvCategories = view.findViewById(R.id.rvCategories);
         if (rvCategories != null) {
-            // Danh mục hiển thị cuộn ngang (HORIZONTAL)
             rvCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-
             categoryAdapter = new UserCategoryAdapter(categoryId -> {
-                // Sự kiện: Bấm vào icon Danh mục -> Báo ViewModel đi lọc sản phẩm
                 viewModel.fetchProductsByCategory(categoryId);
             });
             rvCategories.setAdapter(categoryAdapter);
         }
 
-        // 4. Khởi tạo MVVM (Đã kết hợp cả 2 Kho dữ liệu)
+        // 4. Khởi tạo MVVM
         UserProductService productService = ApiClient.getUserProductService();
         UserProductRepository productRepository = new UserProductRepository(productService);
-
-        //THÊM TOKEN VÀO API DANH MỤC =====
         TokenManager tokenManager = TokenManager.getInstance(getContext());
         UserCategoryApiService categoryService = ApiClient.getUserCategoryApiService(tokenManager);
-        // =======================================================
-
         UserCategoryRepository categoryRepository = new UserCategoryRepository(categoryService);
-
-        // Truyền cả 2 kho vào Factory
         UserHomeViewModelFactory factory = new UserHomeViewModelFactory(productRepository, categoryRepository);
         viewModel = new ViewModelProvider(this, factory).get(UserHomeViewModel.class);
 
-
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            // Khi vuốt, ta gọi lại 2 API này để lấy dữ liệu mới nhất
             viewModel.fetchCategories();
-            viewModel.fetchProducts();
+            viewModel.fetchProducts(true);
         });
-        // 5. LẮNG NGHE DỮ LIỆU TỪ VIEWMODEL
 
-        // Lắng nghe Danh mục
+        // 5. LẮNG NGHE DỮ LIỆU
         viewModel.getCategoryList().observe(getViewLifecycleOwner(), categories -> {
             if (categories != null && !categories.isEmpty() && categoryAdapter != null) {
                 categoryAdapter.updateData(categories);
             }
         });
 
-        // Lắng nghe Sản phẩm
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
             if (products != null) {
                 productAdapter.updateData(products);
@@ -144,7 +181,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Lắng nghe lỗi (Để dễ biết API có bị sập không)
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
@@ -154,9 +190,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // 6. KÍCH HOẠT GỌI API KHI VỪA VÀO TRANG
-        viewModel.fetchCategories(); // Kéo thanh danh mục
-        viewModel.fetchProducts();   // Kéo lưới sản phẩm mặc định
+        // 6. KÍCH HOẠT GỌI API
+        viewModel.fetchCategories();
+        viewModel.fetchProducts(true);
 
         return view;
     }
@@ -173,5 +209,12 @@ public class HomeFragment extends Fragment {
                 tvCartBadge.setVisibility(View.GONE);
             }
         }
+        bannerHandler.postDelayed(bannerRunnable, 4000);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        bannerHandler.removeCallbacks(bannerRunnable);
     }
 }

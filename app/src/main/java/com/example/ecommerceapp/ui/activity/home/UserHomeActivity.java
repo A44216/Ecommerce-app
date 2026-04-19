@@ -12,11 +12,16 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.ui.fragment.user.HomeFragment;
 import com.example.ecommerceapp.ui.fragment.user.NotificationFragment;
 import com.example.ecommerceapp.ui.fragment.user.ProfileFragment;
+import com.example.ecommerceapp.utils.NetworkMonitor;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.widget.TextView;
+import android.view.View;
 
 public class UserHomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
+    private NetworkMonitor networkMonitor;
+    private TextView tvNoInternet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,29 @@ public class UserHomeActivity extends AppCompatActivity {
 
             return false;
         });
+
+        // Xử lý giám sát mạng
+        tvNoInternet = findViewById(R.id.tvNoInternet);
+        networkMonitor = new NetworkMonitor(this);
+        networkMonitor.getIsConnected().observe(this, isConnected -> {
+            if (isConnected) {
+                tvNoInternet.setVisibility(View.GONE);
+            } else {
+                tvNoInternet.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        networkMonitor.registerCallback();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        networkMonitor.unregisterCallback();
     }
 
     // Hàm phụ trợ để chuyển đổi giữa các Fragment

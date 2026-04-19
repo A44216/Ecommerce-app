@@ -61,7 +61,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:src="@android:drawable/ic_menu_send"
-            app:tint="@color/shopee_orange" />
+            app:tint="@color/primary_blue" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -55,4 +55,7 @@ public interface UserService {
 
     @PUT("users/{id}/set-password")
     Call<Void> setPassword(@Path("id") int userId, @Body SetPasswordRequest request);
+
+    @PUT("users/{id}/change-email")
+    Call<Void> changeEmail(@Path("id") long id, @Body com.example.ecommerceapp.data.model.request.ChangeEmailRequest request);
 }

@@ -1,6 +1,8 @@
 package com.example.ecommerceapp.ui.activity.home.user.chat;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +36,10 @@ public class ChatActivity extends AppCompatActivity {
     private int conversationId;
     private TokenManager tokenManager;
     private int currentUserId;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable pollingRunnable;
+    private static final int POLLING_INTERVAL = 3000; // 3 giây
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +83,43 @@ public class ChatActivity extends AppCompatActivity {
         btnBackChat.setOnClickListener(v -> finish());
         btnSendMessage.setOnClickListener(v -> sendMessage());
 
-        // 6. Tải lịch sử tin nhắn
+        // 6. Tải lịch sử tin nhắn và bắt đầu Polling
         loadMessages();
+        startPolling();
+    }
+
+    private void startPolling() {
+        pollingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                loadMessagesQuietly();
+                handler.postDelayed(this, POLLING_INTERVAL);
+            }
+        };
+        handler.postDelayed(pollingRunnable, POLLING_INTERVAL);
+    }
+
+    private void loadMessagesQuietly() {
+        ApiClient.getChatApiService(tokenManager).getMessages(conversationId).enqueue(new Callback<List<MessageResponse>>() {
+            @Override
+            public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int oldCount = adapter.getItemCount();
+                    List<MessageResponse> newMessages = response.body();
+                    adapter.updateData(newMessages);
+
+                    // Chỉ cuộn xuống dưới cùng nếu phát hiện có tin nhắn mới (chống giật màn hình)
+                    if (newMessages.size() > oldCount && adapter.getItemCount() > 0) {
+                        rvMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
+                // Polling ngầm thất bại (do mạng yếu) -> im lặng bỏ qua, không hiển thị Toast làm phiền người dùng
+            }
+        });
     }
 
     private void loadMessages() {
@@ -130,5 +171,14 @@ public class ChatActivity extends AppCompatActivity {
                 edtChatMessage.setText(text);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Hủy Polling khi thoát màn hình Chat để tiết kiệm bộ nhớ và băng thông
+        if (handler != null && pollingRunnable != null) {
+            handler.removeCallbacks(pollingRunnable);
+        }
     }
 }

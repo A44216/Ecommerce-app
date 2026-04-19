@@ -14,17 +14,24 @@ public class ImageLoader {
 
     public static void load(Context context, ImageView imageView, String url) {
 
-        TokenManager tm = TokenManager.getInstance(context);
+        if (url == null || url.isEmpty()) {
+            imageView.setImageResource(R.drawable.ic_launcher_background);
+            return;
+        }
 
-        GlideUrl glideUrl = new GlideUrl(
-                url,
-                new LazyHeaders.Builder()
-                        .addHeader("Authorization", "Bearer " + tm.getToken())
-                        .build()
-        );
+        TokenManager tm = TokenManager.getInstance(context);
+        LazyHeaders.Builder builder = new LazyHeaders.Builder();
+        
+        // Chỉ thêm header Authorization nếu có token thực sự
+        if (tm.getToken() != null && !tm.getToken().isEmpty()) {
+            builder.addHeader("Authorization", "Bearer " + tm.getToken());
+        }
+
+        GlideUrl glideUrl = new GlideUrl(url, builder.build());
 
         Glide.with(context)
                 .load(glideUrl)
+                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.ALL) // Cache cả ảnh gốc và ảnh đã resize
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
                 .into(imageView);

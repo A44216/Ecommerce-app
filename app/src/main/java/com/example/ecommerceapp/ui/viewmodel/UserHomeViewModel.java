@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.model.response.UserCategoryResponse;
 import com.example.ecommerceapp.data.model.response.UserProductResponse;
 import com.example.ecommerceapp.data.repository.UserCategoryRepository;
 import com.example.ecommerceapp.data.repository.UserProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -16,49 +18,87 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserHomeViewModel extends ViewModel {
-    // Các biến chứa dữ liệu
-    private final MutableLiveData<List<UserProductResponse>> productList = new MutableLiveData<>();
+    
+    private final MutableLiveData<List<UserProductResponse>> productList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<UserCategoryResponse>> categoryList = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-    // Kho chứa API
+    // Pagination state
+    private int currentPage = 0;
+    private boolean isLastPage = false;
+    private boolean isLoading = false;
+    private final int PAGE_SIZE = 10;
+
+    // Filter state
+    private Integer currentCategoryId = null;
+
     private final UserProductRepository productRepository;
     private final UserCategoryRepository categoryRepository;
 
-    // Sửa lại Constructor để nhận cả 2 Kho
     public UserHomeViewModel(UserProductRepository productRepository, UserCategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
 
-    // Getters để giao diện (Activity/Fragment) lắng nghe
     public LiveData<List<UserProductResponse>> getProducts() { return productList; }
     public LiveData<List<UserCategoryResponse>> getCategoryList() { return categoryList; }
     public LiveData<String> getErrorMessage() { return errorMessage; }
 
-    // ===========================================
-    // 1. LẤY TẤT CẢ SẢN PHẨM (Hàm cũ của bạn)
-    // ===========================================
-    public void fetchProducts() {
-        productRepository.getProducts().enqueue(new Callback<List<UserProductResponse>>() {
+    /**
+     * Tải sản phẩm (Hỗ trợ cả tải mới và tải thêm trang)
+     * @param isRefresh true nếu muốn xóa trắng dữ liệu cũ để tải lại từ đầu
+     */
+    public void fetchProducts(boolean isRefresh) {
+        if (isRefresh) {
+            currentPage = 0;
+            isLastPage = false;
+        }
+        
+        if (isLoading || isLastPage) return;
+
+        isLoading = true;
+        
+        Call<PageResponse<UserProductResponse>> call;
+        if (currentCategoryId != null) {
+            call = productRepository.getProductsByCategoryPaginated(currentCategoryId, currentPage, PAGE_SIZE);
+        } else {
+            call = productRepository.getProductsPaginated(currentPage, PAGE_SIZE);
+        }
+
+        call.enqueue(new Callback<PageResponse<UserProductResponse>>() {
             @Override
-            public void onResponse(Call<List<UserProductResponse>> call, Response<List<UserProductResponse>> response) {
+            public void onResponse(Call<PageResponse<UserProductResponse>> call, Response<PageResponse<UserProductResponse>> response) {
+                isLoading = false;
                 if (response.isSuccessful() && response.body() != null) {
-                    productList.setValue(response.body());
+                    PageResponse<UserProductResponse> pageData = response.body();
+                    isLastPage = pageData.isLast();
+
+                    List<UserProductResponse> currentList = productList.getValue();
+                    if (isRefresh || currentList == null) {
+                        productList.setValue(new ArrayList<>(pageData.getContent()));
+                    } else {
+                        // Tạo list mới để DiffUtil nhận diện thay đổi
+                        List<UserProductResponse> updatedList = new ArrayList<>(currentList);
+                        updatedList.addAll(pageData.getContent());
+                        productList.setValue(updatedList);
+                    }
+                    currentPage++;
+                } else {
+                    errorMessage.setValue("Không thể lấy dữ liệu sản phẩm");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<UserProductResponse>> call, Throwable t) {
-                t.printStackTrace();
-                errorMessage.setValue("Lỗi tải sản phẩm: " + t.getMessage());
+            public void onFailure(Call<PageResponse<UserProductResponse>> call, Throwable t) {
+                isLoading = false;
+                errorMessage.setValue("Lỗi kết nối: " + t.getMessage());
             }
         });
     }
 
-    // ===========================================
-    // 2. LẤY DANH SÁCH DANH MỤC
-    // ===========================================
+    /**
+     * Lấy danh sách danh mục (Không phân trang vì số lượng ít)
+     */
     public void fetchCategories() {
         categoryRepository.getAllCategories().enqueue(new Callback<List<UserCategoryResponse>>() {
             @Override
@@ -67,56 +107,28 @@ public class UserHomeViewModel extends ViewModel {
                     categoryList.setValue(response.body());
                 }
             }
-
             @Override
             public void onFailure(Call<List<UserCategoryResponse>> call, Throwable t) {
-                t.printStackTrace();
-                errorMessage.setValue("Lỗi tải danh mục: " + t.getMessage());
+                errorMessage.setValue("Lỗi tải danh mục");
             }
         });
     }
 
-    // ===========================================
-    // 3. LỌC SẢN PHẨM THEO DANH MỤC (Bấm vào Icon)
-    // ===========================================
+    /**
+     * Lọc sản phẩm theo danh mục
+     */
     public void fetchProductsByCategory(int categoryId) {
-        productRepository.getProductsByCategory(categoryId).enqueue(new Callback<List<UserProductResponse>>() {
-            @Override
-            public void onResponse(Call<List<UserProductResponse>> call, Response<List<UserProductResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // Cập nhật lại chính danh sách productList để giao diện tự đổi
-                    productList.setValue(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<UserProductResponse>> call, Throwable t) {
-                t.printStackTrace();
-                errorMessage.setValue("Lỗi lọc sản phẩm: " + t.getMessage());
-            }
-        });
+        if (currentCategoryId != null && currentCategoryId == categoryId) return;
+        
+        currentCategoryId = categoryId;
+        fetchProducts(true); // Tải lại từ đầu với filter mới
     }
-
-    // ===========================================
-    // 4. TÌM KIẾM SẢN PHẨM
-    // ===========================================
-    public void searchProducts(String keyword) {
-        productRepository.searchProducts(keyword, null).enqueue(new Callback<List<UserProductResponse>>() {
-            @Override
-            public void onResponse(Call<List<UserProductResponse>> call, Response<List<UserProductResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // Nhét kết quả tìm kiếm vào danh sách, giao diện sẽ tự đổi!
-                    productList.setValue(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<UserProductResponse>> call, Throwable t) {
-                t.printStackTrace();
-                errorMessage.setValue("Lỗi tìm kiếm: " + t.getMessage());
-            }
-        });
+    
+    /**
+     * Xóa filter để quay về danh sách tất cả
+     */
+    public void clearCategoryFilter() {
+        currentCategoryId = null;
+        fetchProducts(true);
     }
-
-
 }
