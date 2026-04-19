@@ -362,7 +362,7 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                 etStatus.setText("Vô hiệu", false);
             } else if (originalStatus == CouponStatus.EXPIRED) {
                 etStatus.setText("Hết hạn", false);
-                // Vẫn cho phép chuyển về Hoạt động hoặc Vô hiệu nếu sửa lại ngày
+                tilStatus.setEnabled(false);
             }
 
             if (isEdit) {

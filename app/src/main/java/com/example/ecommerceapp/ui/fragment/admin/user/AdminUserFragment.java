@@ -60,7 +60,6 @@ public class AdminUserFragment extends Fragment {
         restoreState();
         setupViewPager();
         
-        // Initial fetch only if not loaded
         if (!viewModel.isDataLoaded()) {
             fetchData(false);
         }
@@ -79,7 +78,6 @@ public class AdminUserFragment extends Fragment {
         edtSearch = view.findViewById(R.id.edtSearch);
         actvFilter = view.findViewById(R.id.actvFilter);
         
-        // Disable automatic state saving to prevent restoration bugs, we will use ViewModel state
         edtSearch.setSaveEnabled(false);
         actvFilter.setSaveEnabled(false);
     }
@@ -118,7 +116,6 @@ public class AdminUserFragment extends Fragment {
                 viewModel.setCurrentKeyword(v.getText().toString().trim());
                 fetchData(false);
                 
-                // Hide keyboard after search
                 android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);

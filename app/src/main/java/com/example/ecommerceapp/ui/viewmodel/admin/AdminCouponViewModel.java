@@ -95,7 +95,6 @@ public class AdminCouponViewModel extends ViewModel {
                             java.util.List<AdminCouponResponse> newItems = body.getItems();
                             if (newItems == null) newItems = new java.util.ArrayList<>();
 
-                            // Lọc các item bị sai trạng thái (ví dụ API trả về EXPIRED trong query ACTIVE)
                             if (status != null) {
                                 java.util.Iterator<AdminCouponResponse> it = newItems.iterator();
                                 while (it.hasNext()) {
