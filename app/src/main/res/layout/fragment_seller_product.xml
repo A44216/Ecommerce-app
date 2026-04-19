@@ -14,10 +14,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/seller_product_search_hint"
-        app:endIconDrawable="@drawable/ic_search"
-        app:endIconMode="custom"
+        android:textColorHint="@color/gray"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="6dp"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -25,11 +25,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:maxLines="1"
             android:imeOptions="actionSearch"
-            android:paddingStart="20dp"
-            android:paddingEnd="35dp"
-            android:layout_margin="12dp"
-            android:singleLine="true"/>
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:layout_margin="12dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.tabs.TabLayout

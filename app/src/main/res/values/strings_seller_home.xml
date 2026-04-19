@@ -49,7 +49,7 @@
     </string-array>
 
     <!-- Product-->
-    <string name="seller_product_search_hint">Nhập tên hoặc danh mục cần tìm</string>
+    <string name="seller_product_search_hint">Tên hoặc danh mục cần tìm</string>
     <!-- Default for product-->
     <string name="seller_product_default_id">#1</string>
     <string name="seller_product_default_name">Laptop Gamming</string>

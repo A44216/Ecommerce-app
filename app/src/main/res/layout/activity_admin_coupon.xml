@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/cardview_light_background"
     tools:context=".ui.activity.home.admin.profile.AdminCouponActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -46,23 +46,19 @@
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="8dp"
                 android:hint="Tìm kiếm coupon..."
+                android:maxLines="1"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColorHint="#9E9E9E"
+                android:textColorHint="@color/gray"
                 android:textSize="14sp" />
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:tabIndicatorColor="#1962F7"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="#1962F7"
-            app:tabTextColor="#757575" />
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

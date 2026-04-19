@@ -15,9 +15,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/admin_profile_category_search"
-        app:endIconDrawable="@drawable/ic_search"
-        app:endIconMode="custom"
         android:padding="12dp"
+        android:textColorHint="@color/gray"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -26,9 +25,11 @@
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:maxLines="1"
             android:inputType="text"
-            android:imeOptions="actionSearch"
-            android:singleLine="true"/>
+            android:imeOptions="actionSearch"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.tabs.TabLayout
