@@ -1,0 +1,143 @@
+package com.example.ecommerceapp.ui.fragment.admin.user;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.ui.activity.home.admin.user.AdminUserDetailActivity;
+import com.example.ecommerceapp.ui.adapter.admin.user.AdminUserAdapter;
+import com.example.ecommerceapp.ui.viewmodel.admin.AdminUserViewModel;
+
+public class AdminUserListFragment extends Fragment {
+
+    private static final String ARG_POSITION = "arg_position";
+    private int position;
+
+    private AdminUserViewModel viewModel;
+    private AdminUserAdapter adapter;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView rvUsers;
+    private ProgressBar progressBar;
+    private TextView tvEmpty;
+
+    public static AdminUserListFragment newInstance(int position) {
+        AdminUserListFragment fragment = new AdminUserListFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_POSITION, position);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            position = getArguments().getInt(ARG_POSITION);
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_admin_user_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        initViews(view);
+        setupRecyclerView();
+        initViewModel();
+        setupObservers();
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (getParentFragment() instanceof AdminUserFragment) {
+                ((AdminUserFragment) getParentFragment()).fetchData(false);
+            }
+        });
+    }
+
+    private void initViews(View view) {
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        rvUsers = view.findViewById(R.id.rvUsers);
+        progressBar = view.findViewById(R.id.progressBar);
+        tvEmpty = view.findViewById(R.id.tvEmpty);
+    }
+
+    private void setupRecyclerView() {
+        adapter = new AdminUserAdapter();
+        adapter.setOnItemClickListener(user -> {
+            Intent intent = new Intent(requireContext(), AdminUserDetailActivity.class);
+            intent.putExtra("userId", user.getId());
+            startActivity(intent);
+        });
+        rvUsers.setAdapter(adapter);
+    }
+
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(requireActivity()).get(AdminUserViewModel.class);
+    }
+
+    private void setupObservers() {
+        if (position == 0) {
+            // Customer
+            viewModel.getCustomersLiveData().observe(getViewLifecycleOwner(), users -> {
+                swipeRefreshLayout.setRefreshing(false);
+                if (users != null && !users.isEmpty()) {
+                    adapter.submitList(users);
+                    tvEmpty.setVisibility(View.GONE);
+                    rvUsers.setVisibility(View.VISIBLE);
+                } else {
+                    adapter.submitList(null);
+                    tvEmpty.setVisibility(View.VISIBLE);
+                    rvUsers.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            // Seller
+            viewModel.getSellersLiveData().observe(getViewLifecycleOwner(), users -> {
+                swipeRefreshLayout.setRefreshing(false);
+                if (users != null && !users.isEmpty()) {
+                    adapter.submitList(users);
+                    tvEmpty.setVisibility(View.GONE);
+                    rvUsers.setVisibility(View.VISIBLE);
+                } else {
+                    adapter.submitList(null);
+                    tvEmpty.setVisibility(View.VISIBLE);
+                    rvUsers.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        viewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null && isLoading && !swipeRefreshLayout.isRefreshing()) {
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        viewModel.getError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}

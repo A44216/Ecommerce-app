@@ -57,6 +57,9 @@
             android:name=".ui.activity.home.UserHomeActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.home.admin.user.AdminUserDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.login.RegisterActivity"
             android:exported="false" />
         <activity

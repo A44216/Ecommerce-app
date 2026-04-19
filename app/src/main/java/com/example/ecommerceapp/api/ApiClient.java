@@ -4,6 +4,7 @@ import android.os.Build;
 
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.api.service.admin.AdminCouponService;
+import com.example.ecommerceapp.api.service.admin.AdminUserService;
 import com.example.ecommerceapp.api.service.seller.SellerCategoryService;
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
 import com.example.ecommerceapp.api.service.admin.AdminProfileService;
@@ -138,6 +139,10 @@ public class ApiClient {
 
     public static AdminCouponService getAdminCouponService(TokenManager tm) {
         return createAuthRetrofit(tm).create(AdminCouponService.class);
+    }
+
+    public static AdminUserService getAdminUserService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(AdminUserService.class);
     }
 
 }
