@@ -11,9 +11,7 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.repository.admin.user.AdminUserRepository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +23,7 @@ public class AdminUserViewModel extends ViewModel {
 
     private String currentKeyword = "";
     private UserStatus currentStatus = null;
+    private Role currentRole = null;
     private boolean isDataLoaded = false;
 
     public AdminUserViewModel(AdminUserRepository repository) {
@@ -37,19 +36,17 @@ public class AdminUserViewModel extends ViewModel {
     public UserStatus getCurrentStatus() { return currentStatus; }
     public void setCurrentStatus(UserStatus status) { this.currentStatus = status; }
 
+    public Role getCurrentRole() { return currentRole; }
+    public void setCurrentRole(Role role) { this.currentRole = role; }
+
     public boolean isDataLoaded() { return isDataLoaded; }
 
-    private final MutableLiveData<List<AdminUserResponse>> customersLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<AdminUserResponse>> sellersLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<AdminUserResponse>> usersLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
 
-    public LiveData<List<AdminUserResponse>> getCustomersLiveData() {
-        return customersLiveData;
-    }
-
-    public LiveData<List<AdminUserResponse>> getSellersLiveData() {
-        return sellersLiveData;
+    public LiveData<List<AdminUserResponse>> getUsersLiveData() {
+        return usersLiveData;
     }
 
     public LiveData<Boolean> getLoading() {
@@ -60,27 +57,24 @@ public class AdminUserViewModel extends ViewModel {
         return error;
     }
 
-    private final Map<Role, Integer> currentPageMap = new HashMap<>();
-    private final Map<Role, Boolean> lastPageMap = new HashMap<>();
+    private int currentPage = 0;
+    private boolean isLastPage = false;
     private static final int PAGE_SIZE = 10;
     private int pendingRequests = 0;
 
-    public void fetchUsers(Role role, boolean isLoadMore, boolean isSilent) {
-        int page = currentPageMap.getOrDefault(role, 0);
-
+    public void fetchUsers(boolean isLoadMore, boolean isSilent) {
         if (!isLoadMore) {
-            page = 0;
-            currentPageMap.put(role, 0);
-            lastPageMap.put(role, false);
+            currentPage = 0;
+            isLastPage = false;
             isDataLoaded = true;
         }
 
-        if (Boolean.TRUE.equals(lastPageMap.get(role))) return;
+        if (isLastPage) return;
 
         if (!isSilent) loading.setValue(true);
         pendingRequests++;
 
-        repository.getUsers(page, PAGE_SIZE, role, currentStatus, currentKeyword)
+        repository.getUsers(currentPage, PAGE_SIZE, currentRole, currentStatus, currentKeyword)
                 .enqueue(new Callback<PageResponse<AdminUserResponse>>() {
                     @Override
                     public void onResponse(Call<PageResponse<AdminUserResponse>> call, Response<PageResponse<AdminUserResponse>> response) {
@@ -90,10 +84,7 @@ public class AdminUserViewModel extends ViewModel {
                         if (response.isSuccessful() && response.body() != null) {
                             PageResponse<AdminUserResponse> body = response.body();
                             
-                            MutableLiveData<List<AdminUserResponse>> liveData = 
-                                    (role == Role.CUSTOMER) ? customersLiveData : sellersLiveData;
-                                    
-                            List<AdminUserResponse> current = liveData.getValue();
+                            List<AdminUserResponse> current = usersLiveData.getValue();
                             if (current == null) current = new ArrayList<>();
 
                             List<AdminUserResponse> newItems = body.getItems();
@@ -105,14 +96,12 @@ public class AdminUserViewModel extends ViewModel {
                                 current = new ArrayList<>(newItems);
                             }
 
-                            liveData.setValue(current);
+                            usersLiveData.setValue(current);
 
-                            currentPageMap.put(role, body.getPage() + 1);
-
-                            boolean isLast = newItems.size() < PAGE_SIZE || current.size() >= body.getTotalElements();
-                            lastPageMap.put(role, isLast);
+                            currentPage = body.getPage() + 1;
+                            isLastPage = newItems.size() < PAGE_SIZE || current.size() >= body.getTotalElements();
                         } else {
-                            error.setValue("Failed to load " + role.name());
+                            error.setValue("Failed to load users");
                         }
                     }
 
@@ -126,18 +115,19 @@ public class AdminUserViewModel extends ViewModel {
     }
 
     public void updateUserStatusLocally(int userId, UserStatus newStatus) {
-        updateStatusInList(customersLiveData, userId, newStatus);
-        updateStatusInList(sellersLiveData, userId, newStatus);
-    }
-
-    private void updateStatusInList(MutableLiveData<List<AdminUserResponse>> liveData, int userId, UserStatus newStatus) {
-        List<AdminUserResponse> list = liveData.getValue();
+        List<AdminUserResponse> list = usersLiveData.getValue();
         if (list != null) {
             boolean updated = false;
             List<AdminUserResponse> newList = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 AdminUserResponse oldObj = list.get(i);
                 if (oldObj.getId() != null && oldObj.getId() == userId) {
+                    // Nếu đang lọc theo 1 trạng thái cụ thể mà trạng thái mới của user không khớp với bộ lọc đó, ta xóa user này khỏi danh sách hiển thị
+                    if (currentStatus != null && currentStatus != newStatus) {
+                        updated = true;
+                        continue; // Bỏ qua không add vào newList
+                    }
+
                     AdminUserResponse newObj = new AdminUserResponse(
                             oldObj.getId(),
                             oldObj.getFullName(),
@@ -154,7 +144,7 @@ public class AdminUserViewModel extends ViewModel {
                 }
             }
             if (updated) {
-                liveData.setValue(newList);
+                usersLiveData.setValue(newList);
             }
         }
     }
