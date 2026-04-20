@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerShopService;
+import com.example.ecommerceapp.data.enums.ShopStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
@@ -34,9 +35,7 @@ public class SellerShopFragment extends Fragment {
     private SellerShopViewModel mViewModel;
 
     private ImageView imgShopAvatar;
-    private TextView tvShopName;
-    private TextView tvShopAddress;
-    private TextView tvShopRating;
+    private TextView tvShopName, tvShopStatus, tvShopAddress, tvShopRating;
 
     private TokenManager tokenManager;
 
@@ -94,8 +93,10 @@ public class SellerShopFragment extends Fragment {
             tvShopName.setText(shop.getShopName());
             tvShopAddress.setText(shop.getAddress());
             tvShopRating.setText(
-                    shop.getRatingAvg() + " ⭐ (" + shop.getRatingCount() + ")"
+                    shop.getRatingAvg() + " ⭐ (" + shop.getRatingCount() + " đánh giá)"
             );
+
+            setStatusUI(shop.getStatus());
 
             String avatar = shop.getAvatar();
 
@@ -112,6 +113,7 @@ public class SellerShopFragment extends Fragment {
 
         // ánh xạ view
         imgShopAvatar = view.findViewById(R.id.imgShopAvatar);
+        tvShopStatus = view.findViewById(R.id.tvShopStatus);
         tvShopName = view.findViewById(R.id.tvShopName);
         tvShopAddress = view.findViewById(R.id.tvShopAddress);
         tvShopRating = view.findViewById(R.id.tvShopRating);
@@ -147,6 +149,43 @@ public class SellerShopFragment extends Fragment {
                     .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
                     .show();
         });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setStatusUI(ShopStatus status) {
+
+        switch (status) {
+
+            case APPROVED:
+                tvShopStatus.setText("Hoạt động");
+                tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_approved);
+                tvShopStatus.setTextColor(requireContext().getColor(R.color.green));
+                break;
+
+            case BLOCKED:
+                tvShopStatus.setText("Bị khóa");
+                tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_blocked);
+                tvShopStatus.setTextColor(requireContext().getColor(R.color.red));
+                break;
+
+            case REJECTED:
+                tvShopStatus.setText("Từ chối");
+                tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_rejected);
+                tvShopStatus.setTextColor(requireContext().getColor(R.color.orange));
+                break;
+
+            case PENDING:
+                tvShopStatus.setText("Chờ duyệt");
+                tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_pending);
+                tvShopStatus.setTextColor(requireContext().getColor(R.color.orange));
+                break;
+
+            default:
+                tvShopStatus.setText("UNKNOWN");
+                tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_pending);
+                tvShopStatus.setTextColor(requireContext().getColor(R.color.gray));
+                break;
+        }
     }
 
 }

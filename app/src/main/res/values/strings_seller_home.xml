@@ -108,6 +108,7 @@
 
     <!-- SHOP DEFAULT -->
     <string name="seller_shop_default_name">Shop Name</string>
+    <string name="seller_shop_default_status">Hoạt động</string>
     <string name="seller_shop_default_address">Hà Nội</string>
     <string name="seller_shop_default_rating">⭐ 4.8</string>
     <string name="seller_shop_action_edit">Chỉnh sửa shop</string>

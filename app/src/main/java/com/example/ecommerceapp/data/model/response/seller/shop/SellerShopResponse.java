@@ -17,10 +17,6 @@ public class SellerShopResponse {
 
     private BigDecimal ratingAvg;
     private Integer ratingCount;
-
-    private Integer totalOrders;
-    private BigDecimal totalRevenue;
-
     private String phone;
     private String email;
 
@@ -36,8 +32,6 @@ public class SellerShopResponse {
 
     public BigDecimal getRatingAvg() { return ratingAvg; }
     public Integer getRatingCount() { return ratingCount; }
-    public Integer getTotalOrders() { return totalOrders; }
-    public BigDecimal getTotalRevenue() { return totalRevenue; }
 
     public String getPhone() { return phone; }
     public String getEmail() { return email; }
@@ -54,8 +48,6 @@ public class SellerShopResponse {
 
     public void setRatingAvg(BigDecimal ratingAvg) { this.ratingAvg = ratingAvg; }
     public void setRatingCount(Integer ratingCount) { this.ratingCount = ratingCount; }
-    public void setTotalOrders(Integer totalOrders) { this.totalOrders = totalOrders; }
-    public void setTotalRevenue(BigDecimal totalRevenue) { this.totalRevenue = totalRevenue; }
 
     public void setPhone(String phone) { this.phone = phone; }
     public void setEmail(String email) { this.email = email; }
