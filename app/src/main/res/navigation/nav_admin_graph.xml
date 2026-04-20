@@ -10,19 +10,14 @@
         android:label="Dashboard" />
 
     <fragment
-        android:id="@+id/adminProductFragment"
-        android:name="com.example.ecommerceapp.ui.fragment.admin.product.AdminProductFragment"
-        android:label="Product" />
+        android:id="@+id/adminManagementFragment"
+        android:name="com.example.ecommerceapp.ui.fragment.admin.management.AdminManagementFragment"
+        android:label="Quản lý" />
 
     <fragment
         android:id="@+id/adminOrderFragment"
         android:name="com.example.ecommerceapp.ui.fragment.admin.order.AdminOrderFragment"
         android:label="Order" />
-
-    <fragment
-        android:id="@+id/adminUserFragment"
-        android:name="com.example.ecommerceapp.ui.fragment.admin.user.AdminUserFragment"
-        android:label="User" />
 
     <fragment
         android:id="@+id/adminProfileFragment"

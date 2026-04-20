@@ -21,10 +21,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.repository.admin.profile.AdminProfileRepository;
-import com.example.ecommerceapp.ui.activity.home.admin.product.AdminCategoryActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminChangePasswordActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminProfileInfoActivity;
-import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminCouponActivity;
 import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminProfileViewModel;
 import com.example.ecommerceapp.ui.viewmodel.admin.factory.AdminProfileViewModelFactory;
@@ -33,7 +31,7 @@ import com.example.ecommerceapp.utils.ImageLoader;
 public class AdminProfileFragment extends Fragment {
 
     private View rootView;
-    private LinearLayout itemProfileInfo, itemVoucher, itemCategory, itemChangePassword, itemLogout;
+    private LinearLayout itemProfileInfo, itemChangePassword, itemLogout;
     private TextView tvFullName, tvPhone;
     private ImageView imgAvatar;
 
@@ -94,8 +92,6 @@ public class AdminProfileFragment extends Fragment {
 
     private void initViews() {
         itemProfileInfo = rootView.findViewById(R.id.itemProfileInfo);
-        itemVoucher = rootView.findViewById(R.id.itemVoucher);
-        itemCategory = rootView.findViewById(R.id.itemCategory);
         itemChangePassword = rootView.findViewById(R.id.itemChangePassword);
         itemLogout = rootView.findViewById(R.id.itemLogout);
         tvFullName = rootView.findViewById(R.id.tvFullName);
@@ -107,10 +103,6 @@ public class AdminProfileFragment extends Fragment {
 
         itemProfileInfo.setOnClickListener(v -> openProfileInfo());
 
-        itemVoucher.setOnClickListener(v -> openVoucher());
-
-        itemCategory.setOnClickListener(v -> openCategory());
-
         itemChangePassword.setOnClickListener(v -> openChangePassword());
 
         itemLogout.setOnClickListener(v -> logout());
@@ -120,13 +112,7 @@ public class AdminProfileFragment extends Fragment {
         launcher.launch(new Intent(requireContext(), AdminProfileInfoActivity.class));
     }
 
-    private void openVoucher() {
-        startActivity(new Intent(requireContext(), AdminCouponActivity.class));
-    }
 
-    private void openCategory() {
-        startActivity(new Intent(requireContext(), AdminCategoryActivity.class));
-    }
 
     private void openChangePassword() {
         startActivity(new Intent(requireContext(), AdminChangePasswordActivity.class));

@@ -60,6 +60,18 @@
             android:name=".ui.activity.home.admin.user.AdminUserDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.home.admin.user.AdminUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.product.AdminProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.shop.AdminShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.complaint.AdminComplaintActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.login.RegisterActivity"
             android:exported="false" />
         <activity
