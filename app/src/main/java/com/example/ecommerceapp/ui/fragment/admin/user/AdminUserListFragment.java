@@ -20,6 +20,8 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.ui.activity.home.admin.user.AdminUserDetailActivity;
 import com.example.ecommerceapp.ui.adapter.admin.user.AdminUserAdapter;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminUserViewModel;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 public class AdminUserListFragment extends Fragment {
 
@@ -33,6 +35,24 @@ public class AdminUserListFragment extends Fragment {
     private RecyclerView rvUsers;
     private ProgressBar progressBar;
     private TextView tvEmpty;
+
+    private final ActivityResultLauncher<Intent> detailLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == android.app.Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        int userId = data.getIntExtra("userId", -1);
+                        String newStatusStr = data.getStringExtra("newStatus");
+                        if (userId != -1 && newStatusStr != null) {
+                            com.example.ecommerceapp.data.enums.UserStatus newStatus = 
+                                com.example.ecommerceapp.data.enums.UserStatus.valueOf(newStatusStr);
+                            viewModel.updateUserStatusLocally(userId, newStatus);
+                        }
+                    }
+                }
+            }
+    );
 
     public static AdminUserListFragment newInstance(int position) {
         AdminUserListFragment fragment = new AdminUserListFragment();
@@ -85,7 +105,7 @@ public class AdminUserListFragment extends Fragment {
         adapter.setOnItemClickListener(user -> {
             Intent intent = new Intent(requireContext(), AdminUserDetailActivity.class);
             intent.putExtra("userId", user.getId());
-            startActivity(intent);
+            detailLauncher.launch(intent);
         });
         rvUsers.setAdapter(adapter);
 

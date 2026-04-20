@@ -8,34 +8,42 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.admin.user.AdminUserResponse;
 import com.example.ecommerceapp.ui.viewholder.admin.user.AdminUserVH;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserVH> {
+public class AdminUserAdapter extends ListAdapter<AdminUserResponse, AdminUserVH> {
 
-    private List<AdminUserResponse> users = new ArrayList<>();
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(AdminUserResponse user);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+    public AdminUserAdapter() {
+        super(new DiffUtil.ItemCallback<AdminUserResponse>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull AdminUserResponse oldItem, @NonNull AdminUserResponse newItem) {
+                return oldItem.getId() == newItem.getId();
+            }
+
+            @SuppressLint("DiffUtilEquals")
+            @Override
+            public boolean areContentsTheSame(@NonNull AdminUserResponse oldItem, @NonNull AdminUserResponse newItem) {
+                return oldItem.getStatus() == newItem.getStatus() &&
+                       Objects.equals(oldItem.getFullName(), newItem.getFullName());
+            }
+        });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void submitList(List<AdminUserResponse> newUsers) {
-        if (newUsers != null) {
-            this.users = newUsers;
-        } else {
-            this.users = new ArrayList<>();
-        }
-        notifyDataSetChanged();
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -47,7 +55,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserVH> {
 
     @Override
     public void onBindViewHolder(@NonNull AdminUserVH holder, int position) {
-        AdminUserResponse user = users.get(position);
+        AdminUserResponse user = getItem(position);
         holder.bind(user);
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -55,9 +63,6 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserVH> {
             }
         });
     }
-
-    @Override
-    public int getItemCount() {
-        return users.size();
     }
-}
+
+

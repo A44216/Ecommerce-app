@@ -132,7 +132,7 @@ public class AdminUserDetailActivity extends AppCompatActivity {
         viewModel.getStatusChangeSuccess().observe(this, success -> {
             if (success != null && success) {
                 Toast.makeText(this, "Thay đổi trạng thái thành công", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK); // Notify previous list to refresh
+                // Data will be reloaded by ViewModel, and finish() will handle returning the latest status
             }
         });
     }
@@ -216,5 +216,16 @@ public class AdminUserDetailActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
+    }
+
+    @Override
+    public void finish() {
+        if (currentUserDetail != null) {
+            android.content.Intent resultIntent = new android.content.Intent();
+            resultIntent.putExtra("userId", userId);
+            resultIntent.putExtra("newStatus", currentUserDetail.getStatus().name());
+            setResult(RESULT_OK, resultIntent);
+        }
+        super.finish();
     }
 }

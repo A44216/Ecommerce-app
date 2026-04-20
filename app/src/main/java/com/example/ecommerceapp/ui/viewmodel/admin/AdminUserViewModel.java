@@ -124,4 +124,38 @@ public class AdminUserViewModel extends ViewModel {
                     }
                 });
     }
+
+    public void updateUserStatusLocally(int userId, UserStatus newStatus) {
+        updateStatusInList(customersLiveData, userId, newStatus);
+        updateStatusInList(sellersLiveData, userId, newStatus);
+    }
+
+    private void updateStatusInList(MutableLiveData<List<AdminUserResponse>> liveData, int userId, UserStatus newStatus) {
+        List<AdminUserResponse> list = liveData.getValue();
+        if (list != null) {
+            boolean updated = false;
+            List<AdminUserResponse> newList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                AdminUserResponse oldObj = list.get(i);
+                if (oldObj.getId() != null && oldObj.getId() == userId) {
+                    AdminUserResponse newObj = new AdminUserResponse(
+                            oldObj.getId(),
+                            oldObj.getFullName(),
+                            oldObj.getEmail(),
+                            oldObj.getPhone(),
+                            oldObj.getRole(),
+                            newStatus,
+                            oldObj.getAvatar()
+                    );
+                    newList.add(newObj);
+                    updated = true;
+                } else {
+                    newList.add(oldObj);
+                }
+            }
+            if (updated) {
+                liveData.setValue(newList);
+            }
+        }
+    }
 }
