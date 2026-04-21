@@ -134,8 +134,6 @@ public class AdminDashboardFragment extends Fragment {
     }
 
     private void setupCharts() {
-        chartRevenue.getDescription().setEnabled(false);
-        chartRevenue.setDrawGridBackground(false);
         chartRevenue.setNoDataText("Chưa có dữ liệu thống kê");
         chartRevenue.setNoDataTextColor(Color.GRAY);
 
@@ -244,31 +242,28 @@ public class AdminDashboardFragment extends Fragment {
             if (hasData) {
                 ArrayList<BarEntry> entries = new ArrayList<>();
                 ArrayList<String> labels = new ArrayList<>();
+                String currentType = viewModel.getCurrentChartType();
                 for (int i = 0; i < data.size(); i++) {
                     AdminRevenueChartResponse item = data.get(i);
-                    entries.add(new BarEntry(i, item.getRevenue().floatValue()));
+                    float rev = item.getRevenue() != null ? item.getRevenue().floatValue() : 0f;
+                    entries.add(new BarEntry(i, rev));
 
                     String label = item.getLabel() != null ? item.getLabel() : "";
-                    String currentType = viewModel.getCurrentChartType();
                     if ("DAY".equals(currentType) && label.length() >= 5) {
                         label = label.substring(5);
                     } else if ("MONTH".equals(currentType) && label.contains("-")) {
-                        String[] parts = label.split("-");
-                        if (parts.length > 1) {
-                            label = "T" + Integer.parseInt(parts[1]);
-                        }
+                        String month = label.split("-")[1];
+                        label = "T" + Integer.parseInt(month);
                     }
                     labels.add(label);
                 }
                 BarDataSet dataSet = new BarDataSet(entries, "Doanh thu");
-                BarData barData = new BarData(dataSet);
-                chartRevenue.setData(barData);
+                chartRevenue.setData(new BarData(dataSet));
 
-                XAxis xAxis = chartRevenue.getXAxis();
-                xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-                xAxis.setGranularity(1f);
-                xAxis.setGranularityEnabled(true);
-                xAxis.setLabelCount(labels.size());
+                chartRevenue.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+                chartRevenue.getXAxis().setGranularity(1f);
+                chartRevenue.getXAxis().setGranularityEnabled(true);
+                chartRevenue.getXAxis().setLabelCount(labels.size());
 
                 chartRevenue.invalidate();
             } else {
@@ -316,10 +311,26 @@ public class AdminDashboardFragment extends Fragment {
             if (hasData) {
                 ArrayList<BarEntry> entries = new ArrayList<>();
                 ArrayList<String> labels = new ArrayList<>();
-                for (int i = 0; i < data.size(); i++) {
-                    AdminCategorySalesChartResponse item = data.get(i);
-                    entries.add(new BarEntry(i, item.getTotalSales().floatValue()));
+                
+                if (data.size() == 1) {
+                    // Cột ẩn bên trái
+                    entries.add(new BarEntry(0, 0f));
+                    labels.add("");
+                    
+                    // Cột thật ở giữa
+                    AdminCategorySalesChartResponse item = data.get(0);
+                    entries.add(new BarEntry(1, item.getTotalSales().floatValue()));
                     labels.add(item.getCategoryName() != null ? item.getCategoryName() : "Khác");
+                    
+                    // Cột ẩn bên phải
+                    entries.add(new BarEntry(2, 0f));
+                    labels.add("");
+                } else {
+                    for (int i = 0; i < data.size(); i++) {
+                        AdminCategorySalesChartResponse item = data.get(i);
+                        entries.add(new BarEntry(i, item.getTotalSales().floatValue()));
+                        labels.add(item.getCategoryName() != null ? item.getCategoryName() : "Khác");
+                    }
                 }
                 BarDataSet dataSet = new BarDataSet(entries, "Doanh số");
                 BarData barData = new BarData(dataSet);
@@ -332,11 +343,10 @@ public class AdminDashboardFragment extends Fragment {
                 xAxis.setGranularityEnabled(true);
                 xAxis.setLabelCount(labels.size());
 
-                xAxis.setAxisMinimum(-0.5f);
-                xAxis.setAxisMaximum(labels.size() - 0.5f);
-
+                xAxis.resetAxisMinimum();
+                xAxis.resetAxisMaximum();
                 chartCategorySales.fitScreen();
-                chartCategorySales.notifyDataSetChanged();
+
                 chartCategorySales.invalidate();
             } else {
                 chartCategorySales.clear();
