@@ -33,5 +33,25 @@
     <string name="admin_profile_change_password_title">ĐỔI MẬT KHẨU</string>
     <string name="admin_profile_hint_current_password">Mật khẩu hiện tại</string>
 
+    <!-- Admin Dashboard Filters -->
+    <string-array name="admin_filter_global_time">
+        <item>Hôm nay</item>
+        <item>Hôm qua</item>
+        <item>7 ngày qua</item>
+        <item>Tháng này</item>
+        <item>Tháng trước</item>
+        <item>Năm nay</item>
+    </string-array>
+
+    <string-array name="admin_filter_chart_type">
+        <item>Ngày</item>
+        <item>Tháng</item>
+        <item>Năm</item>
+    </string-array>
+
+    <string-array name="admin_filter_top_product_type">
+        <item>Bán chạy</item>
+        <item>Doanh thu</item>
+    </string-array>
 
 </resources>
