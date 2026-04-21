@@ -240,7 +240,7 @@ public class AdminDashboardFragment extends Fragment {
                     }
                 }
             }
-            
+
             if (hasData) {
                 ArrayList<BarEntry> entries = new ArrayList<>();
                 ArrayList<String> labels = new ArrayList<>();
@@ -324,23 +324,19 @@ public class AdminDashboardFragment extends Fragment {
                 BarDataSet dataSet = new BarDataSet(entries, "Doanh số");
                 BarData barData = new BarData(dataSet);
                 chartCategorySales.setData(barData);
-                
+
                 XAxis xAxis = chartCategorySales.getXAxis();
                 xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
                 xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                 xAxis.setGranularity(1f);
                 xAxis.setGranularityEnabled(true);
                 xAxis.setLabelCount(labels.size());
-                
-                if (labels.size() == 1) {
-                    xAxis.setAxisMinimum(-0.5f);
-                    xAxis.setAxisMaximum(0.5f);
-                } else {
-                    xAxis.resetAxisMinimum();
-                    xAxis.resetAxisMaximum();
-                    chartCategorySales.fitScreen();
-                }
-                
+
+                xAxis.setAxisMinimum(-0.5f);
+                xAxis.setAxisMaximum(labels.size() - 0.5f);
+
+                chartCategorySales.fitScreen();
+                chartCategorySales.notifyDataSetChanged();
                 chartCategorySales.invalidate();
             } else {
                 chartCategorySales.clear();
