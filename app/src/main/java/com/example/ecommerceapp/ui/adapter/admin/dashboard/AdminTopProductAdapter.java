@@ -37,19 +37,19 @@ public class AdminTopProductAdapter extends RecyclerView.Adapter<AdminTopProduct
         return new ViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AdminTopProductResponse product = productList.get(position);
         holder.tvRank.setText(String.valueOf(position + 1));
         holder.tvProductName.setText(product.getName());
         holder.tvShopName.setText("Shop: " + product.getShopName());
-        holder.tvPrice.setText(NumberUtils.formatCompact(product.getPrice()) + " ₫");
+        holder.tvPrice.setText(String.format("%,.0f", product.getPrice()) + " đ");
 
         ImageLoader.load(holder.itemView.getContext(), holder.ivProductImage, product.getImage());
 
         if ("REVENUE".equals(currentType)) {
-            holder.tvSoldAndRevenue.setText("DT: " + NumberUtils.formatCompact(product.getRevenue()) + " ₫");
+            holder.tvSoldAndRevenue.setText("Doanh thu: " + NumberUtils.formatCompact(product.getRevenue()) + " ₫");
             holder.tvSoldAndRevenue.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.green));
         } else {
             holder.tvSoldAndRevenue.setText("Đã bán: " + NumberUtils.formatCompact(java.math.BigDecimal.valueOf(product.getSoldCount())));

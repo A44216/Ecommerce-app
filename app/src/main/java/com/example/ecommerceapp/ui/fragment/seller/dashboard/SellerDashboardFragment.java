@@ -110,6 +110,9 @@ public class SellerDashboardFragment extends Fragment {
         spFilterTime = view.findViewById(R.id.spFilterTime);
 
         chartRevenue = view.findViewById(R.id.chartRevenue);
+        chartRevenue.setNoDataText("Chưa có dữ liệu thống kê");
+        chartRevenue.setNoDataTextColor(android.graphics.Color.GRAY);
+        
         rvTopProduct = view.findViewById(R.id.rvTopProducts);
     }
 
@@ -287,9 +290,21 @@ public class SellerDashboardFragment extends Fragment {
 
     private void observeChartData() {
         viewModel.getChartData().observe(getViewLifecycleOwner(), list -> {
-            if (list == null) return;
+            boolean hasData = false;
+            if (list != null && !list.isEmpty()) {
+                for (SellerRevenueChartResponse item : list) {
+                    if (item.getRevenue() != null && item.getRevenue().floatValue() > 0) {
+                        hasData = true;
+                        break;
+                    }
+                }
+            }
 
-            drawChart(list, currentChartType);
+            if (hasData) {
+                drawChart(list, currentChartType);
+            } else {
+                chartRevenue.clear();
+            }
         });
     }
 

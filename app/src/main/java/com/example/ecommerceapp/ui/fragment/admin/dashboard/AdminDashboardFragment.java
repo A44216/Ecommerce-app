@@ -62,6 +62,12 @@ public class AdminDashboardFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        resetFilters();
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_dashboard, container, false);
@@ -72,6 +78,20 @@ public class AdminDashboardFragment extends Fragment {
         setupFilters();
         observeViewModel();
         return view;
+    }
+
+    private void resetFilters() {
+        String[] timeRangeValues = getResources().getStringArray(R.array.admin_filter_global_time);
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, timeRangeValues);
+        actFilterGlobalTime.setAdapter(timeAdapter);
+
+        String[] chartTypeValues = getResources().getStringArray(R.array.admin_filter_chart_type);
+        ArrayAdapter<String> chartTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, chartTypeValues);
+        actFilterChartType.setAdapter(chartTypeAdapter);
+
+        String[] productTypeValues = getResources().getStringArray(R.array.admin_filter_top_product_type);
+        ArrayAdapter<String> productTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, productTypeValues);
+        actFilterTopProductType.setAdapter(productTypeAdapter);
     }
 
     @SuppressLint("SetTextI18n")
@@ -116,14 +136,21 @@ public class AdminDashboardFragment extends Fragment {
     private void setupCharts() {
         chartRevenue.getDescription().setEnabled(false);
         chartRevenue.setDrawGridBackground(false);
+        chartRevenue.setNoDataText("Chưa có dữ liệu thống kê");
+        chartRevenue.setNoDataTextColor(Color.GRAY);
 
         chartOrderStatus.getDescription().setEnabled(false);
         chartOrderStatus.setUsePercentValues(true);
         chartOrderStatus.setDrawHoleEnabled(true);
         chartOrderStatus.setHoleColor(Color.WHITE);
+        chartOrderStatus.setRotationEnabled(false);
+        chartOrderStatus.setNoDataText("Chưa có đơn hàng");
+        chartOrderStatus.setNoDataTextColor(Color.GRAY);
 
         chartCategorySales.getDescription().setEnabled(false);
         chartCategorySales.setDrawGridBackground(false);
+        chartCategorySales.setNoDataText("Chưa có dữ liệu danh mục");
+        chartCategorySales.setNoDataTextColor(Color.GRAY);
     }
 
     private void setupRecyclerViews(View view) {
@@ -189,6 +216,7 @@ public class AdminDashboardFragment extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void observeViewModel() {
         viewModel.getKpiLiveData().observe(getViewLifecycleOwner(), kpi -> {
             if (kpi != null) {
@@ -203,22 +231,45 @@ public class AdminDashboardFragment extends Fragment {
         });
 
         viewModel.getRevenueChartLiveData().observe(getViewLifecycleOwner(), data -> {
+            boolean hasData = false;
             if (data != null && !data.isEmpty()) {
+                for (AdminRevenueChartResponse item : data) {
+                    if (item.getRevenue() != null && item.getRevenue().floatValue() > 0) {
+                        hasData = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (hasData) {
                 ArrayList<BarEntry> entries = new ArrayList<>();
                 ArrayList<String> labels = new ArrayList<>();
                 for (int i = 0; i < data.size(); i++) {
                     AdminRevenueChartResponse item = data.get(i);
                     entries.add(new BarEntry(i, item.getRevenue().floatValue()));
-                    labels.add(item.getLabel());
+
+                    String label = item.getLabel() != null ? item.getLabel() : "";
+                    String currentType = viewModel.getCurrentChartType();
+                    if ("DAY".equals(currentType) && label.length() >= 5) {
+                        label = label.substring(5);
+                    } else if ("MONTH".equals(currentType) && label.contains("-")) {
+                        String[] parts = label.split("-");
+                        if (parts.length > 1) {
+                            label = "T" + Integer.parseInt(parts[1]);
+                        }
+                    }
+                    labels.add(label);
                 }
-                BarDataSet dataSet = new BarDataSet(entries, "Revenue");
-                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                BarDataSet dataSet = new BarDataSet(entries, "Doanh thu");
                 BarData barData = new BarData(dataSet);
                 chartRevenue.setData(barData);
+
                 XAxis xAxis = chartRevenue.getXAxis();
                 xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                 xAxis.setGranularity(1f);
+                xAxis.setGranularityEnabled(true);
+                xAxis.setLabelCount(labels.size());
+
                 chartRevenue.invalidate();
             } else {
                 chartRevenue.clear();
@@ -226,7 +277,17 @@ public class AdminDashboardFragment extends Fragment {
         });
 
         viewModel.getOrderStatusChartLiveData().observe(getViewLifecycleOwner(), data -> {
+            boolean hasData = false;
             if (data != null && !data.isEmpty()) {
+                for (AdminOrderStatusChartResponse item : data) {
+                    if (item.getOrderCount() > 0) {
+                        hasData = true;
+                        break;
+                    }
+                }
+            }
+
+            if (hasData) {
                 ArrayList<PieEntry> entries = new ArrayList<>();
                 for (AdminOrderStatusChartResponse item : data) {
                     entries.add(new PieEntry(item.getOrderCount(), item.getStatus()));
@@ -242,22 +303,44 @@ public class AdminDashboardFragment extends Fragment {
         });
 
         viewModel.getCategorySalesChartLiveData().observe(getViewLifecycleOwner(), data -> {
+            boolean hasData = false;
             if (data != null && !data.isEmpty()) {
+                for (AdminCategorySalesChartResponse item : data) {
+                    if (item.getTotalSales() != null && item.getTotalSales().floatValue() > 0) {
+                        hasData = true;
+                        break;
+                    }
+                }
+            }
+
+            if (hasData) {
                 ArrayList<BarEntry> entries = new ArrayList<>();
                 ArrayList<String> labels = new ArrayList<>();
                 for (int i = 0; i < data.size(); i++) {
                     AdminCategorySalesChartResponse item = data.get(i);
                     entries.add(new BarEntry(i, item.getTotalSales().floatValue()));
-                    labels.add(item.getCategoryName());
+                    labels.add(item.getCategoryName() != null ? item.getCategoryName() : "Khác");
                 }
-                BarDataSet dataSet = new BarDataSet(entries, "Category Sales");
-                dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+                BarDataSet dataSet = new BarDataSet(entries, "Doanh số");
                 BarData barData = new BarData(dataSet);
                 chartCategorySales.setData(barData);
+                
                 XAxis xAxis = chartCategorySales.getXAxis();
                 xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
                 xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                 xAxis.setGranularity(1f);
+                xAxis.setGranularityEnabled(true);
+                xAxis.setLabelCount(labels.size());
+                
+                if (labels.size() == 1) {
+                    xAxis.setAxisMinimum(-0.5f);
+                    xAxis.setAxisMaximum(0.5f);
+                } else {
+                    xAxis.resetAxisMinimum();
+                    xAxis.resetAxisMaximum();
+                    chartCategorySales.fitScreen();
+                }
+                
                 chartCategorySales.invalidate();
             } else {
                 chartCategorySales.clear();
@@ -282,8 +365,10 @@ public class AdminDashboardFragment extends Fragment {
             }
         });
 
-        // Trigger initial fetch
-        viewModel.fetchAllDataWithCurrentRange();
+        // Trigger initial fetch only if data is empty
+        if (viewModel.getKpiLiveData().getValue() == null) {
+            viewModel.fetchAllDataWithCurrentRange();
+        }
     }
 
     private void updateTopProductList(String type) {

@@ -15,37 +15,37 @@ import retrofit2.http.Query;
 
 public interface AdminDashboardService {
 
-    @GET("api/admin/dashboard/kpi")
+    @GET("admin/dashboard/kpi")
     Call<AdminDashboardKPIResponse> getKPI(
             @Header("Authorization") String token,
             @Query("range") String range
     );
 
-    @GET("api/admin/dashboard/revenue-chart")
+    @GET("admin/dashboard/revenue-chart")
     Call<List<com.example.ecommerceapp.data.model.response.admin.dashboard.AdminRevenueChartResponse>> getRevenueChart(
             @Header("Authorization") String token,
             @Query("type") String type
     );
 
-    @GET("api/admin/dashboard/order-status-chart")
+    @GET("admin/dashboard/order-status-chart")
     Call<List<AdminOrderStatusChartResponse>> getOrderStatusChart(
             @Header("Authorization") String token,
             @Query("range") String range
     );
 
-    @GET("api/admin/dashboard/category-sales-chart")
+    @GET("admin/dashboard/category-sales-chart")
     Call<List<AdminCategorySalesChartResponse>> getCategorySalesChart(
             @Header("Authorization") String token,
             @Query("range") String range
     );
 
-    @GET("api/admin/dashboard/top-selling-shops")
+    @GET("admin/dashboard/top-selling-shops")
     Call<List<AdminTopShopResponse>> getTopSellingShops(
             @Header("Authorization") String token,
             @Query("range") String range
     );
 
-    @GET("api/admin/dashboard/top-selling-products")
+    @GET("admin/dashboard/top-selling-products")
     Call<AdminDashboardTopProductResponse> getTopSellingProducts(
             @Header("Authorization") String token,
             @Query("range") String range
