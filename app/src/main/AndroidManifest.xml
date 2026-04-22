@@ -69,6 +69,9 @@
             android:name=".ui.activity.home.admin.shop.AdminShopActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.home.admin.shop.AdminShopDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.home.admin.complaint.AdminComplaintActivity"
             android:exported="false" />
         <activity
