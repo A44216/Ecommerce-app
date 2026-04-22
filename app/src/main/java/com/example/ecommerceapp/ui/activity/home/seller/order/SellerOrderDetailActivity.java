@@ -27,7 +27,7 @@ import java.util.List;
 
 public class SellerOrderDetailActivity extends AppCompatActivity {
 
-    private TextView tvOrderId, tvCreatedAt, tvCompletedAt;
+    private TextView tvOrderCode, tvCreatedAt, tvCompletedAt;
     private TextView tvCustomer, tvShippingName, tvPhone, tvAddress;
     private TextView tvSubtotal, txtDiscount, tvDiscount, txtPlatformFee, tvPlatformFee, tvSellerRevenue;
     private TextView tvPaymentMethod, tvPaymentStatus;
@@ -67,7 +67,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         rvOrder = findViewById(R.id.rvOrderItems);
         rvStatus = findViewById(R.id.rvOrderStatus);
 
-        tvOrderId = findViewById(R.id.tvOrderId);
+        tvOrderCode = findViewById(R.id.tvOrderCode);
         tvCreatedAt = findViewById(R.id.tvCreatedAt);
         tvCompletedAt = findViewById(R.id.tvCompletedAt);
 
@@ -169,7 +169,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     if (data == null) return;
 
                     // OrderId
-                    tvOrderId.setText("Đơn: #" + data.getOrderId());
+                    tvOrderCode.setText("Mã đơn: " + data.getOrderCode());
 
                     // CreatedAt
                     String createdAt = data.getCreatedAt();

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.enums.PaymentStatus;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.order.SellerOrderVH;
 import com.example.ecommerceapp.utils.ImageLoader;
@@ -52,9 +53,17 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderVH> {
 
         SellerOrderResponse item = list.get(position);
 
-        holder.orderId.setText("#" + item.getOrderId());
+        holder.orderCode.setText("#" + item.getOrderCode());
         holder.customerName.setText("Khách hàng: " + item.getCustomerName());
-        holder.paymentStatus.setText("Trạng thái: " + item.getPaymentStatus().getLabel());
+        holder.paymentStatus.setText(item.getPaymentStatus().getLabel());
+        if (item.getPaymentStatus() == PaymentStatus.PAID) {
+            holder.paymentStatus.setBackgroundResource(R.drawable.bg_status_paid);
+            holder.paymentStatus.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.green));
+        } else {
+            holder.paymentStatus.setBackgroundResource(R.drawable.bg_status_unpaid);
+            holder.paymentStatus.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
+        }
+        
         holder.totalPrice.setText("Tổng tiền: " + String.format("%,.0f", item.getSellerRevenue()) + " đ");
 
         String rawDate = item.getCreatedAt(); // ví dụ: 2026-04-05T19:05:31

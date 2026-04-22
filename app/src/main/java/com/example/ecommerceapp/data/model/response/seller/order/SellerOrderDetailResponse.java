@@ -10,6 +10,7 @@ import java.util.List;
 public class SellerOrderDetailResponse {
 
     private Integer orderId;
+    private String orderCode;
 
     private OrderStatus status;
 
@@ -36,6 +37,9 @@ public class SellerOrderDetailResponse {
 
     public Integer getOrderId() {
         return orderId;
+    }
+    public String getOrderCode() {
+        return orderCode;
     }
 
     public OrderStatus getStatus() {
@@ -96,18 +100,6 @@ public class SellerOrderDetailResponse {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public void setSellerRevenue(BigDecimal sellerRevenue) {
-        this.sellerRevenue = sellerRevenue;
     }
 
 }

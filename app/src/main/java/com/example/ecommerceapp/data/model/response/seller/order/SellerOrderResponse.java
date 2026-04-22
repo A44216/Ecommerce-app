@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 public class SellerOrderResponse {
     private Integer orderId;
+    private String orderCode;
 
     private OrderStatus status;
 
@@ -20,6 +21,10 @@ public class SellerOrderResponse {
 
     public Integer getOrderId() {
         return orderId;
+    }
+
+    public String getOrderCode() {
+        return orderCode;
     }
 
     public OrderStatus getStatus() {

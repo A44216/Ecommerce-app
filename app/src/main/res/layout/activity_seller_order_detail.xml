@@ -53,7 +53,7 @@
 
             <!-- ORDER ID -->
             <TextView
-                android:id="@+id/tvOrderId"
+                android:id="@+id/tvOrderCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/seller_order_detail_default_id"
@@ -72,7 +72,7 @@
                 android:textColor="@color/gray"
                 android:textSize="15sp"
                 android:layout_marginTop="4dp"
-                app:layout_constraintTop_toBottomOf="@id/tvOrderId"
+                app:layout_constraintTop_toBottomOf="@id/tvOrderCode"
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView

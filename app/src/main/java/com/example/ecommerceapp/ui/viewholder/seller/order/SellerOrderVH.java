@@ -11,13 +11,13 @@ import com.example.ecommerceapp.R;
 
 public class SellerOrderVH extends RecyclerView.ViewHolder {
 
-    public TextView orderId, customerName,paymentStatus, totalPrice, createdAt;
+    public TextView orderCode, customerName,paymentStatus, totalPrice, createdAt;
     public ImageView ivOrder;
 
     public SellerOrderVH(@NonNull View itemView) {
         super(itemView);
 
-        orderId = itemView.findViewById(R.id.tvOrderId);
+        orderCode = itemView.findViewById(R.id.tvOrderCode);
         customerName = itemView.findViewById(R.id.tvCustomerName);
         paymentStatus = itemView.findViewById(R.id.tvPaymentStatus);
         totalPrice = itemView.findViewById(R.id.tvSellerRevenue);
