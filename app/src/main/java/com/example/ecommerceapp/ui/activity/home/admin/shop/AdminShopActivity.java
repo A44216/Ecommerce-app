@@ -55,9 +55,9 @@ public class AdminShopActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    boolean statusChanged = result.getData().getBooleanExtra("STATUS_CHANGED", false);
-                    int shopId = result.getData().getIntExtra("SHOP_ID", -1);
-                    String newStatusStr = result.getData().getStringExtra("NEW_STATUS");
+                    boolean statusChanged = result.getData().getBooleanExtra("statusChanged", false);
+                    int shopId = result.getData().getIntExtra("shopId", -1);
+                    String newStatusStr = result.getData().getStringExtra("newStatus");
 
                     if (statusChanged && shopId != -1 && newStatusStr != null) {
                         try {
@@ -113,7 +113,7 @@ public class AdminShopActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         adapter = new AdminShopAdapter(shop -> {
             Intent intent = new Intent(this, AdminShopDetailActivity.class);
-            intent.putExtra("SHOP_ID", shop.getId());
+            intent.putExtra("shopId", shop.getId());
             detailActivityLauncher.launch(intent);
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

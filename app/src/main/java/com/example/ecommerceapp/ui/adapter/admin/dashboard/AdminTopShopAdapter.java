@@ -20,6 +20,15 @@ import java.util.List;
 public class AdminTopShopAdapter extends RecyclerView.Adapter<AdminTopShopAdapter.ViewHolder> {
 
     private List<AdminTopShopResponse> shopList = new ArrayList<>();
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onShopClick(int shopId);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     public void setShopList(List<AdminTopShopResponse> shopList) {
@@ -44,6 +53,12 @@ public class AdminTopShopAdapter extends RecyclerView.Adapter<AdminTopShopAdapte
         holder.tvShopRevenue.setText(NumberUtils.formatCompact(shop.getTotalRevenue()) + " ₫");
 
         ImageLoader.load(holder.itemView.getContext(), holder.ivShopAvatar, shop.getAvatar());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onShopClick(shop.getId());
+            }
+        });
     }
 
     @Override

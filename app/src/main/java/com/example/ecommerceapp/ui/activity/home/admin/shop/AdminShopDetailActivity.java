@@ -57,7 +57,7 @@ public class AdminShopDetailActivity extends AppCompatActivity {
             return insets;
         });
 
-        shopId = getIntent().getIntExtra("SHOP_ID", -1);
+        shopId = getIntent().getIntExtra("shopId", -1);
         if (shopId == -1) {
             Toast.makeText(this, "Lỗi ID cửa hàng", Toast.LENGTH_SHORT).show();
             finish();
@@ -111,9 +111,9 @@ public class AdminShopDetailActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 if (statusChanged && currentStatus != null) {
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("STATUS_CHANGED", true);
-                    resultIntent.putExtra("SHOP_ID", shopId);
-                    resultIntent.putExtra("NEW_STATUS", currentStatus.name());
+                    resultIntent.putExtra("statusChanged", true);
+                    resultIntent.putExtra("shopId", shopId);
+                    resultIntent.putExtra("newStatus", currentStatus.name());
                     setResult(RESULT_OK, resultIntent);
                 }
                 finish();

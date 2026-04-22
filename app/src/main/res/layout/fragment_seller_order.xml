@@ -19,11 +19,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            app:tabGravity="fill"
-            app:tabMode="fixed"
-            app:tabIndicatorColor="@color/blue"
-            app:tabIndicatorFullWidth="true"
-            app:tabSelectedTextColor="@color/blue"
             app:tabTextAppearance="@style/OrderTabTextAppearance"
             tools:ignore="SpeakableTextPresentCheck"/>
 

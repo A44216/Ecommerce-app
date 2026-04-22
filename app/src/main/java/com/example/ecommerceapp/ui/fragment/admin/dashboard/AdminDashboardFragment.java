@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import android.app.Activity;
+import android.content.Intent;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,12 +21,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminCategorySalesChartResponse;
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminOrderStatusChartResponse;
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminRevenueChartResponse;
 import com.example.ecommerceapp.data.repository.admin.dashboard.AdminDashboardRepository;
+import com.example.ecommerceapp.ui.activity.home.admin.shop.AdminShopDetailActivity;
 import com.example.ecommerceapp.ui.adapter.admin.dashboard.AdminTopProductAdapter;
 import com.example.ecommerceapp.ui.adapter.admin.dashboard.AdminTopShopAdapter;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminDashboardViewModel;
@@ -60,6 +67,25 @@ public class AdminDashboardFragment extends Fragment {
     public static AdminDashboardFragment newInstance() {
         return new AdminDashboardFragment();
     }
+
+    private ActivityResultLauncher<Intent> shopDetailLauncher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        shopDetailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        boolean statusChanged = result.getData().getBooleanExtra("statusChanged", false);
+                        if (statusChanged && viewModel != null) {
+                            viewModel.fetchAllDataWithCurrentRange();
+                        }
+                    }
+                }
+        );
+    }
+
 
     @Override
     public void onResume() {
@@ -155,7 +181,13 @@ public class AdminDashboardFragment extends Fragment {
         RecyclerView rvTopShops = view.findViewById(R.id.rvTopShops);
         rvTopShops.setLayoutManager(new LinearLayoutManager(getContext()));
         topShopAdapter = new AdminTopShopAdapter();
+        topShopAdapter.setOnItemClickListener(shopId -> {
+            Intent intent = new Intent(requireContext(), AdminShopDetailActivity.class);
+            intent.putExtra("shopId", shopId);
+            shopDetailLauncher.launch(intent);
+        });
         rvTopShops.setAdapter(topShopAdapter);
+
 
         RecyclerView rvTopProducts = view.findViewById(R.id.rvTopProducts);
         rvTopProducts.setLayoutManager(new LinearLayoutManager(getContext()));

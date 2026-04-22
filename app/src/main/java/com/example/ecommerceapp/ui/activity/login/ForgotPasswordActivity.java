@@ -181,7 +181,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     // MÃ ĐÚNG -> CHUYỂN MÀN HÌNH VÀ "GÓI" THEO EMAIL/USERNAME
                     Intent intent = new Intent(ForgotPasswordActivity.this, ResetPasswordActivity.class);
                     // Dòng này cực kỳ quan trọng để màn hình sau biết đang đổi mật khẩu cho ai
-                    intent.putExtra("EMAIL_OR_USERNAME", input);
+                    intent.putExtra("emailOrUsername", input);
                     startActivity(intent);
                     finish();
                 } else {
