@@ -9,8 +9,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.enums.ShopStatus;
@@ -45,7 +49,13 @@ public class AdminShopDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_admin_shop_detail);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         shopId = getIntent().getIntExtra("SHOP_ID", -1);
         if (shopId == -1) {
@@ -111,23 +121,30 @@ public class AdminShopDetailActivity extends AppCompatActivity {
         });
 
         btnApprove.setOnClickListener(v -> {
-            viewModel.updateShopStatus(shopId, ShopStatus.APPROVED);
+            String message = currentStatus == ShopStatus.BLOCKED ? "Bạn có chắc muốn MỞ KHÓA shop này?" : "Bạn có chắc muốn DUYỆT shop này?";
+            showConfirmDialog(message, () -> {
+                viewModel.updateShopStatus(shopId, ShopStatus.APPROVED);
+            });
         });
 
         btnReject.setOnClickListener(v -> {
-            viewModel.updateShopStatus(shopId, ShopStatus.REJECTED);
+            showConfirmDialog("Bạn có chắc muốn TỪ CHỐI shop này?", () -> {
+                viewModel.updateShopStatus(shopId, ShopStatus.REJECTED);
+            });
         });
 
         btnBlock.setOnClickListener(v -> {
-            viewModel.updateShopStatus(shopId, ShopStatus.BLOCKED);
+            showConfirmDialog("Bạn có chắc muốn KHÓA shop này?", () -> {
+                viewModel.updateShopStatus(shopId, ShopStatus.BLOCKED);
+            });
         });
     }
 
     private void observeViewModel() {
         viewModel.getShopDetail().observe(this, detail -> {
             if (detail != null) {
-                bindData(detail);
                 currentStatus = detail.getStatus();
+                bindData(detail);
             }
         });
 
@@ -195,19 +212,30 @@ public class AdminShopDetailActivity extends AppCompatActivity {
                 tvStatus.setTextColor(ContextCompat.getColor(this, R.color.orange));
                 btnApprove.setVisibility(View.VISIBLE);
                 btnReject.setVisibility(View.VISIBLE);
+                btnApprove.setText("Duyệt");
                 break;
             case REJECTED:
                 tvStatus.setText("Bị từ chối");
                 tvStatus.setBackgroundResource(R.drawable.bg_shop_status_rejected);
                 tvStatus.setTextColor(ContextCompat.getColor(this, R.color.red));
-                btnApprove.setVisibility(View.VISIBLE); // Can reconsider
                 break;
             case BLOCKED:
                 tvStatus.setText("Bị khóa");
                 tvStatus.setBackgroundResource(R.drawable.bg_shop_status_blocked);
                 tvStatus.setTextColor(ContextCompat.getColor(this, R.color.red));
-                btnApprove.setVisibility(View.VISIBLE); // Allow unblocking by approving
+                btnApprove.setVisibility(View.VISIBLE);
+                btnApprove.setText("Mở khóa");
                 break;
         }
     }
+
+    private void showConfirmDialog(String message, Runnable onConfirm) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Xác nhận")
+                .setMessage(message)
+                .setPositiveButton("Đồng ý", (dialog, which) -> onConfirm.run())
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
 }

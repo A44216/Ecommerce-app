@@ -76,51 +76,104 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvShopName"
             app:layout_constraintTop_toBottomOf="@+id/tvShopEmail"
             tools:text="SĐT: 0901234567" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginStart="96dp"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             android:weightSum="3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvShopName"
             app:layout_constraintTop_toBottomOf="@+id/tvShopPhone">
 
-            <TextView
-                android:id="@+id/tvRating"
+            <!-- Rating -->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawablePadding="4dp"
-                android:textSize="12sp"
-                app:drawableStartCompat="@drawable/ic_check"
-                tools:text="4.5 ⭐" />
+                android:gravity="center_vertical"
+                tools:ignore="UseCompoundDrawables">
 
-            <TextView
-                android:id="@+id/tvOrders"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawablePadding="4dp"
-                android:textSize="12sp"
-                app:drawableStartCompat="@drawable/ic_order"
-                tools:text="120 Đơn" />
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@string/desc_image"
+                    android:src="@drawable/ic_check"/>
 
-            <TextView
-                android:id="@+id/tvRevenue"
+                <TextView
+                    android:id="@+id/tvRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical"
+                    tools:text="4.5 ⭐"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+            </LinearLayout>
+
+            <!-- Orders -->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawablePadding="4dp"
-                android:textSize="12sp"
-                app:drawableStartCompat="@drawable/ic_revenue"
-                tools:text="15.5M" />
+                android:gravity="center_vertical"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@string/desc_image"
+                    android:src="@drawable/ic_order"/>
+
+                <TextView
+                    android:id="@+id/tvOrders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical"
+                    tools:text="120 đơn"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+            </LinearLayout>
+
+            <!-- Revenue -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@string/desc_image"
+                    android:src="@drawable/ic_revenue"/>
+
+                <TextView
+                    android:id="@+id/tvRevenue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical"
+                    tools:text="15.5M"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+            </LinearLayout>
 
         </LinearLayout>
 

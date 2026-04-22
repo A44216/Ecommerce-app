@@ -103,29 +103,21 @@ public class AdminShopViewModel extends ViewModel {
     }
 
     public void updateShopStatus(int shopId, ShopStatus newStatus) {
-        repository.updateShopStatus(shopId, newStatus).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    List<AdminShopResponse> currentList = shops.getValue();
-                    if (currentList != null) {
-                        for (int i = 0; i < currentList.size(); i++) {
-                            if (currentList.get(i).getId() == shopId) {
-                                currentList.get(i).setStatus(newStatus);
-                                shops.setValue(currentList); // Trigger update
-                                break;
-                            }
-                        }
+        List<AdminShopResponse> currentList = shops.getValue();
+        if (currentList != null) {
+            for (int i = 0; i < currentList.size(); i++) {
+                if (currentList.get(i).getId() == shopId) {
+                    if (currentStatus != null && currentStatus != newStatus) {
+                        // Trạng thái mới không khớp với filter hiện tại -> Xóa khỏi list
+                        currentList.remove(i);
+                    } else {
+                        // Cập nhật trạng thái mới
+                        currentList.get(i).setStatus(newStatus);
                     }
-                } else {
-                    error.setValue("Cập nhật trạng thái thất bại: " + response.code());
+                    shops.setValue(currentList); // Trigger update UI
+                    break;
                 }
             }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                error.setValue("Lỗi kết nối: " + t.getMessage());
-            }
-        });
+        }
     }
 }

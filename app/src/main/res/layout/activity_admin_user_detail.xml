@@ -188,6 +188,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginStart="4dp"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             tools:text="email@example.com" />
@@ -211,6 +212,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginStart="4dp"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             tools:text="0987654321" />
@@ -236,6 +238,7 @@
                             android:layout_weight="1"
                             android:textColor="@color/black"
                             android:textSize="16sp"
+                            android:layout_marginStart="4dp"
                             tools:text="20/04/2026" />
                     </LinearLayout>
 
@@ -289,7 +292,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:textColor="#757575"
+                            android:textColor="@color/gray"
                             android:textSize="14sp"
                             tools:text="Chuyên bán đồ gia dụng" />
 
