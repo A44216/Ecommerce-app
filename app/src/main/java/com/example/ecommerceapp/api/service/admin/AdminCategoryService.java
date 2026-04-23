@@ -30,4 +30,10 @@ public interface AdminCategoryService {
 
     @PUT("admin/categories/{id}/restore")
     Call<Void> restoreCategory(@Path("id") int id);
+
+    @GET("admin/categories/autocomplete")
+    Call<List<AdminCategoryResponse>> autocompleteCategories(
+            @Query("keyword") String keyword
+    );
+
 }

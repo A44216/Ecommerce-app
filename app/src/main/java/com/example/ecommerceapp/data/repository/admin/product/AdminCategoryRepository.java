@@ -35,4 +35,8 @@ public class AdminCategoryRepository {
     public Call<Void> restoreCategory(int id) {
         return apiService.restoreCategory(id);
     }
+
+    public Call<List<AdminCategoryResponse>> autocompleteCategories(String keyword) {
+        return apiService.autocompleteCategories(keyword);
+    }
 }

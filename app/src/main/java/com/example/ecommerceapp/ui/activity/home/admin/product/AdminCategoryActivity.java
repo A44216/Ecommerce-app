@@ -1,6 +1,14 @@
 package com.example.ecommerceapp.ui.activity.home.admin.product;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
@@ -28,9 +36,13 @@ public class AdminCategoryActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
-    private EditText etSearch;
+    private AutoCompleteTextView etSearch;
     private FloatingActionButton fabAdd;
     private AdminCategoryViewModel viewModel;
+
+    private ArrayAdapter<String> autoCompleteAdapter;
+    private Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     private int currentTab = 0; // 0 = ALL, 1 = DELETED
 
@@ -98,14 +110,69 @@ public class AdminCategoryActivity extends AppCompatActivity {
 
     private void setupSearch() {
 
+        autoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
+        etSearch.setAdapter(autoCompleteAdapter);
+
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
-
             String keyword = etSearch.getText().toString().trim();
-
             viewModel.search(keyword);
-
             return true;
         });
+
+        etSearch.setOnItemClickListener((parent, view, position, id) -> {
+            String selected = autoCompleteAdapter.getItem(position);
+            if (selected != null) {
+                viewModel.search(selected);
+                etSearch.clearFocus();
+            }
+        });
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (searchRunnable != null) {
+                    searchHandler.removeCallbacks(searchRunnable);
+                }
+
+                searchRunnable = () -> {
+                    String keyword = s.toString().trim();
+                    if (!keyword.isEmpty()) {
+                        viewModel.autocomplete(keyword);
+                    }
+                };
+
+                searchHandler.postDelayed(searchRunnable, 400);
+            }
+        });
+
+        viewModel.getAutocompleteSuggestions().observe(this, suggestions -> {
+            if (suggestions != null) {
+                autoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suggestions);
+                etSearch.setAdapter(autoCompleteAdapter);
+
+                if (!suggestions.isEmpty() && etSearch.hasFocus()) {
+                    etSearch.showDropDown();
+                }
+            }
+        });
+    }
+
+    private void clearSearchFocus() {
+        etSearch.clearFocus();
+        findViewById(R.id.main).requestFocus();
+
+        InputMethodManager imm =
+                (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+        }
     }
 
     private void showAddDialog() {
@@ -139,6 +206,14 @@ public class AdminCategoryActivity extends AppCompatActivity {
                     CategoryRequest request = new CategoryRequest(name);
                     viewModel.create(request);
                 });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            clearSearchFocus();
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
 }

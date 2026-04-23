@@ -21,6 +21,7 @@ public class AdminCategoryViewModel extends ViewModel {
     private final MutableLiveData<List<AdminCategoryResponse>> all = new MutableLiveData<>();
     private final MutableLiveData<List<AdminCategoryResponse>> deleted = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> autocompleteSuggestions = new MutableLiveData<>();
 
     private String currentKeyword = "";
     private boolean isDeletedTab = false;
@@ -39,6 +40,10 @@ public class AdminCategoryViewModel extends ViewModel {
 
     public LiveData<String> getError() {
         return error;
+    }
+
+    public LiveData<List<String>> getAutocompleteSuggestions() {
+        return autocompleteSuggestions;
     }
 
     // LOAD
@@ -71,6 +76,32 @@ public class AdminCategoryViewModel extends ViewModel {
 
         fetchCategories(false);
         fetchCategories(true);
+    }
+
+    // AUTOCOMPLETE
+    public void autocomplete(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            autocompleteSuggestions.setValue(null);
+            return;
+        }
+
+        repository.autocompleteCategories(keyword).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<AdminCategoryResponse>> call, Response<List<AdminCategoryResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<String> suggestions = new java.util.ArrayList<>();
+                    for (AdminCategoryResponse category : response.body()) {
+                        suggestions.add(category.getName());
+                    }
+                    autocompleteSuggestions.setValue(suggestions);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AdminCategoryResponse>> call, Throwable t) {
+                // Ignore errors for autocomplete
+            }
+        });
     }
 
     // RELOAD TAB

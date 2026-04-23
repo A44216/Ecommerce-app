@@ -7,6 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_light"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".ui.activity.home.admin.product.AdminCategoryActivity">
 
     <!-- SEARCH -->
@@ -21,15 +23,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="8dp"
+            android:paddingStart="12dp"
             android:maxLines="1"
             android:inputType="text"
-            android:imeOptions="actionSearch"/>
+            android:imeOptions="actionSearch"
+            android:completionThreshold="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.tabs.TabLayout
