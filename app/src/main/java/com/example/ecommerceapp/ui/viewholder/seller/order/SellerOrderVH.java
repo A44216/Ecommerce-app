@@ -11,7 +11,7 @@ import com.example.ecommerceapp.R;
 
 public class SellerOrderVH extends RecyclerView.ViewHolder {
 
-    public TextView orderCode, customerName,paymentStatus, totalPrice, createdAt;
+    public TextView orderCode, customerName, customerPhone, paymentStatus, totalPrice, createdAt;
     public ImageView ivOrder;
 
     public SellerOrderVH(@NonNull View itemView) {
@@ -19,6 +19,7 @@ public class SellerOrderVH extends RecyclerView.ViewHolder {
 
         orderCode = itemView.findViewById(R.id.tvOrderCode);
         customerName = itemView.findViewById(R.id.tvCustomerName);
+        customerPhone = itemView.findViewById(R.id.tvCustomerPhone);
         paymentStatus = itemView.findViewById(R.id.tvPaymentStatus);
         totalPrice = itemView.findViewById(R.id.tvSellerRevenue);
         createdAt = itemView.findViewById(R.id.tvCreatedAt);

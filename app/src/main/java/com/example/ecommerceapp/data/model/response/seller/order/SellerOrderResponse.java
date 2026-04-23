@@ -12,6 +12,7 @@ public class SellerOrderResponse {
     private OrderStatus status;
 
     private String customerName;
+    private String customerPhone;
 
     private BigDecimal sellerRevenue;
 
@@ -33,6 +34,10 @@ public class SellerOrderResponse {
 
     public String getCustomerName() {
         return customerName;
+    }
+
+    public String getCustomerPhone() {
+        return customerPhone;
     }
 
     public BigDecimal getSellerRevenue() {

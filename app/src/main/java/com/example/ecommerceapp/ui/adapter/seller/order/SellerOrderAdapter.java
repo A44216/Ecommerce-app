@@ -61,7 +61,7 @@ public class SellerOrderAdapter extends ListAdapter<SellerOrderResponse, SellerO
         SellerOrderResponse item = getItem(position);
 
         holder.orderCode.setText("#" + item.getOrderCode());
-        holder.customerName.setText("Khách hàng: " + item.getCustomerName());
+        holder.customerName.setText(item.getCustomerName());
         holder.paymentStatus.setText(item.getPaymentStatus().getLabel());
         if (item.getPaymentStatus() == PaymentStatus.PAID) {
             holder.paymentStatus.setBackgroundResource(R.drawable.bg_status_paid);
@@ -70,14 +70,17 @@ public class SellerOrderAdapter extends ListAdapter<SellerOrderResponse, SellerO
             holder.paymentStatus.setBackgroundResource(R.drawable.bg_status_unpaid);
             holder.paymentStatus.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
         }
-        
-        holder.totalPrice.setText("Tổng tiền: " + String.format("%,.0f", item.getSellerRevenue()) + " đ");
+
+        holder.totalPrice.setText(String.format("%,.0f", item.getSellerRevenue()) + " đ");
 
         String rawDate = item.getCreatedAt();
         if (rawDate != null && rawDate.contains("T")) {
             rawDate = rawDate.split("T")[0];
         }
-        holder.createdAt.setText("Ngày: " + rawDate);
+        holder.createdAt.setText(rawDate);
+
+        String phone = item.getCustomerPhone();
+        holder.customerPhone.setText("SDT: " + (phone != null ? phone : "--"));
 
         com.example.ecommerceapp.utils.ImageLoader.load(
                 holder.itemView.getContext(),

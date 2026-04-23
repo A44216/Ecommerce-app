@@ -76,7 +76,7 @@
     <string name="seller_order_default_description">Mô tả hóa đơn</string>
     <string name="seller_order_default_tracking">Theo dõi đơn hàng</string>
     <string name="seller_order_default_id">#1</string>
-    <string name="seller_order_default_payment_status">Trạng thái: Đã thanh toán</string>
+    <string name="seller_order_default_payment_status">Đã thanh toán</string>
     <string name="seller_product_default_subtotal">25,000 đ</string>
     <string name="seller_order_default_quantity">x1</string>
     <string name="seller_order_default_created_at">05/04/2026</string>

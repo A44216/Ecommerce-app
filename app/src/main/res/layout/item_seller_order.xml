@@ -15,16 +15,20 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
-        <!-- ICON -->
-        <ImageView
-            android:id="@+id/ivOrder"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:contentDescription="@string/desc_image"
-            android:src="@drawable/ic_launcher_background"
-            android:scaleType="centerCrop"
+        <!-- ORDER CODE + PAYMENT STATUS (HEADER) -->
+        <TextView
+            android:id="@+id/tvOrderCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@string/seller_order_default_id"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvOrderCode" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvPaymentStatus" />
 
         <TextView
             android:id="@+id/tvPaymentStatus"
@@ -40,38 +44,22 @@
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tvOrderCode" />
 
-        <!-- ORDER CODE -->
-        <TextView
-            android:id="@+id/tvOrderCode"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:text="@string/seller_order_default_id"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintStart_toEndOf="@id/ivOrder"
-            app:layout_constraintTop_toBottomOf="@id/tvPaymentStatus"
-            app:layout_constraintEnd_toEndOf="parent" />
+        <!-- ICON (LEFT) -->
+        <ImageView
+            android:id="@+id/ivOrder"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/desc_image"
+            android:src="@drawable/ic_launcher_background"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvOrderCode" />
 
-        <!-- CREATED AT -->
-        <TextView
-            android:id="@+id/tvCreatedAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/seller_order_default_created_at"
-            android:layout_marginTop="4dp"
-            android:textSize="16sp"
-            android:textColor="@color/gray"
-            app:layout_constraintTop_toBottomOf="@id/tvOrderCode"
-            app:layout_constraintStart_toStartOf="@id/tvOrderCode"/>
-
-        <!-- CUSTOMER NAME -->
+        <!-- RIGHT SIDE: NAME, DATE, PHONE, PRICE -->
         <TextView
             android:id="@+id/tvCustomerName"
             android:layout_width="0dp"
@@ -81,12 +69,34 @@
             android:ellipsize="end"
             android:textSize="17sp"
             android:textColor="@color/blue"
-            android:layout_marginTop="4dp"
-            app:layout_constraintStart_toStartOf="@id/tvOrderCode"
-            app:layout_constraintTop_toBottomOf="@id/tvCreatedAt"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toEndOf="@id/ivOrder"
+            app:layout_constraintTop_toBottomOf="@id/tvOrderCode"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- TOTAL PRICE (BOTTOM) -->
+        <TextView
+            android:id="@+id/tvCreatedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seller_order_default_created_at"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tvCustomerName"
+            app:layout_constraintStart_toStartOf="@id/tvCustomerName" />
+
+        <TextView
+            android:id="@+id/tvCustomerPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SDT: --"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tvCreatedAt"
+            app:layout_constraintStart_toStartOf="@id/tvCustomerName" />
+
         <TextView
             android:id="@+id/tvSellerRevenue"
             android:layout_width="wrap_content"
@@ -97,9 +107,9 @@
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/red"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@id/tvCustomerName"
-            app:layout_constraintTop_toBottomOf="@id/tvCustomerName" />
+            app:layout_constraintTop_toBottomOf="@id/tvCustomerPhone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
