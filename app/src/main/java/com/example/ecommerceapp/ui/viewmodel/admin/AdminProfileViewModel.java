@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.response.admin.profile.AdminProfileResponse;
-import com.example.ecommerceapp.data.repository.admin.profile.AdminProfileRepository;
+import com.example.ecommerceapp.data.repository.admin.AdminProfileRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;

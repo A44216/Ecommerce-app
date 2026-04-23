@@ -18,7 +18,7 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.seller.shop.SellerShopRequest;
-import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerShopRepository;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerShopViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerShopViewModelFactory;
 import com.example.ecommerceapp.utils.ImageLoader;

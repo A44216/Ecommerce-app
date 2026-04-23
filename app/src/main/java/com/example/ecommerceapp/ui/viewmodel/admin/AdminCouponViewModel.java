@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.enums.CouponStatus;
-import com.example.ecommerceapp.data.model.request.admin.profile.AdminCouponRequest;
-import com.example.ecommerceapp.data.model.response.admin.profile.AdminCouponResponse;
+import com.example.ecommerceapp.data.model.request.admin.management.AdminCouponRequest;
+import com.example.ecommerceapp.data.model.response.admin.management.coupon.AdminCouponResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
-import com.example.ecommerceapp.data.repository.admin.profile.AdminCouponRepository;
+import com.example.ecommerceapp.data.repository.admin.AdminCouponRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +24,8 @@ public class AdminCouponViewModel extends ViewModel {
     public AdminCouponViewModel(AdminCouponRepository repository) {
         this.repository = repository;
     }
+
+    private final MutableLiveData<List<String>> autocompleteSuggestions = new MutableLiveData<>();
 
     private final Map<String, MutableLiveData<List<AdminCouponResponse>>> cache = new java.util.HashMap<>();
     private final Map<String, Integer> currentPageMap = new java.util.HashMap<>();
@@ -56,6 +58,34 @@ public class AdminCouponViewModel extends ViewModel {
 
     public LiveData<String> getError() {
         return error;
+    }
+
+    public LiveData<List<String>> getAutocompleteSuggestions() {
+        return autocompleteSuggestions;
+    }
+
+    // AUTOCOMPLETE
+    public void autocomplete(String keyword) {
+        if (repository == null) return;
+        
+        if (keyword == null || keyword.trim().isEmpty()) {
+            autocompleteSuggestions.setValue(null);
+            return;
+        }
+
+        repository.autocompleteCoupons(keyword).enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    autocompleteSuggestions.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+                // Ignore errors for autocomplete
+            }
+        });
     }
 
     public void loadCoupons(CouponStatus status, String keyword, Boolean isDeleted, boolean isLoadMore, boolean isSilent) {

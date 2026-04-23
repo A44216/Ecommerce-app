@@ -4,15 +4,13 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.repository.seller.review.SellerReviewRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerReviewRepository;
 import com.example.ecommerceapp.ui.adapter.seller.review.SellerReviewPagerAdapter;
-import com.example.ecommerceapp.ui.fragment.seller.review.SellerReviewListFragment;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerReviewViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerReviewViewModelFactory;
 import com.google.android.material.button.MaterialButton;

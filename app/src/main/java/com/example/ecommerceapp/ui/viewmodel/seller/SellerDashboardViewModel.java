@@ -9,7 +9,7 @@ import com.example.ecommerceapp.data.enums.DateRange;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardKPIResponse;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerDashboardTopProductResponse;
 import com.example.ecommerceapp.data.model.response.seller.dashboard.SellerRevenueChartResponse;
-import com.example.ecommerceapp.data.repository.seller.dashboard.SellerDashboardRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerDashboardRepository;
 
 import java.util.List;
 

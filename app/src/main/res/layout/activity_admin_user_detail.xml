@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_light"
     android:id="@+id/main"
-    tools:context=".ui.activity.home.admin.user.AdminUserDetailActivity">
+    tools:context=".ui.activity.home.admin.management.user.AdminUserDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"

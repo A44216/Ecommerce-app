@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.ecommerceapp.data.repository.admin.profile.AdminCouponRepository;
+import com.example.ecommerceapp.data.repository.admin.AdminCouponRepository;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminCouponViewModel;
 
 public class AdminCouponViewModelFactory implements ViewModelProvider.Factory {

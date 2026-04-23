@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
-import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerProductRepository;
 
 import java.util.HashMap;
 import java.util.List;

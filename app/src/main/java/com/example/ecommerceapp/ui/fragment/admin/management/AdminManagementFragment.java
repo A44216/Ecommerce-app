@@ -12,12 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.ecommerceapp.R;
-import com.example.ecommerceapp.ui.activity.home.admin.complaint.AdminComplaintActivity;
-import com.example.ecommerceapp.ui.activity.home.admin.product.AdminCategoryActivity;
-import com.example.ecommerceapp.ui.activity.home.admin.product.AdminProductActivity;
-import com.example.ecommerceapp.ui.activity.home.admin.profile.AdminCouponActivity;
-import com.example.ecommerceapp.ui.activity.home.admin.shop.AdminShopActivity;
-import com.example.ecommerceapp.ui.activity.home.admin.user.AdminUserActivity;
+import com.example.ecommerceapp.ui.activity.home.admin.management.complaint.AdminComplaintActivity;
+import com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminCategoryActivity;
+import com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductActivity;
+import com.example.ecommerceapp.ui.activity.home.admin.management.coupon.AdminCouponActivity;
+import com.example.ecommerceapp.ui.activity.home.admin.management.shop.AdminShopActivity;
+import com.example.ecommerceapp.ui.activity.home.admin.management.user.AdminUserActivity;
 
 public class AdminManagementFragment extends Fragment {
 

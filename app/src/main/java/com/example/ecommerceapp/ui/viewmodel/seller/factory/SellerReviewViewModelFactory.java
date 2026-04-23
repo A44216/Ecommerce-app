@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.ecommerceapp.data.repository.seller.review.SellerReviewRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerReviewRepository;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerReviewViewModel;
 
 public class SellerReviewViewModelFactory implements ViewModelProvider.Factory {

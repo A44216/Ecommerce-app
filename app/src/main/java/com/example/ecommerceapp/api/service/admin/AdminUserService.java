@@ -3,8 +3,8 @@ package com.example.ecommerceapp.api.service.admin;
 import com.example.ecommerceapp.data.enums.Role;
 import com.example.ecommerceapp.data.enums.UserStatus;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
-import com.example.ecommerceapp.data.model.response.admin.user.AdminUserDetailResponse;
-import com.example.ecommerceapp.data.model.response.admin.user.AdminUserResponse;
+import com.example.ecommerceapp.data.model.response.admin.management.user.AdminUserDetailResponse;
+import com.example.ecommerceapp.data.model.response.admin.management.user.AdminUserResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

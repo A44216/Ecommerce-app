@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.enums.ShopStatus;
-import com.example.ecommerceapp.data.model.response.admin.shop.AdminShopDetailResponse;
-import com.example.ecommerceapp.data.repository.admin.shop.AdminShopRepository;
+import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopDetailResponse;
+import com.example.ecommerceapp.data.repository.admin.AdminShopRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;

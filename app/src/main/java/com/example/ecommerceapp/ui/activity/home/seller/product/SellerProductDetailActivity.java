@@ -19,7 +19,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
-import com.example.ecommerceapp.data.repository.seller.product.SellerProductRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerProductRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.review.SellerReviewActivity;
 import com.example.ecommerceapp.ui.adapter.seller.product.SellerImagePagerAdapter;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.enums.ShopStatus;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
-import com.example.ecommerceapp.data.model.response.admin.shop.AdminShopResponse;
-import com.example.ecommerceapp.data.repository.admin.shop.AdminShopRepository;
+import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
+import com.example.ecommerceapp.data.repository.admin.AdminShopRepository;
 
 import java.util.ArrayList;
 import java.util.List;

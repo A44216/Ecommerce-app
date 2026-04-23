@@ -1,9 +1,11 @@
 package com.example.ecommerceapp.api.service.admin;
 
 import com.example.ecommerceapp.data.enums.CouponStatus;
-import com.example.ecommerceapp.data.model.request.admin.profile.AdminCouponRequest;
-import com.example.ecommerceapp.data.model.response.admin.profile.AdminCouponResponse;
+import com.example.ecommerceapp.data.model.request.admin.management.AdminCouponRequest;
+import com.example.ecommerceapp.data.model.response.admin.management.coupon.AdminCouponResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -53,4 +55,11 @@ public interface AdminCouponService {
     // RESTORE
     @PATCH("admin/coupons/{id}/restore")
     Call<Void> restoreCoupon(@Path("id") Integer id);
+
+    // AUTOCOMPLETE
+    @GET("admin/coupons/autocomplete")
+    Call<List<String>> autocompleteCoupons(
+            @Query("keyword") String keyword
+    );
+
 }

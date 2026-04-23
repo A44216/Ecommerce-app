@@ -22,7 +22,7 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.enums.ShopStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerShopRepository;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerChatActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerShopInfoActivity;

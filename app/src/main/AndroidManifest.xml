@@ -15,10 +15,10 @@
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.activity.home.admin.profile.AdminCouponActivity"
+            android:name=".ui.activity.home.admin.management.coupon.AdminCouponActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.profile.AdminAddAndEditCouponActivity"
+            android:name=".ui.activity.home.admin.management.coupon.AdminAddAndEditCouponActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.admin.profile.AdminProfileInfoActivity"
@@ -27,7 +27,7 @@
             android:name=".ui.activity.home.admin.profile.AdminChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.product.AdminCategoryActivity"
+            android:name=".ui.activity.home.admin.management.product.AdminCategoryActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.seller.review.SellerReviewActivity"
@@ -57,22 +57,22 @@
             android:name=".ui.activity.home.UserHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.user.AdminUserDetailActivity"
+            android:name=".ui.activity.home.admin.management.user.AdminUserDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.user.AdminUserActivity"
+            android:name=".ui.activity.home.admin.management.user.AdminUserActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.product.AdminProductActivity"
+            android:name=".ui.activity.home.admin.management.product.AdminProductActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.shop.AdminShopActivity"
+            android:name=".ui.activity.home.admin.management.shop.AdminShopActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.shop.AdminShopDetailActivity"
+            android:name=".ui.activity.home.admin.management.shop.AdminShopDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.admin.complaint.AdminComplaintActivity"
+            android:name=".ui.activity.home.admin.management.complaint.AdminComplaintActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.login.RegisterActivity"

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
-import com.example.ecommerceapp.data.repository.seller.review.SellerReviewRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerReviewRepository;
 import com.example.ecommerceapp.ui.adapter.seller.review.SellerReviewAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerReviewViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerReviewViewModelFactory;

@@ -2,8 +2,8 @@ package com.example.ecommerceapp.api.service.admin;
 
 import com.example.ecommerceapp.data.enums.ShopStatus;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
-import com.example.ecommerceapp.data.model.response.admin.shop.AdminShopDetailResponse;
-import com.example.ecommerceapp.data.model.response.admin.shop.AdminShopResponse;
+import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopDetailResponse;
+import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

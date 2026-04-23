@@ -11,7 +11,7 @@ import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminDashboa
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminOrderStatusChartResponse;
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminRevenueChartResponse;
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminTopShopResponse;
-import com.example.ecommerceapp.data.repository.admin.dashboard.AdminDashboardRepository;
+import com.example.ecommerceapp.data.repository.admin.AdminDashboardRepository;
 
 import java.util.List;
 

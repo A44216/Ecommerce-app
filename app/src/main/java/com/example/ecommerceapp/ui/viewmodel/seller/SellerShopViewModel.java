@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.request.seller.shop.SellerShopRequest;
 import com.example.ecommerceapp.data.model.response.seller.shop.SellerShopResponse;
-import com.example.ecommerceapp.data.repository.seller.shop.SellerShopRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerShopRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;

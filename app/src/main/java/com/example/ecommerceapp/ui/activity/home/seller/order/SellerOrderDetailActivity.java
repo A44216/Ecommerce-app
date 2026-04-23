@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.enums.OrderStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.repository.seller.order.SellerOrderRepository;
+import com.example.ecommerceapp.data.repository.seller.SellerOrderRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderDetailAdapter;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderStatusAdapter;
