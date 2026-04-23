@@ -1,6 +1,6 @@
 package com.example.ecommerceapp.ui.adapter.admin.management.coupon;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
@@ -16,13 +18,10 @@ import com.example.ecommerceapp.data.enums.CouponStatus;
 import com.example.ecommerceapp.data.model.response.admin.management.coupon.AdminCouponResponse;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.CouponViewHolder> {
+public class AdminCouponAdapter extends ListAdapter<AdminCouponResponse, AdminCouponAdapter.CouponViewHolder> {
 
-    private final Context context;
-    private final List<AdminCouponResponse> list = new ArrayList<>();
     private OnItemClickListener listener;
     private boolean isDeletedTab = false;
 
@@ -31,8 +30,21 @@ public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.
         void onItemLongClick(AdminCouponResponse coupon, View view);
     }
 
-    public AdminCouponAdapter(Context context) {
-        this.context = context;
+    public AdminCouponAdapter() {
+        super(new DiffUtil.ItemCallback<AdminCouponResponse>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull AdminCouponResponse oldItem, @NonNull AdminCouponResponse newItem) {
+                return oldItem.getId() == newItem.getId();
+            }
+
+            @SuppressLint("DiffUtilEquals")
+            @Override
+            public boolean areContentsTheSame(@NonNull AdminCouponResponse oldItem, @NonNull AdminCouponResponse newItem) {
+                return Objects.equals(oldItem.getCode(), newItem.getCode()) &&
+                       oldItem.getStatus() == newItem.getStatus() &&
+                       Objects.equals(oldItem.getUsedCount(), newItem.getUsedCount());
+            }
+        });
     }
 
     public void setDeletedTab(boolean deletedTab) {
@@ -43,30 +55,17 @@ public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.
         this.listener = listener;
     }
 
-    public void submitList(List<AdminCouponResponse> newList) {
-        list.clear();
-        if (newList != null) {
-            list.addAll(newList);
-        }
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public CouponViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_admin_coupon, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_coupon, parent, false);
         return new CouponViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CouponViewHolder holder, int position) {
-        AdminCouponResponse item = list.get(position);
-        holder.bind(item);
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
+        AdminCouponResponse item = getItem(position);
+        holder.bind(item, isDeletedTab);
     }
 
     class CouponViewHolder extends RecyclerView.ViewHolder {
@@ -87,21 +86,21 @@ public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.
             itemView.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onItemClick(list.get(pos));
+                    listener.onItemClick(getItem(pos));
                 }
             });
 
             itemView.setOnLongClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onItemLongClick(list.get(pos), v);
+                    listener.onItemLongClick(getItem(pos), v);
                     return true;
                 }
                 return false;
             });
         }
 
-        public void bind(AdminCouponResponse item) {
+        public void bind(AdminCouponResponse item, boolean deletedTab) {
             tvCouponCode.setText(item.getCode());
 
             if (item.getDiscountPercent() != null) {
@@ -120,7 +119,7 @@ public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.
                 String end = item.getEndDate() != null ? item.getEndDate().format(formatter) : "";
                 tvDateRange.setText(start + " - " + end);
             } else {
-                tvDateRange.setText(""); // Fallback cho API thấp
+                tvDateRange.setText("");
             }
 
             int used = item.getUsedCount() != null ? item.getUsedCount() : 0;
@@ -136,37 +135,37 @@ public class AdminCouponAdapter extends RecyclerView.Adapter<AdminCouponAdapter.
             }
             tvMinOrder.setText("Đơn tối thiểu: " + minOrder + " đ");
 
-            if (isDeletedTab) {
+            if (deletedTab) {
                 tvStatus.setText("Đã xóa");
-                tvStatus.setTextColor(Color.parseColor("#9E9E9E")); // Gray
+                tvStatus.setTextColor(Color.parseColor("#9E9E9E"));
                 tvStatus.setBackgroundColor(Color.parseColor("#F5F5F5"));
             } else {
-                setupStatus(item.getStatus(), item);
+                setupStatus(item.getStatus());
             }
         }
 
-        private void setupStatus(CouponStatus status, AdminCouponResponse item) {
+        private void setupStatus(CouponStatus status) {
             if (status == null) return;
             
             switch (status) {
                 case ACTIVE:
                     tvStatus.setText("Hoạt động");
-                    tvStatus.setTextColor(Color.parseColor("#4CAF50")); // Green
+                    tvStatus.setTextColor(Color.parseColor("#4CAF50"));
                     tvStatus.setBackgroundColor(Color.parseColor("#E8F5E9"));
                     break;
                 case DISABLED:
                     tvStatus.setText("Vô hiệu");
-                    tvStatus.setTextColor(Color.parseColor("#FF9800")); // Orange
+                    tvStatus.setTextColor(Color.parseColor("#FF9800"));
                     tvStatus.setBackgroundColor(Color.parseColor("#FFF3E0"));
                     break;
                 case EXPIRED:
                     tvStatus.setText("Hết hạn");
-                    tvStatus.setTextColor(Color.parseColor("#F44336")); // Red
+                    tvStatus.setTextColor(Color.parseColor("#F44336"));
                     tvStatus.setBackgroundColor(Color.parseColor("#FFEBEE"));
                     break;
                 default:
                     tvStatus.setText("Đã xóa");
-                    tvStatus.setTextColor(Color.parseColor("#9E9E9E")); // Gray
+                    tvStatus.setTextColor(Color.parseColor("#9E9E9E"));
                     tvStatus.setBackgroundColor(Color.parseColor("#F5F5F5"));
                     break;
             }

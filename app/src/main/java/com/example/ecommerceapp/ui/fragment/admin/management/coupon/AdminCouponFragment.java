@@ -87,7 +87,7 @@ public class AdminCouponFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new AdminCouponAdapter(requireContext());
+        adapter = new AdminCouponAdapter();
         adapter.setDeletedTab(position == 3);
         adapter.setOnItemClickListener(new AdminCouponAdapter.OnItemClickListener() {
             @Override
