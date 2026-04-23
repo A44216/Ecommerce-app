@@ -1,6 +1,8 @@
 package com.example.ecommerceapp.data.enums;
 
 public enum ShopStatus {
-    ACTIVE,
+    PENDING,
+    REJECTED,
+    APPROVED,
     BLOCKED
 }

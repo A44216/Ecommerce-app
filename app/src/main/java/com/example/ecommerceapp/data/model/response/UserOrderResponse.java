@@ -5,6 +5,7 @@ import java.util.List;
 
 public class UserOrderResponse {
     private Integer id;
+    private String orderCode;
     private Integer userId;
     private Integer shopId;
     private String status;
@@ -21,6 +22,7 @@ public class UserOrderResponse {
 
     // --- GETTERS ---
     public Integer getId() { return id; }
+    public String getOrderCode() { return orderCode; }
     public Integer getUserId() { return userId; }
     public Integer getShopId() { return shopId; }
     public String getStatus() { return status; }
@@ -33,6 +35,7 @@ public class UserOrderResponse {
 
     // --- SETTERS (Thêm vào để Retrofit/Gson gán dữ liệu an toàn) ---
     public void setId(Integer id) { this.id = id; }
+    public void setOrderCode(String orderCode) { this.orderCode = orderCode; }
     public void setUserId(Integer userId) { this.userId = userId; }
     public void setShopId(Integer shopId) { this.shopId = shopId; }
     public void setStatus(String status) { this.status = status; }
