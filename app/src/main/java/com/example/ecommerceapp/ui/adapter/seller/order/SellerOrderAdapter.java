@@ -6,52 +6,59 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.enums.PaymentStatus;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 import com.example.ecommerceapp.ui.viewholder.seller.order.SellerOrderVH;
-import com.example.ecommerceapp.utils.ImageLoader;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderVH> {
+public class SellerOrderAdapter extends ListAdapter<SellerOrderResponse, SellerOrderVH> {
 
     public interface OnItemClickListener {
         void onClick(SellerOrderResponse item);
     }
 
-    private List<SellerOrderResponse> list = new ArrayList<>();
-
     private OnItemClickListener listener;
+
+    public SellerOrderAdapter() {
+        super(new DiffUtil.ItemCallback<SellerOrderResponse>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull SellerOrderResponse oldItem, @NonNull SellerOrderResponse newItem) {
+                return Objects.equals(oldItem.getOrderId(), newItem.getOrderId());
+            }
+
+            @SuppressLint("DiffUtilEquals")
+            @Override
+            public boolean areContentsTheSame(@NonNull SellerOrderResponse oldItem, @NonNull SellerOrderResponse newItem) {
+                return Objects.equals(oldItem.getOrderId(), newItem.getOrderId()) &&
+                       oldItem.getStatus() == newItem.getStatus() &&
+                       oldItem.getPaymentStatus() == newItem.getPaymentStatus() &&
+                       Objects.equals(oldItem.getSellerRevenue(), newItem.getSellerRevenue());
+            }
+        });
+    }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setData(List<SellerOrderResponse> data) {
-        this.list = (data != null) ? data : new ArrayList<>();
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public SellerOrderVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_seller_order, parent, false);
-
         return new SellerOrderVH(view);
     }
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull SellerOrderVH holder, int position) {
-
-        SellerOrderResponse item = list.get(position);
+        SellerOrderResponse item = getItem(position);
 
         holder.orderCode.setText("#" + item.getOrderCode());
         holder.customerName.setText("Khách hàng: " + item.getCustomerName());
@@ -66,13 +73,13 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderVH> {
         
         holder.totalPrice.setText("Tổng tiền: " + String.format("%,.0f", item.getSellerRevenue()) + " đ");
 
-        String rawDate = item.getCreatedAt(); // ví dụ: 2026-04-05T19:05:31
+        String rawDate = item.getCreatedAt();
         if (rawDate != null && rawDate.contains("T")) {
-            rawDate = rawDate.split("T")[0]; // lấy phần trước T
+            rawDate = rawDate.split("T")[0];
         }
         holder.createdAt.setText("Ngày: " + rawDate);
 
-        ImageLoader.load(
+        com.example.ecommerceapp.utils.ImageLoader.load(
                 holder.itemView.getContext(),
                 holder.ivOrder,
                 item.getImageOrder());
@@ -82,11 +89,5 @@ public class SellerOrderAdapter extends RecyclerView.Adapter<SellerOrderVH> {
                 listener.onClick(item);
             }
         });
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
     }
 }

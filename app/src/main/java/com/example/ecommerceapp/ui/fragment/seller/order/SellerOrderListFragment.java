@@ -115,7 +115,7 @@ public class SellerOrderListFragment extends Fragment {
         viewModel.getOrders(status).observe(getViewLifecycleOwner(), data -> {
             isLoadingMore = false;
             if (data != null) {
-                adapter.setData(data);
+                adapter.submitList(data);
             }
         });
     }
