@@ -9,6 +9,8 @@ import com.example.ecommerceapp.data.model.response.admin.management.user.AdminU
 import com.example.ecommerceapp.data.model.response.admin.management.user.AdminUserResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 
 public class AdminUserRepository {
@@ -29,5 +31,9 @@ public class AdminUserRepository {
 
     public Call<Void> changeStatus(int id, UserStatus status) {
         return service.changeStatus(id, status);
+    }
+
+    public Call<List<String>> autocomplete(String keyword) {
+        return service.autocompleteUsers(keyword);
     }
 }

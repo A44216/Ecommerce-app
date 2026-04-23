@@ -2,7 +2,13 @@ package com.example.ecommerceapp.ui.activity.home.admin.management.user;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -30,7 +36,6 @@ import com.example.ecommerceapp.data.repository.admin.AdminUserRepository;
 import com.example.ecommerceapp.ui.adapter.admin.management.user.AdminUserAdapter;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminUserViewModel;
 import com.example.ecommerceapp.ui.viewmodel.admin.factory.AdminUserViewModelFactory;
-import com.google.android.material.textfield.TextInputEditText;
 
 public class AdminUserActivity extends AppCompatActivity {
 
@@ -38,12 +43,16 @@ public class AdminUserActivity extends AppCompatActivity {
     private AdminUserAdapter adapter;
 
     private ImageView ivBack;
-    private TextInputEditText edtSearch;
+    private AutoCompleteTextView edtSearch;
     private AutoCompleteTextView actvFilterRole;
     private AutoCompleteTextView actvFilterStatus;
     private RecyclerView rvUsers;
     private ProgressBar progressBar;
     private TextView tvEmpty;
+
+    private ArrayAdapter<String> autoCompleteAdapter;
+    private Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     private final ActivityResultLauncher<Intent> detailLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -179,22 +188,88 @@ public class AdminUserActivity extends AppCompatActivity {
     }
 
     private void setupSearch() {
+        autoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
+        edtSearch.setAdapter(autoCompleteAdapter);
         edtSearch.setText(viewModel.getCurrentKeyword());
-        
+
         edtSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH ||
                     (event != null && event.getAction() == android.view.KeyEvent.ACTION_DOWN && event.getKeyCode() == android.view.KeyEvent.KEYCODE_ENTER)) {
                 viewModel.setCurrentKeyword(v.getText().toString().trim());
                 viewModel.fetchUsers(false, false);
-                
-                android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
                 return true;
             }
             return false;
         });
+
+        edtSearch.setOnItemClickListener((parent, view, position, id) -> {
+            String selected = autoCompleteAdapter.getItem(position);
+            if (selected != null) {
+                viewModel.setCurrentKeyword(selected);
+                viewModel.fetchUsers(false, false);
+                edtSearch.clearFocus();
+            }
+        });
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (searchRunnable != null) {
+                    searchHandler.removeCallbacks(searchRunnable);
+                }
+
+                searchRunnable = () -> {
+                    String keyword = s.toString().trim();
+                    if (!keyword.isEmpty()) {
+                        viewModel.autocomplete(keyword);
+                    }
+                };
+
+                searchHandler.postDelayed(searchRunnable, 400);
+            }
+        });
+
+        viewModel.getAutocompleteSuggestions().observe(this, suggestions -> {
+            if (suggestions != null) {
+                autoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suggestions);
+                edtSearch.setAdapter(autoCompleteAdapter);
+
+                if (!suggestions.isEmpty() && edtSearch.hasFocus()) {
+                    edtSearch.showDropDown();
+                }
+            }
+        });
+    }
+
+    private void clearSearchFocus() {
+        edtSearch.clearFocus();
+        actvFilterRole.clearFocus();
+        actvFilterStatus.clearFocus();
+        findViewById(R.id.main).requestFocus();
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        // Dismiss all dropdowns when touching outside
+        if (actvFilterRole != null) actvFilterRole.dismissDropDown();
+        if (actvFilterStatus != null) actvFilterStatus.dismissDropDown();
+        if (edtSearch != null) edtSearch.dismissDropDown();
+
+        if (getCurrentFocus() != null) {
+            clearSearchFocus();
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     private void setupObservers() {

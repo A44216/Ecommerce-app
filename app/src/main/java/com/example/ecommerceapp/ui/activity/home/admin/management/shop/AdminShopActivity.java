@@ -247,6 +247,8 @@ public class AdminShopActivity extends AppCompatActivity {
 
     private void clearSearchFocus() {
         edtSearch.clearFocus();
+        actvSortCreated.clearFocus();
+        actvFilterStatus.clearFocus();
         findViewById(R.id.main).requestFocus();
 
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -257,6 +259,11 @@ public class AdminShopActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        // Dismiss all dropdowns when touching outside
+        if (actvSortCreated != null) actvSortCreated.dismissDropDown();
+        if (actvFilterStatus != null) actvFilterStatus.dismissDropDown();
+        if (edtSearch != null) edtSearch.dismissDropDown();
+
         if (getCurrentFocus() != null) {
             clearSearchFocus();
         }

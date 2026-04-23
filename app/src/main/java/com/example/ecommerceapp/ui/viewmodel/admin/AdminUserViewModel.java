@@ -44,6 +44,7 @@ public class AdminUserViewModel extends ViewModel {
     private final MutableLiveData<List<AdminUserResponse>> usersLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> autocompleteSuggestions = new MutableLiveData<>();
 
     public LiveData<List<AdminUserResponse>> getUsersLiveData() {
         return usersLiveData;
@@ -55,6 +56,28 @@ public class AdminUserViewModel extends ViewModel {
 
     public LiveData<String> getError() {
         return error;
+    }
+
+    public LiveData<List<String>> getAutocompleteSuggestions() {
+        return autocompleteSuggestions;
+    }
+
+    public void autocomplete(String keyword) {
+        repository.autocomplete(keyword).enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    autocompleteSuggestions.setValue(response.body());
+                } else {
+                    autocompleteSuggestions.setValue(new ArrayList<>());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+                autocompleteSuggestions.setValue(new ArrayList<>());
+            }
+        });
     }
 
     private int currentPage = 0;
