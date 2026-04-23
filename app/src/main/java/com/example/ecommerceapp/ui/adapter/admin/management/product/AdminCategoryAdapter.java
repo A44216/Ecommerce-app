@@ -8,18 +8,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminCategoryResponse;
 
-import java.util.List;
+import java.util.Objects;
 
-public class AdminCategoryAdapter extends RecyclerView.Adapter<AdminCategoryAdapter.ViewHolder> {
+public class AdminCategoryAdapter extends ListAdapter<AdminCategoryResponse, AdminCategoryAdapter.ViewHolder> {
 
-    private List<AdminCategoryResponse> list;
     private final OnActionListener listener;
-
     private boolean isDeletedTab;
 
     public interface OnActionListener {
@@ -28,16 +28,26 @@ public class AdminCategoryAdapter extends RecyclerView.Adapter<AdminCategoryAdap
         void onRestore(AdminCategoryResponse category);
     }
 
-    public AdminCategoryAdapter(List<AdminCategoryResponse> list, OnActionListener listener, boolean isDeletedTab) {
-        this.list = list;
+    public AdminCategoryAdapter(OnActionListener listener, boolean isDeletedTab) {
+        super(new DiffUtil.ItemCallback<AdminCategoryResponse>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull AdminCategoryResponse oldItem, @NonNull AdminCategoryResponse newItem) {
+                return oldItem.getId() == newItem.getId();
+            }
+
+            @SuppressLint("DiffUtilEquals")
+            @Override
+            public boolean areContentsTheSame(@NonNull AdminCategoryResponse oldItem, @NonNull AdminCategoryResponse newItem) {
+                return Objects.equals(oldItem.getName(), newItem.getName()) &&
+                       Objects.equals(oldItem.getIsDeleted(), newItem.getIsDeleted());
+            }
+        });
         this.listener = listener;
         this.isDeletedTab = isDeletedTab;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setData(List<AdminCategoryResponse> list) {
-        this.list = list;
-        notifyDataSetChanged();
+    public void setDeletedTab(boolean deletedTab) {
+        this.isDeletedTab = deletedTab;
     }
 
     @NonNull
@@ -60,18 +70,13 @@ public class AdminCategoryAdapter extends RecyclerView.Adapter<AdminCategoryAdap
             holder.ivRestore.setVisibility(View.VISIBLE);
         }
 
-        AdminCategoryResponse item = list.get(position);
+        AdminCategoryResponse item = getItem(position);
 
         holder.tvName.setText(item.getName());
 
         holder.ivEdit.setOnClickListener(v -> listener.onEdit(item));
         holder.ivDelete.setOnClickListener(v -> listener.onDelete(item));
         holder.ivRestore.setOnClickListener(v -> listener.onRestore(item));
-    }
-
-    @Override
-    public int getItemCount() {
-        return list == null ? 0 : list.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

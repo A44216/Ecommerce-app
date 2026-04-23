@@ -88,7 +88,6 @@ public class AdminCategoryListFragment extends Fragment {
 
     private void setupRecycler() {
         adapter = new AdminCategoryAdapter(
-                new ArrayList<>(),
                 new AdminCategoryAdapter.OnActionListener() {
 
                     @Override
@@ -134,12 +133,12 @@ public class AdminCategoryListFragment extends Fragment {
         if (type == TYPE_DELETED) {
             viewModel.getDeleted().observe(getViewLifecycleOwner(), list -> {
                 if (list == null) return;
-                adapter.setData(list);
+                adapter.submitList(new java.util.ArrayList<>(list));
             });
         } else {
             viewModel.getAll().observe(getViewLifecycleOwner(), list -> {
                 if (list == null) return;
-                adapter.setData(list);
+                adapter.submitList(new java.util.ArrayList<>(list));
             });
         }
     }
