@@ -6,6 +6,8 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.user.AdminUserDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.user.AdminUserResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
@@ -41,4 +43,10 @@ public interface AdminUserService {
             @Path("id") int id,
             @Query("role") Role role
     );
+
+    @GET("admin/users/autocomplete")
+    Call<List<String>> autocompleteUsers(
+            @Query("keyword") String keyword
+    );
+
 }

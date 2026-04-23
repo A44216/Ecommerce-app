@@ -5,6 +5,8 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
@@ -31,4 +33,10 @@ public interface AdminShopService {
             @Path("id") int id,
             @Query("status") ShopStatus status
     );
+
+    @GET("admin/shops/autocomplete")
+    Call<List<String>> autocompleteShops(
+            @Query("keyword") String keyword
+    );
+
 }

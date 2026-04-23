@@ -24,6 +24,7 @@ public class AdminShopViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLastPage = new MutableLiveData<>(false);
+    private final MutableLiveData<List<String>> autocompleteSuggestions = new MutableLiveData<>();
 
     private int currentPage = 0;
     private final int pageSize = 10;
@@ -50,6 +51,28 @@ public class AdminShopViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsLastPage() {
         return isLastPage;
+    }
+
+    public LiveData<List<String>> getAutocompleteSuggestions() {
+        return autocompleteSuggestions;
+    }
+
+    public void autocomplete(String keyword) {
+        repository.autocomplete(keyword).enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    autocompleteSuggestions.setValue(response.body());
+                } else {
+                    autocompleteSuggestions.setValue(new ArrayList<>());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+                autocompleteSuggestions.setValue(new ArrayList<>());
+            }
+        });
     }
 
     public void setFilters(ShopStatus status, String keyword, String sortBy, String sortDir) {

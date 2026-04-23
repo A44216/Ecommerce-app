@@ -8,6 +8,8 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 
 public class AdminShopRepository {
@@ -28,5 +30,9 @@ public class AdminShopRepository {
 
     public Call<Void> updateShopStatus(int id, ShopStatus status) {
         return service.updateShopStatus(id, status);
+    }
+
+    public Call<List<String>> autocomplete(String keyword) {
+        return service.autocompleteShops(keyword);
     }
 }

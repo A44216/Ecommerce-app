@@ -17,7 +17,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/admin_profile_category_search"
-        android:padding="12dp"
+        android:padding="10dp"
         android:textColorHint="@color/gray"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:maxLines="1"
-            android:inputType="text"
+            android:inputType="textNoSuggestions"
             android:imeOptions="actionSearch"
             android:completionThreshold="1"/>
     </com.google.android.material.textfield.TextInputLayout>
