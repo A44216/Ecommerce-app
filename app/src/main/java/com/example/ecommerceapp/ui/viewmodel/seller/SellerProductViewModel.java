@@ -152,19 +152,29 @@ public class SellerProductViewModel extends ViewModel {
     private final MutableLiveData<Boolean> deleteResult = new MutableLiveData<>();
 
     public void deleteProduct(int id) {
+        // OPTIMISTIC UPDATE: xóa khỏi cache ngay lập tức
+        String key = getKey();
+        MutableLiveData<List<SellerProductResponse>> liveData = cache.get(key);
+        if (liveData != null) {
+            List<SellerProductResponse> current = liveData.getValue();
+            if (current != null) {
+                List<SellerProductResponse> updated = new java.util.ArrayList<>(current);
+                updated.removeIf(p -> java.util.Objects.equals(p.getId(), id));
+                liveData.setValue(updated);
+            }
+        }
 
+        // Gọi API xóa ở background
         repository.deleteProduct(id)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-
-                        if (response.isSuccessful()) {
-                            deleteResult.setValue(true);
-                            for (String key : cache.keySet()) {
-                                cache.get(key).setValue(null);
-                            }
-                        } else {
+                        if (!response.isSuccessful()) {
                             deleteResult.setValue(false);
+                            // Nếu API thất bại, fetch lại để đồng bộ
+                            fetchProducts(false);
+                        } else {
+                            deleteResult.setValue(true);
                         }
                     }
 
@@ -187,17 +197,27 @@ public class SellerProductViewModel extends ViewModel {
 
     public void restoreProduct(int id) {
 
+        // OPTIMISTIC UPDATE: xóa khỏi cache ngay lập tức
+        String key = getKey();
+        MutableLiveData<List<SellerProductResponse>> liveData = cache.get(key);
+        if (liveData != null) {
+            List<SellerProductResponse> current = liveData.getValue();
+            if (current != null) {
+                List<SellerProductResponse> updated = new java.util.ArrayList<>(current);
+                updated.removeIf(p -> java.util.Objects.equals(p.getId(), id));
+                liveData.setValue(updated);
+            }
+        }
+
         repository.restoreProduct(id)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
                             restoreResult.setValue(true);
-                            for (String key : cache.keySet()) {
-                                cache.get(key).setValue(null);
-                            }
                         } else {
                             restoreResult.setValue(false);
+                            fetchProducts(false);
                         }
                     }
 
@@ -216,17 +236,27 @@ public class SellerProductViewModel extends ViewModel {
 
     public void submitProduct(int id) {
 
+        // OPTIMISTIC UPDATE: xóa khỏi cache ngay lập tức
+        String key = getKey();
+        MutableLiveData<List<SellerProductResponse>> liveData = cache.get(key);
+        if (liveData != null) {
+            List<SellerProductResponse> current = liveData.getValue();
+            if (current != null) {
+                List<SellerProductResponse> updated = new java.util.ArrayList<>(current);
+                updated.removeIf(p -> java.util.Objects.equals(p.getId(), id));
+                liveData.setValue(updated);
+            }
+        }
+
         repository.submitProduct(id)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
                             submitResult.setValue(true);
-                            for (String key : cache.keySet()) {
-                                cache.get(key).setValue(null);
-                            }
                         } else {
                             submitResult.setValue(false);
+                            fetchProducts(false);
                         }
                     }
 

@@ -97,8 +97,6 @@ public class SellerProductListFragment extends Fragment {
 
         adapter = new SellerProductAdapter();
 
-        adapter.setCurrentStatus(status);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -145,10 +143,7 @@ public class SellerProductListFragment extends Fragment {
                         .setTitle("Xóa sản phẩm")
                         .setMessage("Bạn có chắc muốn xóa \"" + product.getName() + "\"?")
                         .setPositiveButton("Xóa", (dialog, which) -> {
-
                             viewModel.deleteProduct(product.getId());
-                            adapter.removeItem(product);
-
                         })
                         .setNegativeButton("Hủy", null)
                         .show();
@@ -161,15 +156,7 @@ public class SellerProductListFragment extends Fragment {
                         .setTitle("Khôi phục sản phẩm")
                         .setMessage("Bạn có chắc muốn khôi phục \"" + product.getName() + "\"?")
                         .setPositiveButton("Khôi phục", (dialog, which) -> {
-
                             viewModel.restoreProduct(product.getId());
-
-                            viewModel.getRestoreResult().observe(getViewLifecycleOwner(), success -> {
-                                if (success != null && success) {
-                                    reload();
-                                }
-                            });
-
                         })
                         .setNegativeButton("Hủy", null)
                         .show();
@@ -182,15 +169,7 @@ public class SellerProductListFragment extends Fragment {
                         .setTitle("Gửi duyệt lại")
                         .setMessage("Bạn có chắc muốn gửi lại \"" + product.getName() + "\" để duyệt?")
                         .setPositiveButton("Gửi", (dialog, which) -> {
-
                             viewModel.submitProduct(product.getId());
-
-                            viewModel.getSubmitResult().observe(getViewLifecycleOwner(), success -> {
-                                if (success != null && success) {
-                                    reload();
-                                }
-                            });
-
                         })
                         .setNegativeButton("Hủy", null)
                         .show();
@@ -225,7 +204,7 @@ public class SellerProductListFragment extends Fragment {
         viewModel.getProducts().observe(getViewLifecycleOwner(), items -> {
             isLoadingMore = false;
             if (items != null) {
-                adapter.setData(items);
+                adapter.submitList(items);
             }
         });
     }
