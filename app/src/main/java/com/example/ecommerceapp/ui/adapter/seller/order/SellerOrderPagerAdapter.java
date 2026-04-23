@@ -4,9 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.ecommerceapp.ui.fragment.seller.order.SellerOrderFragment;
 import com.example.ecommerceapp.ui.fragment.seller.order.SellerOrderListFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SellerOrderPagerAdapter extends FragmentStateAdapter {
+
+    private List<SellerOrderListFragment> fragments = new ArrayList<>();
 
     public SellerOrderPagerAdapter(@NonNull Fragment fragment) {
         super(fragment);
@@ -27,7 +33,13 @@ public class SellerOrderPagerAdapter extends FragmentStateAdapter {
             default: status = "PENDING";
         }
 
-        return SellerOrderListFragment.newInstance(status);
+        SellerOrderListFragment fragment = SellerOrderListFragment.newInstance(status);
+        fragments.add(fragment);
+        return fragment;
+    }
+
+    public List<SellerOrderListFragment> getFragments() {
+        return fragments;
     }
 
     @Override

@@ -21,17 +21,21 @@ import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderAdapter;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerOrderViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerOrderViewModelFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SellerOrderListFragment extends Fragment {
+
+    public interface FilterCallback {
+        void onAutocompleteResult(List<String> suggestions);
+    }
 
     private static final String ARG_STATUS = "status";
 
     private String status;
-
     private SellerOrderViewModel viewModel;
     private SellerOrderAdapter adapter;
-
     private LinearLayoutManager layoutManager;
-
     private boolean isLoadingMore = false;
 
     private RecyclerView rvOrders;
@@ -47,7 +51,6 @@ public class SellerOrderListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             status = getArguments().getString(ARG_STATUS);
         }
@@ -58,15 +61,14 @@ public class SellerOrderListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_seller_order_list, container, false);
-        initViews(view);
-        setupRecyclerView();
-        return view;
+        return inflater.inflate(R.layout.fragment_seller_order_list, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initViews(view);
+        setupRecyclerView();
         initViewModel();
         setupObservers();
     }
@@ -100,7 +102,7 @@ public class SellerOrderListFragment extends Fragment {
 
                 if (!isLoadingMore && lastVisibleItem >= totalItemCount - 2) {
                     isLoadingMore = true;
-                    viewModel.loadOrders(status, true);
+                    loadOrdersWithFilters(true);
                 }
             }
         });
@@ -108,21 +110,57 @@ public class SellerOrderListFragment extends Fragment {
 
     private void initViewModel() {
         SellerOrderRepository repository = new SellerOrderRepository(TokenManager.getInstance(requireContext()));
-        viewModel = new ViewModelProvider(this, new SellerOrderViewModelFactory(repository)).get(SellerOrderViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity(), new SellerOrderViewModelFactory(repository))
+                .get(SellerOrderViewModel.class);
     }
 
     private void setupObservers() {
-        viewModel.getOrders(status).observe(getViewLifecycleOwner(), data -> {
-            isLoadingMore = false;
-            if (data != null) {
-                adapter.submitList(data);
+        // Observe filter changes từ parent (qua ViewModel)
+        viewModel.getFilter().observe(getViewLifecycleOwner(), filter -> {
+            if (filter != null) {
+                viewModel.clearCache(status);
+                loadOrdersWithFilters(false, filter.paymentMethod, filter.paymentStatus, filter.keyword);
             }
         });
+
+        // Observe orders với filter hiện tại
+        viewModel.getFilter().observe(getViewLifecycleOwner(), filter -> {
+            String pm = filter != null ? filter.paymentMethod : null;
+            String ps = filter != null ? filter.paymentStatus : null;
+            String kw = filter != null ? filter.keyword : null;
+            
+            viewModel.getOrders(status, pm, ps, kw).observe(getViewLifecycleOwner(), data -> {
+                isLoadingMore = false;
+                if (data != null) {
+                    adapter.submitList(new ArrayList<>(data));
+                }
+            });
+        });
+
+        // Observe autocomplete results
+        viewModel.getAutocompleteResult().observe(getViewLifecycleOwner(), suggestions -> {
+            if (getActivity() instanceof FilterCallback) {
+                ((FilterCallback) getActivity()).onAutocompleteResult(suggestions);
+            }
+        });
+    }
+
+    private void loadOrdersWithFilters(boolean isLoadMore) {
+        SellerOrderViewModel.FilterState filter = viewModel.getFilter().getValue();
+        String pm = filter != null ? filter.paymentMethod : null;
+        String ps = filter != null ? filter.paymentStatus : null;
+        String kw = filter != null ? filter.keyword : null;
+        loadOrdersWithFilters(isLoadMore, pm, ps, kw);
+    }
+
+    private void loadOrdersWithFilters(boolean isLoadMore, String paymentMethod, String paymentStatus, String keyword) {
+        viewModel.loadOrders(status, paymentMethod, paymentStatus, keyword, isLoadMore);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.loadOrders(status, false);
+        viewModel.clearCache(status);
+        loadOrdersWithFilters(false);
     }
 }

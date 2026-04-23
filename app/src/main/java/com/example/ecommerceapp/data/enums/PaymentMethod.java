@@ -2,8 +2,8 @@ package com.example.ecommerceapp.data.enums;
 
 public enum PaymentMethod {
 
-    COD("Thanh toán khi nhận hàng"),
-    QR("Thanh toán QR");
+    COD("Thanh toán khi nhận"),
+    QR("QR");
 
     private final String label;
 
