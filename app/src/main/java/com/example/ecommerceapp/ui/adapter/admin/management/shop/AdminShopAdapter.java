@@ -1,39 +1,45 @@
 package com.example.ecommerceapp.ui.adapter.admin.management.shop;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
 import com.example.ecommerceapp.ui.viewholder.admin.management.shop.AdminShopVH;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-public class AdminShopAdapter extends RecyclerView.Adapter<AdminShopVH> {
+public class AdminShopAdapter extends ListAdapter<AdminShopResponse, AdminShopVH> {
 
-    private final List<AdminShopResponse> shopList = new ArrayList<>();
-    private final OnShopClickListener listener;
+    private OnShopClickListener listener;
 
     public interface OnShopClickListener {
         void onShopClick(AdminShopResponse shop);
     }
 
     public AdminShopAdapter(OnShopClickListener listener) {
-        this.listener = listener;
-    }
+        super(new DiffUtil.ItemCallback<AdminShopResponse>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull AdminShopResponse oldItem, @NonNull AdminShopResponse newItem) {
+                return oldItem.getId() == newItem.getId();
+            }
 
-    public void submitList(List<AdminShopResponse> newShops) {
-        // Simple update, for better performance consider DiffUtil
-        shopList.clear();
-        if (newShops != null) {
-            shopList.addAll(newShops);
-        }
-        notifyDataSetChanged();
+            @SuppressLint("DiffUtilEquals")
+            @Override
+            public boolean areContentsTheSame(@NonNull AdminShopResponse oldItem, @NonNull AdminShopResponse newItem) {
+                return oldItem.getStatus() == newItem.getStatus() &&
+                       Objects.equals(oldItem.getShopName(), newItem.getShopName());
+            }
+        });
+        this.listener = listener;
     }
 
     @NonNull
@@ -45,17 +51,12 @@ public class AdminShopAdapter extends RecyclerView.Adapter<AdminShopVH> {
 
     @Override
     public void onBindViewHolder(@NonNull AdminShopVH holder, int position) {
-        AdminShopResponse shop = shopList.get(position);
+        AdminShopResponse shop = getItem(position);
         holder.bind(shop);
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onShopClick(shop);
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return shopList.size();
     }
 }

@@ -103,14 +103,22 @@ public class AdminShopViewModel extends ViewModel {
                         isLoading.setValue(false);
                         if (response.isSuccessful() && response.body() != null) {
                             PageResponse<AdminShopResponse> pageResponse = response.body();
-                            List<AdminShopResponse> currentList = shops.getValue();
-                            if (currentList == null) currentList = new ArrayList<>();
+                            List<AdminShopResponse> newItems = pageResponse.getItems();
                             
+                            List<AdminShopResponse> newList;
                             if (currentPage == 0) {
-                                currentList.clear();
+                                // Tạo danh sách mới hoàn toàn cho trang đầu tiên
+                                newList = new ArrayList<>(newItems != null ? newItems : new ArrayList<>());
+                            } else {
+                                // Thêm vào danh sách hiện tại cho các trang tiếp theo
+                                List<AdminShopResponse> currentList = shops.getValue();
+                                newList = new ArrayList<>(currentList != null ? currentList : new ArrayList<>());
+                                if (newItems != null) {
+                                    newList.addAll(newItems);
+                                }
                             }
-                            currentList.addAll(pageResponse.getItems());
-                            shops.setValue(currentList);
+                            
+                            shops.setValue(newList);
                             isLastPage.setValue((currentPage + 1) >= pageResponse.getTotalPages());
                         } else {
                             error.setValue("Lỗi tải danh sách cửa hàng: " + response.code());
@@ -128,19 +136,43 @@ public class AdminShopViewModel extends ViewModel {
     public void updateShopStatus(int shopId, ShopStatus newStatus) {
         List<AdminShopResponse> currentList = shops.getValue();
         if (currentList != null) {
-            for (int i = 0; i < currentList.size(); i++) {
-                if (currentList.get(i).getId() == shopId) {
-                    if (currentStatus != null && currentStatus != newStatus) {
-                        // Trạng thái mới không khớp với filter hiện tại -> Xóa khỏi list
-                        currentList.remove(i);
-                    } else {
-                        // Cập nhật trạng thái mới
-                        currentList.get(i).setStatus(newStatus);
+            boolean shouldRemove = currentStatus != null && currentStatus != newStatus;
+            if (shouldRemove) {
+                // Tạo danh sách mới để xóa item (tránh ConcurrentModificationException)
+                java.util.ArrayList<AdminShopResponse> newList = new java.util.ArrayList<>(currentList);
+                for (int i = 0; i < newList.size(); i++) {
+                    if (newList.get(i).getId() == shopId) {
+                        newList.remove(i);
+                        break;
                     }
-                    shops.setValue(currentList); // Trigger update UI
-                    break;
                 }
+                shops.setValue(newList);
+            } else {
+                // Cập nhật trạng thái - tạo bản sao để kích hoạt DiffUtil
+                java.util.ArrayList<AdminShopResponse> newList = new java.util.ArrayList<>(currentList);
+                for (int i = 0; i < newList.size(); i++) {
+                    if (newList.get(i).getId() == shopId) {
+                        newList.set(i, createUpdatedShop(newList.get(i), newStatus));
+                        break;
+                    }
+                }
+                shops.setValue(newList);
             }
         }
+    }
+
+    private AdminShopResponse createUpdatedShop(AdminShopResponse original, ShopStatus newStatus) {
+        AdminShopResponse updated = new AdminShopResponse();
+        updated.setId(original.getId());
+        updated.setShopName(original.getShopName());
+        updated.setEmail(original.getEmail());
+        updated.setPhone(original.getPhone());
+        updated.setAvatar(original.getAvatar());
+        updated.setRatingAvg(original.getRatingAvg());
+        updated.setTotalOrders(original.getTotalOrders());
+        updated.setTotalRevenue(original.getTotalRevenue());
+        updated.setCreatedAt(original.getCreatedAt());
+        updated.setStatus(newStatus);
+        return updated;
     }
 }

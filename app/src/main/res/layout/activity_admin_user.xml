@@ -55,7 +55,7 @@
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/edtSearch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:hint="Tìm kiếm theo tên, email, sđt hoặc user..."
             android:imeOptions="actionSearch"
             android:inputType="text"
