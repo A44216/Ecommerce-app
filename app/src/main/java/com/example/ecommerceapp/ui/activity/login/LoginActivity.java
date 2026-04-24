@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvRegister, tvForgotPassword;
     private TextInputEditText etUsernameOrEmail, etPassword;
     private MaterialButton btnLogin;
+    private ImageView ivBack;
+    private TextView tvContinueAsGuest;
 
     // --- GOOGLE SIGN IN VARIABLES ---
     private android.widget.LinearLayout btnLoginGoogle; // Đổi sang LinearLayout và đổi tên biến
@@ -132,6 +135,8 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         chkRememberLogin = findViewById(R.id.chkRememberLogin);
+        ivBack = findViewById(R.id.ivBack);
+        tvContinueAsGuest = findViewById(R.id.tvContinueAsGuest);
 
         // --- GOOGLE SIGN IN VIEW ---
         btnLoginGoogle = findViewById(R.id.btnLoginGoogle); // Khớp chuẩn với ID trong XML
@@ -160,6 +165,14 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
         // ----------------------------
+
+        if (ivBack != null) {
+            ivBack.setOnClickListener(v -> finish());
+        }
+
+        if (tvContinueAsGuest != null) {
+            tvContinueAsGuest.setOnClickListener(v -> finish());
+        }
     }
 
     // Kiểm tra token hết hạn
