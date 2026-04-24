@@ -23,6 +23,7 @@ import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.NotificationResponse;
 import com.example.ecommerceapp.data.model.ui.NotificationItem;
 import com.example.ecommerceapp.ui.activity.home.user.cart.UserCartActivity;
+import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 import com.example.ecommerceapp.ui.activity.home.user.order.OrderDetailActivity;
 import com.example.ecommerceapp.ui.activity.home.user.order.UserOrderHistoryActivity;
 import com.example.ecommerceapp.ui.adapter.user.NotificationAdapter;
@@ -60,7 +61,7 @@ public class NotificationFragment extends Fragment {
         ivChatNotification.setOnClickListener(v -> {
             TokenManager tm = TokenManager.getInstance(getContext());
             if (tm.getUserId() == -1) {
-                Toast.makeText(getContext(), "Vui lòng đăng nhập để xem tin nhắn", Toast.LENGTH_SHORT).show();
+                showLoginRequireDialog();
             } else {
                 startActivity(new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.chat.UserConversationListActivity.class));
             }
@@ -89,6 +90,19 @@ public class NotificationFragment extends Fragment {
         apiService = ApiClient.getUserService(tokenManager);
 
         return view;
+    }
+    
+    private void showLoginRequireDialog() {
+        if (getContext() == null) return;
+        new androidx.appcompat.app.AlertDialog.Builder(getContext())
+                .setTitle("Yêu cầu đăng nhập")
+                .setMessage("Bạn cần đăng nhập để sử dụng tính năng này. Đi đến trang đăng nhập ngay?")
+                .setCancelable(true)
+                .setPositiveButton("Đăng nhập", (dialog, which) -> {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                })
+                .setNegativeButton("Để sau", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     @Override
