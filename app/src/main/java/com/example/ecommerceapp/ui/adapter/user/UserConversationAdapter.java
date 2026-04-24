@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.response.ConversationResponse;
 import com.example.ecommerceapp.ui.activity.home.user.chat.ChatActivity;
+import com.example.ecommerceapp.utils.ImageLoader;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,8 @@ public class UserConversationAdapter extends RecyclerView.Adapter<UserConversati
             holder.tvDate.setText("");
         }
 
+        ImageLoader.loadAvatar(context, holder.ivShopAvatar, null); // Backend chưa có avatar shop
+
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("CONVERSATION_ID", conversation.getId());
@@ -64,11 +68,13 @@ public class UserConversationAdapter extends RecyclerView.Adapter<UserConversati
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvShopName, tvDate;
+        ImageView ivShopAvatar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvShopName = itemView.findViewById(R.id.tvShopName);
             tvDate = itemView.findViewById(R.id.tvDate);
+            ivShopAvatar = itemView.findViewById(R.id.ivShopAvatar);
         }
     }
 }

@@ -94,7 +94,7 @@ public class UserCartAdapter extends RecyclerView.Adapter<UserCartAdapter.UserCa
                     .setPositiveButton("Xóa", (dialog, which) -> {
 
                         // Đổi tên thành actualPosition để không bị trùng với biến position của hàm
-                        int actualPosition = holder.getAdapterPosition();
+                        int actualPosition = holder.getBindingAdapterPosition();
 
                         if (actualPosition != RecyclerView.NO_POSITION) {
 

@@ -77,9 +77,8 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:background="@drawable/bg_avatar_placeholder"
-                android:padding="12dp"
-                android:src="@android:drawable/ic_menu_myplaces"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_user"
                 app:layout_constraintTop_toBottomOf="@id/ivSettings"
                 app:layout_constraintStart_toStartOf="parent"/>
 

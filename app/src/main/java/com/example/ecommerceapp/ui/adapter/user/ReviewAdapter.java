@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.utils.ImageLoader;
+import android.widget.ImageView;
 import com.example.ecommerceapp.data.model.response.ReviewResponse;
 import java.util.List;
 
@@ -42,6 +44,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
         // Tạm thời ẩn phản hồi nếu Backend chưa trả về trường reply
         holder.layoutReply.setVisibility(View.GONE);
+
+        ImageLoader.loadAvatar(holder.itemView.getContext(), holder.ivAvatar, null);
     }
 
     @Override
@@ -53,6 +57,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         TextView tvName, tvComment, tvDate, tvReply;
         RatingBar ratingBar;
         LinearLayout layoutReply;
+        ImageView ivAvatar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,6 +67,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             tvReply = itemView.findViewById(R.id.tvSellerReply);
             ratingBar = itemView.findViewById(R.id.itemRatingBar);
             layoutReply = itemView.findViewById(R.id.layoutSellerReply);
+            ivAvatar = itemView.findViewById(R.id.ivUserAvatar);
         }
     }
 }
