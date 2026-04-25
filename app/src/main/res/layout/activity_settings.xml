@@ -27,8 +27,17 @@
         android:id="@+id/btnChangePassword"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_margin="16dp"
         android:text="Đổi mật khẩu bảo mật"
+        android:backgroundTint="@color/white"
+        android:textColor="#333333" />
+
+    <Button
+        android:id="@+id/btnHelpCenter"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="16dp"
+        android:text="Trung tâm trợ giúp"
         android:backgroundTint="@color/white"
         android:textColor="#333333" />
 </LinearLayout>

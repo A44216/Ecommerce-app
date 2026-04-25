@@ -3,6 +3,8 @@ package com.example.ecommerceapp.api.service;
 import com.example.ecommerceapp.data.model.request.ChangePasswordRequest;
 import com.example.ecommerceapp.data.model.request.ReviewRequest;
 import com.example.ecommerceapp.data.model.request.SetPasswordRequest;
+import com.example.ecommerceapp.data.model.request.ComplaintRequest;
+import com.example.ecommerceapp.data.model.response.ComplaintResponse;
 import com.example.ecommerceapp.data.model.response.NotificationResponse;
 import com.example.ecommerceapp.data.model.response.ReviewResponse;
 import com.example.ecommerceapp.data.model.response.UserProfileResponse;
@@ -62,4 +64,10 @@ public interface UserService {
 
     @PUT("users/{id}/change-email")
     Call<Void> changeEmail(@Path("id") long id, @Body com.example.ecommerceapp.data.model.request.ChangeEmailRequest request);
+
+    @POST("complaints")
+    Call<Void> submitComplaint(@Body ComplaintRequest request);
+
+    @GET("complaints/user/{userId}")
+    Call<List<ComplaintResponse>> getMyComplaints(@Path("userId") long userId);
 }

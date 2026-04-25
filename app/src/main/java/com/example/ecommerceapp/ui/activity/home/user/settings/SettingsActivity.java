@@ -6,6 +6,8 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.ui.activity.home.user.editprofile.EditUserProfileActivity;
+import com.example.ecommerceapp.ui.activity.home.user.help.HelpCenterActivity;
+import com.example.ecommerceapp.ui.activity.home.user.settings.ChangePasswordActivity;
 
 public class SettingsActivity extends AppCompatActivity {
     @Override
@@ -24,6 +26,12 @@ public class SettingsActivity extends AppCompatActivity {
         // Chuyển sang trang Đổi Mật Khẩu
         btnChangePassword.setOnClickListener(v -> {
             startActivity(new Intent(this, ChangePasswordActivity.class));
+        });
+
+        // Chuyển sang Trung tâm trợ giúp
+        Button btnHelpCenter = findViewById(R.id.btnHelpCenter);
+        btnHelpCenter.setOnClickListener(v -> {
+            startActivity(new Intent(this, HelpCenterActivity.class));
         });
     }
 }
