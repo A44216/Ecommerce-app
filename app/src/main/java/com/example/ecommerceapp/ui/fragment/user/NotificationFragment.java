@@ -31,7 +31,9 @@ import com.example.ecommerceapp.ui.adapter.user.OrderNotificationAdapter;
 import com.example.ecommerceapp.utils.CartManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +46,9 @@ public class NotificationFragment extends Fragment {
     private LinearLayout layoutEmptyOrder;
     private TokenManager tokenManager;
     private UserService apiService;
+    
+    private List<NotificationItem> listTopNotifications;
+    private NotificationAdapter topAdapter;
 
     @Nullable
     @Override
@@ -71,15 +76,15 @@ public class NotificationFragment extends Fragment {
         RecyclerView rvNotifications = view.findViewById(R.id.rvNotifications);
         rvNotifications.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        List<NotificationItem> list = new ArrayList<>();
-        list.add(new NotificationItem(android.R.drawable.ic_menu_today, "Khuyến mãi", "Thẻ quà mua cả Shopee", 16));
-        list.add(new NotificationItem(android.R.drawable.ic_menu_camera, "Live & Video", "Săn voucher giảm đến 30%", 4));
-        list.add(new NotificationItem(android.R.drawable.ic_menu_agenda, "Cập nhật Shopee", "Dành vài phút chia sẻ ĐỂ ĐÂY", 5));
-        list.add(new NotificationItem(android.R.drawable.ic_menu_gallery, "Giải Thưởng Shopee", "Tại Đấu Trường Nối Hình Shopee", 1));
-        list.add(new NotificationItem(android.R.drawable.ic_menu_mapmode, "ShopeeFood", "Tài xế hiện đang ở quán...", 5));
-
-        NotificationAdapter adapter = new NotificationAdapter(list);
-        rvNotifications.setAdapter(adapter);
+        listTopNotifications = new ArrayList<>();
+        listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_today, "Khuyến mãi", "Chưa có thông báo mới", 0));
+        listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_camera, "Live & Video", "Chưa có thông báo mới", 0));
+        listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_agenda, "Cập nhật hệ thống", "Chưa có thông báo mới", 0));
+        listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_gallery, "Giải thưởng & Quà tặng", "Chưa có thông báo mới", 0));
+        listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_mapmode, "Giao đồ ăn", "Chưa có thông báo mới", 0));
+ 
+        topAdapter = new NotificationAdapter(listTopNotifications);
+        rvNotifications.setAdapter(topAdapter);
 
         // --- 2. SETUP DANH SÁCH ĐỘNG (Cập nhật đơn hàng) ---
         rvOrderNotifications = view.findViewById(R.id.rvOrderNotifications);
@@ -122,6 +127,7 @@ public class NotificationFragment extends Fragment {
         // Gọi API nạp thông báo thật
         loadRealNotifications();
     }
+ 
 
     private void loadRealNotifications() {
         long userId = tokenManager.getUserId();
@@ -134,43 +140,76 @@ public class NotificationFragment extends Fragment {
         apiService.getMyNotifications(userId).enqueue(new Callback<List<NotificationResponse>>() {
             @Override
             public void onResponse(Call<List<NotificationResponse>> call, Response<List<NotificationResponse>> response) {
-                // 1. Máy dò mã lỗi HTTP
-                android.util.Log.e("DEBUG_NOTIF", "Mã HTTP trả về: " + response.code());
-
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
-                    List<NotificationResponse> notifList = response.body();
+                    List<NotificationResponse> allNotifications = response.body();
 
-                    // 2. Máy dò số lượng dữ liệu
-                    android.util.Log.e("DEBUG_NOTIF", "Số lượng thông báo nhận được: " + notifList.size());
+                    // 1. Lọc thông báo Đơn hàng cho danh sách dưới
+                    List<NotificationResponse> orderNotifs = new ArrayList<>();
+                    // 2. Map để lưu nội dung mới nhất của từng loại cho danh sách trên
+                    Map<String, NotificationResponse> latestByType = new HashMap<>();
+                    // 3. Map để đếm số lượng chưa đọc theo loại
+                    Map<String, Integer> unreadCounts = new HashMap<>();
 
-                    if (notifList.isEmpty()) {
+                    for (NotificationResponse n : allNotifications) {
+                        String type = n.getType();
+                        if ("ORDER".equals(type)) {
+                            orderNotifs.add(n);
+                        } else {
+                            // Lưu thông báo đầu tiên (mới nhất) tìm thấy cho mỗi loại
+                            if (!latestByType.containsKey(type)) {
+                                latestByType.put(type, n);
+                            }
+                        }
+
+                        // Đếm số lượng chưa đọc
+                        if (!n.isRead()) {
+                            unreadCounts.put(type, unreadCounts.getOrDefault(type, 0) + 1);
+                        }
+                    }
+
+                    // --- CẬP NHẬT DANH SÁCH TRÊN (5 mục) ---
+                    updateTopCategory("Khuyến mãi", "PROMOTION", latestByType, unreadCounts);
+                    updateTopCategory("Live & Video", "LIVE", latestByType, unreadCounts);
+                    updateTopCategory("Cập nhật hệ thống", "SYSTEM", latestByType, unreadCounts);
+                    updateTopCategory("Giải thưởng & Quà tặng", "AWARDS", latestByType, unreadCounts);
+                    updateTopCategory("Giao đồ ăn", "FOOD", latestByType, unreadCounts);
+                    topAdapter.notifyDataSetChanged();
+
+                    // --- CẬP NHẬT DANH SÁCH DƯỚI (Cập nhật đơn hàng) ---
+                    if (orderNotifs.isEmpty()) {
                         rvOrderNotifications.setVisibility(View.GONE);
                         layoutEmptyOrder.setVisibility(View.VISIBLE);
                     } else {
                         rvOrderNotifications.setVisibility(View.VISIBLE);
                         layoutEmptyOrder.setVisibility(View.GONE);
-
-                        OrderNotificationAdapter orderAdapter = new OrderNotificationAdapter(notifList, item -> {
+                        OrderNotificationAdapter orderAdapter = new OrderNotificationAdapter(orderNotifs, item -> {
                             handleNotificationClick(item);
                         });
                         rvOrderNotifications.setAdapter(orderAdapter);
                     }
-                } else {
-                    // Nếu lỗi 403, 404, 500... sẽ nhảy vào đây
-                    try {
-                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
-                        android.util.Log.e("DEBUG_NOTIF", "Lỗi API: " + errorBody);
-                    } catch (Exception e) {}
                 }
             }
 
             @Override
             public void onFailure(Call<List<NotificationResponse>> call, Throwable t) {
-                // Nếu lỗi sập app/sai định dạng JSON sẽ nhảy vào đây
-                android.util.Log.e("DEBUG_NOTIF", "Lỗi hệ thống/JSON: " + t.getMessage());
                 if (isAdded()) Toast.makeText(getContext(), "Lỗi tải thông báo", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateTopCategory(String title, String type, Map<String, NotificationResponse> latestByType, Map<String, Integer> unreadCounts) {
+        for (NotificationItem item : listTopNotifications) {
+            if (item.getTitle().equals(title)) {
+                // Cập nhật nội dung mới nhất
+                NotificationResponse latest = latestByType.get(type);
+                if (latest != null) {
+                    item.setDescription(latest.getTitle()); // Hoặc latest.getBody() tùy bạn muốn hiện gì
+                }
+                // Cập nhật số lượng chưa đọc
+                item.setBadgeCount(unreadCounts.getOrDefault(type, 0));
+                break;
+            }
+        }
     }
 
     private void handleNotificationClick(NotificationResponse item) {

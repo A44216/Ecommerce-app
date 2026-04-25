@@ -17,4 +17,6 @@ public class NotificationItem {
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public int getBadgeCount() { return badgeCount; }
+    public void setBadgeCount(int badgeCount) { this.badgeCount = badgeCount; }
+    public void setDescription(String description) { this.description = description; }
 }

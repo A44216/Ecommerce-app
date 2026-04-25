@@ -9,6 +9,7 @@ import com.example.ecommerceapp.data.model.response.UserProfileResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -43,6 +44,9 @@ public interface UserService {
 
     @GET("notifications/user/{userId}")
     Call<List<NotificationResponse>> getMyNotifications(@Path("userId") long userId);
+    
+    @GET("notifications/user/{userId}/summary")
+    Call<Map<String, Integer>> getNotificationSummary(@Path("userId") long userId);
 
     @PUT("notifications/{id}/read")
     Call<Void> markNotificationAsRead(@Path("id") int notificationId);
