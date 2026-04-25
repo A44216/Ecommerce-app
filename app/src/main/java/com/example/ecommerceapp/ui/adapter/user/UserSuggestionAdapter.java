@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.ui.adapter.user;
 
 import android.view.LayoutInflater;
+import com.example.ecommerceapp.R;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,14 +30,14 @@ public class UserSuggestionAdapter extends RecyclerView.Adapter<UserSuggestionAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_suggestion, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String item = suggestions.get(position);
-        holder.textView.setText(item);
+        holder.tvSuggestionText.setText(item);
         holder.itemView.setOnClickListener(v -> listener.onSuggestionClick(item));
     }
 
@@ -46,10 +47,10 @@ public class UserSuggestionAdapter extends RecyclerView.Adapter<UserSuggestionAd
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        TextView tvSuggestionText;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(android.R.id.text1);
+            tvSuggestionText = itemView.findViewById(R.id.tvSuggestionText);
         }
     }
 }

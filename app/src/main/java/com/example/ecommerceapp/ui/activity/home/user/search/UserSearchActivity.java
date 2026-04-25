@@ -44,6 +44,10 @@ public class UserSearchActivity extends AppCompatActivity {
     private LinearLayout layoutSearchHistory;
     private RecyclerView rvSearchHistory;
     private android.widget.TextView tvClearHistory;
+    
+    // Debounce cho tìm kiếm
+    private final android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,10 @@ public class UserSearchActivity extends AppCompatActivity {
             etSearchInput.setSelection(suggestion.length());
             rvSuggestions.setVisibility(View.GONE);
             hideKeyboard();
+            
+            // Lưu vào lịch sử tìm kiếm
+            historyManager.addSearchKeyword(suggestion);
+            
             viewModel.searchProducts(suggestion, true);
         });
         rvSuggestions.setAdapter(suggestionAdapter);
@@ -214,7 +222,13 @@ public class UserSearchActivity extends AppCompatActivity {
                     viewModel.fetchTrendingProducts(); // Lấy lại trending nếu xóa trắng
                 } else {
                     layoutSearchHistory.setVisibility(View.GONE);
-                    viewModel.fetchSuggestions(keyword);
+                    
+                    // --- TRIỂN KHAI DEBOUNCE (300ms) ---
+                    if (searchRunnable != null) {
+                        searchHandler.removeCallbacks(searchRunnable);
+                    }
+                    searchRunnable = () -> viewModel.fetchSuggestions(keyword);
+                    searchHandler.postDelayed(searchRunnable, 300);
                 }
             }
             @Override public void afterTextChanged(android.text.Editable s) {}
