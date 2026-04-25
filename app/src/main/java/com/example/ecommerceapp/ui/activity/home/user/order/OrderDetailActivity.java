@@ -25,7 +25,7 @@ import retrofit2.Response;
 public class OrderDetailActivity extends AppCompatActivity {
 
     // Đã khai báo thêm tvOrderDate và tvSubTotal
-    private TextView tvStatus, tvAddress, tvTotal, tvOrderDate, tvSubTotal;
+    private TextView tvStatus, tvAddress, tvTotal, tvOrderDate, tvSubTotal, tvPaymentMethod, tvPaymentStatus;
     private RecyclerView rvItems;
     private Button btnCancelOrder;
     private View ivStepPending, ivStepProcessing, ivStepShipping, ivStepDelivered;
@@ -46,6 +46,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvTotal = findViewById(R.id.tvTotalPayment);
         tvOrderDate = findViewById(R.id.tvOrderDate); // Ánh xạ Ngày đặt
         tvSubTotal = findViewById(R.id.tvSubTotal);   // Ánh xạ Tổng tiền hàng
+        tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
+        tvPaymentStatus = findViewById(R.id.tvPaymentStatus);
 
         rvItems = findViewById(R.id.rvOrderDetailItems);
         btnCancelOrder = findViewById(R.id.btnCancelOrder);
@@ -110,6 +112,26 @@ public class OrderDetailActivity extends AppCompatActivity {
                     rvItems.setLayoutManager(new LinearLayoutManager(OrderDetailActivity.this));
                     if (order.getOrderItems() != null) {
                         rvItems.setAdapter(new UserOrderItemAdapter(order.getOrderItems()));
+                    }
+
+                    // --- HIỂN THỊ PHƯƠNG THỨC THANH TOÁN ---
+                    if (order.getPaymentMethod() != null) {
+                        if ("QR".equalsIgnoreCase(order.getPaymentMethod())) {
+                            tvPaymentMethod.setText("Ví VNPay (QR)");
+                        } else {
+                            tvPaymentMethod.setText("Thanh toán khi nhận hàng (COD)");
+                        }
+                    }
+
+                    // --- HIỂN THỊ TRẠNG THÁI THANH TOÁN ---
+                    if (order.getPaymentStatus() != null) {
+                        if ("PAID".equalsIgnoreCase(order.getPaymentStatus())) {
+                            tvPaymentStatus.setText("Đã thanh toán");
+                            tvPaymentStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                        } else {
+                            tvPaymentStatus.setText("Chưa thanh toán");
+                            tvPaymentStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                        }
                     }
 
                     // Cập nhật Stepper

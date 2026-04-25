@@ -53,10 +53,14 @@ public class UserCheckoutActivity extends AppCompatActivity {
     private int realAddressId = -1;
 
     // Các View hiển thị tiền
+    private TextView tvCheckoutFinalTotal;
     private TextView tvCheckoutSubtotal;
     private TextView tvCheckoutDiscount;
     private TextView tvCheckoutShippingFee;
-    private TextView tvCheckoutFinalTotal;
+
+    // Bộ khởi tạo Activity để nhận kết quả thanh toán
+    private androidx.activity.result.ActivityResultLauncher<Intent> paymentLauncher;
+    private List<UserOrderRequest> pendingOrders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +76,25 @@ public class UserCheckoutActivity extends AppCompatActivity {
         
         android.widget.EditText edtCouponCode = findViewById(R.id.edtCouponCode);
         Button btnApplyCoupon = findViewById(R.id.btnApplyCoupon);
-
         Button btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
+
         RecyclerView rvCheckoutItems = findViewById(R.id.rvCheckoutItems);
         RadioGroup rgPaymentMethod = findViewById(R.id.rgPaymentMethod);
+
+        // --- KHỞI TẠO BỘ NHẬN KẾT QUẢ THANH TOÁN ---
+        paymentLauncher = registerForActivityResult(
+                new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Thanh toán thành công -> Thực hiện đặt hàng
+                        if (!pendingOrders.isEmpty()) {
+                            viewModel.placeMultipleOrders(pendingOrders);
+                        }
+                    } else {
+                        Toast.makeText(this, "Thanh toán không thành công hoặc đã bị hủy", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
         // --- SETUP RECYCLERVIEW ĐỊA CHỈ ---
         RecyclerView rvCheckoutAddresses = findViewById(R.id.rvCheckoutAddresses);
@@ -299,7 +318,18 @@ public class UserCheckoutActivity extends AppCompatActivity {
                 requests.add(request);
             }
 
-            viewModel.placeMultipleOrders(requests);
+            // --- LƯU TRỮ DANH SÁCH ĐƠN HÀNG CHỜ ---
+            pendingOrders = requests;
+
+            if (method == PaymentMethod.QR) {
+                // Mở màn hình thanh toán
+                Intent intent = new Intent(this, PaymentSimulationActivity.class);
+                intent.putExtra("PAYMENT_AMOUNT", finalTotal.doubleValue());
+                paymentLauncher.launch(intent);
+            } else {
+                // COD -> Đặt hàng luôn
+                viewModel.placeMultipleOrders(pendingOrders);
+            }
         });
     }
     @Override

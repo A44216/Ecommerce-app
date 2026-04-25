@@ -11,6 +11,8 @@ public class UserOrderResponse {
     private String status;
     private BigDecimal totalPrice;
     private String createdAt;
+    private String paymentMethod;
+    private String paymentStatus;
 
     // Phần địa chỉ (Dữ liệu phẳng)
     private String shippingName;
@@ -28,6 +30,8 @@ public class UserOrderResponse {
     public String getStatus() { return status; }
     public BigDecimal getTotalPrice() { return totalPrice; }
     public String getCreatedAt() { return createdAt; }
+    public String getPaymentMethod() { return paymentMethod; }
+    public String getPaymentStatus() { return paymentStatus; }
     public String getShippingName() { return shippingName; }
     public String getShippingPhone() { return shippingPhone; }
     public String getAddressLine() { return addressLine; }
@@ -44,5 +48,7 @@ public class UserOrderResponse {
     public void setShippingName(String shippingName) { this.shippingName = shippingName; }
     public void setShippingPhone(String shippingPhone) { this.shippingPhone = shippingPhone; }
     public void setAddressLine(String addressLine) { this.addressLine = addressLine; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
     public void setOrderItems(List<UserOrderItemResponse> orderItems) { this.orderItems = orderItems; }
 }
