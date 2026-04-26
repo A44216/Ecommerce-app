@@ -27,6 +27,7 @@ public class UserSearchViewModel extends ViewModel {
     private int currentPage = 0;
     private boolean isLastPage = false;
     private String currentKeyword = "";
+    private String currentSortBy = "id,desc"; // Mặc định: Mới nhất
     private final int PAGE_SIZE = 10;
 
     private final UserProductRepository productRepository;
@@ -54,7 +55,7 @@ public class UserSearchViewModel extends ViewModel {
         if (Boolean.TRUE.equals(isLoading.getValue()) || isLastPage) return;
 
         isLoading.setValue(true);
-        productRepository.searchProductsPaginated(currentKeyword, currentPage, PAGE_SIZE).enqueue(new Callback<PageResponse<UserProductResponse>>() {
+        productRepository.searchProductsPaginated(currentKeyword, currentPage, PAGE_SIZE, currentSortBy).enqueue(new Callback<PageResponse<UserProductResponse>>() {
             @Override
             public void onResponse(Call<PageResponse<UserProductResponse>> call, Response<PageResponse<UserProductResponse>> response) {
                 isLoading.setValue(false);
@@ -112,5 +113,18 @@ public class UserSearchViewModel extends ViewModel {
                 isLoading.setValue(false);
             }
         });
+    }
+
+    public void setSortBy(String sortBy) {
+        if (sortBy != null && !sortBy.equals(currentSortBy)) {
+            this.currentSortBy = sortBy;
+            if (!currentKeyword.isEmpty()) {
+                searchProducts(currentKeyword, true);
+            }
+        }
+    }
+
+    public String getCurrentSortBy() {
+        return currentSortBy;
     }
 }

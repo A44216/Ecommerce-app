@@ -60,9 +60,9 @@ public class UserHomeViewModel extends ViewModel {
         
         Call<PageResponse<UserProductResponse>> call;
         if (currentCategoryId != null) {
-            call = productRepository.getProductsByCategoryPaginated(currentCategoryId, currentPage, PAGE_SIZE);
+            call = productRepository.getProductsByCategoryPaginated(currentCategoryId, currentPage, PAGE_SIZE, "id,desc");
         } else {
-            call = productRepository.getProductsPaginated(currentPage, PAGE_SIZE);
+            call = productRepository.getProductsPaginated(currentPage, PAGE_SIZE, "id,desc");
         }
 
         call.enqueue(new Callback<PageResponse<UserProductResponse>>() {

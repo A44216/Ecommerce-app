@@ -44,6 +44,125 @@
 
     </LinearLayout>
 
+    <!-- Filter Bar -->
+    <HorizontalScrollView
+        android:id="@+id/scrollFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:scrollbars="none"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:id="@+id/btnSortRelevance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Liên quan"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/bg_filter_chip"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/btnSortPriceAsc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giá: Thấp-Cao"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/bg_filter_chip"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/btnSortPriceDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giá: Cao-Thấp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/bg_filter_chip"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/btnSortBestSelling"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bán chạy"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/bg_filter_chip"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/btnSortAZ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A-Z"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/bg_filter_chip"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/btnSortNewest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mới nhất"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/bg_filter_chip"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/btnSortOldest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cũ nhất"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/bg_filter_chip"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -45,6 +45,10 @@ public class UserSearchActivity extends AppCompatActivity {
     private RecyclerView rvSearchHistory;
     private android.widget.TextView tvClearHistory;
     
+    private View scrollFilter;
+    private android.widget.TextView btnSortRelevance, btnSortPriceAsc, btnSortPriceDesc, 
+            btnSortBestSelling, btnSortAZ, btnSortNewest, btnSortOldest;
+    
     // Debounce cho tìm kiếm
     private final android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable searchRunnable;
@@ -65,6 +69,16 @@ public class UserSearchActivity extends AppCompatActivity {
         layoutSearchHistory = findViewById(R.id.layoutSearchHistory);
         rvSearchHistory = findViewById(R.id.rvSearchHistory);
         tvClearHistory = findViewById(R.id.tvClearHistory);
+
+        scrollFilter = findViewById(R.id.scrollFilter);
+        btnSortRelevance = findViewById(R.id.btnSortRelevance);
+        btnSortPriceAsc = findViewById(R.id.btnSortPriceAsc);
+        btnSortPriceDesc = findViewById(R.id.btnSortPriceDesc);
+        btnSortBestSelling = findViewById(R.id.btnSortBestSelling);
+        btnSortAZ = findViewById(R.id.btnSortAZ);
+        btnSortNewest = findViewById(R.id.btnSortNewest);
+        btnSortOldest = findViewById(R.id.btnSortOldest);
+        btnSortRelevance.setSelected(true);
 
         historyManager = new SearchHistoryManager(this);
 
@@ -138,6 +152,15 @@ public class UserSearchActivity extends AppCompatActivity {
             layoutSearchHistory.setVisibility(View.GONE);
         });
 
+        // Setup Filter Click Listeners
+        btnSortRelevance.setOnClickListener(v -> handleSortClick("id,desc", btnSortRelevance));
+        btnSortPriceAsc.setOnClickListener(v -> handleSortClick("price,asc", btnSortPriceAsc));
+        btnSortPriceDesc.setOnClickListener(v -> handleSortClick("price,desc", btnSortPriceDesc));
+        btnSortBestSelling.setOnClickListener(v -> handleSortClick("soldCount,desc", btnSortBestSelling));
+        btnSortAZ.setOnClickListener(v -> handleSortClick("name,asc", btnSortAZ));
+        btnSortNewest.setOnClickListener(v -> handleSortClick("id,desc", btnSortNewest));
+        btnSortOldest.setOnClickListener(v -> handleSortClick("id,asc", btnSortOldest));
+
         // 3. Khởi tạo ViewModel
         UserProductService productService = ApiClient.getUserProductService();
         UserProductRepository productRepository = new UserProductRepository(productService);
@@ -151,9 +174,17 @@ public class UserSearchActivity extends AppCompatActivity {
                 productAdapter.updateData(products);
                 rvSearchResults.setVisibility(View.VISIBLE);
                 layoutEmptyState.setVisibility(View.GONE);
+                
+                // Show filter bar only if keyword is not empty (i.e. it's a search result, not trending)
+                if (!etSearchInput.getText().toString().trim().isEmpty()) {
+                    scrollFilter.setVisibility(View.VISIBLE);
+                } else {
+                    scrollFilter.setVisibility(View.GONE);
+                }
             } else {
                 rvSearchResults.setVisibility(View.GONE);
                 layoutEmptyState.setVisibility(View.VISIBLE);
+                scrollFilter.setVisibility(View.GONE);
             }
         });
 
@@ -164,6 +195,7 @@ public class UserSearchActivity extends AppCompatActivity {
                     productAdapter.updateData(products);
                     rvSearchResults.setVisibility(View.VISIBLE);
                     layoutEmptyState.setVisibility(View.GONE);
+                    scrollFilter.setVisibility(View.GONE);
                 }
             }
         });
@@ -266,5 +298,24 @@ public class UserSearchActivity extends AppCompatActivity {
         if (imm != null) {
             imm.hideSoftInputFromWindow(etSearchInput.getWindowToken(), 0);
         }
+    }
+
+    private void handleSortClick(String sortBy, android.widget.TextView selectedBtn) {
+        viewModel.setSortBy(sortBy);
+        updateSortUI(selectedBtn);
+    }
+
+    private void updateSortUI(android.widget.TextView selectedBtn) {
+        // Reset all
+        btnSortRelevance.setSelected(false);
+        btnSortPriceAsc.setSelected(false);
+        btnSortPriceDesc.setSelected(false);
+        btnSortBestSelling.setSelected(false);
+        btnSortAZ.setSelected(false);
+        btnSortNewest.setSelected(false);
+        btnSortOldest.setSelected(false);
+
+        // Select one
+        selectedBtn.setSelected(true);
     }
 }

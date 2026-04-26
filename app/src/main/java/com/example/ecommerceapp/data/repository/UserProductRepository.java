@@ -16,8 +16,8 @@ public class UserProductRepository {
         return apiService.getProducts();
     }
 
-    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsPaginated(int page, int size) {
-        return apiService.getProductsPaginated(page, size);
+    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsPaginated(int page, int size, String sortBy) {
+        return apiService.getProductsPaginated(page, size, sortBy);
     }
 
     public Call<UserProductResponse> getProductById(int id) {
@@ -40,11 +40,11 @@ public class UserProductRepository {
         return apiService.searchProducts(keyword, shopId);
     }
 
-    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> searchProductsPaginated(String keyword, int page, int size) {
-        return apiService.searchProductsPaginated(keyword, page, size);
+    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> searchProductsPaginated(String keyword, int page, int size, String sortBy) {
+        return apiService.searchProductsPaginated(keyword, page, size, sortBy);
     }
 
-    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsByCategoryPaginated(int categoryId, int page, int size) {
-        return apiService.getProductsByCategoryPaginated(categoryId, page, size);
+    public Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsByCategoryPaginated(int categoryId, int page, int size, String sortBy) {
+        return apiService.getProductsByCategoryPaginated(categoryId, page, size, sortBy);
     }
 }

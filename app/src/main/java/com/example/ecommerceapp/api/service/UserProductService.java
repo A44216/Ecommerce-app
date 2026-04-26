@@ -14,7 +14,8 @@ public interface UserProductService {
     @GET("products/page")
     Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsPaginated(
             @Query("page") int page,
-            @Query("size") int size
+            @Query("size") int size,
+            @Query("sortBy") String sortBy
     );
 
     @GET("products/{id}")
@@ -39,13 +40,15 @@ public interface UserProductService {
     Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> searchProductsPaginated(
             @Query("keyword") String keyword,
             @Query("page") int page,
-            @Query("size") int size
+            @Query("size") int size,
+            @Query("sortBy") String sortBy
     );
 
     @GET("products/category/{categoryId}/page")
     Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsByCategoryPaginated(
             @Path("categoryId") int categoryId,
             @Query("page") int page,
-            @Query("size") int size
+            @Query("size") int size,
+            @Query("sortBy") String sortBy
     );
 }
