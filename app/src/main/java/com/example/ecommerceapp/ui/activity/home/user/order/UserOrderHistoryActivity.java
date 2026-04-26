@@ -25,6 +25,8 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
 
     private UserOrderViewModel viewModel;
     private UserOrderAdapter adapter;
+    private androidx.swiperefreshlayout.widget.SwipeRefreshLayout swipeRefreshLayout;
+    private android.view.View layoutEmpty;
 
     private String currentStatus = "ALL";
     private int specificOrderId = -1;
@@ -51,8 +53,14 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
         // 1. Ánh xạ View
         ImageView btnBack = findViewById(R.id.btnOrderHistoryBack);
         RecyclerView rvOrderHistory = findViewById(R.id.rvOrderHistory);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        layoutEmpty = findViewById(R.id.layoutEmpty);
+        android.widget.Button btnRetry = findViewById(R.id.btnRetry);
 
         btnBack.setOnClickListener(v -> finish());
+        btnRetry.setOnClickListener(v -> loadData());
+        
+        swipeRefreshLayout.setOnRefreshListener(this::loadData);
 
         // 2. Cài đặt RecyclerView
         rvOrderHistory.setLayoutManager(new LinearLayoutManager(this));
@@ -69,32 +77,36 @@ public class UserOrderHistoryActivity extends AppCompatActivity {
 
         // 4. Lắng nghe dữ liệu
         viewModel.getOrderList().observe(this, userOrderResponses -> {
+            swipeRefreshLayout.setRefreshing(false);
             if (userOrderResponses != null && !userOrderResponses.isEmpty()) {
                 adapter.updateData(userOrderResponses);
+                rvOrderHistory.setVisibility(android.view.View.VISIBLE);
+                layoutEmpty.setVisibility(android.view.View.GONE);
             } else {
-                Toast.makeText(this, "Bạn chưa có đơn hàng nào", Toast.LENGTH_SHORT).show();
+                rvOrderHistory.setVisibility(android.view.View.GONE);
+                layoutEmpty.setVisibility(android.view.View.VISIBLE);
             }
         });
 
-        viewModel.getErrorMessage().observe(this, s ->
-                Toast.makeText(this, s, Toast.LENGTH_SHORT).show()
-        );
+        viewModel.getErrorMessage().observe(this, s -> {
+            swipeRefreshLayout.setRefreshing(false);
+            Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+            if (adapter.getItemCount() == 0) {
+                layoutEmpty.setVisibility(android.view.View.VISIBLE);
+            }
+        });
 
-        // ==========================================
-        // 5. GỌI API THEO LUỒNG ĐIỀU HƯỚNG
-        // ==========================================
+        // 5. Gọi dữ liệu lần đầu
+        loadData();
+    }
+
+    private void loadData() {
+        TokenManager tokenManager = TokenManager.getInstance(this);
         int realUserId = (int) tokenManager.getUserId();
 
         if (realUserId != -1) {
-            // Nếu có specificOrderId, tức là đi từ Thông báo sang -> Chuyển hướng hoặc xử lý đặc biệt
-            if (specificOrderId != -1) {
-                Toast.makeText(this, "Đang mở đơn hàng: " + specificOrderId, Toast.LENGTH_SHORT).show();
-                viewModel.fetchOrdersByUserAndStatus(realUserId, currentStatus);
-
-            } else {
-                // Nếu không có specificOrderId, tức là đi từ Profile sang -> Lọc danh sách bình thường
-                viewModel.fetchOrdersByUserAndStatus(realUserId, currentStatus);
-            }
+            swipeRefreshLayout.setRefreshing(true);
+            viewModel.fetchOrdersByUserAndStatus(realUserId, currentStatus);
         } else {
             Toast.makeText(this, "Vui lòng đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show();
         }

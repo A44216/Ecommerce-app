@@ -17,7 +17,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserHomeViewModel extends ViewModel {
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+
+public class UserHomeViewModel extends AndroidViewModel {
     
     private final MutableLiveData<List<UserProductResponse>> productList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<UserCategoryResponse>> categoryList = new MutableLiveData<>();
@@ -35,7 +38,8 @@ public class UserHomeViewModel extends ViewModel {
     private final UserProductRepository productRepository;
     private final UserCategoryRepository categoryRepository;
 
-    public UserHomeViewModel(UserProductRepository productRepository, UserCategoryRepository categoryRepository) {
+    public UserHomeViewModel(@NonNull android.app.Application application, UserProductRepository productRepository, UserCategoryRepository categoryRepository) {
+        super(application);
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -118,29 +122,43 @@ public class UserHomeViewModel extends ViewModel {
     }
     
     private void fetchImagesForCategories(List<UserCategoryResponse> categories) {
-        for (UserCategoryResponse category : categories) {
-            // Nếu đã có ảnh từ server thì bỏ qua
-            if (category.getImageUrl() != null && !category.getImageUrl().isEmpty()) continue;
+        android.content.SharedPreferences prefs = getApplication().getSharedPreferences("category_cache", android.content.Context.MODE_PRIVATE);
+        boolean hasUpdateFromCache = false;
 
+        for (UserCategoryResponse category : categories) {
+            // Kiểm tra trong Cache trước
+            String cachedUrl = prefs.getString("cat_" + category.getId(), null);
+            if (cachedUrl != null && (category.getImageUrl() == null || category.getImageUrl().isEmpty())) {
+                category.setImageUrl(cachedUrl);
+                hasUpdateFromCache = true;
+            }
+
+            // Vẫn thực hiện fetch từ server để đảm bảo dữ liệu mới nhất
             productRepository.getProductsByCategoryPaginated(category.getId(), 0, 1, "id,desc").enqueue(new Callback<PageResponse<UserProductResponse>>() {
                 @Override
                 public void onResponse(Call<PageResponse<UserProductResponse>> call, Response<PageResponse<UserProductResponse>> response) {
                     if (response.isSuccessful() && response.body() != null && !response.body().getContent().isEmpty()) {
                         UserProductResponse firstProduct = response.body().getContent().get(0);
                         if (firstProduct.getImages() != null && !firstProduct.getImages().isEmpty()) {
-                            // Lấy ảnh đầu tiên của sản phẩm đầu tiên làm ảnh đại diện danh mục
-                            category.setImageUrl(firstProduct.getImages().get(0).getImageUrl());
-                            // Cập nhật LiveData để UI render lại ảnh mới
-                            categoryList.postValue(new ArrayList<>(categories));
+                            String imageUrl = firstProduct.getImages().get(0).getImageUrl();
+                            
+                            // Lưu vào Cache nếu có thay đổi hoặc chưa có
+                            if (!imageUrl.equals(cachedUrl)) {
+                                prefs.edit().putString("cat_" + category.getId(), imageUrl).apply();
+                                category.setImageUrl(imageUrl);
+                                categoryList.postValue(new ArrayList<>(categories));
+                            }
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<PageResponse<UserProductResponse>> call, Throwable t) {
-                    // Bỏ qua nếu lỗi
-                }
+                public void onFailure(Call<PageResponse<UserProductResponse>> call, Throwable t) {}
             });
+        }
+        
+        if (hasUpdateFromCache) {
+            categoryList.postValue(new ArrayList<>(categories));
         }
     }
 

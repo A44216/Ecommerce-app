@@ -10,11 +10,12 @@ import com.example.ecommerceapp.ui.viewmodel.UserHomeViewModel;
 
 public class UserHomeViewModelFactory implements ViewModelProvider.Factory {
 
+    private final android.app.Application application;
     private final UserProductRepository productRepository;
-    private final UserCategoryRepository categoryRepository; // Thêm dòng này
+    private final UserCategoryRepository categoryRepository;
 
-    // Cập nhật hàm tạo nhận 2 tham số
-    public UserHomeViewModelFactory(UserProductRepository productRepository, UserCategoryRepository categoryRepository) {
+    public UserHomeViewModelFactory(android.app.Application application, UserProductRepository productRepository, UserCategoryRepository categoryRepository) {
+        this.application = application;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -23,8 +24,7 @@ public class UserHomeViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(UserHomeViewModel.class)) {
-            // Truyền 2 tham số vào ViewModel
-            return (T) new UserHomeViewModel(productRepository, categoryRepository);
+            return (T) new UserHomeViewModel(application, productRepository, categoryRepository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

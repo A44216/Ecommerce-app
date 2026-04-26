@@ -45,6 +45,8 @@ public class HomeFragment extends Fragment {
     private UserHomeViewModel viewModel;
     private UserProductAdapter productAdapter;
     private UserCategoryAdapter categoryAdapter;
+    private com.facebook.shimmer.ShimmerFrameLayout shimmerContainer;
+    private RecyclerView rvProducts;
 
     private TextView tvCartBadge;
     private ViewPager2 vpBanners;
@@ -117,7 +119,9 @@ public class HomeFragment extends Fragment {
         });
 
         // 2. Setup RecyclerView Sản phẩm
-        RecyclerView rvProducts = view.findViewById(R.id.rvProducts);
+        rvProducts = view.findViewById(R.id.rvProducts);
+        shimmerContainer = view.findViewById(R.id.shimmer_view_container);
+        
         rvProducts.setLayoutManager(new GridLayoutManager(getContext(), 2));
         productAdapter = new UserProductAdapter(getContext());
         rvProducts.setAdapter(productAdapter);
@@ -158,10 +162,13 @@ public class HomeFragment extends Fragment {
         TokenManager tokenManager = TokenManager.getInstance(getContext());
         UserCategoryApiService categoryService = ApiClient.getUserCategoryApiService(tokenManager);
         UserCategoryRepository categoryRepository = new UserCategoryRepository(categoryService);
-        UserHomeViewModelFactory factory = new UserHomeViewModelFactory(productRepository, categoryRepository);
+        UserHomeViewModelFactory factory = new UserHomeViewModelFactory(requireActivity().getApplication(), productRepository, categoryRepository);
         viewModel = new ViewModelProvider(this, factory).get(UserHomeViewModel.class);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
+            shimmerContainer.setVisibility(View.VISIBLE);
+            shimmerContainer.startShimmer();
+            rvProducts.setVisibility(View.GONE);
             viewModel.fetchCategories();
             viewModel.fetchProducts(true);
         });
@@ -175,6 +182,10 @@ public class HomeFragment extends Fragment {
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
             if (products != null) {
+                shimmerContainer.stopShimmer();
+                shimmerContainer.setVisibility(View.GONE);
+                rvProducts.setVisibility(View.VISIBLE);
+
                 productAdapter.updateData(products);
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
@@ -184,6 +195,10 @@ public class HomeFragment extends Fragment {
 
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
+                shimmerContainer.stopShimmer();
+                shimmerContainer.setVisibility(View.GONE);
+                rvProducts.setVisibility(View.VISIBLE);
+                
                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);

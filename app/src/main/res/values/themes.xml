@@ -7,6 +7,14 @@
         
         <!-- Bo tròn các nút mặc định (nếu sử dụng MaterialButton) -->
         <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
+    </style>
+
+    <style name="WindowAnimation">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
 
     <style name="Theme.EcommerceApp" parent="Base.Theme.EcommerceApp" />
