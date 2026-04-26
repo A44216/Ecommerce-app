@@ -40,11 +40,15 @@ import retrofit2.Response;
 
 public class UserProductDetailActivity extends AppCompatActivity {
 
-    // Khai báo biến cho phần Review
+    private androidx.viewpager2.widget.ViewPager2 vpProductImages;
+    private TextView tvImageIndex;
+    private com.example.ecommerceapp.ui.adapter.user.ProductImageAdapter imageAdapter;
+    
     private RecyclerView rvReviews;
     private TextView tvAverageRating, tvNoReviews;
     private RatingBar mainRatingBar;
     private TokenManager tokenManager;
+    private UserProductResponse currentProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,8 @@ public class UserProductDetailActivity extends AppCompatActivity {
 
         // 1. Ánh xạ View Sản phẩm cơ bản
         ImageView btnBack = findViewById(R.id.btnBack);
-        ImageView ivDetailImage = findViewById(R.id.ivDetailImage);
+        vpProductImages = findViewById(R.id.vpProductImages);
+        tvImageIndex = findViewById(R.id.tvImageIndex);
         TextView tvDetailName = findViewById(R.id.tvDetailName);
         TextView tvDetailPrice = findViewById(R.id.tvDetailPrice);
 
@@ -105,9 +110,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
             }
         }
 
-        if (imageUrl != null) {
-            ImageLoader.load(this, ivDetailImage, imageUrl);
-        }
+        // (Đã thay thế bằng Slider ảnh trong loadProductDetail)
 
         // --- ĐỔ DỮ LIỆU MỚI LÊN MÀN HÌNH ---
         tvDetailRatingAvg.setText(String.format("%.1f", ratingAvg));
@@ -120,8 +123,9 @@ public class UserProductDetailActivity extends AppCompatActivity {
             tvDetailDesc.setText("Chưa có mô tả cho sản phẩm này.");
         }
 
-        // --- GỌI API TẢI REVIEW ---
+        // --- GỌI API TẢI CHI TIẾT VÀ REVIEW ---
         if (productId != -1) {
+            loadProductDetail(productId);
             loadReviews(productId);
         }
 
@@ -172,21 +176,22 @@ public class UserProductDetailActivity extends AppCompatActivity {
         });
 
         // --- LOGIC GIỎ HÀNG ---
-        UserProductResponse currentProduct = new UserProductResponse();
+        // Khởi tạo đối tượng sản phẩm tạm thời từ Intent
+        currentProduct = new UserProductResponse();
         if (productId != -1) currentProduct.setId(productId);
         if (shopId != -1) currentProduct.setShopId(shopId);
         if (name != null) currentProduct.setName(name);
         if (priceString != null) {
             try {
-                currentProduct.setPrice(new BigDecimal(priceString));
+                currentProduct.setPrice(new java.math.BigDecimal(priceString));
             } catch (Exception e) {
-                currentProduct.setPrice(BigDecimal.ZERO);
+                currentProduct.setPrice(java.math.BigDecimal.ZERO);
             }
         }
         if (imageUrl != null) {
-            UserProductImageResponse imgObj = new UserProductImageResponse();
+            com.example.ecommerceapp.data.model.response.UserProductImageResponse imgObj = new com.example.ecommerceapp.data.model.response.UserProductImageResponse();
             imgObj.setImageUrl(imageUrl);
-            currentProduct.setImages(Collections.singletonList(imgObj));
+            currentProduct.setImages(java.util.Collections.singletonList(imgObj));
         }
 
         btnAddToCart.setOnClickListener(v -> {
@@ -194,7 +199,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 showLoginRequireDialog();
                 return;
             }
-            com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet bottomSheet = new com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet(currentProduct, stock, quantity -> {
+            com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet bottomSheet = new com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet(currentProduct, currentProduct.getStock() != null ? currentProduct.getStock() : stock, quantity -> {
                 CartManager.getInstance().addToCart(currentProduct, quantity);
                 Toast.makeText(UserProductDetailActivity.this, "Đã thêm " + quantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
             });
@@ -206,7 +211,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 showLoginRequireDialog();
                 return;
             }
-            com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet bottomSheet = new com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet(currentProduct, stock, quantity -> {
+            com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet bottomSheet = new com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet(currentProduct, currentProduct.getStock() != null ? currentProduct.getStock() : stock, quantity -> {
                 CartManager.getInstance().addToCart(currentProduct, quantity);
                 Intent intent = new Intent(UserProductDetailActivity.this, UserCartActivity.class);
                 startActivity(intent);
@@ -218,7 +223,64 @@ public class UserProductDetailActivity extends AppCompatActivity {
     }
 
     // ==========================================
-    // 5. HÀM TẢI ĐÁNH GIÁ (REVIEW)
+    // 5. HÀM TẢI CHI TIẾT SẢN PHẨM (ĐỂ LẤY NHIỀU ẢNH)
+    // ==========================================
+    private void loadProductDetail(int productId) {
+        ApiClient.getUserProductService().getProductById(productId).enqueue(new Callback<UserProductResponse>() {
+            @Override
+            public void onResponse(Call<UserProductResponse> call, Response<UserProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    currentProduct = response.body();
+                    displayProductDetail(currentProduct);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserProductResponse> call, Throwable t) {
+                Toast.makeText(UserProductDetailActivity.this, "Không thể tải chi tiết sản phẩm", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void displayProductDetail(UserProductResponse product) {
+        // Cập nhật các trường thông tin nếu có dữ liệu mới từ API
+        if (product.getName() != null) ((TextView)findViewById(R.id.tvDetailName)).setText(product.getName());
+        if (product.getPrice() != null) {
+            DecimalFormat formatter = new DecimalFormat("#,###");
+            ((TextView)findViewById(R.id.tvDetailPrice)).setText(formatter.format(product.getPrice()) + "đ");
+        }
+        if (product.getDescription() != null) ((TextView)findViewById(R.id.tvDetailDesc)).setText(product.getDescription());
+        ((TextView)findViewById(R.id.tvDetailSoldCount)).setText("Đã bán " + product.getSoldCount());
+        ((TextView)findViewById(R.id.tvDetailStock)).setText("Kho: " + product.getStock());
+
+        // Thiết lập Slider ảnh
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            java.util.List<String> urls = new java.util.ArrayList<>();
+            for (com.example.ecommerceapp.data.model.response.UserProductImageResponse img : product.getImages()) {
+                urls.add(img.getImageUrl());
+            }
+
+            imageAdapter = new com.example.ecommerceapp.ui.adapter.user.ProductImageAdapter(this, urls);
+            vpProductImages.setAdapter(imageAdapter);
+
+            if (urls.size() > 1) {
+                tvImageIndex.setVisibility(View.VISIBLE);
+                tvImageIndex.setText("1/" + urls.size());
+                vpProductImages.registerOnPageChangeCallback(new androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        tvImageIndex.setText((position + 1) + "/" + urls.size());
+                    }
+                });
+            } else {
+                tvImageIndex.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    // ==========================================
+    // 6. HÀM TẢI ĐÁNH GIÁ (REVIEW)
     // ==========================================
     private void loadReviews(int productId) {
         // ĐÃ SỬA LẠI THÀNH getUserService() / getUserApiService() ĐỂ LẤY ĐÁNH GIÁ

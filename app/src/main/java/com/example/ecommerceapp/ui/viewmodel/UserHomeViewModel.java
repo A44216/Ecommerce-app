@@ -104,7 +104,10 @@ public class UserHomeViewModel extends ViewModel {
             @Override
             public void onResponse(Call<List<UserCategoryResponse>> call, Response<List<UserCategoryResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    categoryList.setValue(response.body());
+                    List<UserCategoryResponse> categories = response.body();
+                    categoryList.setValue(categories);
+                    // Tự động tìm ảnh minh họa cho từng danh mục từ sản phẩm đầu tiên
+                    fetchImagesForCategories(categories);
                 }
             }
             @Override
@@ -112,6 +115,33 @@ public class UserHomeViewModel extends ViewModel {
                 errorMessage.setValue("Lỗi tải danh mục");
             }
         });
+    }
+    
+    private void fetchImagesForCategories(List<UserCategoryResponse> categories) {
+        for (UserCategoryResponse category : categories) {
+            // Nếu đã có ảnh từ server thì bỏ qua
+            if (category.getImageUrl() != null && !category.getImageUrl().isEmpty()) continue;
+
+            productRepository.getProductsByCategoryPaginated(category.getId(), 0, 1, "id,desc").enqueue(new Callback<PageResponse<UserProductResponse>>() {
+                @Override
+                public void onResponse(Call<PageResponse<UserProductResponse>> call, Response<PageResponse<UserProductResponse>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().getContent().isEmpty()) {
+                        UserProductResponse firstProduct = response.body().getContent().get(0);
+                        if (firstProduct.getImages() != null && !firstProduct.getImages().isEmpty()) {
+                            // Lấy ảnh đầu tiên của sản phẩm đầu tiên làm ảnh đại diện danh mục
+                            category.setImageUrl(firstProduct.getImages().get(0).getImageUrl());
+                            // Cập nhật LiveData để UI render lại ảnh mới
+                            categoryList.postValue(new ArrayList<>(categories));
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PageResponse<UserProductResponse>> call, Throwable t) {
+                    // Bỏ qua nếu lỗi
+                }
+            });
+        }
     }
 
     /**

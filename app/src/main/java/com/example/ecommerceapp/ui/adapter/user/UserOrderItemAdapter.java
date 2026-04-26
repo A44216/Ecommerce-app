@@ -53,6 +53,20 @@ public class UserOrderItemAdapter extends RecyclerView.Adapter<UserOrderItemAdap
             intent.putExtra("PRODUCT_ID", item.getProductId()); // Gửi ID của sản phẩm này sang
             context.startActivity(intent); // Bắt đầu bay sang màn hình Đánh giá
         });
+
+        // Sự kiện khi nhấn vào cả item để xem chi tiết sản phẩm
+        holder.itemView.setOnClickListener(v -> {
+            android.content.Context context = holder.itemView.getContext();
+            android.content.Intent intent = new android.content.Intent(context, com.example.ecommerceapp.ui.activity.home.user.product.UserProductDetailActivity.class);
+            
+            // Gửi các thông tin cần thiết sang màn hình chi tiết
+            intent.putExtra("product_id", item.getProductId());
+            intent.putExtra("product_name", item.getProductName());
+            intent.putExtra("product_price", item.getPrice() != null ? item.getPrice().toString() : "0");
+            intent.putExtra("product_image", item.getProductImage());
+            
+            context.startActivity(intent);
+        });
     }
 
     @Override
