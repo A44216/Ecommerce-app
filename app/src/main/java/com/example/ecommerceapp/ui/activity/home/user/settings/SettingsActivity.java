@@ -15,6 +15,8 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+
         Button btnEditProfile = findViewById(R.id.btnEditProfile);
         Button btnChangePassword = findViewById(R.id.btnChangePassword);
 
