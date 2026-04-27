@@ -272,8 +272,15 @@ public class SellerOrderFragment extends Fragment {
             actvSearch.setText(selected, false);
             actvSearch.clearFocus();
             android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(actvSearch.getWindowToken(), 0);
+            if (imm != null) imm.hideSoftInputFromWindow(actvSearch.getWindowToken(), 0);
             applyFiltersToChildren();
+        });
+
+        actvSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && searchAdapter != null) {
+                searchAdapter.clear();
+                searchAdapter.notifyDataSetChanged();
+            }
         });
     }
 
