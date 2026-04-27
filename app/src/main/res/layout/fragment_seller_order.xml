@@ -32,6 +32,7 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
+            android:completionThreshold="1"
             android:textSize="14sp" />
 
     </com.google.android.material.textfield.TextInputLayout>

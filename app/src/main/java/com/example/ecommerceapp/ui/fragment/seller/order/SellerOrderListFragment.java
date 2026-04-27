@@ -40,6 +40,14 @@ public class SellerOrderListFragment extends Fragment {
 
     private RecyclerView rvOrders;
 
+    private androidx.lifecycle.LiveData<List<com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse>> currentOrdersLiveData;
+    private final androidx.lifecycle.Observer<List<com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse>> ordersObserver = data -> {
+        isLoadingMore = false;
+        if (data != null) {
+            adapter.submitList(new ArrayList<>(data));
+        }
+    };
+
     public static SellerOrderListFragment newInstance(String status) {
         SellerOrderListFragment fragment = new SellerOrderListFragment();
         Bundle args = new Bundle();
@@ -118,23 +126,21 @@ public class SellerOrderListFragment extends Fragment {
         // Observe filter changes từ parent (qua ViewModel)
         viewModel.getFilter().observe(getViewLifecycleOwner(), filter -> {
             if (filter != null) {
-                viewModel.clearCache(status);
-                loadOrdersWithFilters(false, filter.paymentMethod, filter.paymentStatus, filter.keyword);
-            }
-        });
+                String pm = filter.paymentMethod;
+                String ps = filter.paymentStatus;
+                String kw = filter.keyword;
 
-        // Observe orders với filter hiện tại
-        viewModel.getFilter().observe(getViewLifecycleOwner(), filter -> {
-            String pm = filter != null ? filter.paymentMethod : null;
-            String ps = filter != null ? filter.paymentStatus : null;
-            String kw = filter != null ? filter.keyword : null;
-            
-            viewModel.getOrders(status, pm, ps, kw).observe(getViewLifecycleOwner(), data -> {
-                isLoadingMore = false;
-                if (data != null) {
-                    adapter.submitList(new ArrayList<>(data));
+                if (currentOrdersLiveData != null) {
+                    currentOrdersLiveData.removeObserver(ordersObserver);
                 }
-            });
+
+                currentOrdersLiveData = viewModel.getOrders(status, pm, ps, kw);
+                currentOrdersLiveData.observe(getViewLifecycleOwner(), ordersObserver);
+
+                if (currentOrdersLiveData.getValue() == null) {
+                    loadOrdersWithFilters(false, pm, ps, kw);
+                }
+            }
         });
 
         // Observe autocomplete results
@@ -160,7 +166,6 @@ public class SellerOrderListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.clearCache(status);
         loadOrdersWithFilters(false);
     }
 }

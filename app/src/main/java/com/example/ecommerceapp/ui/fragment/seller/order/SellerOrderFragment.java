@@ -49,7 +49,7 @@ public class SellerOrderFragment extends Fragment {
 
     private Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
-    private static final long SEARCH_DEBOUNCE_MS = 500;
+    private static final long SEARCH_DEBOUNCE_MS = 400;
 
     private ArrayAdapter<String> searchAdapter;
 
@@ -83,12 +83,38 @@ public class SellerOrderFragment extends Fragment {
     }
 
     private void setupFilters() {
-        // Setup Search adapter first (needed by observer below)
-        searchAdapter = new ArrayAdapter<>(
+        searchAdapter = new ArrayAdapter<String>(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 new ArrayList<>()
-        );
+        ) {
+            @NonNull
+            @Override
+            public android.widget.Filter getFilter() {
+                return new android.widget.Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence constraint) {
+                        FilterResults results = new FilterResults();
+                        List<String> list = new ArrayList<>();
+                        for (int i = 0; i < getCount(); i++) {
+                            list.add(getItem(i));
+                        }
+                        results.values = list;
+                        results.count = list.size();
+                        return results;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence constraint, FilterResults results) {
+                        if (results != null && results.count > 0) {
+                            notifyDataSetChanged();
+                        } else {
+                            notifyDataSetInvalidated();
+                        }
+                    }
+                };
+            }
+        };
         actvSearch.setAdapter(searchAdapter);
 
         // Observe autocomplete results
@@ -108,13 +134,31 @@ public class SellerOrderFragment extends Fragment {
             paymentMethodLabels.add(method.getLabel());
         }
 
-        ArrayAdapter<String> paymentMethodAdapter = new ArrayAdapter<>(
+        ArrayAdapter<String> paymentMethodAdapter = new ArrayAdapter<String>(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 paymentMethodLabels
-        );
+        ) {
+            @NonNull
+            @Override
+            public android.widget.Filter getFilter() {
+                return new android.widget.Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence constraint) {
+                        FilterResults results = new FilterResults();
+                        results.values = paymentMethodLabels;
+                        results.count = paymentMethodLabels.size();
+                        return results;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence constraint, FilterResults results) {
+                        notifyDataSetChanged();
+                    }
+                };
+            }
+        };
         actvPaymentMethod.setAdapter(paymentMethodAdapter);
-        actvPaymentMethod.setText("Tất cả", false);
 
         actvPaymentMethod.setOnItemClickListener((parent, v, position, id) -> {
             if (position == 0) {
@@ -132,13 +176,57 @@ public class SellerOrderFragment extends Fragment {
             paymentStatusLabels.add(ps.getLabel());
         }
 
-        ArrayAdapter<String> paymentStatusAdapter = new ArrayAdapter<>(
+        ArrayAdapter<String> paymentStatusAdapter = new ArrayAdapter<String>(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 paymentStatusLabels
-        );
+        ) {
+            @NonNull
+            @Override
+            public android.widget.Filter getFilter() {
+                return new android.widget.Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence constraint) {
+                        FilterResults results = new FilterResults();
+                        results.values = paymentStatusLabels;
+                        results.count = paymentStatusLabels.size();
+                        return results;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence constraint, FilterResults results) {
+                        notifyDataSetChanged();
+                    }
+                };
+            }
+        };
         actvPaymentStatus.setAdapter(paymentStatusAdapter);
-        actvPaymentStatus.setText("Tất cả", false);
+
+        // Restore state from ViewModel if exists
+        SellerOrderViewModel.FilterState state = viewModel.getFilter().getValue();
+        if (state != null) {
+            currentPaymentMethod = state.paymentMethod;
+            currentPaymentStatus = state.paymentStatus;
+            currentKeyword = state.keyword;
+        }
+
+        String pmLabel = "Tất cả";
+        if (currentPaymentMethod != null) {
+            try { pmLabel = PaymentMethod.valueOf(currentPaymentMethod).getLabel(); } catch (Exception ignored) {}
+        }
+        actvPaymentMethod.setText(pmLabel, false);
+
+        String psLabel = "Tất cả";
+        if (currentPaymentStatus != null) {
+            try { psLabel = PaymentStatus.valueOf(currentPaymentStatus).getLabel(); } catch (Exception ignored) {}
+        }
+        actvPaymentStatus.setText(psLabel, false);
+
+        if (currentKeyword != null) {
+            actvSearch.setText(currentKeyword, false);
+        } else {
+            actvSearch.setText("", false);
+        }
 
         actvPaymentStatus.setOnItemClickListener((parent, v, position, id) -> {
             if (position == 0) {
@@ -182,6 +270,9 @@ public class SellerOrderFragment extends Fragment {
         actvSearch.setOnItemClickListener((parent, v, position, id) -> {
             String selected = (String) parent.getItemAtPosition(position);
             actvSearch.setText(selected, false);
+            actvSearch.clearFocus();
+            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(actvSearch.getWindowToken(), 0);
             applyFiltersToChildren();
         });
     }
