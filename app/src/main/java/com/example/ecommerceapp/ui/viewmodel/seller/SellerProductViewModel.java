@@ -267,4 +267,27 @@ public class SellerProductViewModel extends ViewModel {
                 });
     }
 
+    private final MutableLiveData<List<String>> autocompleteResult = new MutableLiveData<>();
+
+    public void autocompleteProducts(String keyword) {
+        repository.autocompleteProducts(keyword).enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    autocompleteResult.setValue(response.body());
+                } else {
+                    autocompleteResult.setValue(new java.util.ArrayList<>());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+                autocompleteResult.setValue(new java.util.ArrayList<>());
+            }
+        });
+    }
+
+    public LiveData<List<String>> getAutocompleteResult() {
+        return autocompleteResult;
+    }
 }

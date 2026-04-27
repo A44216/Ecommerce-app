@@ -4,6 +4,8 @@ import com.example.ecommerceapp.data.model.request.seller.product.SellerProductR
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -38,4 +40,10 @@ public interface SellerProductService {
 
     @PUT("seller/products/submit/{id}")
     Call<Void> submitProduct(@Path("id") int id);
+
+    @GET("seller/products/autocomplete")
+    Call<List<String>> autocompleteProducts(
+            @Query("keyword") String keyword
+    );
+
 }

@@ -5,6 +5,8 @@ import com.example.ecommerceapp.data.model.request.seller.product.SellerProductR
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 
 public class SellerProductRepository {
@@ -48,4 +50,9 @@ public class SellerProductRepository {
     public Call<Void> submitProduct(int id) {
         return apiService.submitProduct(id);
     }
+
+    public Call<List<String>> autocompleteProducts(String keyword) {
+        return apiService.autocompleteProducts(keyword);
+    }
+
 }

@@ -102,6 +102,18 @@ public class SellerProductListFragment extends Fragment {
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
+            public void onScrollStateChanged(@NonNull RecyclerView rv, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    android.view.View currentFocus = requireActivity().getCurrentFocus();
+                    if (currentFocus != null) {
+                        currentFocus.clearFocus();
+                        android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                        if (imm != null) imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                    }
+                }
+            }
+
+            @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
 
                 LinearLayoutManager lm = (LinearLayoutManager) rv.getLayoutManager();

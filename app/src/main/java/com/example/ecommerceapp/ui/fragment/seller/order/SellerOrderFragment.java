@@ -123,7 +123,9 @@ public class SellerOrderFragment extends Fragment {
                 searchAdapter.clear();
                 searchAdapter.addAll(suggestions);
                 searchAdapter.notifyDataSetChanged();
-                actvSearch.showDropDown();
+                if (actvSearch.hasFocus()) {
+                    actvSearch.showDropDown();
+                }
             }
         });
 
