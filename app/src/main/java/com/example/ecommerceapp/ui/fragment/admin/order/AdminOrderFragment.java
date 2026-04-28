@@ -21,6 +21,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.enums.PaymentMethod;
 import com.example.ecommerceapp.data.enums.PaymentStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopAutocompleteResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminOrderRepository;
 import com.example.ecommerceapp.data.repository.admin.AdminShopRepository;
 import com.example.ecommerceapp.ui.adapter.admin.order.AdminOrderPagerAdapter;
@@ -332,7 +333,7 @@ public class AdminOrderFragment extends Fragment {
         bsPaymentStatus.setText(currentPsLabel, false);
 
         // Setup Shop Autocomplete
-        ArrayAdapter<String> shopAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
+        ArrayAdapter<AdminShopAutocompleteResponse> shopAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
         bsShop.setAdapter(shopAdapter);
         
         if (currentShopName != null) {
@@ -374,21 +375,12 @@ public class AdminOrderFragment extends Fragment {
         });
 
         bsShop.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedShop = (String) parent.getItemAtPosition(position);
-            bsShop.setText(selectedShop, false);
+            AdminShopAutocompleteResponse selectedShop = (AdminShopAutocompleteResponse) parent.getItemAtPosition(position);
+            bsShop.setText(selectedShop.getLabel(), false);
             bsShop.clearFocus();
             hideKeyboard();
-            currentShopName = selectedShop;
-            // Try extracting ID if format is "ID - Name", otherwise fallback to null or try parsing the whole string
-            try {
-                if (selectedShop.contains("-")) {
-                    currentShopId = Integer.parseInt(selectedShop.split("-")[0].trim());
-                } else {
-                    currentShopId = Integer.parseInt(selectedShop); // Very unlikely if it's a name, but as fallback
-                }
-            } catch (NumberFormatException e) {
-                currentShopId = null; // Cannot determine ID from name
-            }
+            currentShopName = selectedShop.getLabel();
+            currentShopId = selectedShop.getId();
         });
 
         bsShop.setOnFocusChangeListener((v, hasFocus) -> {
@@ -418,6 +410,11 @@ public class AdminOrderFragment extends Fragment {
 
             if (bsShop.getText().toString().trim().isEmpty()) {
                 currentShopId = null;
+                currentShopName = null;
+            } else if (currentShopId == null) {
+                // User typed something but didn't select from autocomplete
+                android.widget.Toast.makeText(requireContext(), "Vui lòng chọn cửa hàng từ danh sách gợi ý", android.widget.Toast.LENGTH_SHORT).show();
+                return;
             }
 
             applyFiltersToChildren();

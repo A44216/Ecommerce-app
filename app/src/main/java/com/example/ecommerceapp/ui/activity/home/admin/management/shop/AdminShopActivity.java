@@ -16,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopAutocompleteResponse;
+
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -49,7 +51,7 @@ public class AdminShopActivity extends AppCompatActivity {
     private TextView tvEmpty;
     private ImageView ivBack;
 
-    private ArrayAdapter<String> autoCompleteAdapter;
+    private ArrayAdapter<AdminShopAutocompleteResponse> autoCompleteAdapter;
     private Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
 
@@ -196,9 +198,9 @@ public class AdminShopActivity extends AppCompatActivity {
         });
 
         edtSearch.setOnItemClickListener((parent, view, position, id) -> {
-            String selected = autoCompleteAdapter.getItem(position);
+            AdminShopAutocompleteResponse selected = autoCompleteAdapter.getItem(position);
             if (selected != null) {
-                currentKeyword = selected;
+                currentKeyword = selected.getLabel();
                 viewModel.setFilters(currentStatus, currentKeyword, currentSortBy, currentSortDir);
                 edtSearch.clearFocus();
             }

@@ -9,6 +9,8 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminShopRepository;
 
+import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopAutocompleteResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class AdminShopViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLastPage = new MutableLiveData<>(false);
-    private final MutableLiveData<List<String>> autocompleteSuggestions = new MutableLiveData<>();
+    private final MutableLiveData<List<AdminShopAutocompleteResponse>> autocompleteSuggestions = new MutableLiveData<>();
 
     private int currentPage = 0;
     private final int pageSize = 10;
@@ -53,14 +55,14 @@ public class AdminShopViewModel extends ViewModel {
         return isLastPage;
     }
 
-    public LiveData<List<String>> getAutocompleteSuggestions() {
+    public LiveData<List<AdminShopAutocompleteResponse>> getAutocompleteSuggestions() {
         return autocompleteSuggestions;
     }
 
     public void autocomplete(String keyword) {
-        repository.autocomplete(keyword).enqueue(new Callback<List<String>>() {
+        repository.autocomplete(keyword).enqueue(new Callback<List<AdminShopAutocompleteResponse>>() {
             @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+            public void onResponse(Call<List<AdminShopAutocompleteResponse>> call, Response<List<AdminShopAutocompleteResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     autocompleteSuggestions.setValue(response.body());
                 } else {
@@ -69,7 +71,7 @@ public class AdminShopViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
+            public void onFailure(Call<List<AdminShopAutocompleteResponse>> call, Throwable t) {
                 autocompleteSuggestions.setValue(new ArrayList<>());
             }
         });

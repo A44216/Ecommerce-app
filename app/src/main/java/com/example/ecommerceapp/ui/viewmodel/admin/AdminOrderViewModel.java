@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.response.admin.management.order.AdminOrderResponse;
+import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopAutocompleteResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminOrderRepository;
 import com.example.ecommerceapp.data.repository.admin.AdminShopRepository;
@@ -31,7 +32,7 @@ public class AdminOrderViewModel extends ViewModel {
 
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final MutableLiveData<List<String>> orderAutocompleteSuggestions = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> shopAutocompleteSuggestions = new MutableLiveData<>();
+    private final MutableLiveData<List<AdminShopAutocompleteResponse>> shopAutocompleteSuggestions = new MutableLiveData<>();
 
     private final MutableLiveData<FilterState> currentFilter = new MutableLiveData<>(new FilterState());
 
@@ -58,7 +59,7 @@ public class AdminOrderViewModel extends ViewModel {
         return orderAutocompleteSuggestions;
     }
 
-    public LiveData<List<String>> getShopAutocompleteSuggestions() {
+    public LiveData<List<AdminShopAutocompleteResponse>> getShopAutocompleteSuggestions() {
         return shopAutocompleteSuggestions;
     }
 
@@ -97,9 +98,9 @@ public class AdminOrderViewModel extends ViewModel {
     }
 
     public void autocompleteShops(String keyword) {
-        shopRepository.autocomplete(keyword).enqueue(new Callback<List<String>>() {
+        shopRepository.autocomplete(keyword).enqueue(new Callback<List<AdminShopAutocompleteResponse>>() {
             @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+            public void onResponse(Call<List<AdminShopAutocompleteResponse>> call, Response<List<AdminShopAutocompleteResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     shopAutocompleteSuggestions.setValue(response.body());
                 } else {
@@ -108,7 +109,7 @@ public class AdminOrderViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
+            public void onFailure(Call<List<AdminShopAutocompleteResponse>> call, Throwable t) {
                 shopAutocompleteSuggestions.setValue(new ArrayList<>());
             }
         });
