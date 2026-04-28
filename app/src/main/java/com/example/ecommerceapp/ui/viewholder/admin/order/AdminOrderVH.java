@@ -1,11 +1,13 @@
 package com.example.ecommerceapp.ui.viewholder.admin.order;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
@@ -34,6 +36,7 @@ public class AdminOrderVH extends RecyclerView.ViewHolder {
         tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     public void bind(AdminOrderResponse order, Context context, View.OnClickListener onClickListener) {
         tvOrderCode.setText(order.getOrderCode() != null ? "#" + order.getOrderCode() : "N/A");
         
@@ -41,10 +44,10 @@ public class AdminOrderVH extends RecyclerView.ViewHolder {
             tvPaymentStatus.setText(order.getPaymentStatus().getLabel());
             if ("PAID".equals(order.getPaymentStatus().name())) {
                 tvPaymentStatus.setBackgroundResource(R.drawable.bg_status_paid);
-                tvPaymentStatus.setTextColor(context.getResources().getColor(R.color.green));
+                tvPaymentStatus.setTextColor(ContextCompat.getColor(context,R.color.green));
             } else {
                 tvPaymentStatus.setBackgroundResource(R.drawable.bg_status_unpaid);
-                tvPaymentStatus.setTextColor(context.getResources().getColor(R.color.red));
+                tvPaymentStatus.setTextColor(ContextCompat.getColor(context,R.color.red));
             }
         } else {
             tvPaymentStatus.setText("N/A");

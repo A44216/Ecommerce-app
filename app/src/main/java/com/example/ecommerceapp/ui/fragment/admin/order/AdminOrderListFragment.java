@@ -108,7 +108,7 @@ public class AdminOrderListFragment extends Fragment {
 
         adapter = new AdminOrderAdapter(requireContext(), order -> {
             Intent intent = new Intent(requireContext(), AdminOrderDetailActivity.class);
-            // Put extra here if needed, for example: intent.putExtra("ORDER_ID", order.getId());
+            intent.putExtra("orderId", order.getId());
             startActivity(intent);
         });
         rvOrder.setAdapter(adapter);

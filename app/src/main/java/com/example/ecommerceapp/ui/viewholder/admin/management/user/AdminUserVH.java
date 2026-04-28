@@ -1,9 +1,11 @@
 package com.example.ecommerceapp.ui.viewholder.admin.management.user;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +34,7 @@ public class AdminUserVH extends RecyclerView.ViewHolder {
         tvRole = itemView.findViewById(R.id.tvRole);
     }
 
+    @SuppressLint("SetTextI18n")
     public void bind(AdminUserResponse user) {
         tvName.setText(user.getFullName() != null ? user.getFullName() : "Chưa cập nhật");
         tvEmail.setText("Email: " + (user.getEmail() != null ? user.getEmail() : "Trống"));
@@ -40,11 +43,10 @@ public class AdminUserVH extends RecyclerView.ViewHolder {
         // Status
         if (user.getStatus() == UserStatus.ACTIVE) {
             tvStatus.setText("Hoạt động");
-            tvStatus.setTextColor(itemView.getContext().getResources().getColor(android.R.color.holo_green_dark));
-            tvStatus.setBackgroundResource(R.drawable.bg_status_active);
+            tvStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), android.R.color.holo_green_dark));            tvStatus.setBackgroundResource(R.drawable.bg_status_active);
         } else {
             tvStatus.setText("Vô hiệu hóa");
-            tvStatus.setTextColor(itemView.getContext().getResources().getColor(android.R.color.holo_red_dark));
+            tvStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), android.R.color.holo_red_dark));
             tvStatus.setBackgroundResource(R.drawable.bg_status_blocked);
         }
 

@@ -37,7 +37,7 @@ public class AdminShopVH extends RecyclerView.ViewHolder {
         tvRevenue = itemView.findViewById(R.id.tvRevenue);
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public void bind(AdminShopResponse shop) {
         tvShopName.setText(shop.getShopName() != null ? shop.getShopName() : "Không tên");
         tvShopEmail.setText(shop.getEmail() != null ? "Email: " + shop.getEmail() : "Email: N/A");
@@ -52,6 +52,7 @@ public class AdminShopVH extends RecyclerView.ViewHolder {
         bindStatus(shop.getStatus());
     }
 
+    @SuppressLint("SetTextI18n")
     private void bindStatus(ShopStatus status) {
         if (status == null) {
             tvShopStatus.setVisibility(View.GONE);
