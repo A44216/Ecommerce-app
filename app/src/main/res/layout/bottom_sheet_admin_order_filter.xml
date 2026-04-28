@@ -82,7 +82,7 @@
             android:id="@+id/actvShop"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Chọn cửa hàng (nhập tên)"
+            android:hint="Chọn cửa hàng (Tên, email hoặc sđt)"
             android:inputType="text"
             android:maxLines="1"
             android:completionThreshold="1"
