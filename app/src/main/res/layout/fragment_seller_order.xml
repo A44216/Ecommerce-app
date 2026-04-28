@@ -28,7 +28,7 @@
             android:id="@+id/actvSearch"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:hint="Tìm kiếm theo mã đơn, khách hàng..."
+            android:hint="Tìm kiếm theo mã đơn, khách hàng, sdt"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"

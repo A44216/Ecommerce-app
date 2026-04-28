@@ -75,6 +75,9 @@
             android:name=".ui.activity.home.admin.management.complaint.AdminComplaintActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.home.admin.management.order.AdminOrderDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.login.RegisterActivity"
             android:exported="false" />
         <activity
