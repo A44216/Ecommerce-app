@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
@@ -29,6 +30,7 @@ import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerProductViewMod
 public class SellerProductListFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshProducts;
     private SellerProductAdapter adapter;
     private SellerProductViewModel viewModel;
 
@@ -85,6 +87,15 @@ public class SellerProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_seller_product_list, container, false);
 
         recyclerView = view.findViewById(R.id.listProduct);
+        swipeRefreshProducts = view.findViewById(R.id.swipeRefreshProducts);
+
+        swipeRefreshProducts.setOnRefreshListener(() -> {
+            if (viewModel != null) {
+                reload();
+            } else {
+                swipeRefreshProducts.setRefreshing(false);
+            }
+        });
 
         initRecycler();
         setupViewModel();
@@ -215,6 +226,9 @@ public class SellerProductListFragment extends Fragment {
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), items -> {
             isLoadingMore = false;
+            if (swipeRefreshProducts != null) {
+                swipeRefreshProducts.setRefreshing(false);
+            }
             if (items != null) {
                 adapter.submitList(items);
             }

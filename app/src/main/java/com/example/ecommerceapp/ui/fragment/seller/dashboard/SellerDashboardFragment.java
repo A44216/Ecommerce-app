@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
@@ -44,6 +45,7 @@ public class SellerDashboardFragment extends Fragment {
 
     private TextView tvRevenue, tvOrders, tvSold;
     private Spinner spFilterTime;
+    private SwipeRefreshLayout swipeRefreshDashboard;
 
     private MaterialAutoCompleteTextView actFilterKpi, actFilterTopProduct, actFilterTopProductTime;
 
@@ -113,6 +115,8 @@ public class SellerDashboardFragment extends Fragment {
         chartRevenue.setNoDataTextColor(android.graphics.Color.GRAY);
         
         rvTopProduct = view.findViewById(R.id.rvTopProducts);
+        
+        swipeRefreshDashboard = view.findViewById(R.id.swipeRefreshDashboard);
     }
 
     private void setInits() {
@@ -190,6 +194,12 @@ public class SellerDashboardFragment extends Fragment {
         setupTopProductSortListener();
         setupTopProductTimeListener();
         setupChartFilterListener();
+        
+        swipeRefreshDashboard.setOnRefreshListener(() -> {
+            viewModel.loadKpi(currentKpiRange);
+            viewModel.loadTopProducts(currentTopRange);
+            viewModel.loadChart(currentChartType);
+        });
     }
 
     private void setupKpiFilterListener() {
@@ -264,6 +274,7 @@ public class SellerDashboardFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void observeKpiData() {
         viewModel.getKpiData().observe(getViewLifecycleOwner(), data -> {
+            swipeRefreshDashboard.setRefreshing(false);
             if (data == null) return;
 
             tvRevenue.setText(NumberUtils.formatCompact(data.getRevenue()) + " ₫");
@@ -274,6 +285,7 @@ public class SellerDashboardFragment extends Fragment {
 
     private void observeTopProductData() {
         viewModel.getTopProductData().observe(getViewLifecycleOwner(), data -> {
+            swipeRefreshDashboard.setRefreshing(false);
             if (data == null) return;
 
             topProductData = data;
@@ -289,6 +301,7 @@ public class SellerDashboardFragment extends Fragment {
 
     private void observeChartData() {
         viewModel.getChartData().observe(getViewLifecycleOwner(), list -> {
+            swipeRefreshDashboard.setRefreshing(false);
             boolean hasData = false;
             if (list != null && !list.isEmpty()) {
                 for (SellerRevenueChartResponse item : list) {

@@ -27,6 +27,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.enums.Role;
@@ -48,6 +49,7 @@ public class AdminUserActivity extends AppCompatActivity {
     private AutoCompleteTextView actvFilterStatus;
     private RecyclerView rvUsers;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshUsers;
     private TextView tvEmpty;
 
     private ArrayAdapter<String> autoCompleteAdapter;
@@ -101,9 +103,14 @@ public class AdminUserActivity extends AppCompatActivity {
         actvFilterStatus = findViewById(R.id.actvFilterStatus);
         rvUsers = findViewById(R.id.rvUsers);
         progressBar = findViewById(R.id.progressBar);
+        swipeRefreshUsers = findViewById(R.id.swipeRefreshUsers);
         tvEmpty = findViewById(R.id.tvEmpty);
 
         ivBack.setOnClickListener(v -> finish());
+        
+        swipeRefreshUsers.setOnRefreshListener(() -> {
+            viewModel.fetchUsers(false, false);
+        });
         
         edtSearch.setSaveEnabled(false);
         actvFilterRole.setSaveEnabled(false);
@@ -287,6 +294,9 @@ public class AdminUserActivity extends AppCompatActivity {
 
         viewModel.getLoading().observe(this, isLoading -> {
             progressBar.setVisibility(isLoading != null && isLoading ? View.VISIBLE : View.GONE);
+            if (isLoading != null && !isLoading && swipeRefreshUsers != null) {
+                swipeRefreshUsers.setRefreshing(false);
+            }
         });
 
         viewModel.getError().observe(this, error -> {

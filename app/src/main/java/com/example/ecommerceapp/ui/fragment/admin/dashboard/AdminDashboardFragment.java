@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import com.example.ecommerceapp.R;
@@ -61,6 +62,8 @@ public class AdminDashboardFragment extends Fragment {
 
     private BarChart chartRevenue, chartCategorySales;
     private PieChart chartOrderStatus;
+
+    private SwipeRefreshLayout swipeRefreshAdminDashboard;
 
     private TextView kpiGMV, kpiOrders, kpiRevenue, kpiShops, kpiProducts, kpiComplaints, kpiCoupons;
 
@@ -129,6 +132,13 @@ public class AdminDashboardFragment extends Fragment {
         chartRevenue = view.findViewById(R.id.chartRevenue);
         chartOrderStatus = view.findViewById(R.id.chartOrderStatus);
         chartCategorySales = view.findViewById(R.id.chartCategorySales);
+
+        swipeRefreshAdminDashboard = view.findViewById(R.id.swipeRefreshAdminDashboard);
+        swipeRefreshAdminDashboard.setOnRefreshListener(() -> {
+            if (viewModel != null) {
+                viewModel.fetchAllDataWithCurrentRange();
+            }
+        });
 
         View vGMV = view.findViewById(R.id.kpiGMV);
         ((TextView) vGMV.findViewById(R.id.tvLabel)).setText("Tổng GMV");
@@ -249,6 +259,7 @@ public class AdminDashboardFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void observeViewModel() {
         viewModel.getKpiLiveData().observe(getViewLifecycleOwner(), kpi -> {
+            swipeRefreshAdminDashboard.setRefreshing(false);
             if (kpi != null) {
                 kpiGMV.setText(NumberUtils.formatCompact(kpi.getTotalGMV()) + " ₫");
                 kpiOrders.setText(NumberUtils.formatCompact(java.math.BigDecimal.valueOf(kpi.getTotalOrders())));
@@ -261,6 +272,7 @@ public class AdminDashboardFragment extends Fragment {
         });
 
         viewModel.getRevenueChartLiveData().observe(getViewLifecycleOwner(), data -> {
+            swipeRefreshAdminDashboard.setRefreshing(false);
             boolean hasData = false;
             if (data != null && !data.isEmpty()) {
                 for (AdminRevenueChartResponse item : data) {
@@ -304,6 +316,7 @@ public class AdminDashboardFragment extends Fragment {
         });
 
         viewModel.getOrderStatusChartLiveData().observe(getViewLifecycleOwner(), data -> {
+            swipeRefreshAdminDashboard.setRefreshing(false);
             boolean hasData = false;
             if (data != null && !data.isEmpty()) {
                 for (AdminOrderStatusChartResponse item : data) {
@@ -330,6 +343,7 @@ public class AdminDashboardFragment extends Fragment {
         });
 
         viewModel.getCategorySalesChartLiveData().observe(getViewLifecycleOwner(), data -> {
+            swipeRefreshAdminDashboard.setRefreshing(false);
             boolean hasData = false;
             if (data != null && !data.isEmpty()) {
                 for (AdminCategorySalesChartResponse item : data) {
@@ -386,12 +400,14 @@ public class AdminDashboardFragment extends Fragment {
         });
 
         viewModel.getTopShopsLiveData().observe(getViewLifecycleOwner(), data -> {
+            swipeRefreshAdminDashboard.setRefreshing(false);
             if (data != null) {
                 topShopAdapter.setShopList(data);
             }
         });
 
         viewModel.getTopProductsLiveData().observe(getViewLifecycleOwner(), response -> {
+            swipeRefreshAdminDashboard.setRefreshing(false);
             if (response != null) {
                 updateTopProductList(viewModel.getCurrentTopProductType());
             }

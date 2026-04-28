@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
@@ -39,10 +40,14 @@ public class SellerOrderListFragment extends Fragment {
     private boolean isLoadingMore = false;
 
     private RecyclerView rvOrders;
+    private SwipeRefreshLayout swipeRefreshOrders;
 
     private androidx.lifecycle.LiveData<List<com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse>> currentOrdersLiveData;
     private final androidx.lifecycle.Observer<List<com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse>> ordersObserver = data -> {
         isLoadingMore = false;
+        if (swipeRefreshOrders != null) {
+            swipeRefreshOrders.setRefreshing(false);
+        }
         if (data != null) {
             adapter.submitList(new ArrayList<>(data));
         }
@@ -83,6 +88,8 @@ public class SellerOrderListFragment extends Fragment {
 
     private void initViews(View view) {
         rvOrders = view.findViewById(R.id.rvOrders);
+        swipeRefreshOrders = view.findViewById(R.id.swipeRefreshOrders);
+        swipeRefreshOrders.setOnRefreshListener(() -> loadOrdersWithFilters(false));
     }
 
     private void setupRecyclerView() {

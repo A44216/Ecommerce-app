@@ -83,7 +83,6 @@ public class AdminShopViewModel extends ViewModel {
         this.currentSortBy = sortBy;
         this.currentSortDir = sortDir;
         this.currentPage = 0;
-        this.shops.setValue(new ArrayList<>());
         this.isLastPage.setValue(false);
         loadShops();
     }

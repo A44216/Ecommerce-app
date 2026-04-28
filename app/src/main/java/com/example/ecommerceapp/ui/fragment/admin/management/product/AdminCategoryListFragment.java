@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.model.request.CategoryRequest;
@@ -32,6 +33,7 @@ public class AdminCategoryListFragment extends Fragment {
     private int type;
 
     private RecyclerView rv;
+    private SwipeRefreshLayout swipeRefreshCategory;
     private AdminCategoryAdapter adapter;
     private AdminCategoryViewModel viewModel;
 
@@ -70,9 +72,14 @@ public class AdminCategoryListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         rv = view.findViewById(R.id.rvCategory);
+        swipeRefreshCategory = view.findViewById(R.id.swipeRefreshCategory);
 
         viewModel = new ViewModelProvider(requireActivity())
                 .get(AdminCategoryViewModel.class);
+
+        swipeRefreshCategory.setOnRefreshListener(() -> {
+            viewModel.fetchCategories(type == TYPE_DELETED);
+        });
 
         setupRecycler();
         observeData();
@@ -132,11 +139,13 @@ public class AdminCategoryListFragment extends Fragment {
 
         if (type == TYPE_DELETED) {
             viewModel.getDeleted().observe(getViewLifecycleOwner(), list -> {
+                if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
                 if (list == null) return;
                 adapter.submitList(new java.util.ArrayList<>(list));
             });
         } else {
             viewModel.getAll().observe(getViewLifecycleOwner(), list -> {
+                if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
                 if (list == null) return;
                 adapter.submitList(new java.util.ArrayList<>(list));
             });

@@ -29,6 +29,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.enums.ShopStatus;
@@ -48,6 +49,7 @@ public class AdminShopActivity extends AppCompatActivity {
     private AutoCompleteTextView actvFilterStatus;
     private RecyclerView rvShops;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshShops;
     private TextView tvEmpty;
     private ImageView ivBack;
 
@@ -108,6 +110,7 @@ public class AdminShopActivity extends AppCompatActivity {
         actvFilterStatus = findViewById(R.id.actvFilterStatus);
         rvShops = findViewById(R.id.rvShops);
         progressBar = findViewById(R.id.progressBar);
+        swipeRefreshShops = findViewById(R.id.swipeRefreshShops);
         tvEmpty = findViewById(R.id.tvEmpty);
         ivBack = findViewById(R.id.ivBack);
     }
@@ -245,6 +248,10 @@ public class AdminShopActivity extends AppCompatActivity {
     private void setupListeners() {
         ivBack.setOnClickListener(v -> finish());
         setupSearch();
+
+        swipeRefreshShops.setOnRefreshListener(() -> {
+            viewModel.setFilters(currentStatus, currentKeyword, currentSortBy, currentSortDir);
+        });
     }
 
     private void clearSearchFocus() {
@@ -279,7 +286,11 @@ public class AdminShopActivity extends AppCompatActivity {
         });
 
         viewModel.getIsLoading().observe(this, isLoading -> {
-            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            boolean isListEmpty = adapter.getCurrentList().isEmpty();
+            progressBar.setVisibility((isLoading && isListEmpty) ? View.VISIBLE : View.GONE);
+            if (!isLoading && swipeRefreshShops != null) {
+                swipeRefreshShops.setRefreshing(false);
+            }
         });
 
         viewModel.getError().observe(this, error -> {
