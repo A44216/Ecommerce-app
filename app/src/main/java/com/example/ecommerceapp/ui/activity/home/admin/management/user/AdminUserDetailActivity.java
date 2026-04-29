@@ -162,6 +162,13 @@ public class AdminUserDetailActivity extends AppCompatActivity {
             AdminUserShopInfoResponse shop = detail.getShop();
             if (shop != null) {
                 tvShopName.setText(shop.getShopName() != null ? shop.getShopName() : "Chưa cập nhật");
+                tvShopName.setOnClickListener(v -> {
+                    if (shop.getId() != null) {
+                        android.content.Intent intent = new android.content.Intent(AdminUserDetailActivity.this, com.example.ecommerceapp.ui.activity.home.admin.management.shop.AdminShopDetailActivity.class);
+                        intent.putExtra("shopId", shop.getId());
+                        startActivity(intent);
+                    }
+                });
                 tvShopDescription.setText(shop.getDescription() != null ? shop.getDescription() : "Không có mô tả");
                 tvShopRating.setText(shop.getRatingAvg() != null ? shop.getRatingAvg() + " ★" : "0 ★");
                 tvShopOrders.setText(shop.getTotalOrders() != null ? String.valueOf(shop.getTotalOrders()) : "0");

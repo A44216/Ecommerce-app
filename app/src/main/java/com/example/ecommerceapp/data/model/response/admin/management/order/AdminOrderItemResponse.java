@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class AdminOrderItemResponse {
 
     private Integer id;
+    private String productCode;
     private Integer productId;
     private String productName;
     private String productImage;
@@ -14,6 +15,8 @@ public class AdminOrderItemResponse {
     public Integer getId() {
         return id;
     }
+
+    public String getProductCode() { return productCode; }
 
     public Integer getProductId() {
         return productId;

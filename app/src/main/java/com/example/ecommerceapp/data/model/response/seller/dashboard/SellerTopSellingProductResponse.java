@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class SellerTopSellingProductResponse {
 
     private Integer productId;
+    private String productCode;
     private String name;
     private Integer soldQuantity;
     private BigDecimal revenue;
@@ -18,6 +19,8 @@ public class SellerTopSellingProductResponse {
     public Integer getProductId() {
         return productId;
     }
+
+    public String getProductCode() { return productCode; }
 
     public String getName() {
         return name;
@@ -37,10 +40,6 @@ public class SellerTopSellingProductResponse {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setSoldQuantity(Integer soldQuantity) {
-        this.soldQuantity = soldQuantity;
     }
 
     public void setRevenue(BigDecimal revenue) {

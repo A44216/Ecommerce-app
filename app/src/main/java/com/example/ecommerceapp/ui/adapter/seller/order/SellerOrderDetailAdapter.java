@@ -50,7 +50,7 @@ public class SellerOrderDetailAdapter extends RecyclerView.Adapter<SellerOrderDe
 
         SellerOrderItemResponse item = list.get(position);
 
-        holder.getProductId().setText("ID = " + String.valueOf(item.getProductId()));
+        holder.getProductCode().setText(item.getProductCode() != null ? item.getProductCode() : "Mã: --");
         holder.getProductName().setText(item.getProductName());
         holder.getUnitPrice().setText(String.format("%,.0f", item.getUnitPrice()) + " đ");
         holder.getQuantity().setText("x" + item.getQuantity());

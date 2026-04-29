@@ -84,6 +84,13 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
 
         rvOrderItems = findViewById(R.id.rvOrderItems);
         adapter = new AdminOrderItemAdapter();
+        adapter.setListener(item -> {
+            if (item.getProductId() != null) {
+                Intent intent = new Intent(AdminOrderDetailActivity.this, com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductDetailActivity.class);
+                intent.putExtra("productId", item.getProductId());
+                startActivity(intent);
+            }
+        });
         rvOrderItems.setLayoutManager(new LinearLayoutManager(this));
         rvOrderItems.setAdapter(adapter);
 

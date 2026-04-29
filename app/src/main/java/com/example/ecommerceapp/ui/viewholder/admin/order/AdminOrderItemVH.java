@@ -14,7 +14,7 @@ import com.example.ecommerceapp.utils.ImageLoader;
 public class AdminOrderItemVH extends RecyclerView.ViewHolder {
 
     public final ImageView ivProduct;
-    public final TextView tvProductId;
+    public final TextView tvProductCode;
     public final TextView tvProductName;
     public final TextView tvUnitPrice;
     public final TextView tvQuantity;
@@ -23,7 +23,7 @@ public class AdminOrderItemVH extends RecyclerView.ViewHolder {
     public AdminOrderItemVH(@NonNull View itemView) {
         super(itemView);
         ivProduct = itemView.findViewById(R.id.ivProduct);
-        tvProductId = itemView.findViewById(R.id.tvProductId);
+        tvProductCode = itemView.findViewById(R.id.tvProductCode);
         tvProductName = itemView.findViewById(R.id.tvProductName);
         tvUnitPrice = itemView.findViewById(R.id.tvUnitPrice);
         tvQuantity = itemView.findViewById(R.id.tvQuantity);
@@ -32,7 +32,7 @@ public class AdminOrderItemVH extends RecyclerView.ViewHolder {
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     public void bind(AdminOrderItemResponse item) {
-        tvProductId.setText(item.getProductId() != null ? "ID: " + item.getProductId() : "ID: --");
+        tvProductCode.setText(item.getProductCode() != null ? item.getProductCode() : "Mã: --");
         tvProductName.setText(item.getProductName() != null ? item.getProductName() : "--");
         
         if (item.getPrice() != null) {

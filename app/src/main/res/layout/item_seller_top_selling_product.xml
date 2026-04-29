@@ -43,47 +43,61 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- NAME -->
-        <TextView
-            android:id="@+id/tvName"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/seller_product_default_name"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:orientation="vertical"
             android:layout_marginStart="10dp"
             app:layout_constraintStart_toEndOf="@id/imgProduct"
-            app:layout_constraintTop_toTopOf="@id/imgProduct"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- PRICE -->
-        <TextView
-            android:id="@+id/tvPrice"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/seller_product_default_price"
-            android:textColor="@color/red"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_marginTop="4dp"
-            app:layout_constraintStart_toStartOf="@id/tvName"
-            app:layout_constraintTop_toBottomOf="@id/tvName"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <!-- PRODUCT CODE -->
+            <TextView
+                android:id="@+id/tvProductCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PRD-000000"
+                android:textSize="12sp"
+                android:textColor="#757575"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
-        <!-- SOLD -->
-        <TextView
-            android:id="@+id/tvSoldAndRevenue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/seller_product_default_sold_and_revenue"
-            android:textSize="13sp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintStart_toStartOf="@id/tvPrice"
-            app:layout_constraintTop_toBottomOf="@id/tvPrice" />
+            <!-- NAME -->
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_product_default_name"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- PRICE -->
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_product_default_price"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="4dp" />
+
+            <!-- SOLD -->
+            <TextView
+                android:id="@+id/tvSoldAndRevenue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_product_default_sold_and_revenue"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
 
 
 

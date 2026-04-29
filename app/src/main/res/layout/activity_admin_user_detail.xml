@@ -282,9 +282,13 @@
                             android:id="@+id/tvShopName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
+                            android:textColor="@color/blue"
                             android:textSize="20sp"
                             android:textStyle="bold"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:paddingVertical="4dp"
                             tools:text="Cửa hàng tiện lợi" />
 
                         <TextView

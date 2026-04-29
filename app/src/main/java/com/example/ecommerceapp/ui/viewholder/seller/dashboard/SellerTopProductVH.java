@@ -11,17 +11,22 @@ import com.example.ecommerceapp.R;
 
 public class SellerTopProductVH extends RecyclerView.ViewHolder {
 
-    private final TextView tvRank, tvName, tvPrice, tvSoldAndRevenue;
+    private final TextView tvRank, tvProductCode, tvName, tvPrice, tvSoldAndRevenue;
     private ImageView imgProduct;
 
     public SellerTopProductVH(@NonNull View itemView) {
         super(itemView);
 
         tvRank = itemView.findViewById(R.id.tvRank);
+        tvProductCode = itemView.findViewById(R.id.tvProductCode);
         tvName = itemView.findViewById(R.id.tvName);
         tvPrice = itemView.findViewById(R.id.tvPrice);
         tvSoldAndRevenue = itemView.findViewById(R.id.tvSoldAndRevenue);
         imgProduct = itemView.findViewById(R.id.imgProduct);
+    }
+
+    public TextView getTvProductCode() {
+        return tvProductCode;
     }
 
     public TextView getTvRank() {

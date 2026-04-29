@@ -158,7 +158,16 @@ public class AdminProductDetailActivity extends AppCompatActivity {
         txtProductCode.setText(product.getProductCode() != null ? product.getProductCode() : "N/A");
         txtName.setText(product.getName());
         txtPrice.setText("Giá: " + String.format("%,.0f", product.getPrice()) + " đ");
+        
         txtShopName.setText("Shop: " + (product.getShopName() != null ? product.getShopName() : "N/A"));
+        txtShopName.setOnClickListener(v -> {
+            if (product.getShopId() != null) {
+                Intent intent = new Intent(AdminProductDetailActivity.this, com.example.ecommerceapp.ui.activity.home.admin.management.shop.AdminShopDetailActivity.class);
+                intent.putExtra("shopId", product.getShopId());
+                startActivity(intent);
+            }
+        });
+
         txtCategory.setText("Danh mục: " + (product.getCategoryName() != null ? product.getCategoryName() : "Khác"));
         txtStock.setText("Kho: " + product.getStock());
         txtSold.setText("Đã bán: " + product.getSoldCount());

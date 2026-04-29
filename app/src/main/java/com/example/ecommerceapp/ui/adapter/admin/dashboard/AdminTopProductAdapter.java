@@ -20,8 +20,17 @@ import java.util.List;
 
 public class AdminTopProductAdapter extends RecyclerView.Adapter<AdminTopProductAdapter.ViewHolder> {
 
+    public interface OnTopProductClickListener {
+        void onClick(AdminTopProductResponse product);
+    }
+
     private List<AdminTopProductResponse> productList = new ArrayList<>();
     private String currentType = "SOLD"; // "SOLD" or "REVENUE"
+    private OnTopProductClickListener listener;
+
+    public void setListener(OnTopProductClickListener listener) {
+        this.listener = listener;
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     public void setProductList(List<AdminTopProductResponse> productList, String type) {
@@ -42,6 +51,7 @@ public class AdminTopProductAdapter extends RecyclerView.Adapter<AdminTopProduct
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AdminTopProductResponse product = productList.get(position);
         holder.tvRank.setText(String.valueOf(position + 1));
+        holder.tvProductCode.setText(product.getProductCode() != null ? product.getProductCode() : "Mã: --");
         holder.tvProductName.setText(product.getName());
         holder.tvShopName.setText("Shop: " + product.getShopName());
         holder.tvPrice.setText(String.format("%,.0f", product.getPrice()) + " đ");
@@ -55,6 +65,12 @@ public class AdminTopProductAdapter extends RecyclerView.Adapter<AdminTopProduct
             holder.tvSoldAndRevenue.setText("Đã bán: " + NumberUtils.formatCompact(java.math.BigDecimal.valueOf(product.getSoldCount())));
             holder.tvSoldAndRevenue.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.purple));
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(product);
+            }
+        });
     }
 
     @Override
@@ -64,12 +80,13 @@ public class AdminTopProductAdapter extends RecyclerView.Adapter<AdminTopProduct
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProductImage;
-        TextView tvRank, tvProductName, tvShopName, tvPrice, tvSoldAndRevenue;
+        TextView tvRank, tvProductCode, tvProductName, tvShopName, tvPrice, tvSoldAndRevenue;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvRank = itemView.findViewById(R.id.tvRank);
             ivProductImage = itemView.findViewById(R.id.ivProductImage);
+            tvProductCode = itemView.findViewById(R.id.tvProductCode);
             tvProductName = itemView.findViewById(R.id.tvProductName);
             tvShopName = itemView.findViewById(R.id.tvShopName);
             tvPrice = itemView.findViewById(R.id.tvPrice);

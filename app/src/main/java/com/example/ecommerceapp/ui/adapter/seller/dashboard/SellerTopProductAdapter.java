@@ -81,6 +81,7 @@ public class SellerTopProductAdapter extends RecyclerView.Adapter<SellerTopProdu
 
         holder.getTvRank().getBackground().setTint(color);
 
+        holder.getTvProductCode().setText(item.getProductCode() != null ? item.getProductCode() : "Mã: --");
         holder.getTvName().setText(item.getName());
 
         holder.getTvPrice().setText(String.format("%,.0f", item.getPrice()) + " đ");

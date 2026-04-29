@@ -15,7 +15,16 @@ import java.util.List;
 
 public class AdminOrderItemAdapter extends RecyclerView.Adapter<AdminOrderItemVH> {
 
+    public interface OnOrderItemClickListener {
+        void onClick(AdminOrderItemResponse item);
+    }
+
     private List<AdminOrderItemResponse> items = new ArrayList<>();
+    private OnOrderItemClickListener listener;
+
+    public void setListener(OnOrderItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public void setData(List<AdminOrderItemResponse> items) {
         if (items != null) {
@@ -38,6 +47,12 @@ public class AdminOrderItemAdapter extends RecyclerView.Adapter<AdminOrderItemVH
     public void onBindViewHolder(@NonNull AdminOrderItemVH holder, int position) {
         AdminOrderItemResponse item = items.get(position);
         holder.bind(item);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(item);
+            }
+        });
     }
 
     @Override

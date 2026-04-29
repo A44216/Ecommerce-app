@@ -202,6 +202,13 @@ public class AdminDashboardFragment extends Fragment {
         RecyclerView rvTopProducts = view.findViewById(R.id.rvTopProducts);
         rvTopProducts.setLayoutManager(new LinearLayoutManager(getContext()));
         topProductAdapter = new AdminTopProductAdapter();
+        topProductAdapter.setListener(product -> {
+            if (product.getId() != null) {
+                Intent intent = new Intent(requireContext(), com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductDetailActivity.class);
+                intent.putExtra("productId", product.getId());
+                startActivity(intent);
+            }
+        });
         rvTopProducts.setAdapter(topProductAdapter);
     }
 
