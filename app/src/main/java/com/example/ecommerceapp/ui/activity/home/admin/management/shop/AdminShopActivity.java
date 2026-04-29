@@ -203,7 +203,7 @@ public class AdminShopActivity extends AppCompatActivity {
         edtSearch.setOnItemClickListener((parent, view, position, id) -> {
             AdminShopAutocompleteResponse selected = autoCompleteAdapter.getItem(position);
             if (selected != null) {
-                currentKeyword = selected.getLabel();
+                currentKeyword = selected.getName();
                 viewModel.setFilters(currentStatus, currentKeyword, currentSortBy, currentSortDir);
                 edtSearch.clearFocus();
             }

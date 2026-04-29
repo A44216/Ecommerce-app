@@ -376,10 +376,10 @@ public class AdminOrderFragment extends Fragment {
 
         bsShop.setOnItemClickListener((parent, view, position, id) -> {
             AdminShopAutocompleteResponse selectedShop = (AdminShopAutocompleteResponse) parent.getItemAtPosition(position);
-            bsShop.setText(selectedShop.getLabel(), false);
+            bsShop.setText(selectedShop.getName(), false);
             bsShop.clearFocus();
             hideKeyboard();
-            currentShopName = selectedShop.getLabel();
+            currentShopName = selectedShop.getName();
             currentShopId = selectedShop.getId();
         });
 

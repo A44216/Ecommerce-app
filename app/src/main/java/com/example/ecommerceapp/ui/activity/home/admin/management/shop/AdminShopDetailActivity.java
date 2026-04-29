@@ -23,6 +23,7 @@ import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminS
 import com.example.ecommerceapp.data.repository.admin.AdminShopRepository;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminShopDetailViewModel;
 import com.example.ecommerceapp.ui.viewmodel.admin.factory.AdminShopDetailViewModelFactory;
+import com.example.ecommerceapp.utils.ImageLoader;
 import com.example.ecommerceapp.utils.NumberUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -181,7 +182,7 @@ public class AdminShopDetailActivity extends AppCompatActivity {
         tvOrders.setText("Đơn hàng: " + (detail.getTotalOrders() != null ? detail.getTotalOrders() : 0));
         tvRevenue.setText("Doanh thu: " + NumberUtils.formatCompact(detail.getTotalRevenue() != null ? detail.getTotalRevenue() : java.math.BigDecimal.ZERO));
 
-        com.example.ecommerceapp.utils.ImageLoader.load(this, ivAvatar, detail.getAvatar());
+        ImageLoader.load(this, ivAvatar, detail.getAvatar());
 
         bindStatus(detail.getStatus());
     }

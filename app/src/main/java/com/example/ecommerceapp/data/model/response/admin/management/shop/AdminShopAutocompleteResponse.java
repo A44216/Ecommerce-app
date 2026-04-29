@@ -1,8 +1,10 @@
 package com.example.ecommerceapp.data.model.response.admin.management.shop;
 
+import androidx.annotation.NonNull;
+
 public class AdminShopAutocompleteResponse {
     private Integer id;
-    private String label;
+    private String name;
 
     public Integer getId() {
         return id;
@@ -12,16 +14,17 @@ public class AdminShopAutocompleteResponse {
         this.id = id;
     }
 
-    public String getLabel() {
-        return label;
+    public String getName() {
+        return name;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return label != null ? label : "";
+        return name != null ? name : "";
     }
 }
