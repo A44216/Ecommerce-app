@@ -9,6 +9,7 @@ import java.util.List;
 public class SellerProductResponse {
 
     private Integer id;
+    private String productCode;
     private String name;
     private BigDecimal price;
     private int stock;
@@ -28,6 +29,7 @@ public class SellerProductResponse {
     public BigDecimal getPrice() { return price; }
 
     public Integer getId() { return id; }
+    public String getProductCode() {return productCode;}
     public int getStock() { return stock; }
     public String getCategoryName() { return categoryName; }
     public String getShopName() { return shopName; }

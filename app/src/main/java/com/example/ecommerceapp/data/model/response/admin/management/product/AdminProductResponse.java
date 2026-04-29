@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 public class AdminProductResponse {
     private Integer id;
+    private String productCode;
     private Integer shopId;
     private String shopName;
     private Integer categoryId;
@@ -21,6 +22,7 @@ public class AdminProductResponse {
     private String image;
 
     public Integer getId() { return id; }
+    public String getProductCode() {return productCode;}
     public Integer getShopId() { return shopId; }
     public String getShopName() { return shopName; }
     public Integer getCategoryId() { return categoryId; }

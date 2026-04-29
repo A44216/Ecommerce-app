@@ -10,6 +10,7 @@ import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.data.repository.seller.SellerProductRepository;
 
+import com.example.ecommerceapp.data.model.response.ProductAutocompleteResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -270,18 +271,22 @@ public class SellerProductViewModel extends ViewModel {
     private final MutableLiveData<List<String>> autocompleteResult = new MutableLiveData<>();
 
     public void autocompleteProducts(String keyword) {
-        repository.autocompleteProducts(keyword).enqueue(new Callback<List<String>>() {
+        repository.autocompleteProducts(keyword).enqueue(new Callback<List<ProductAutocompleteResponse>>() {
             @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+            public void onResponse(Call<List<ProductAutocompleteResponse>> call, Response<List<ProductAutocompleteResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    autocompleteResult.setValue(response.body());
+                    List<String> result = new java.util.ArrayList<>();
+                    for (ProductAutocompleteResponse item : response.body()) {
+                        result.add(item.getProductCode() + " - " + item.getName());
+                    }
+                    autocompleteResult.setValue(result);
                 } else {
                     autocompleteResult.setValue(new java.util.ArrayList<>());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
+            public void onFailure(Call<List<ProductAutocompleteResponse>> call, Throwable t) {
                 autocompleteResult.setValue(new java.util.ArrayList<>());
             }
         });

@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.api.service.seller;
 
 import com.example.ecommerceapp.data.model.request.seller.product.SellerProductRequest;
+import com.example.ecommerceapp.data.model.response.ProductAutocompleteResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 
@@ -42,7 +43,7 @@ public interface SellerProductService {
     Call<Void> submitProduct(@Path("id") int id);
 
     @GET("seller/products/autocomplete")
-    Call<List<String>> autocompleteProducts(
+    Call<List<ProductAutocompleteResponse>> autocompleteProducts(
             @Query("keyword") String keyword
     );
 

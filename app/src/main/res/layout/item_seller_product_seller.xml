@@ -15,16 +15,49 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
+        <!-- PRODUCT CODE + STATUS (HEADER) -->
+        <TextView
+            android:id="@+id/tvProductCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="CODE_SP"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvProductStatus" />
+
+        <TextView
+            android:id="@+id/tvProductStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trạng thái"
+            android:background="@drawable/bg_shop_status_pending"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:textColor="@color/orange"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tvProductCode" />
+
         <!-- Ảnh sản phẩm -->
         <ImageView
             android:id="@+id/imgPathProduct"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:contentDescription="@string/desc_image"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background"
+            android:layout_marginTop="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvProductCode"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <!-- Info -->
@@ -33,28 +66,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/seller_product_default_name"
-            android:textStyle="bold"
-            android:textSize="18sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:layout_marginStart="10dp"
+            android:textSize="16sp"
+            android:textColor="@color/blue"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
             app:layout_constraintStart_toEndOf="@id/imgPathProduct"
-            app:layout_constraintTop_toTopOf="@id/imgPathProduct"
-            app:layout_constraintEnd_toStartOf="@id/actionsLayoutProduct" />
-
-        <TextView
-            android:id="@+id/tvProductPrice"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/seller_product_default_price"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/red"
-            android:textSize="14sp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="6dp"
-            app:layout_constraintStart_toStartOf="@id/tvProductName"
-            app:layout_constraintTop_toBottomOf="@id/tvProductName"
+            app:layout_constraintTop_toBottomOf="@id/tvProductCode"
             app:layout_constraintEnd_toStartOf="@id/actionsLayoutProduct" />
 
         <TextView
@@ -65,10 +84,9 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="14sp"
-            android:layout_marginEnd="6dp"
             android:layout_marginTop="4dp"
-            app:layout_constraintStart_toStartOf="@id/tvProductPrice"
-            app:layout_constraintTop_toBottomOf="@id/tvProductPrice"
+            app:layout_constraintStart_toStartOf="@id/tvProductName"
+            app:layout_constraintTop_toBottomOf="@id/tvProductName"
             app:layout_constraintEnd_toStartOf="@id/actionsLayoutProduct" />
 
         <!-- Rating + Sold -->
@@ -80,7 +98,8 @@
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="@id/tvProductCategory"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/tvProductName"
             app:layout_constraintTop_toBottomOf="@id/tvProductCategory"
             app:layout_constraintEnd_toStartOf="@id/tvSeparator"/>
 
@@ -108,13 +127,17 @@
             app:layout_constraintEnd_toStartOf="@id/actionsLayoutProduct" />
 
         <TextView
-            android:id="@+id/tvProductStatus"
+            android:id="@+id/tvProductPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/seller_product_default_status"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintStart_toStartOf="@id/tvRating"
+            android:text="@string/seller_product_default_price"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@id/tvProductName"
             app:layout_constraintTop_toBottomOf="@id/tvRating"
             app:layout_constraintEnd_toStartOf="@id/actionsLayoutProduct" />
 

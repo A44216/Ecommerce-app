@@ -36,6 +36,7 @@ import com.example.ecommerceapp.api.service.admin.AdminProductService;
 import com.example.ecommerceapp.api.service.admin.AdminShopService;
 import com.example.ecommerceapp.data.enums.ProductStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.ProductAutocompleteResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminCategoryResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminProductResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopAutocompleteResponse;
@@ -302,15 +303,26 @@ public class AdminProductActivity extends AppCompatActivity {
         });
 
         actvSearchKeyword.setOnItemClickListener((parent, view, position, id) -> {
-            currentKeyword = keywordAdapter.getItem(position);
+            String selected = keywordAdapter.getItem(position);
+            actvSearchKeyword.setText(selected, false);
+            
+            if (selected != null && selected.contains(" - ")) {
+                currentKeyword = selected.split(" - ")[0].trim();
+            } else {
+                currentKeyword = selected;
+            }
             clearSearchFocus();
             fetchProducts(true, false, true);
         });
 
         actvSearchKeyword.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                currentKeyword = actvSearchKeyword.getText().toString().trim();
-                clearSearchFocus();
+                String typed = actvSearchKeyword.getText().toString().trim();
+                if (typed.contains(" - ")) {
+                    currentKeyword = typed.split(" - ")[0].trim();
+                } else {
+                    currentKeyword = typed;
+                }
                 fetchProducts(true, false, true);
                 return true;
             }
@@ -478,12 +490,14 @@ public class AdminProductActivity extends AppCompatActivity {
     }
 
     private void fetchKeywordAutocomplete(String keyword) {
-        adminProductService.autocomplete(keyword, null).enqueue(new Callback<List<String>>() {
+        adminProductService.autocomplete(keyword, null).enqueue(new Callback<List<ProductAutocompleteResponse>>() {
             @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+            public void onResponse(Call<List<ProductAutocompleteResponse>> call, Response<List<ProductAutocompleteResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     keywordAdapter.clear();
-                    keywordAdapter.addAll(response.body());
+                    for (ProductAutocompleteResponse item : response.body()) {
+                        keywordAdapter.add(item.getProductCode() + " - " + item.getName());
+                    }
                     keywordAdapter.getFilter().filter(null, count -> {
                         if (count > 0 && actvSearchKeyword.hasFocus()) {
                             actvSearchKeyword.showDropDown();
@@ -493,7 +507,7 @@ public class AdminProductActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
+            public void onFailure(Call<List<ProductAutocompleteResponse>> call, Throwable t) {
                 Log.e("AdminProduct", "Autocomplete failed: " + t.getMessage());
             }
         });
@@ -577,10 +591,11 @@ public class AdminProductActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (actvSearchKeyword != null) actvSearchKeyword.dismissDropDown();
+        if (actvSortTime != null) actvSortTime.dismissDropDown();
+
         if (getCurrentFocus() != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            getCurrentFocus().clearFocus();
+            clearSearchFocus();
         }
         return super.dispatchTouchEvent(ev);
     }

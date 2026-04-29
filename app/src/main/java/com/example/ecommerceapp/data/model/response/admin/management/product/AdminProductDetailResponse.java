@@ -8,6 +8,7 @@ import java.util.List;
 
 public class AdminProductDetailResponse {
     private Integer id;
+    private String productCode;
     private Integer shopId;
     private String shopName;
     private Integer categoryId;
@@ -25,6 +26,7 @@ public class AdminProductDetailResponse {
     private Boolean isDeleted;
 
     public Integer getId() { return id; }
+    public String getProductCode() {return productCode;}
     public Integer getShopId() { return shopId; }
     public String getShopName() { return shopName; }
     public Integer getCategoryId() { return categoryId; }

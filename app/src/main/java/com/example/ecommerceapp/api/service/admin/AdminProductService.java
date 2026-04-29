@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.api.service.admin;
 
 import com.example.ecommerceapp.data.enums.ProductStatus;
+import com.example.ecommerceapp.data.model.response.ProductAutocompleteResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminProductDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminProductResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
@@ -34,7 +35,7 @@ public interface AdminProductService {
     );
 
     @GET("admin/products/autocomplete")
-    Call<List<String>> autocomplete(
+    Call<List<ProductAutocompleteResponse>> autocomplete(
             @Query("keyword") String keyword,
             @Query("shopId") Integer shopId
     );

@@ -2,6 +2,7 @@ package com.example.ecommerceapp.data.repository.seller;
 
 import com.example.ecommerceapp.api.service.seller.SellerProductService;
 import com.example.ecommerceapp.data.model.request.seller.product.SellerProductRequest;
+import com.example.ecommerceapp.data.model.response.ProductAutocompleteResponse;
 import com.example.ecommerceapp.data.model.response.seller.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 
@@ -51,7 +52,7 @@ public class SellerProductRepository {
         return apiService.submitProduct(id);
     }
 
-    public Call<List<String>> autocompleteProducts(String keyword) {
+    public Call<List<ProductAutocompleteResponse>> autocompleteProducts(String keyword) {
         return apiService.autocompleteProducts(keyword);
     }
 

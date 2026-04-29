@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 public class AdminProductDetailActivity extends AppCompatActivity {
 
-    private TextView txtName, txtPrice, txtShopName, txtCategory, txtStock, txtSold, txtRating, txtStatus, txtCreatedAt, txtDescription;
+    private TextView txtProductCode, txtName, txtPrice, txtShopName, txtCategory, txtStock, txtSold, txtRating, txtStatus, txtCreatedAt, txtDescription;
     private ViewPager2 viewPagerImages;
     private ImageView ivBack;
     private WormDotsIndicator dotsIndicator;
@@ -94,6 +94,7 @@ public class AdminProductDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        txtProductCode = findViewById(R.id.txtProductCode);
         txtName = findViewById(R.id.txtName);
         txtPrice = findViewById(R.id.txtPrice);
         txtShopName = findViewById(R.id.txtShopName);
@@ -154,6 +155,7 @@ public class AdminProductDetailActivity extends AppCompatActivity {
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void bindData(AdminProductDetailResponse product) {
+        txtProductCode.setText(product.getProductCode() != null ? product.getProductCode() : "N/A");
         txtName.setText(product.getName());
         txtPrice.setText("Giá: " + String.format("%,.0f", product.getPrice()) + " đ");
         txtShopName.setText("Shop: " + (product.getShopName() != null ? product.getShopName() : "N/A"));

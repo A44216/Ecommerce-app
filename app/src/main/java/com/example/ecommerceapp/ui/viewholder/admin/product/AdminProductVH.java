@@ -12,6 +12,7 @@ import com.example.ecommerceapp.R;
 public class AdminProductVH extends RecyclerView.ViewHolder {
 
     private final ImageView imgPathProduct;
+    private final TextView tvProductCode;
     private final TextView tvProductName;
     private final TextView tvShopName;
     private final TextView tvProductPrice;
@@ -22,6 +23,7 @@ public class AdminProductVH extends RecyclerView.ViewHolder {
     public AdminProductVH(@NonNull View itemView) {
         super(itemView);
         imgPathProduct = itemView.findViewById(R.id.imgPathProduct);
+        tvProductCode = itemView.findViewById(R.id.tvProductCode);
         tvProductName = itemView.findViewById(R.id.tvProductName);
         tvShopName = itemView.findViewById(R.id.tvShopName);
         tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
@@ -31,6 +33,7 @@ public class AdminProductVH extends RecyclerView.ViewHolder {
     }
 
     public ImageView getImgPathProduct() { return imgPathProduct; }
+    public TextView getTvProductCode() { return tvProductCode; }
     public TextView getTvProductName() { return tvProductName; }
     public TextView getTvShopName() { return tvShopName; }
     public TextView getTvProductPrice() { return tvProductPrice; }

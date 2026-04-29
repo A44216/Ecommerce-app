@@ -239,6 +239,10 @@ public class SellerProductFragment extends Fragment {
         String keyword = etSearch.getText() != null
                 ? etSearch.getText().toString().trim()
                 : "";
+                
+        if (keyword.contains(" - ")) {
+            keyword = keyword.split(" - ")[0].trim();
+        }
 
         if (adapter == null) return;
 

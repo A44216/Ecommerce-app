@@ -15,14 +15,14 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
-        <!-- PRODUCT NAME + STATUS (HEADER) -->
+        <!-- PRODUCT CODE + STATUS (HEADER) -->
         <TextView
-            android:id="@+id/tvProductName"
+            android:id="@+id/tvProductCode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="Tên sản phẩm"
+            android:text="CODE_SP"
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/black"
@@ -45,7 +45,7 @@
             android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/tvProductName" />
+            app:layout_constraintBottom_toBottomOf="@id/tvProductCode" />
 
         <!-- ICON / IMAGE (LEFT) -->
         <com.google.android.material.imageview.ShapeableImageView
@@ -59,7 +59,23 @@
             app:cornerSize="8dp"
             android:layout_marginTop="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvProductName" />
+            app:layout_constraintTop_toBottomOf="@id/tvProductCode" />
+
+        <!-- RIGHT SIDE: PRODUCT NAME, SHOP, CATEGORY, SOLD & STOCK, PRICE -->
+        <TextView
+            android:id="@+id/tvProductName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Tên sản phẩm"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:textColor="@color/blue"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toEndOf="@id/imgPathProduct"
+            app:layout_constraintTop_toBottomOf="@id/tvProductCode"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- RIGHT SIDE: SHOP, CATEGORY, SOLD & STOCK, PRICE -->
         <TextView
@@ -69,11 +85,10 @@
             android:text="Shop: N/A"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textSize="16sp"
-            android:textColor="@color/blue"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintStart_toEndOf="@id/imgPathProduct"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/tvProductName"
             app:layout_constraintTop_toBottomOf="@id/tvProductName"
             app:layout_constraintEnd_toEndOf="parent" />
 

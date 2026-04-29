@@ -65,6 +65,7 @@ public class AdminProductAdapter extends ListAdapter<AdminProductResponse, Admin
     public void onBindViewHolder(@NonNull AdminProductVH holder, int position) {
         AdminProductResponse product = getItem(position);
 
+        holder.getTvProductCode().setText(product.getProductCode() != null ? product.getProductCode() : "N/A");
         holder.getTvProductName().setText(product.getName());
         holder.getTvShopName().setText(product.getShopName() != null ? "Shop: " + product.getShopName() : "Shop: N/A");
         

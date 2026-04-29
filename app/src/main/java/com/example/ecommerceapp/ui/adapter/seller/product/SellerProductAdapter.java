@@ -69,6 +69,7 @@ public class SellerProductAdapter extends ListAdapter<SellerProductResponse, Sel
     public void onBindViewHolder(@NonNull SellerProductVH holder, int position) {
         SellerProductResponse product = getItem(position);
 
+        holder.getCode().setText(product.getProductCode() != null ? product.getProductCode() : "N/A");
         holder.getName().setText(product.getName());
         holder.getPrice().setText(String.format("%,.0f", product.getPrice()) + " đ");
 

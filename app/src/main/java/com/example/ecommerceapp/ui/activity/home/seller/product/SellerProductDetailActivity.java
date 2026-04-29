@@ -28,7 +28,7 @@ import java.math.RoundingMode;
 
 public class SellerProductDetailActivity extends AppCompatActivity {
 
-    private TextView txtName, txtPrice, txtCategory, txtStock, txtSold, txtRating, txtStatus, txtDescription;
+    private TextView txtProductCode, txtName, txtPrice, txtCategory, txtStock, txtSold, txtRating, txtStatus, txtDescription;
     private TextView tvViewReviews;
     private ViewPager2 viewPagerImages;
     private ImageView ivBack;
@@ -71,6 +71,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        txtProductCode = findViewById(R.id.txtProductCode);
         txtName = findViewById(R.id.txtName);
         txtPrice = findViewById(R.id.txtPrice);
         txtCategory = findViewById(R.id.txtCategory);
@@ -98,6 +99,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void bindData(SellerProductResponse product) {
 
+        txtProductCode.setText(product.getProductCode() != null ? product.getProductCode() : "N/A");
         txtName.setText(product.getName());
         txtPrice.setText("💰 " + String.format("%,.0f", product.getPrice()) + " đ");
         txtCategory.setText("🏷️ Danh mục: " + product.getCategoryName());
