@@ -322,10 +322,32 @@ public class UserCheckoutActivity extends AppCompatActivity {
             pendingOrders = requests;
 
             if (method == PaymentMethod.QR) {
-                // Mở màn hình thanh toán
-                Intent intent = new Intent(this, PaymentSimulationActivity.class);
-                intent.putExtra("PAYMENT_AMOUNT", finalTotal.doubleValue());
-                paymentLauncher.launch(intent);
+                // Gọi API lấy URL thanh toán VNPAY
+                android.app.ProgressDialog progressDialog = new android.app.ProgressDialog(this);
+                progressDialog.setMessage("Đang tạo liên kết thanh toán...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                ApiClient.getPaymentApiService().createPaymentUrl(finalTotal.longValue(), "Thanh toan don hang").enqueue(new retrofit2.Callback<com.example.ecommerceapp.data.model.response.PaymentResponse>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<com.example.ecommerceapp.data.model.response.PaymentResponse> call, retrofit2.Response<com.example.ecommerceapp.data.model.response.PaymentResponse> response) {
+                        progressDialog.dismiss();
+                        if (response.isSuccessful() && response.body() != null) {
+                            String paymentUrl = response.body().getUrl();
+                            Intent intent = new Intent(UserCheckoutActivity.this, VnPayPaymentActivity.class);
+                            intent.putExtra("PAYMENT_URL", paymentUrl);
+                            paymentLauncher.launch(intent);
+                        } else {
+                            Toast.makeText(UserCheckoutActivity.this, "Không thể tạo liên kết thanh toán", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<com.example.ecommerceapp.data.model.response.PaymentResponse> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(UserCheckoutActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 // COD -> Đặt hàng luôn
                 viewModel.placeMultipleOrders(pendingOrders);

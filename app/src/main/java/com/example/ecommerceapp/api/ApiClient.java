@@ -105,4 +105,8 @@ public class ApiClient {
     public static ChatApiService getChatApiService(TokenManager tokenManager) {
         return createAuthRetrofit(tokenManager).create(ChatApiService.class);
     }
+
+    public static com.example.ecommerceapp.api.service.PaymentApiService getPaymentApiService() {
+        return getPublicRetrofit().create(com.example.ecommerceapp.api.service.PaymentApiService.class);
+    }
 }
