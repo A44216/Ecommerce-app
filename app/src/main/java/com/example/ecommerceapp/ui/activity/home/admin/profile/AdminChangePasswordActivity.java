@@ -17,10 +17,14 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.admin.profile.AdminChangePasswordRequest;
+import com.example.ecommerceapp.ui.activity.login.LoginActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import android.content.Intent;
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.Map;
 
@@ -157,7 +161,12 @@ public class AdminChangePasswordActivity extends AppCompatActivity {
             return;
         }
 
-        submitChangePassword(current, newPass);
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận")
+                .setMessage("Bạn có chắc chắn muốn đổi mật khẩu không?")
+                .setPositiveButton("Đồng ý", (dialog, which) -> submitChangePassword(current, newPass))
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
     @SuppressLint("SetTextI18n")
@@ -191,13 +200,18 @@ public class AdminChangePasswordActivity extends AppCompatActivity {
                         msg = "Đổi mật khẩu thành công";
                     }
 
-                    Snackbar.make(findViewById(android.R.id.content),
-                                    msg,
-                                    Snackbar.LENGTH_SHORT)
+                    new AlertDialog.Builder(AdminChangePasswordActivity.this)
+                            .setTitle("Thành công")
+                            .setMessage(msg + ". Vui lòng đăng nhập lại.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", (dialog, which) -> {
+                                tokenManager.logout();
+                                Intent intent = new Intent(AdminChangePasswordActivity.this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            })
                             .show();
-
-                    // delay để Snackbar kịp hiển thị
-                    new android.os.Handler().postDelayed(() -> finish(), 1500);
 
                 } else {
 
