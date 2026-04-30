@@ -28,6 +28,7 @@ import com.example.ecommerceapp.data.model.request.GoogleLoginRequest;
 import com.example.ecommerceapp.data.model.request.LoginRequest;
 import com.example.ecommerceapp.data.model.response.LoginResponse;
 
+import com.example.ecommerceapp.ui.activity.SplashActivity;
 import com.example.ecommerceapp.ui.activity.home.AdminHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.SellerHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
@@ -171,7 +172,10 @@ public class LoginActivity extends AppCompatActivity {
         // ----------------------------
 
         if (ivBack != null) {
-            ivBack.setOnClickListener(v -> finish());
+            ivBack.setOnClickListener(v -> {
+                Intent it = new Intent(this, SplashActivity.class);
+                startActivity(it);
+            });
         }
 
         if (tvContinueAsGuest != null) {
