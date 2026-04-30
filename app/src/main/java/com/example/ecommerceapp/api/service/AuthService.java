@@ -9,6 +9,12 @@ import com.example.ecommerceapp.data.model.request.SendOtpRequest;
 import com.example.ecommerceapp.data.model.response.LoginResponse;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 
+
+import com.example.ecommerceapp.data.model.request.admin.profile.AdminChangePasswordRequest;
+
+import java.util.Map;
+
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -41,4 +47,6 @@ public interface AuthService {
 
     @POST("auth/send-verify-new-email-otp")
     Call<Void> sendVerifyNewEmailOtp(@Body SendOtpRequest request);
+    @POST("auth/change-password")
+    Call<Map<String, String>> changePassword(@Body AdminChangePasswordRequest request);
 }

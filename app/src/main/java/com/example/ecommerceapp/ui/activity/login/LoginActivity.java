@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.GoogleLoginRequest;
 import com.example.ecommerceapp.data.model.request.LoginRequest;
 import com.example.ecommerceapp.data.model.response.LoginResponse;
+
 import com.example.ecommerceapp.ui.activity.home.AdminHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.SellerHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
@@ -55,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnLogin;
     private ImageView ivBack;
     private TextView tvContinueAsGuest;
+
 
     // --- GOOGLE SIGN IN VARIABLES ---
     private android.widget.LinearLayout btnLoginGoogle; // Đổi sang LinearLayout và đổi tên biến
@@ -122,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         
         // Tối ưu hóa: Đăng xuất ngầm ngay khi mở màn hình để tránh giật lag khi người dùng bấm nút
         mGoogleSignInClient.signOut();
+
         // -----------------------------
 
         initViews();

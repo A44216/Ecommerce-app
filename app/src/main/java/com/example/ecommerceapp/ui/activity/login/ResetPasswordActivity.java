@@ -55,6 +55,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // ĐÃ SỬA LỖI: Chìa khóa phải khớp 100% với ForgotPasswordActivity
         targetEmail = getIntent().getStringExtra("EMAIL_OR_USERNAME");
 
+
         if (targetEmail == null || targetEmail.isEmpty()) {
             Toast.makeText(this, "Lỗi dữ liệu, vui lòng thử lại từ đầu", Toast.LENGTH_SHORT).show();
             finish();

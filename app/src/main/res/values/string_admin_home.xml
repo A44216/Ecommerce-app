@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- NAV -->
+    <string name="admin_nav_dashboard">Tổng quan</string>
+    <string name="admin_nav_products">Sản phẩm</string>
+    <string name="admin_nav_orders">Đơn hàng</string>
+    <string name="admin_nav_users">Người dùng</string>
+    <string name="admin_nav_profile">Tài khoản</string>
+
+    <!-- Admin Info -->
+    <string name="admin_profile_default_name">Admin Name</string>
+    <string name="admin_profile_default_phone">0123456789</string>
+
+    <!-- Menu -->
+    <string name="admin_profile_info_button">Thông tin cá nhân</string>
+    <string name="admin_profile_voucher_button">Quản lý mã giảm giá</string>
+    <string name="admin_profile_category_button">Quản lý danh mục</string>
+    <string name="admin_profile_change_password_button">Đổi mật khẩu</string>
+    <string name="admin_profile_logout">Đăng xuất</string>
+
+    <!-- ProfileInfo -->
+    <string name="admin_profile_hint_full_name">Nhập họ và tên</string>
+    <string name="admin_profile_hint_phone">Nhập số điện thoại</string>
+    <string name="admin_profile_hint_email">Nhập email</string>
+    <string name="admin_profile_button_update">Cập nhật</string>
+
+    <!-- Category -->
+    <string name="admin_profile_category_search">Tìm kiếm danh mục</string>
+    <string name="admin_profile_category_name">Tên danh mục</string>
+
+    <!-- Change Password -->
+    <string name="admin_profile_change_password_title">ĐỔI MẬT KHẨU</string>
+    <string name="admin_profile_hint_current_password">Mật khẩu hiện tại</string>
+
+    <!-- Admin Dashboard Filters -->
+    <string-array name="admin_filter_global_time">
+        <item>Hôm nay</item>
+        <item>Hôm qua</item>
+        <item>7 ngày qua</item>
+        <item>Tháng này</item>
+        <item>Tháng trước</item>
+        <item>Năm nay</item>
+    </string-array>
+
+    <string-array name="admin_filter_chart_type">
+        <item>Ngày</item>
+        <item>Tháng</item>
+        <item>Năm</item>
+    </string-array>
+
+    <string-array name="admin_filter_top_product_type">
+        <item>Bán chạy</item>
+        <item>Doanh thu</item>
+    </string-array>
+
+</resources>

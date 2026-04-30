@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="6dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ivCouponIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#1962F7" />
+
+        <TextView
+            android:id="@+id/tvCouponCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/ivCouponIcon"
+            app:layout_constraintEnd_toStartOf="@+id/tvStatus"
+            app:layout_constraintStart_toEndOf="@+id/ivCouponIcon"
+            app:layout_constraintTop_toTopOf="@+id/ivCouponIcon"
+            tools:text="SUMMER2026" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_search_input"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Hoạt động" />
+
+        <TextView
+            android:id="@+id/tvDiscountPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#1962F7"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivCouponIcon"
+            tools:text="20%" />
+
+        <ImageView
+            android:id="@+id/ivCalendar"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/ic_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDiscountPercent"
+            app:tint="#757575" />
+
+        <TextView
+            android:id="@+id/tvDateRange"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="#424242"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivCalendar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivCalendar"
+            app:layout_constraintTop_toTopOf="@+id/ivCalendar"
+            tools:text="01/04/2026 - 30/06/2026" />
+
+        <ImageView
+            android:id="@+id/ivPeople"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/ic_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDateRange"
+            app:tint="#757575" />
+
+        <TextView
+            android:id="@+id/tvUsageLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Đã sử dụng"
+            android:textColor="#424242"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivPeople"
+            app:layout_constraintStart_toEndOf="@+id/ivPeople"
+            app:layout_constraintTop_toTopOf="@+id/ivPeople" />
+
+        <TextView
+            android:id="@+id/tvUsageCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvUsageLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvUsageLabel"
+            tools:text="45/100" />
+
+        <ProgressBar
+            android:id="@+id/pbUsage"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="8dp"
+            android:max="100"
+            android:progress="45"
+            android:progressDrawable="@drawable/bg_search_input"
+            app:layout_constraintTop_toBottomOf="@+id/ivPeople" />
+
+        <TextView
+            android:id="@+id/tvMinOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="#757575"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pbUsage"
+            tools:text="Đơn tối thiểu: 100.000 đ" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

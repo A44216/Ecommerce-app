@@ -27,7 +27,7 @@ public class CategoryViewModel extends ViewModel {
     }
 
     public void fetchCategories() {
-        repository.getCategories().enqueue(new Callback<List<CategoryResponse>>() {
+        repository.getPublicCategories().enqueue(new Callback<List<CategoryResponse>>() {
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {

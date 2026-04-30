@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.ProductImageRequest;
 import com.example.ecommerceapp.data.model.request.ProductRequest;
@@ -122,7 +123,7 @@ public class AddAndEditProductActivity extends AppCompatActivity {
         );
 
         productRepository = new ProductRepository(
-                ApiClient.getProductService(tokenManager)
+                (ProductService) ApiClient.getProductService(tokenManager)
         );
 
         loadCategories(() -> {

@@ -28,6 +28,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
+
     }
 }
 
@@ -41,6 +43,7 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.core.splashscreen)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -58,9 +61,12 @@ dependencies {
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
     implementation(libs.dotsindicator)
-
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.core.splashscreen)
     implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+    implementation(libs.mpandroidchart)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
 }

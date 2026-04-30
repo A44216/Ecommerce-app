@@ -13,9 +13,9 @@
     <color name="brown">#795548</color>
     <color name="gray">#9E9E9E</color>
     <color name="light_gray">#F5F5F5</color>
-
     <color name="primary_blue">#2563EB</color>
     <color name="bg_gray">#F8F9FA</color>
     <color name="bg_light_gray">#F5F5F5</color>
+    <color name="background_light">#F5F6FA</color>
 
 </resources>

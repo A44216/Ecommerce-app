@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Header: Title and Close button -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Bộ lọc sản phẩm"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_close"
+            android:contentDescription="Đóng" />
+    </RelativeLayout>
+
+    <!-- Shop Filter -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Chọn Shop"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:startIconDrawable="@drawable/ic_shop">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/actvShopFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tất cả Shop (Gõ để tìm kiếm)"
+            android:inputType="text"
+            android:completionThreshold="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Category Filter -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Danh mục"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:startIconDrawable="@drawable/ic_category">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/actvCategoryFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tất cả danh mục"
+            android:completionThreshold="1"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReset"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:paddingVertical="12dp"
+            android:text="Thiết lập lại"
+            android:textColor="@color/black"
+            app:strokeColor="@color/black"
+            app:cornerRadius="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnApply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/black"
+            android:paddingVertical="12dp"
+            android:text="Áp dụng"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+
+</LinearLayout>

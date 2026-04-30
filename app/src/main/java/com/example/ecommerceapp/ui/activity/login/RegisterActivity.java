@@ -21,7 +21,9 @@ import com.example.ecommerceapp.data.model.request.UserRequest;
 import com.example.ecommerceapp.data.model.response.UserResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+
 import com.example.ecommerceapp.data.model.request.SendOtpRequest;
+
 
 import java.util.Objects;
 
@@ -39,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etCode;
     private MaterialButton btnSendCode;
     private android.os.CountDownTimer countDownTimer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,15 +254,16 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Tạo request
         UserRequest request = new UserRequest();
-        request.fullName = fullName;
-        request.username = username;
-        request.email = email;
-        request.phone = TextUtils.isEmpty(phone) ? null : phone;
-        request.password = password;
-        request.role = Role.CUSTOMER;
+        request.setFullName(fullName);
+        request.setUsername(username);
+        request.setEmail(email);
+        request.setPhone(TextUtils.isEmpty(phone) ? null : phone);
+        request.setPassword(password);
+        request.setRole(Role.CUSTOMER);
 
         // BỔ SUNG 4: Nhét mã OTP vào Request để gửi lên Server
-        request.otpCode = otpCode;
+        request.setOtpCode(otpCode);
+
 
         // Gọi API
         authService.register(request).enqueue(new Callback<UserResponse>() {
@@ -361,7 +365,6 @@ public class RegisterActivity extends AppCompatActivity {
                 break;
         }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

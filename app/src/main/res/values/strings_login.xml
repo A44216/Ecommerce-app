@@ -24,4 +24,9 @@
     <string name="desc_icon_password">Icon mật khẩu</string>
     <string name="desc_icon_google">Icon Google</string>
     <string name="login_continue_as_guest">Tiếp tục với tư cách khách</string>
+
+    <string name="login_desc_icon_user">Icon người dùng</string>
+    <string name="login_desc_icon_password">Icon mật khẩu</string>
+    <string name="login_desc_icon_google">Icon Google</string>
+
 </resources>

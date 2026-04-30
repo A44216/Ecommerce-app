@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.ProductResponse;
 import com.example.ecommerceapp.data.repository.ProductRepository;
@@ -53,7 +54,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         TokenManager tokenManager = TokenManager.getInstance(this);
 
         repository = new ProductRepository(
-                ApiClient.getProductService(tokenManager)
+                (ProductService) ApiClient.getProductService(tokenManager)
         );
 
         // lấy productId

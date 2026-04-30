@@ -19,6 +19,7 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.data.model.request.SendOtpRequest;
 import com.example.ecommerceapp.data.model.request.VerifyOtpRequest;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -193,6 +194,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     Intent intent = new Intent(ForgotPasswordActivity.this, ResetPasswordActivity.class);
                     // Dòng này cực kỳ quan trọng để màn hình sau biết đang đổi mật khẩu cho ai
                     intent.putExtra("EMAIL_OR_USERNAME", input);
+
                     startActivity(intent);
                     finish();
                 } else {
@@ -216,7 +218,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
     }
-
     private String parseError(Response<?> response) {
         try {
             if (response.errorBody() == null) return "UNKNOWN_ERROR";

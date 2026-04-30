@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:id="@+id/main"
+    android:background="@color/background_light"
+    tools:context=".ui.activity.home.admin.management.order.AdminOrderDetailActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- GROUP: HEADER -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:elevation="4dp"
+            android:padding="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Chi tiết đơn hàng"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivBack"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- CARD: ORDER SUMMARY -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardOrderSummary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvOrderCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mã ĐH: "
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvOrderStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trạng thái: "
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvOrderCode"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvCreatedAt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ngày tạo: "
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvOrderStatus"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvCompletedAt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hoàn thành: "
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvCreatedAt"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- CARD: SHOP INFO -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardShopInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintTop_toBottomOf="@id/cardOrderSummary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/txtShopTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thông tin Cửa hàng"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvShopName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tên shop"
+                    android:textSize="16sp"
+                    android:textColor="@color/blue"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingVertical="4dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtShopTitle"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- CARD: CUSTOMER + SHIPPING -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardOrderInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintTop_toBottomOf="@id/cardShopInfo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/txtCustomerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thông tin Khách hàng"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- CUSTOMER -->
+                <TextView
+                    android:id="@+id/tvCustomer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Khách hàng"
+                    android:textSize="16sp"
+                    android:textColor="@color/blue"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingVertical="4dp"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtCustomerTitle"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- SHIPPING NAME -->
+                <TextView
+                    android:id="@+id/tvShippingName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Người nhận"
+                    android:layout_marginTop="6dp"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/tvCustomer"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- PHONE -->
+                <TextView
+                    android:id="@+id/tvPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Số điện thoại"
+                    android:layout_marginTop="4dp"
+                    android:textSize="15sp"
+                    app:layout_constraintTop_toBottomOf="@id/tvShippingName"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- ADDRESS -->
+                <TextView
+                    android:id="@+id/tvAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Địa chỉ giao hàng"
+                    android:layout_marginTop="4dp"
+                    android:textSize="15sp"
+                    app:layout_constraintTop_toBottomOf="@id/tvPhone"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardOrderItems"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintTop_toBottomOf="@id/cardOrderInfo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- TITLE -->
+                <TextView
+                    android:id="@+id/tvOrderItems"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sản phẩm"
+                    android:padding="12dp"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:paddingBottom="8dp"/>
+
+                <!-- RECYCLER VIEW -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvOrderItems"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="24dp"
+                    android:nestedScrollingEnabled="false"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardPayment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintTop_toBottomOf="@id/cardOrderItems"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp">
+
+                <!-- TOTAL -->
+                <TextView
+                    android:id="@+id/txtPaymentMethodTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thanh toán"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- PAYMENT METHOD -->
+                <TextView
+                    android:id="@+id/txtPaymentMethod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phương thức: "
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtPaymentMethodTitle"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvPaymentMethod"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginStart="6dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    app:layout_constraintStart_toEndOf="@id/txtPaymentMethod"
+                    app:layout_constraintTop_toTopOf="@id/txtPaymentMethod"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- PAYMENT STATUS -->
+                <TextView
+                    android:id="@+id/txtPaymentStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trạng thái: "
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvPaymentMethod"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvPaymentStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    app:layout_constraintTop_toTopOf="@id/txtPaymentStatus"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/txtPaymentStatus"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardFinance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintTop_toBottomOf="@id/cardPayment"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/txtFinanceInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chi tiết Tài chính"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- SUBTOTAL -->
+                <TextView
+                    android:id="@+id/txtSubtotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tổng tiền hàng:"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtFinanceInfo"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvSubtotal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    android:layout_marginStart="6dp"
+                    android:ellipsize="end"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toTopOf="@id/txtSubtotal"
+                    app:layout_constraintStart_toEndOf="@id/txtSubtotal"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- DISCOUNT -->
+                <TextView
+                    android:id="@+id/txtDiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Giảm giá:"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtSubtotal"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvDiscount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    android:layout_marginStart="6dp"
+                    android:ellipsize="end"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toTopOf="@id/txtDiscount"
+                    app:layout_constraintStart_toEndOf="@id/txtDiscount"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- TOTAL PRICE -->
+                <TextView
+                    android:id="@+id/txtTotalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Khách trả:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtDiscount"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvTotalPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    android:layout_marginStart="6dp"
+                    android:ellipsize="end"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toTopOf="@id/txtTotalPrice"
+                    app:layout_constraintStart_toEndOf="@id/txtTotalPrice"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- PLATFORM FEE -->
+                <TextView
+                    android:id="@+id/txtPlatformFee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phí hệ thống:"
+                    android:textColor="@color/gray"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtTotalPrice"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvPlatformFee"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:layout_marginStart="6dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/gray"
+                    app:layout_constraintTop_toTopOf="@id/txtPlatformFee"
+                    app:layout_constraintStart_toEndOf="@id/txtPlatformFee"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- SELLER RECEIVED -->
+                <TextView
+                    android:id="@+id/txtSellerRevenue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shop nhận:"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"
+                    android:textSize="18sp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtPlatformFee"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvSellerRevenue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"
+                    android:textSize="18sp"
+                    android:layout_marginStart="6dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    app:layout_constraintTop_toTopOf="@id/txtSellerRevenue"
+                    app:layout_constraintStart_toEndOf="@id/txtSellerRevenue"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

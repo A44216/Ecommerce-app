@@ -74,12 +74,44 @@
             android:name=".ui.activity.home.seller.product.AddAndEditProductActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.home.admin.management.coupon.AdminCouponActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.coupon.AdminAddAndEditCouponActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.profile.AdminProfileInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.profile.AdminChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.product.AdminCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.seller.review.SellerReviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.seller.order.SellerOrderDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.seller.shop.SellerChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.seller.shop.SellerShopInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.seller.product.SellerProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.seller.product.SellerAddAndEditProductActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.home.SellerHomeActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.AdminHomeActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.activity.home.user.search.UserSearchActivity"
             android:exported="false"
@@ -88,7 +120,33 @@
         <activity
             android:name=".ui.activity.home.UserHomeActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".ui.activity.home.UserHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.user.AdminUserDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.user.AdminUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.product.AdminProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.product.AdminProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.shop.AdminShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.shop.AdminShopDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.complaint.AdminComplaintActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.order.AdminOrderDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.login.RegisterActivity"
             android:exported="false" />
@@ -101,7 +159,6 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.activity.login.LoginActivity"
             android:exported="false" />
@@ -124,7 +181,6 @@
             android:name=".ui.activity.home.user.checkout.PaymentSimulationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-
     </application>
 
 </manifest>

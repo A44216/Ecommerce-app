@@ -7,8 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.ecommerceapp.R;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 public class AdminHomeActivity extends AppCompatActivity {
 
@@ -22,5 +26,21 @@ public class AdminHomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // 1. BottomNav
+        BottomNavigationView bnvMenu = findViewById(R.id.bnvMenu);
+
+        // 2. NavHostFragment
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.navHost);
+
+        if (navHostFragment == null) return;
+
+        // 3. NavController
+        NavController navController = navHostFragment.getNavController();
+
+        // 4. connect BottomNav với NavController
+        NavigationUI.setupWithNavController(bnvMenu, navController);
     }
 }

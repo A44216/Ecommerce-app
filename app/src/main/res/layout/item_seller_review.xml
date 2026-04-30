@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- ===== USER INFO ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- AVATAR -->
+            <ImageView
+                android:id="@+id/imgUserAvatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/desc_image"
+                android:src="@drawable/ic_user"
+                android:scaleType="centerCrop" />
+
+            <!-- USER + TIME + RATING -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp">
+
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/seller_review_default_full_name"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/blue"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:stepSize="1"
+                        android:isIndicator="true"
+                        android:progressTint="@color/yellow"
+                        android:secondaryProgressTint="@color/yellow"
+                        android:backgroundTint="@color/gray"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tvCreatedAt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/seller_review_default_customer_created_at"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ratingBar"
+                        app:layout_constraintBottom_toBottomOf="@id/ratingBar"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- ===== COMMENT ===== -->
+        <TextView
+            android:id="@+id/tvComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/seller_review_default_comment_content"
+            android:textSize="15sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <!-- ===== SELLER REPLY ===== -->
+        <LinearLayout
+            android:id="@+id/layoutSellerReply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="#F4F6F8">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_review_default_seller_title"
+                android:textStyle="bold"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvSellerReply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_review_default_seller_reply"
+                android:textSize="15sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tvSellerReplyAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_review_default_seller_created_at"
+                android:textSize="12sp"
+                android:textColor="@color/gray"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutSellerReplyInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#F4F6F8">
+
+            <EditText
+                android:id="@+id/etSellerReply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:maxLength="1000"
+                android:hint="@string/seller_review_input_hint_seller_reply"
+                android:inputType="textCapSentences|textMultiLine"
+                android:textSize="14sp"
+                android:minHeight="40dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_review_btn_reply"
+                android:layout_marginTop="6dp"
+                app:cornerRadius="24dp"
+                app:iconGravity="textStart"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp">
+
+            <TextView
+                android:id="@+id/tvToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seller_review_toggle_show"
+                android:textColor="@color/blue"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
