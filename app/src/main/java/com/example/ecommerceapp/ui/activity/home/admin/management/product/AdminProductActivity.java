@@ -536,6 +536,13 @@ public class AdminProductActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && response.body() != null) {
                     RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
+                    
+                    if (Boolean.TRUE.equals(currentIsDeleted)) {
+                        for (AdminProductResponse item : response.body().getItems()) {
+                            item.setIsDeleted(true);
+                        }
+                    }
+
                     if (isRefresh) {
                         // Create a new list reference for DiffUtil to properly calculate changes
                         productList = new ArrayList<>();
@@ -545,7 +552,7 @@ public class AdminProductActivity extends AppCompatActivity {
                         productList.addAll(response.body().getItems());
                         adapter.submitList(new ArrayList<>(productList), () -> {
                             if (shouldScrollToTop) {
-                                recyclerView.smoothScrollToPosition(0);
+                                recyclerView.scrollToPosition(0);
                             } else if (isSilent && isRefresh) {
                                 // Restore state if it exists for this tab
                                 android.os.Parcelable state = tabScrollStates.get(previousTabPosition);
