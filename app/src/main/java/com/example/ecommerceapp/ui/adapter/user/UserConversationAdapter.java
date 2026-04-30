@@ -51,7 +51,7 @@ public class UserConversationAdapter extends RecyclerView.Adapter<UserConversati
             holder.tvDate.setText("");
         }
 
-        ImageLoader.loadAvatar(context, holder.ivShopAvatar, null); // Backend chưa có avatar shop
+        ImageLoader.load(context, holder.ivShopAvatar, ""); // Backend chưa có avatar shop
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChatActivity.class);

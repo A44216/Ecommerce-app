@@ -145,4 +145,33 @@
     <string name="seller_review_toggle_show"><u>Phản hồi</u></string>
     <string name="seller_review_toggle_hide"><u>Ẩn</u></string>
 
+    <!-- Dùng cho màn hình Chi tiết sản phẩm (activity_product_detail.xml) -->
+    <string name="default_product_sold">Đã bán: 0</string>
+    <string name="default_product_ating">Đánh giá: 0.0</string>
+    <string name="default_product_status">Trạng thái: Đang xử lý</string>
+    <string name="default_product_description">Mô tả chi tiết sản phẩm ở đây...</string>
+
+    <!-- Dùng cho màn hình Sản phẩm (fragment_product.xml) -->
+    <string name="hint_search_product_name">Tìm kiếm sản phẩm...</string>
+
+    <!-- Dùng cho Item Đơn hàng của Seller (item_order_seller.xml) -->
+    <string name="order_description">Mô tả đơn hàng</string>
+    <string name="order_tracking">Theo dõi đơn hàng</string>
+
+    <!-- Dùng cho màn hình Thêm/Sửa sản phẩm (activity_add_and_edit_product.xml) -->
+    <string name="product_add_title">Thêm sản phẩm</string>
+    <string name="hint_product_name">Nhập tên sản phẩm</string>
+    <string name="hint_product_price">Nhập giá sản phẩm</string>
+    <string name="hint_product_stock">Nhập số lượng tồn kho</string>
+    <string name="hint_product_category">Chọn danh mục</string>
+    <string name="hint_product_description">Nhập mô tả chi tiết</string>
+    <string name="select_image">Chọn ảnh</string>
+    <string name="action_add_product">Lưu sản phẩm</string>
+
+    <!-- Dùng bổ sung cho màn hình Chi tiết sản phẩm (activity_product_detail.xml) -->
+    <string name="default_product_name">Tên sản phẩm mặc định</string>
+    <string name="default_product_price">Giá: 0đ</string>
+    <string name="default_product_category">Danh mục: Chưa có</string>
+    <string name="default_product_stock">Tồn kho: 0</string>
+
 </resources>

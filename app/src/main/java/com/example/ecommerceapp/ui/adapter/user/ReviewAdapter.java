@@ -45,7 +45,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         // Tạm thời ẩn phản hồi nếu Backend chưa trả về trường reply
         holder.layoutReply.setVisibility(View.GONE);
 
-        ImageLoader.loadAvatar(holder.itemView.getContext(), holder.ivAvatar, null);
+        ImageLoader.load(holder.itemView.getContext(), holder.ivAvatar, "");
     }
 
     @Override

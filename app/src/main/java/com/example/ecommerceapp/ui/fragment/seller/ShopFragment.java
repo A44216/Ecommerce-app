@@ -36,7 +36,7 @@ public class ShopFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         TokenManager tokenManager = TokenManager.getInstance(requireContext());
-        ShopService apiService = ApiClient.getShopService(tokenManager);        ShopRepository repository = new ShopRepository(apiService);
+        ShopService apiService = (ShopService) ApiClient.getShopService(tokenManager);        ShopRepository repository = new ShopRepository(apiService);
 
         ShopViewModelFactory factory = new ShopViewModelFactory(repository);
 

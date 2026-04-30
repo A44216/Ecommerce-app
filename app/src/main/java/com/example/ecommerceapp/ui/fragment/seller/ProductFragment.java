@@ -80,7 +80,7 @@ public class ProductFragment extends Fragment {
 
         TokenManager tokenManager = TokenManager.getInstance(requireContext());
 
-        ProductService apiService = ApiClient.getProductService(tokenManager);
+        ProductService apiService = (ProductService) ApiClient.getProductService(tokenManager);
         ProductRepository repository = new ProductRepository(apiService);
 
         ProductViewModelFactory factory = new ProductViewModelFactory(repository);

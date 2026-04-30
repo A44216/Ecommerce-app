@@ -138,7 +138,7 @@ public class ProfileFragment extends Fragment {
 
                         String avatarUrl = user.getAvatar();
                         if (avatarUrl != null && !avatarUrl.isEmpty()) {
-                            ImageLoader.loadAvatar(getContext(), ivAvatar, avatarUrl);
+                            ImageLoader.load(getContext(), ivAvatar, avatarUrl);
                         } else {
                             ivAvatar.setImageResource(R.drawable.bg_avatar_placeholder);
                         }
