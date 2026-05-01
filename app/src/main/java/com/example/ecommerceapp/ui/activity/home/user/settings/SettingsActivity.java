@@ -35,5 +35,43 @@ public class SettingsActivity extends AppCompatActivity {
         btnHelpCenter.setOnClickListener(v -> {
             startActivity(new Intent(this, HelpCenterActivity.class));
         });
+
+        Button btnRegisterSeller = findViewById(R.id.btnRegisterSeller);
+        btnRegisterSeller.setOnClickListener(v -> {
+            checkShopStatusAndNavigate();
+        });
+    }
+
+    private void checkShopStatusAndNavigate() {
+        com.example.ecommerceapp.data.local.TokenManager tokenManager = com.example.ecommerceapp.data.local.TokenManager.getInstance(this);
+        long userId = tokenManager.getUserId();
+        if (userId == -1) return;
+
+        com.example.ecommerceapp.api.ApiClient.getPublicShopService(tokenManager).getShopByUser((int) userId)
+                .enqueue(new retrofit2.Callback<com.example.ecommerceapp.data.model.response.ShopResponse>() {
+            @Override
+            public void onResponse(retrofit2.Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, retrofit2.Response<com.example.ecommerceapp.data.model.response.ShopResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    com.example.ecommerceapp.data.enums.ShopStatus status = response.body().getStatus();
+                    if (status == com.example.ecommerceapp.data.enums.ShopStatus.PENDING) {
+                        android.widget.Toast.makeText(SettingsActivity.this, "Yêu cầu đăng ký Shop của bạn đang được duyệt.", android.widget.Toast.LENGTH_LONG).show();
+                    } else if (status == com.example.ecommerceapp.data.enums.ShopStatus.APPROVED) {
+                        android.widget.Toast.makeText(SettingsActivity.this, "Bạn đã là người bán hàng! Vui lòng đăng nhập lại để cập nhật quyền.", android.widget.Toast.LENGTH_LONG).show();
+                    } else if (status == com.example.ecommerceapp.data.enums.ShopStatus.REJECTED) {
+                        android.widget.Toast.makeText(SettingsActivity.this, "Yêu cầu đăng ký Shop của bạn đã bị từ chối.", android.widget.Toast.LENGTH_LONG).show();
+                    } else if (status == com.example.ecommerceapp.data.enums.ShopStatus.BLOCKED) {
+                        android.widget.Toast.makeText(SettingsActivity.this, "Shop của bạn đã bị khóa.", android.widget.Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    // Shop không tồn tại (404) -> Chuyển sang form đăng ký
+                    startActivity(new Intent(SettingsActivity.this, UserRegisterShopActivity.class));
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Throwable t) {
+                android.widget.Toast.makeText(SettingsActivity.this, "Lỗi kết nối", android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

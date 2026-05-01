@@ -141,7 +141,8 @@ public class SellerShopFragment extends Fragment {
                     .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
                     .setPositiveButton("Đăng xuất", (dialog, which) -> {
 
-                        Intent intent = new Intent(requireContext(), UserHomeActivity.class);
+                        TokenManager.getInstance(requireContext()).logout();
+                        Intent intent = new Intent(requireContext(), com.example.ecommerceapp.ui.activity.login.LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 

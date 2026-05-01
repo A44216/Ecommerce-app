@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         etOtpCode = findViewById(R.id.etOtpCode);
         etNewPassword = findViewById(R.id.etNewPassword);
         btnSavePassword = findViewById(R.id.btnSavePassword);
+        ImageView ivBack = findViewById(R.id.ivBack);
+
+        ivBack.setOnClickListener(v -> finish());
 
         tokenManager = TokenManager.getInstance(this);
         currentUserId = tokenManager.getUserId();

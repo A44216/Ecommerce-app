@@ -14,9 +14,15 @@ import java.util.List;
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotifViewHolder> {
 
     private List<NotificationItem> notifList;
+    private OnItemClickListener listener;
 
-    public NotificationAdapter(List<NotificationItem> notifList) {
+    public interface OnItemClickListener {
+        void onClick(NotificationItem item);
+    }
+
+    public NotificationAdapter(List<NotificationItem> notifList, OnItemClickListener listener) {
         this.notifList = notifList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -41,6 +47,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         } else {
             holder.tvNotifBadge.setVisibility(View.GONE);
         }
+        
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(item);
+            }
+        });
     }
 
     @Override

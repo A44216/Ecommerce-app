@@ -184,6 +184,12 @@
             android:name=".ui.activity.home.user.checkout.PaymentSimulationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.home.user.notification.CategoryNotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.user.settings.UserRegisterShopActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

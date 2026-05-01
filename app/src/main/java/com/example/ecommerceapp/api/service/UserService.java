@@ -46,6 +46,9 @@ public interface UserService {
 
     @GET("notifications/user/{userId}")
     Call<List<NotificationResponse>> getMyNotifications(@Path("userId") long userId);
+
+    @GET("notifications/user/{userId}/type/{type}")
+    Call<List<NotificationResponse>> getMyNotificationsByType(@Path("userId") long userId, @Path("type") String type);
     
     @GET("notifications/user/{userId}/summary")
     Call<Map<String, Integer>> getNotificationSummary(@Path("userId") long userId);
