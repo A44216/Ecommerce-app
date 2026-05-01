@@ -47,7 +47,22 @@ public class AdminTopShopAdapter extends RecyclerView.Adapter<AdminTopShopAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AdminTopShopResponse shop = shopList.get(position);
-        holder.tvRank.setText(String.valueOf(position + 1));
+        
+        int rank = position + 1;
+        holder.tvRank.setText("#" + rank);
+        
+        int color;
+        if (rank == 1) {
+            color = android.graphics.Color.parseColor("#F5C542"); // Vàng (Gold)
+        } else if (rank == 2) {
+            color = android.graphics.Color.parseColor("#B0BEC5"); // Bạc (Silver)
+        } else if (rank == 3) {
+            color = android.graphics.Color.parseColor("#CD7F32"); // Đồng (Bronze)
+        } else {
+            color = android.graphics.Color.parseColor("#E0E0E0"); // Xám (Gray)
+        }
+        holder.tvRank.getBackground().setTint(color);
+
         holder.tvShopName.setText(shop.getShopName());
         holder.tvShopOrders.setText("Đơn hàng: " + NumberUtils.formatCompact(java.math.BigDecimal.valueOf(shop.getTotalOrders())));
         holder.tvShopRevenue.setText(NumberUtils.formatCompact(shop.getTotalRevenue()) + " ₫");

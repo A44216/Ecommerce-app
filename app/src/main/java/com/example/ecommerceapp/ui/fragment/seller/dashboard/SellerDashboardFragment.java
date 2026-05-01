@@ -47,7 +47,7 @@ public class SellerDashboardFragment extends Fragment {
     private Spinner spFilterTime;
     private SwipeRefreshLayout swipeRefreshDashboard;
 
-    private MaterialAutoCompleteTextView actFilterKpi, actFilterTopProduct, actFilterTopProductTime;
+    private MaterialAutoCompleteTextView actFilterGlobalTime, actFilterTopProduct;
 
     private RecyclerView rvTopProduct;
     private BarChart chartRevenue;
@@ -59,8 +59,7 @@ public class SellerDashboardFragment extends Fragment {
     private TokenManager tokenManager;
     private SellerDashboardRepository dashboardRepository;
 
-    private DateRange currentKpiRange = DateRange.THIS_MONTH;
-    private DateRange currentTopRange = DateRange.THIS_MONTH;
+    private DateRange currentGlobalRange = DateRange.TODAY;
     private ChartType currentChartType = ChartType.DAY;
 
     private int currentTopMode = SellerTopProductAdapter.MODE_SOLD;
@@ -94,8 +93,8 @@ public class SellerDashboardFragment extends Fragment {
         initViewModel();
         setupObservers();
 
-        viewModel.loadKpi(currentKpiRange);
-        viewModel.loadTopProducts(currentTopRange);
+        viewModel.loadKpi(currentGlobalRange);
+        viewModel.loadTopProducts(currentGlobalRange);
         viewModel.loadChart(currentChartType);
     }
 
@@ -105,8 +104,7 @@ public class SellerDashboardFragment extends Fragment {
         tvSold = view.findViewById(R.id.tvSold);
 
         actFilterTopProduct = view.findViewById(R.id.actFilterTopProduct);
-        actFilterTopProductTime = view.findViewById(R.id.actFilterTopProductTime);
-        actFilterKpi = view.findViewById(R.id.actFilterKpi);
+        actFilterGlobalTime = view.findViewById(R.id.actFilterGlobalTime);
 
         spFilterTime = view.findViewById(R.id.spFilterTime);
 
@@ -121,9 +119,8 @@ public class SellerDashboardFragment extends Fragment {
 
     private void setInits() {
 
-        setupDropdown(actFilterKpi, R.array.seller_filter_kpi);
+        setupDropdown(actFilterGlobalTime, R.array.seller_filter_global_time);
         setupDropdown(actFilterTopProduct, R.array.seller_filter_top_product);
-        setupDropdown(actFilterTopProductTime, R.array.seller_filter_top_product_time);
 
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
@@ -137,22 +134,19 @@ public class SellerDashboardFragment extends Fragment {
 
     private void setDefaultFilters() {
 
-        String[] kpiItems = getResources().getStringArray(R.array.seller_filter_kpi);
+        String[] timeItems = getResources().getStringArray(R.array.seller_filter_global_time);
         String[] topItems = getResources().getStringArray(R.array.seller_filter_top_product);
-        String[] timeItems = getResources().getStringArray(R.array.seller_filter_top_product_time);
 
-        actFilterKpi.setText(kpiItems[3], false); // THIS_MONTH
+        actFilterGlobalTime.setText(timeItems[0], false); // TODAY
         actFilterTopProduct.setText(topItems[0], false);
-        actFilterTopProductTime.setText(timeItems[0], false);
 
         spFilterTime.setSelection(0); // DAY
     }
 
     private void resetFilters() {
 
-        setupDropdown(actFilterKpi, R.array.seller_filter_kpi);
+        setupDropdown(actFilterGlobalTime, R.array.seller_filter_global_time);
         setupDropdown(actFilterTopProduct, R.array.seller_filter_top_product);
-        setupDropdown(actFilterTopProductTime, R.array.seller_filter_top_product_time);
     }
 
     private void setupDropdown(MaterialAutoCompleteTextView view, int arrayRes) {
@@ -190,28 +184,25 @@ public class SellerDashboardFragment extends Fragment {
     }
 
     private void setupListeners() {
-        setupKpiFilterListener();
+        setupGlobalTimeFilterListener();
         setupTopProductSortListener();
-        setupTopProductTimeListener();
         setupChartFilterListener();
         
         swipeRefreshDashboard.setOnRefreshListener(() -> {
-            viewModel.loadKpi(currentKpiRange);
-            viewModel.loadTopProducts(currentTopRange);
+            viewModel.loadKpi(currentGlobalRange);
+            viewModel.loadTopProducts(currentGlobalRange);
             viewModel.loadChart(currentChartType);
         });
     }
 
-    private void setupKpiFilterListener() {
-        actFilterKpi.setOnItemClickListener((parent, view, position, id) -> {
-            switch (position) {
-                case 0: currentKpiRange = DateRange.TODAY; break;
-                case 1: currentKpiRange = DateRange.LAST_7_DAYS; break;
-                case 2: currentKpiRange = DateRange.LAST_30_DAYS; break;
-                case 3: currentKpiRange = DateRange.THIS_MONTH; break;
-                case 4: currentKpiRange = DateRange.THIS_YEAR; break;
+    private void setupGlobalTimeFilterListener() {
+        actFilterGlobalTime.setOnItemClickListener((parent, view, position, id) -> {
+            DateRange[] ranges = DateRange.values();
+            if (position >= 0 && position < ranges.length) {
+                currentGlobalRange = ranges[position];
+                viewModel.loadKpi(currentGlobalRange);
+                viewModel.loadTopProducts(currentGlobalRange);
             }
-            viewModel.loadKpi(currentKpiRange);
         });
     }
 
@@ -232,19 +223,6 @@ public class SellerDashboardFragment extends Fragment {
             } else {
                 topProductAdapter.setData(topProductData.getTopByRevenue());
             }
-        });
-    }
-
-    private void setupTopProductTimeListener() {
-        actFilterTopProductTime.setOnItemClickListener((parent, view, position, id) -> {
-            switch (position) {
-                case 0: currentTopRange = DateRange.THIS_MONTH; break;
-                case 1: currentTopRange = DateRange.LAST_MONTH; break;
-                case 2: currentTopRange = DateRange.LAST_3_MONTHS; break;
-                case 3: currentTopRange = DateRange.LAST_6_MONTHS; break;
-                case 4: currentTopRange = DateRange.THIS_YEAR; break;
-            }
-            viewModel.loadTopProducts(currentTopRange);
         });
     }
 

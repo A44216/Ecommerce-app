@@ -30,21 +30,15 @@
         <item>Năm</item>
     </string-array>
 
-    <!-- FILTER KPI -->
-    <string-array name="seller_filter_kpi">
+    <!-- FILTER GLOBAL TIME -->
+    <string-array name="seller_filter_global_time">
         <item>Hôm nay</item>
+        <item>Hôm qua</item>
         <item>7 ngày qua</item>
-        <item>30 ngày qua</item>
-        <item>Tháng này</item>
-        <item>Năm nay</item>
-    </string-array>
-
-    <!-- FILTER TOP PRODUCT TIME -->
-    <string-array name="seller_filter_top_product_time">
         <item>Tháng này</item>
         <item>Tháng trước</item>
-        <item>3 tháng gần đây</item>
-        <item>6 tháng gần đây</item>
+        <item>3 tháng qua</item>
+        <item>6 tháng qua</item>
         <item>Năm nay</item>
     </string-array>
 

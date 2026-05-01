@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.enums.DateRange;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminCategorySalesChartResponse;
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminOrderStatusChartResponse;
@@ -220,7 +221,12 @@ public class AdminDashboardFragment extends Fragment {
     }
 
     private void setupFilters() {
-        String[] timeRangeKeys = {"TODAY", "YESTERDAY", "LAST_7_DAYS", "THIS_MONTH", "LAST_MONTH", "THIS_YEAR"};
+        DateRange[] dateRanges = DateRange.values();
+        String[] timeRangeKeys = new String[dateRanges.length];
+        for (int i = 0; i < dateRanges.length; i++) {
+            timeRangeKeys[i] = dateRanges[i].name();
+        }
+        
         String[] timeRangeValues = getResources().getStringArray(R.array.admin_filter_global_time);
         ArrayAdapter<String> timeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, timeRangeValues);
         actFilterGlobalTime.setAdapter(timeAdapter);
