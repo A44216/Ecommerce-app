@@ -38,13 +38,7 @@ public class SellerChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_seller_chat);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.ivBack), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), v.getPaddingTop() + systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
-            return insets;
-        });
 
         tokenManager = TokenManager.getInstance(this);
 
