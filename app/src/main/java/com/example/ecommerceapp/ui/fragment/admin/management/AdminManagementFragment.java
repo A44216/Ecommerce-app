@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.ui.activity.home.admin.management.AdminNotificationActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.management.complaint.AdminComplaintActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminCategoryActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductActivity;
@@ -21,7 +22,7 @@ import com.example.ecommerceapp.ui.activity.home.admin.management.user.AdminUser
 
 public class AdminManagementFragment extends Fragment {
 
-    private LinearLayout itemUser, itemShop, itemProduct, itemCategory, itemCoupon, itemComplaint;
+    private LinearLayout itemUser, itemShop, itemProduct, itemCategory, itemCoupon, itemComplaint, itemNotification;
 
     public static AdminManagementFragment newInstance() {
         return new AdminManagementFragment();
@@ -48,6 +49,7 @@ public class AdminManagementFragment extends Fragment {
         itemCategory = view.findViewById(R.id.itemCategory);
         itemCoupon = view.findViewById(R.id.itemCoupon);
         itemComplaint = view.findViewById(R.id.itemComplaint);
+        itemNotification = view.findViewById(R.id.itemNotification);
     }
 
     private void setListeners() {
@@ -57,5 +59,6 @@ public class AdminManagementFragment extends Fragment {
         itemCategory.setOnClickListener(v -> startActivity(new Intent(requireContext(), AdminCategoryActivity.class)));
         itemCoupon.setOnClickListener(v -> startActivity(new Intent(requireContext(), AdminCouponActivity.class)));
         itemComplaint.setOnClickListener(v -> startActivity(new Intent(requireContext(), AdminComplaintActivity.class)));
+        itemNotification.setOnClickListener(v -> startActivity(new Intent(requireContext(), AdminNotificationActivity.class)));
     }
 }

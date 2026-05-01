@@ -179,7 +179,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (tvContinueAsGuest != null) {
-            tvContinueAsGuest.setOnClickListener(v -> finish());
+            tvContinueAsGuest.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, UserHomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            });
         }
     }
 

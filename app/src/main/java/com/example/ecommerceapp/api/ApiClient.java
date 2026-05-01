@@ -219,4 +219,8 @@ public class ApiClient {
         return createAuthRetrofit(tm).create(AdminProductService.class);
     }
 
+    public static com.example.ecommerceapp.api.service.admin.AdminNotificationService getAdminNotificationService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(com.example.ecommerceapp.api.service.admin.AdminNotificationService.class);
+    }
+
 }

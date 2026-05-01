@@ -121,9 +121,6 @@
             android:name=".ui.activity.home.UserHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.home.UserHomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.activity.home.admin.management.user.AdminUserDetailActivity"
             android:exported="false" />
         <activity
@@ -146,6 +143,12 @@
             android:exported="false" />
         <activity
             android:name=".ui.activity.home.admin.management.order.AdminOrderDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.AdminNotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.home.admin.management.AdminCreateNotificationActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.login.RegisterActivity"

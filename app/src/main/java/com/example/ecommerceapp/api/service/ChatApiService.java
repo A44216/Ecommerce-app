@@ -25,4 +25,7 @@ public interface ChatApiService {
 
     @GET("conversations/customer/{customerId}")
     Call<List<ConversationResponse>> getConversationsByCustomer(@Path("customerId") int customerId);
+
+    @GET("conversations/shop/{shopId}")
+    Call<List<ConversationResponse>> getConversationsByShop(@Path("shopId") int shopId);
 }
