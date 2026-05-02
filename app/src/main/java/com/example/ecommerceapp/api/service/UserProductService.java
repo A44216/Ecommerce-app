@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.api.service;
 
+import com.example.ecommerceapp.data.model.response.UserPageResponse;
 import com.example.ecommerceapp.data.model.response.UserProductResponse;
 import java.util.List;
 import retrofit2.Call;
@@ -12,7 +13,7 @@ public interface UserProductService {
     Call<List<UserProductResponse>> getProducts();
 
     @GET("products/page")
-    Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsPaginated(
+    Call<UserPageResponse<UserProductResponse>> getProductsPaginated(
             @Query("page") int page,
             @Query("size") int size,
             @Query("sortBy") String sortBy
@@ -37,7 +38,7 @@ public interface UserProductService {
     );
 
     @GET("products/search/page")
-    Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> searchProductsPaginated(
+    Call<UserPageResponse<UserProductResponse>> searchProductsPaginated(
             @Query("keyword") String keyword,
             @Query("page") int page,
             @Query("size") int size,
@@ -45,7 +46,7 @@ public interface UserProductService {
     );
 
     @GET("products/category/{categoryId}/page")
-    Call<com.example.ecommerceapp.data.model.response.PageResponse<UserProductResponse>> getProductsByCategoryPaginated(
+    Call<UserPageResponse<UserProductResponse>> getProductsByCategoryPaginated(
             @Path("categoryId") int categoryId,
             @Query("page") int page,
             @Query("size") int size,

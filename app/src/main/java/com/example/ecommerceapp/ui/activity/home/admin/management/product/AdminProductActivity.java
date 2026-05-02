@@ -40,7 +40,7 @@ import com.example.ecommerceapp.data.model.response.ProductAutocompleteResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminCategoryResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminProductResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopAutocompleteResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.ui.adapter.admin.product.AdminProductAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;

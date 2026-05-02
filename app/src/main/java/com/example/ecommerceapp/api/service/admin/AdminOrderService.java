@@ -2,7 +2,7 @@ package com.example.ecommerceapp.api.service.admin;
 
 import com.example.ecommerceapp.data.model.response.admin.management.order.AdminOrderDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.order.AdminOrderResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 
 import java.util.List;
 

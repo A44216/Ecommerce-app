@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ecommerceapp.data.model.response.PageResponse;
+import com.example.ecommerceapp.data.model.response.UserPageResponse;
 import com.example.ecommerceapp.data.model.response.UserProductResponse;
 import com.example.ecommerceapp.data.repository.UserProductRepository;
 
@@ -55,12 +55,12 @@ public class UserSearchViewModel extends ViewModel {
         if (Boolean.TRUE.equals(isLoading.getValue()) || isLastPage) return;
 
         isLoading.setValue(true);
-        productRepository.searchProductsPaginated(currentKeyword, currentPage, PAGE_SIZE, currentSortBy).enqueue(new Callback<PageResponse<UserProductResponse>>() {
+        productRepository.searchProductsPaginated(currentKeyword, currentPage, PAGE_SIZE, currentSortBy).enqueue(new Callback<UserPageResponse<UserProductResponse>>() {
             @Override
-            public void onResponse(Call<PageResponse<UserProductResponse>> call, Response<PageResponse<UserProductResponse>> response) {
+            public void onResponse(Call<UserPageResponse<UserProductResponse>> call, Response<UserPageResponse<UserProductResponse>> response) {
                 isLoading.setValue(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    PageResponse<UserProductResponse> pageData = response.body();
+                    UserPageResponse<UserProductResponse> pageData = response.body();
                     isLastPage = pageData.isLast();
 
                     List<UserProductResponse> currentList = searchResults.getValue();
@@ -78,7 +78,7 @@ public class UserSearchViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<PageResponse<UserProductResponse>> call, Throwable t) {
+            public void onFailure(Call<UserPageResponse<UserProductResponse>> call, Throwable t) {
                 isLoading.setValue(false);
                 errorMessage.setValue("Lỗi kết nối: " + t.getMessage());
             }

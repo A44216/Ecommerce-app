@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.response.admin.management.order.AdminOrderResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopAutocompleteResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminOrderRepository;
 import com.example.ecommerceapp.data.repository.admin.AdminShopRepository;
 

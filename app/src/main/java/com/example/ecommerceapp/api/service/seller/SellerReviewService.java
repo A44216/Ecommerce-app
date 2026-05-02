@@ -1,7 +1,7 @@
 package com.example.ecommerceapp.api.service.seller;
 
 import com.example.ecommerceapp.data.model.request.seller.review.SellerReplyRequest;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
 
 import retrofit2.Call;

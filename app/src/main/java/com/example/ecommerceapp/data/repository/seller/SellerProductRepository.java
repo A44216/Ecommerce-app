@@ -3,7 +3,7 @@ package com.example.ecommerceapp.data.repository.seller;
 import com.example.ecommerceapp.api.service.seller.SellerProductService;
 import com.example.ecommerceapp.data.model.request.seller.product.SellerProductRequest;
 import com.example.ecommerceapp.data.model.response.ProductAutocompleteResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.enums.ShopStatus;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminShopRepository;
 

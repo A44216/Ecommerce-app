@@ -4,7 +4,7 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.admin.AdminShopService;
 import com.example.ecommerceapp.data.enums.ShopStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.request.seller.review.SellerReplyRequest;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.review.SellerReviewResponse;
 import com.example.ecommerceapp.data.repository.seller.SellerReviewRepository;
 

@@ -1,6 +1,6 @@
 package com.example.ecommerceapp.api.service.seller;
 
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderDetailResponse;
 import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 

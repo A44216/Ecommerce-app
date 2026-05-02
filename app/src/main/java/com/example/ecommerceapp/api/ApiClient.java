@@ -6,6 +6,7 @@ import com.example.ecommerceapp.api.service.AddressService;
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.api.service.CategoryService;
 import com.example.ecommerceapp.api.service.ChatApiService;
+import com.example.ecommerceapp.api.service.PaymentApiService;
 import com.example.ecommerceapp.api.service.ProductImageService;
 import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.api.service.ShopService;
@@ -16,8 +17,10 @@ import com.example.ecommerceapp.api.service.UserOrderApiService;
 import com.example.ecommerceapp.api.service.UserProductService;
 import com.example.ecommerceapp.api.service.UserService;
 import com.example.ecommerceapp.api.service.admin.AdminCategoryService;
+import com.example.ecommerceapp.api.service.admin.AdminComplaintService;
 import com.example.ecommerceapp.api.service.admin.AdminCouponService;
 import com.example.ecommerceapp.api.service.admin.AdminDashboardService;
+import com.example.ecommerceapp.api.service.admin.AdminNotificationService;
 import com.example.ecommerceapp.api.service.admin.AdminOrderService;
 import com.example.ecommerceapp.api.service.admin.AdminProductService;
 import com.example.ecommerceapp.api.service.admin.AdminProfileService;
@@ -124,18 +127,6 @@ public class ApiClient {
         return createAuthRetrofit(tm).create(ShopService.class);
     }
 
-    public static SellerProductService getProductService(TokenManager tm) {
-        return createAuthRetrofit(tm).create(SellerProductService.class);
-    }
-
-    public static SellerCategoryService getCategoryService(TokenManager tm) {
-        return createAuthRetrofit(tm).create(SellerCategoryService.class);
-    }
-
-    public static SellerShopService getShopService(TokenManager tm) {
-        return createAuthRetrofit(tm).create(SellerShopService.class);
-    }
-
     public static UserService getUserService(TokenManager tm) {
         return createAuthRetrofit(tm).create(UserService.class);
     }
@@ -169,7 +160,7 @@ public class ApiClient {
         return createAuthRetrofit(tokenManager).create(ChatApiService.class);
     }
 
-    public static com.example.ecommerceapp.api.service.PaymentApiService getPaymentApiService() {
+    public static PaymentApiService getPaymentApiService() {
         return getPublicRetrofit().create(com.example.ecommerceapp.api.service.PaymentApiService.class);
     }
 
@@ -184,6 +175,18 @@ public class ApiClient {
 
     public static SellerReviewService getReviewService(TokenManager tm) {
         return createAuthRetrofit(tm).create(SellerReviewService.class);
+    }
+
+    public static SellerProductService getProductService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(SellerProductService.class);
+    }
+
+    public static SellerCategoryService getCategoryService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(SellerCategoryService.class);
+    }
+
+    public static SellerShopService getShopService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(SellerShopService.class);
     }
 
     // ===== ADMIN API =====
@@ -219,8 +222,12 @@ public class ApiClient {
         return createAuthRetrofit(tm).create(AdminProductService.class);
     }
 
-    public static com.example.ecommerceapp.api.service.admin.AdminNotificationService getAdminNotificationService(TokenManager tm) {
-        return createAuthRetrofit(tm).create(com.example.ecommerceapp.api.service.admin.AdminNotificationService.class);
+    public static AdminNotificationService getAdminNotificationService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(AdminNotificationService.class);
+    }
+
+    public static AdminComplaintService getAdminComplaintService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(AdminComplaintService.class);
     }
 
 }

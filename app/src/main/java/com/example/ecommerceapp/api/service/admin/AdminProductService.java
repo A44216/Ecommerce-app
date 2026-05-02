@@ -4,7 +4,7 @@ import com.example.ecommerceapp.data.enums.ProductStatus;
 import com.example.ecommerceapp.data.model.response.ProductAutocompleteResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminProductDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.product.AdminProductResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 
 import java.util.List;
 

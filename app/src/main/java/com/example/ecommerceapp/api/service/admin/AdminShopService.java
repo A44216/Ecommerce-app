@@ -2,7 +2,7 @@ package com.example.ecommerceapp.api.service.admin;
 
 import com.example.ecommerceapp.data.enums.ShopStatus;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopAutocompleteResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopDetailResponse;
 import com.example.ecommerceapp.data.model.response.admin.management.shop.AdminShopResponse;
 

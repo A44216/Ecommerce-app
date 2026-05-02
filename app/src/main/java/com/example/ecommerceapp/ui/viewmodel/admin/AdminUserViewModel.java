@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.ecommerceapp.data.enums.Role;
 import com.example.ecommerceapp.data.enums.UserStatus;
 import com.example.ecommerceapp.data.model.response.admin.management.user.AdminUserResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminUserRepository;
 
 import java.util.ArrayList;

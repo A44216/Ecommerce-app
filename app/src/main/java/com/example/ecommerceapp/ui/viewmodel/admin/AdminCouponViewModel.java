@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.ecommerceapp.data.enums.CouponStatus;
 import com.example.ecommerceapp.data.model.request.admin.management.AdminCouponRequest;
 import com.example.ecommerceapp.data.model.response.admin.management.coupon.AdminCouponResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminCouponRepository;
 
 import java.util.List;

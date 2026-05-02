@@ -2,9 +2,8 @@ package com.example.ecommerceapp.ui.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.ecommerceapp.data.model.response.PageResponse;
+import com.example.ecommerceapp.data.model.response.UserPageResponse;
 import com.example.ecommerceapp.data.model.response.UserCategoryResponse;
 import com.example.ecommerceapp.data.model.response.UserProductResponse;
 import com.example.ecommerceapp.data.repository.UserCategoryRepository;
@@ -62,19 +61,19 @@ public class UserHomeViewModel extends AndroidViewModel {
 
         isLoading = true;
         
-        Call<PageResponse<UserProductResponse>> call;
+        Call<UserPageResponse<UserProductResponse>> call;
         if (currentCategoryId != null) {
             call = productRepository.getProductsByCategoryPaginated(currentCategoryId, currentPage, PAGE_SIZE, "id,desc");
         } else {
             call = productRepository.getProductsPaginated(currentPage, PAGE_SIZE, "id,desc");
         }
 
-        call.enqueue(new Callback<PageResponse<UserProductResponse>>() {
+        call.enqueue(new Callback<UserPageResponse<UserProductResponse>>() {
             @Override
-            public void onResponse(Call<PageResponse<UserProductResponse>> call, Response<PageResponse<UserProductResponse>> response) {
+            public void onResponse(Call<UserPageResponse<UserProductResponse>> call, Response<UserPageResponse<UserProductResponse>> response) {
                 isLoading = false;
                 if (response.isSuccessful() && response.body() != null) {
-                    PageResponse<UserProductResponse> pageData = response.body();
+                    UserPageResponse<UserProductResponse> pageData = response.body();
                     isLastPage = pageData.isLast();
 
                     List<UserProductResponse> currentList = productList.getValue();
@@ -93,7 +92,7 @@ public class UserHomeViewModel extends AndroidViewModel {
             }
 
             @Override
-            public void onFailure(Call<PageResponse<UserProductResponse>> call, Throwable t) {
+            public void onFailure(Call<UserPageResponse<UserProductResponse>> call, Throwable t) {
                 isLoading = false;
                 errorMessage.setValue("Lỗi kết nối: " + t.getMessage());
             }
@@ -134,9 +133,9 @@ public class UserHomeViewModel extends AndroidViewModel {
             }
 
             // Vẫn thực hiện fetch từ server để đảm bảo dữ liệu mới nhất
-            productRepository.getProductsByCategoryPaginated(category.getId(), 0, 1, "id,desc").enqueue(new Callback<PageResponse<UserProductResponse>>() {
+            productRepository.getProductsByCategoryPaginated(category.getId(), 0, 1, "id,desc").enqueue(new Callback<UserPageResponse<UserProductResponse>>() {
                 @Override
-                public void onResponse(Call<PageResponse<UserProductResponse>> call, Response<PageResponse<UserProductResponse>> response) {
+                public void onResponse(Call<UserPageResponse<UserProductResponse>> call, Response<UserPageResponse<UserProductResponse>> response) {
                     if (response.isSuccessful() && response.body() != null && !response.body().getContent().isEmpty()) {
                         UserProductResponse firstProduct = response.body().getContent().get(0);
                         if (firstProduct.getImages() != null && !firstProduct.getImages().isEmpty()) {
@@ -153,7 +152,7 @@ public class UserHomeViewModel extends AndroidViewModel {
                 }
 
                 @Override
-                public void onFailure(Call<PageResponse<UserProductResponse>> call, Throwable t) {}
+                public void onFailure(Call<UserPageResponse<UserProductResponse>> call, Throwable t) {}
             });
         }
         

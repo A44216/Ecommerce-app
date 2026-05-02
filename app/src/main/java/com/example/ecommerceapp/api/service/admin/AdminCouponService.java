@@ -3,7 +3,7 @@ package com.example.ecommerceapp.api.service.admin;
 import com.example.ecommerceapp.data.enums.CouponStatus;
 import com.example.ecommerceapp.data.model.request.admin.management.AdminCouponRequest;
 import com.example.ecommerceapp.data.model.response.admin.management.coupon.AdminCouponResponse;
-import com.example.ecommerceapp.data.model.response.seller.PageResponse;
+import com.example.ecommerceapp.data.model.response.PageResponse;
 
 import java.util.List;
 
