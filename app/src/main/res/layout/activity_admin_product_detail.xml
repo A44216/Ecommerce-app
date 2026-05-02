@@ -230,15 +230,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnReject"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
             android:text="TỪ CHỐI"
-            android:textColor="@color/red"
-            app:strokeColor="@color/red"
-            app:cornerRadius="8dp"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/red"
+            app:cornerRadius="4dp"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -248,22 +247,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="DUYỆT"
-            android:backgroundTint="@color/green"
+            app:backgroundTint="@color/green"
             android:textColor="@color/white"
-            app:cornerRadius="8dp"
+            app:cornerRadius="4dp"
             android:visibility="gone"
             tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="XÓA SẢN PHẨM"
-            android:textColor="@color/red"
-            app:strokeColor="@color/red"
-            app:cornerRadius="8dp"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/red"
+            app:cornerRadius="4dp"
             android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
@@ -272,9 +270,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="KHÔI PHỤC"
-            android:backgroundTint="@color/black"
+            app:backgroundTint="@color/black"
             android:textColor="@color/white"
-            app:cornerRadius="8dp"
+            app:cornerRadius="4dp"
             android:visibility="gone" />
             
     </LinearLayout>

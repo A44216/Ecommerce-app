@@ -6,6 +6,7 @@ import com.example.ecommerceapp.data.enums.UserStatus;
 public class AdminUserResponse {
 
     private Integer id;
+    private String username;
     private String fullName;
     private String email;
     private String phone;
@@ -18,9 +19,10 @@ public class AdminUserResponse {
     public AdminUserResponse() {
     }
 
-    public AdminUserResponse(Integer id, String fullName, String email, String phone,
+    public AdminUserResponse(Integer id, String username, String fullName, String email, String phone,
                              Role role, UserStatus status, String avatar) {
         this.id = id;
+        this.username = username;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
@@ -35,6 +37,13 @@ public class AdminUserResponse {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFullName() {

@@ -153,6 +153,7 @@ public class AdminUserViewModel extends ViewModel {
 
                     AdminUserResponse newObj = new AdminUserResponse(
                             oldObj.getId(),
+                            oldObj.getUsername(),
                             oldObj.getFullName(),
                             oldObj.getEmail(),
                             oldObj.getPhone(),

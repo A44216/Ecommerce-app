@@ -284,6 +284,7 @@
                             android:layout_marginEnd="4dp"
                             android:text="Duyệt"
                             android:textColor="@color/white"
+                            app:cornerRadius="4dp"
                             app:backgroundTint="@color/green" />
 
                         <com.google.android.material.button.MaterialButton
@@ -294,7 +295,8 @@
                             android:layout_marginEnd="4dp"
                             android:text="Từ chối"
                             android:textColor="@color/white"
-                            app:backgroundTint="@color/orange" />
+                            app:cornerRadius="4dp"
+                            app:backgroundTint="@color/red" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnBlock"
@@ -303,6 +305,7 @@
                             android:layout_weight="1"
                             android:text="Khóa"
                             android:textColor="@color/white"
+                            app:cornerRadius="4dp"
                             app:backgroundTint="@color/red" />
 
                     </LinearLayout>

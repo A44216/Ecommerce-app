@@ -28,7 +28,7 @@ public class AdminUserAdapter extends ListAdapter<AdminUserResponse, AdminUserVH
         super(new DiffUtil.ItemCallback<AdminUserResponse>() {
             @Override
             public boolean areItemsTheSame(@NonNull AdminUserResponse oldItem, @NonNull AdminUserResponse newItem) {
-                return oldItem.getId() == newItem.getId();
+                return Objects.equals(oldItem.getId(), newItem.getId());
             }
 
             @SuppressLint("DiffUtilEquals")

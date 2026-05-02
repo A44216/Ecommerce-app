@@ -17,6 +17,9 @@
         android:theme="@style/Theme.EcommerceApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.activity.home.admin.management.complaint.AdminComplaintDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.home.user.chat.UserConversationListActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

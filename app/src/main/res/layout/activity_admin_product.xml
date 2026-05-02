@@ -108,14 +108,14 @@
         <!-- Filter Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnFilter"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bộ lọc"
             app:icon="@drawable/ic_filter_list"
-            android:textColor="@color/black"
-            app:strokeColor="@color/gray"
-            android:backgroundTint="@color/white" />
+            app:iconTint="@color/white"
+            android:textColor="@color/white"
+            app:cornerRadius="4dp"
+            app:backgroundTint="@color/black" />
 
     </LinearLayout>
 

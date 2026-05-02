@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class AdminComplaintResponse {
 
     private Integer id;
+    private String complaintCode;
     private String username;
     private String content;
     private String status;
@@ -20,6 +21,14 @@ public class AdminComplaintResponse {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getComplaintCode() {
+        return complaintCode;
+    }
+
+    public void setComplaintCode(String complaintCode) {
+        this.complaintCode = complaintCode;
     }
 
     public String getUsername() {

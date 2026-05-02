@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public class AdminComplaintDetailResponse {
 
     private Integer id;
+    private String complaintCode;
     private String content;
     private String status;
     private LocalDateTime createdAt;
@@ -25,6 +26,14 @@ public class AdminComplaintDetailResponse {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getComplaintCode() {
+        return complaintCode;
+    }
+
+    public void setComplaintCode(String complaintCode) {
+        this.complaintCode = complaintCode;
     }
 
     public String getContent() {
