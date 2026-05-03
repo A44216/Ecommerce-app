@@ -33,4 +33,8 @@ public class SellerShopRepository {
     public Call<SellerShopResponse> updateAvatar(String avatar) {
         return apiService.updateAvatar(avatar);
     }
+
+    public Call<Void> cancelRegistration() {
+        return apiService.cancelRegistration();
+    }
 }

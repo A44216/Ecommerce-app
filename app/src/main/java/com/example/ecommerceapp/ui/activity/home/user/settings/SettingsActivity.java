@@ -54,11 +54,13 @@ public class SettingsActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     com.example.ecommerceapp.data.enums.ShopStatus status = response.body().getStatus();
                     if (status == com.example.ecommerceapp.data.enums.ShopStatus.PENDING) {
-                        android.widget.Toast.makeText(SettingsActivity.this, "Yêu cầu đăng ký Shop của bạn đang được duyệt.", android.widget.Toast.LENGTH_LONG).show();
+                        showCancelRegistrationDialog();
                     } else if (status == com.example.ecommerceapp.data.enums.ShopStatus.APPROVED) {
                         android.widget.Toast.makeText(SettingsActivity.this, "Bạn đã là người bán hàng! Vui lòng đăng nhập lại để cập nhật quyền.", android.widget.Toast.LENGTH_LONG).show();
                     } else if (status == com.example.ecommerceapp.data.enums.ShopStatus.REJECTED) {
                         android.widget.Toast.makeText(SettingsActivity.this, "Yêu cầu đăng ký Shop của bạn đã bị từ chối.", android.widget.Toast.LENGTH_LONG).show();
+                    } else if (status == com.example.ecommerceapp.data.enums.ShopStatus.CANCELED) {
+                        startActivity(new Intent(SettingsActivity.this, UserRegisterShopActivity.class));
                     } else if (status == com.example.ecommerceapp.data.enums.ShopStatus.BLOCKED) {
                         android.widget.Toast.makeText(SettingsActivity.this, "Shop của bạn đã bị khóa.", android.widget.Toast.LENGTH_LONG).show();
                     }
@@ -70,6 +72,38 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(retrofit2.Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Throwable t) {
+                android.widget.Toast.makeText(SettingsActivity.this, "Lỗi kết nối", android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showCancelRegistrationDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Đang chờ duyệt")
+                .setMessage("Yêu cầu đăng ký Shop của bạn đang được duyệt. Bạn có muốn hủy yêu cầu này không?")
+                .setPositiveButton("Hủy yêu cầu", (dialog, which) -> {
+                    cancelRegistration();
+                })
+                .setNegativeButton("Đóng", null)
+                .show();
+    }
+
+    private void cancelRegistration() {
+        com.example.ecommerceapp.data.local.TokenManager tokenManager = com.example.ecommerceapp.data.local.TokenManager.getInstance(this);
+        com.example.ecommerceapp.api.service.seller.SellerShopService api = com.example.ecommerceapp.api.ApiClient.getShopService(tokenManager);
+        
+        api.cancelRegistration().enqueue(new retrofit2.Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    android.widget.Toast.makeText(SettingsActivity.this, "Đã hủy yêu cầu đăng ký Shop thành công.", android.widget.Toast.LENGTH_SHORT).show();
+                } else {
+                    android.widget.Toast.makeText(SettingsActivity.this, "Lỗi khi hủy yêu cầu.", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<Void> call, Throwable t) {
                 android.widget.Toast.makeText(SettingsActivity.this, "Lỗi kết nối", android.widget.Toast.LENGTH_SHORT).show();
             }
         });

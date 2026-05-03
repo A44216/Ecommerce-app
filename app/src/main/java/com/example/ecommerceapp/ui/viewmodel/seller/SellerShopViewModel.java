@@ -92,4 +92,20 @@ public class SellerShopViewModel extends ViewModel {
             }
         });
     }
+
+    public void cancelRegistration() {
+        repository.cancelRegistration().enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    fetchMyShop(); // Tải lại để thấy trạng thái CANCELED (hoặc xóa)
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
 }

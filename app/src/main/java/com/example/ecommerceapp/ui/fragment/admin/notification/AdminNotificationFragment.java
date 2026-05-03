@@ -115,18 +115,29 @@ public class AdminNotificationFragment extends Fragment {
 
         // Điều hướng
         if (item.getType() != null && item.getRelatedId() != null && getActivity() != null) {
-            if ("SYSTEM".equals(item.getType())) {
+            String type = item.getType();
+            Integer relatedId = item.getRelatedId();
+
+            if ("SHOP".equals(type)) {
+                Intent intent = new Intent(getActivity(), AdminShopDetailActivity.class);
+                intent.putExtra("shopId", relatedId);
+                startActivity(intent);
+            } else if ("ORDER".equals(type)) {
+                Intent intent = new Intent(getActivity(), AdminOrderDetailActivity.class);
+                intent.putExtra("orderId", relatedId);
+                startActivity(intent);
+            } else if ("SYSTEM".equals(type)) {
                 if (item.getTitle() != null && item.getTitle().toLowerCase().contains("trả hàng")) {
                     Intent intent = new Intent(getActivity(), AdminOrderDetailActivity.class);
-                    intent.putExtra("orderId", item.getRelatedId());
+                    intent.putExtra("orderId", relatedId);
                     startActivity(intent);
                 } else if (item.getTitle() != null && item.getTitle().toLowerCase().contains("gian hàng")) {
                     Intent intent = new Intent(getActivity(), AdminShopDetailActivity.class);
-                    intent.putExtra("SHOP_ID", item.getRelatedId());
+                    intent.putExtra("SHOP_ID", relatedId);
                     startActivity(intent);
                 } else if (item.getTitle() != null && item.getTitle().toLowerCase().contains("sản phẩm")) {
                     Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductDetailActivity.class);
-                    intent.putExtra("productId", item.getRelatedId());
+                    intent.putExtra("productId", relatedId);
                     startActivity(intent);
                 }
             }

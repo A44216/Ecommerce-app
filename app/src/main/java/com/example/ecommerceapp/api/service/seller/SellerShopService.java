@@ -19,4 +19,7 @@ public interface SellerShopService {
 
     @PATCH("seller/shops/avatar")
     Call<SellerShopResponse> updateAvatar(@Query("avatar") String avatar);
+
+    @DELETE("seller/shops/cancel")
+    Call<Void> cancelRegistration();
 }

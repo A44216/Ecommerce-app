@@ -42,6 +42,7 @@ public class SellerShopFragment extends Fragment {
     private View itemShopInfo;
     private View itemChat;
     private View itemLogout;
+    private com.google.android.material.button.MaterialButton btnCancelRegistration;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -121,6 +122,7 @@ public class SellerShopFragment extends Fragment {
         itemShopInfo = view.findViewById(R.id.itemShopInfo);
         itemChat = view.findViewById(R.id.itemChat);
         itemLogout = view.findViewById(R.id.itemLogout);
+        btnCancelRegistration = view.findViewById(R.id.btnCancelRegistration);
     }
 
     private void setListeners() {
@@ -150,10 +152,23 @@ public class SellerShopFragment extends Fragment {
                     .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
                     .show();
         });
+
+        btnCancelRegistration.setOnClickListener(v -> {
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Hủy yêu cầu đăng ký")
+                    .setMessage("Bạn có chắc chắn muốn hủy yêu cầu đăng ký mở Shop này không?")
+                    .setPositiveButton("Hủy yêu cầu", (dialog, which) -> {
+                        mViewModel.cancelRegistration();
+                    })
+                    .setNegativeButton("Quay lại", null)
+                    .show();
+        });
     }
 
     @SuppressLint("SetTextI18n")
     private void setStatusUI(ShopStatus status) {
+        
+        btnCancelRegistration.setVisibility(View.GONE);
 
         switch (status) {
 
@@ -179,6 +194,14 @@ public class SellerShopFragment extends Fragment {
                 tvShopStatus.setText("Chờ duyệt");
                 tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_pending);
                 tvShopStatus.setTextColor(requireContext().getColor(R.color.orange));
+                btnCancelRegistration.setVisibility(View.VISIBLE);
+                break;
+                
+            case CANCELED:
+                tvShopStatus.setText("Đã hủy");
+                tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_rejected);
+                tvShopStatus.setTextColor(requireContext().getColor(R.color.gray));
+                btnCancelRegistration.setVisibility(View.GONE);
                 break;
 
             default:

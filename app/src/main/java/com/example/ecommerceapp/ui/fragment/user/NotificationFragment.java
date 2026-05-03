@@ -243,21 +243,30 @@ public class NotificationFragment extends Fragment {
             switch (item.getType()) {
                 case "ORDER":
                     if (item.getRelatedId() != null && getActivity() != null) {
-                        // BƯỚC QUAN TRỌNG: Mở màn hình Đơn hàng và truyền ID sang
-
-
                         Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-
-                        // Đóng gói ID đơn hàng vào Intent để mang sang màn hình kia
                         intent.putExtra("ORDER_ID", item.getRelatedId());
-
                         startActivity(intent);
+                    }
+                    break;
+
+                case "SHOP":
+                    if (getActivity() != null) {
+                        // Nếu là thông báo shop, có thể mở màn hình chi tiết shop hoặc thông báo trạng thái
+                        Toast.makeText(getContext(), item.getBody(), Toast.LENGTH_LONG).show();
+                        // Có thể điều hướng đến Seller MainActivity nếu shop đã được duyệt
+                        if (item.getTitle().contains("duyệt")) {
+                             // User có thể cần logout/login lại để cập nhật Role, 
+                             // hoặc ta chỉ hiện thông báo hướng dẫn.
+                        }
                     }
                     break;
 
                 case "PROMOTION":
                     // Sau này nếu có thông báo khuyến mãi, bạn cho mở màn hình Voucher ở đây
                     Toast.makeText(getContext(), "Mở trang Khuyến mãi!", Toast.LENGTH_SHORT).show();
+                    break;
+                case "SYSTEM":
+                    Toast.makeText(getContext(), item.getBody(), Toast.LENGTH_LONG).show();
                     break;
             }
         }
