@@ -11,6 +11,11 @@
         android:title="@string/seller_nav_product"/>
 
     <item
+        android:id="@+id/sellerNotificationFragment"
+        android:icon="@drawable/ic_notification"
+        android:title="Thông báo" />
+
+    <item
         android:id="@+id/sellerOrderFragment"
         android:icon="@drawable/ic_order"
         android:title="@string/seller_nav_order"/>

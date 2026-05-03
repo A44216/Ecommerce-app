@@ -69,6 +69,10 @@ public class UserOrderAdapter extends RecyclerView.Adapter<UserOrderAdapter.Orde
                     statusText = "Đã hủy";
                     holder.tvOrderStatus.setTextColor(Color.parseColor("#F44336"));
                     break;
+                case "RETURN_REQUESTED":
+                    statusText = "Yêu cầu trả hàng";
+                    holder.tvOrderStatus.setTextColor(Color.parseColor("#FF9800"));
+                    break;
                 default: statusText = order.getStatus();
             }
         }

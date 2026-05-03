@@ -167,6 +167,48 @@ public class SellerOrderViewModel extends ViewModel {
         return updateStatusResult;
     }
 
+    public void acceptReturn(int orderId) {
+        repository.acceptReturn(orderId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    updateStatusResult.setValue(true);
+                    for (String key : cache.keySet()) {
+                        cache.get(key).setValue(null);
+                    }
+                } else {
+                    updateStatusResult.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                updateStatusResult.setValue(false);
+            }
+        });
+    }
+
+    public void rejectReturn(int orderId, String reason) {
+        repository.rejectReturn(orderId, reason).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    updateStatusResult.setValue(true);
+                    for (String key : cache.keySet()) {
+                        cache.get(key).setValue(null);
+                    }
+                } else {
+                    updateStatusResult.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                updateStatusResult.setValue(false);
+            }
+        });
+    }
+
     public void autocompleteOrders(String keyword) {
         repository.autocompleteOrders(keyword).enqueue(new Callback<List<String>>() {
             @Override

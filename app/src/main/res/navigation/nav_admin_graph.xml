@@ -24,4 +24,9 @@
         android:name="com.example.ecommerceapp.ui.fragment.admin.profile.AdminProfileFragment"
         android:label="Profile" />
 
+    <fragment
+        android:id="@+id/adminNotificationFragment"
+        android:name="com.example.ecommerceapp.ui.fragment.admin.notification.AdminNotificationFragment"
+        android:label="Thông báo" />
+
 </navigation>

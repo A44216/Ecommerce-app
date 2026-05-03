@@ -27,7 +27,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     // Đã khai báo thêm tvOrderDate và tvSubTotal
     private TextView tvStatus, tvAddress, tvTotal, tvOrderDate, tvSubTotal, tvPaymentMethod, tvPaymentStatus;
     private RecyclerView rvItems;
-    private Button btnCancelOrder;
+    private Button btnCancelOrder, btnReceiveOrder, btnReturnOrder;
     private View ivStepPending, ivStepProcessing, ivStepShipping, ivStepDelivered;
     private View line1, line2, line3;
     private int orderId;
@@ -51,6 +51,8 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         rvItems = findViewById(R.id.rvOrderDetailItems);
         btnCancelOrder = findViewById(R.id.btnCancelOrder);
+        btnReceiveOrder = findViewById(R.id.btnReceiveOrder);
+        btnReturnOrder = findViewById(R.id.btnReturnOrder);
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         // Ánh xạ Stepper
@@ -74,6 +76,8 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         // 3. Sự kiện bấm nút Hủy
         btnCancelOrder.setOnClickListener(v -> showCancelConfirmDialog());
+        btnReceiveOrder.setOnClickListener(v -> showReceiveConfirmDialog());
+        btnReturnOrder.setOnClickListener(v -> showReturnDialog());
     }
 
     private void loadOrderDetail() {
@@ -138,22 +142,32 @@ public class OrderDetailActivity extends AppCompatActivity {
                     updateTrackingStepper(order.getStatus());
 
                     // ==========================================
-                    // LOGIC ẨN/HIỆN NÚT HỦY ĐƠN HÀNG
+                    // LOGIC ẨN/HIỆN NÚT HỦY ĐƠN HÀNG VÀ CÁC NÚT KHÁC
                     // ==========================================
                     String currentStatus = order.getStatus();
 
-                    if (currentStatus != null && currentStatus.trim().equalsIgnoreCase("PENDING")) {
-                        btnCancelOrder.setVisibility(View.VISIBLE);
-                        tvStatus.setText("Chờ xác nhận");
-                    } else {
-                        btnCancelOrder.setVisibility(View.GONE);
-                        // Dịch các trạng thái khác sang tiếng Việt cho đẹp
-                        if (currentStatus != null) {
+                    btnCancelOrder.setVisibility(View.GONE);
+                    btnReceiveOrder.setVisibility(View.GONE);
+                    btnReturnOrder.setVisibility(View.GONE);
+
+                    if (currentStatus != null) {
+                        if (currentStatus.trim().equalsIgnoreCase("PENDING")) {
+                            btnCancelOrder.setVisibility(View.VISIBLE);
+                            tvStatus.setText("Chờ xác nhận");
+                        } else if (currentStatus.trim().equalsIgnoreCase("SHIPPING")) {
+                            btnReceiveOrder.setVisibility(View.VISIBLE);
+                            btnReturnOrder.setVisibility(View.VISIBLE);
+                            tvStatus.setText("Đang giao hàng");
+                        } else if (currentStatus.trim().equalsIgnoreCase("COMPLETED")) {
+                            btnReturnOrder.setVisibility(View.VISIBLE);
+                            tvStatus.setText("Đã giao thành công");
+                        } else {
                             switch (currentStatus.toUpperCase()) {
                                 case "CONFIRMED": tvStatus.setText("Đang chuẩn bị hàng"); break;
-                                case "SHIPPING": tvStatus.setText("Đang giao hàng"); break;
-                                case "COMPLETED": tvStatus.setText("Đã giao thành công"); break;
                                 case "CANCELED": tvStatus.setText("Đã hủy"); break;
+                                case "RETURN_REQUESTED": tvStatus.setText("Đang yêu cầu trả hàng"); break;
+                                case "DISPUTED": tvStatus.setText("Đang tranh chấp (Admin xử lý)"); break;
+                                case "RETURNED": tvStatus.setText("Đã trả hàng/Hoàn tiền"); break;
                                 default: tvStatus.setText(currentStatus); break;
                             }
                         }
@@ -203,6 +217,88 @@ public class OrderDetailActivity extends AppCompatActivity {
             public void onFailure(Call<UserOrderResponse> call, Throwable t) {
                 btnCancelOrder.setEnabled(true);
                 btnCancelOrder.setText("Hủy Đơn Hàng");
+                Toast.makeText(OrderDetailActivity.this, "Lỗi kết nối mạng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showReceiveConfirmDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận nhận hàng")
+                .setMessage("Bạn xác nhận đã nhận được hàng và sản phẩm không có vấn đề gì?")
+                .setPositiveButton("Đồng ý", (dialog, which) -> executeReceiveOrder())
+                .setNegativeButton("Quay lại", null)
+                .show();
+    }
+
+    private void executeReceiveOrder() {
+        btnReceiveOrder.setEnabled(false);
+        btnReceiveOrder.setText("Đang xử lý...");
+
+        ApiClient.getUserOrderApiService(tokenManager).receiveOrder(orderId).enqueue(new Callback<UserOrderResponse>() {
+            @Override
+            public void onResponse(Call<UserOrderResponse> call, Response<UserOrderResponse> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(OrderDetailActivity.this, "Xác nhận nhận hàng thành công!", Toast.LENGTH_SHORT).show();
+                    loadOrderDetail();
+                } else {
+                    btnReceiveOrder.setEnabled(true);
+                    btnReceiveOrder.setText("Đã Nhận Được Hàng");
+                    Toast.makeText(OrderDetailActivity.this, "Lỗi khi xác nhận", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserOrderResponse> call, Throwable t) {
+                btnReceiveOrder.setEnabled(true);
+                btnReceiveOrder.setText("Đã Nhận Được Hàng");
+                Toast.makeText(OrderDetailActivity.this, "Lỗi kết nối mạng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showReturnDialog() {
+        android.widget.EditText input = new android.widget.EditText(this);
+        input.setHint("Nhập lý do trả hàng...");
+        input.setPadding(48, 32, 48, 32);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Yêu cầu trả hàng / Hoàn tiền")
+                .setMessage("Vui lòng cho biết lý do bạn muốn trả hàng:")
+                .setView(input)
+                .setPositiveButton("Gửi yêu cầu", (dialog, which) -> {
+                    String reason = input.getText().toString().trim();
+                    if (reason.isEmpty()) {
+                        Toast.makeText(this, "Vui lòng nhập lý do trả hàng!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        executeReturnOrder(reason);
+                    }
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void executeReturnOrder(String reason) {
+        btnReturnOrder.setEnabled(false);
+        btnReturnOrder.setText("Đang xử lý...");
+
+        ApiClient.getUserOrderApiService(tokenManager).requestReturn(orderId, reason).enqueue(new Callback<UserOrderResponse>() {
+            @Override
+            public void onResponse(Call<UserOrderResponse> call, Response<UserOrderResponse> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(OrderDetailActivity.this, "Gửi yêu cầu trả hàng thành công!", Toast.LENGTH_LONG).show();
+                    loadOrderDetail();
+                } else {
+                    btnReturnOrder.setEnabled(true);
+                    btnReturnOrder.setText("Yêu Cầu Trả Hàng / Hoàn Tiền");
+                    Toast.makeText(OrderDetailActivity.this, "Lỗi khi gửi yêu cầu", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserOrderResponse> call, Throwable t) {
+                btnReturnOrder.setEnabled(true);
+                btnReturnOrder.setText("Yêu Cầu Trả Hàng / Hoàn Tiền");
                 Toast.makeText(OrderDetailActivity.this, "Lỗi kết nối mạng", Toast.LENGTH_SHORT).show();
             }
         });

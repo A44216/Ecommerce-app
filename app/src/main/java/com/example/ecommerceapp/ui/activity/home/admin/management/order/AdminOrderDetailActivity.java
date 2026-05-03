@@ -121,7 +121,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void bindData(AdminOrderDetailResponse data) {
         tvOrderCode.setText("Mã ĐH: " + (data.getOrderCode() != null ? data.getOrderCode() : "N/A"));
-        tvOrderStatus.setText("Trạng thái: " + (data.getStatus() != null ? data.getStatus().name() : "N/A"));
+        tvOrderStatus.setText("Trạng thái: " + (data.getStatus() != null ? data.getStatus().getLabel() : "N/A"));
         
         if (data.getCreatedAt() != null) {
             tvCreatedAt.setText("Ngày tạo: " + TimeUtils.formatDateTime(data.getCreatedAt().toString()));
@@ -174,5 +174,58 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         if (data.getItems() != null) {
             adapter.setData(data.getItems());
         }
+
+        com.google.android.material.button.MaterialButton btnRefund = findViewById(R.id.btnRefund);
+        com.google.android.material.button.MaterialButton btnCompleted = findViewById(R.id.btnCompleted);
+
+        if (data.getStatus() == com.example.ecommerceapp.data.enums.OrderStatus.DISPUTED) {
+            btnRefund.setVisibility(android.view.View.VISIBLE);
+            btnCompleted.setVisibility(android.view.View.VISIBLE);
+
+            btnRefund.setOnClickListener(v -> {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("Phán quyết")
+                        .setMessage("Đồng ý hoàn tiền cho Khách hàng?")
+                        .setPositiveButton("Đồng ý", (dialog, which) -> {
+                            resolveDispute(data.getId(), "REFUND");
+                        })
+                        .setNegativeButton("Huỷ", null)
+                        .show();
+            });
+
+            btnCompleted.setOnClickListener(v -> {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("Phán quyết")
+                        .setMessage("Từ chối hoàn tiền, tiền sẽ được chuyển cho Shop?")
+                        .setPositiveButton("Đồng ý", (dialog, which) -> {
+                            resolveDispute(data.getId(), "COMPLETED");
+                        })
+                        .setNegativeButton("Huỷ", null)
+                        .show();
+            });
+        } else {
+            btnRefund.setVisibility(android.view.View.GONE);
+            btnCompleted.setVisibility(android.view.View.GONE);
+        }
+    }
+
+    private void resolveDispute(int orderId, String decision) {
+        repository.resolveDispute(orderId, decision).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(AdminOrderDetailActivity.this, "Đã đưa ra phán quyết thành công!", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    Toast.makeText(AdminOrderDetailActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(AdminOrderDetailActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

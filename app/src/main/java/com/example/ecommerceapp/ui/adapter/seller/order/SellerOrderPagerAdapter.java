@@ -30,6 +30,7 @@ public class SellerOrderPagerAdapter extends FragmentStateAdapter {
             case 2: status = "SHIPPING"; break;
             case 3: status = "COMPLETED"; break;
             case 4: status = "CANCELED"; break;
+            case 5: status = "RETURN_REQUESTED,RETURNED,DISPUTED"; break;
             default: status = "PENDING";
         }
 
@@ -44,6 +45,6 @@ public class SellerOrderPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 6;
     }
 }

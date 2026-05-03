@@ -24,4 +24,9 @@
             android:name="com.example.ecommerceapp.ui.fragment.seller.shop.SellerShopFragment"
             android:label="Shop" />
 
+        <fragment
+            android:id="@+id/sellerNotificationFragment"
+            android:name="com.example.ecommerceapp.ui.fragment.seller.notification.SellerNotificationFragment"
+            android:label="Thông báo" />
+
 </navigation>

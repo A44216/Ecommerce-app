@@ -24,4 +24,10 @@ public interface UserOrderApiService {
 
     @PUT("orders/{id}/cancel")
     Call<UserOrderResponse> cancelOrder(@Path("id") int orderId);
+
+    @PUT("orders/{id}/receive")
+    Call<UserOrderResponse> receiveOrder(@Path("id") int orderId);
+
+    @PUT("orders/{id}/return")
+    Call<UserOrderResponse> requestReturn(@Path("id") int orderId, @retrofit2.http.Query("reason") String reason);
 }

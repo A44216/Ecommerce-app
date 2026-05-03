@@ -249,6 +249,74 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                         return;
                     }
 
+                    // RETURN_REQUESTED (DISPUTE WORKFLOW)
+                    if (currentStatus == OrderStatus.RETURN_REQUESTED) {
+                        statusAdapter.setData(
+                                java.util.Collections.singletonList(OrderStatus.RETURN_REQUESTED),
+                                OrderStatus.RETURN_REQUESTED
+                        );
+
+                        btnConfirm.setVisibility(View.VISIBLE);
+                        btnCancel.setVisibility(View.VISIBLE);
+
+                        btnConfirm.setText("Đồng ý hoàn tiền");
+                        btnConfirm.setBackgroundTintList(android.content.res.ColorStateList.valueOf(androidx.core.content.ContextCompat.getColor(this, R.color.green)));
+                        btnConfirm.setOnClickListener(v -> {
+                            new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    .setTitle("Đồng ý hoàn tiền")
+                                    .setMessage("Bạn chắc chắn muốn đồng ý hoàn tiền cho đơn hàng này?")
+                                    .setPositiveButton("Đồng ý", (dialog, which) -> {
+                                        viewModel.acceptReturn(orderId);
+                                    })
+                                    .setNegativeButton("Hủy", null)
+                                    .show();
+                        });
+
+                        btnCancel.setText("Từ chối");
+                        btnCancel.setBackgroundTintList(android.content.res.ColorStateList.valueOf(androidx.core.content.ContextCompat.getColor(this, R.color.red)));
+                        btnCancel.setOnClickListener(v -> {
+                            android.widget.EditText input = new android.widget.EditText(this);
+                            input.setHint("Nhập lý do từ chối...");
+                            
+                            android.widget.FrameLayout container = new android.widget.FrameLayout(this);
+                            android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(
+                                    android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
+                                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+                            );
+                            params.leftMargin = 50;
+                            params.rightMargin = 50;
+                            input.setLayoutParams(params);
+                            container.addView(input);
+
+                            new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    .setTitle("Từ chối hoàn tiền (Khiếu nại Admin)")
+                                    .setMessage("Vui lòng nhập lý do từ chối yêu cầu trả hàng của khách:")
+                                    .setView(container)
+                                    .setPositiveButton("Gửi khiếu nại", (dialog, which) -> {
+                                        String reason = input.getText().toString();
+                                        if (reason.trim().isEmpty()) {
+                                            android.widget.Toast.makeText(this, "Vui lòng nhập lý do!", android.widget.Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            viewModel.rejectReturn(orderId, reason);
+                                        }
+                                    })
+                                    .setNegativeButton("Hủy", null)
+                                    .show();
+                        });
+                        return;
+                    }
+                    
+                    // DISPUTED, RETURNED handling
+                    if (currentStatus == OrderStatus.DISPUTED || currentStatus == OrderStatus.RETURNED) {
+                        statusAdapter.setData(
+                                java.util.Collections.singletonList(currentStatus),
+                                currentStatus
+                        );
+                        btnConfirm.setVisibility(View.GONE);
+                        btnCancel.setVisibility(View.GONE);
+                        return;
+                    }
+
                     // NORMAL FLOW
                     statusAdapter.setData(getStatusFlow(), currentStatus);
 

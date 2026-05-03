@@ -8,6 +8,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -38,5 +39,12 @@ public interface AdminOrderService {
     Call<List<String>> autocompleteOrders(
             @Query("keyword") String keyword,
             @Query("shopId") Integer shopId
+    );
+
+    // RESOLVE DISPUTE
+    @PUT("admin/orders/{id}/resolve-dispute")
+    Call<Void> resolveDispute(
+            @Path("id") int orderId,
+            @Query("decision") String decision
     );
 }

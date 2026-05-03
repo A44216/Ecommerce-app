@@ -36,4 +36,12 @@ public class SellerOrderRepository {
     public Call<List<String>> autocompleteOrders(String keyword) {
         return service.autocompleteOrders(keyword);
     }
+
+    public Call<Void> acceptReturn(int orderId) {
+        return service.acceptReturn(orderId);
+    }
+
+    public Call<Void> rejectReturn(int orderId, String reason) {
+        return service.rejectReturn(orderId, reason);
+    }
 }

@@ -43,4 +43,17 @@ public interface SellerOrderService {
     Call<List<String>> autocompleteOrders(
             @Query("keyword") String keyword
     );
+
+    // ACCEPT RETURN
+    @PUT("seller/orders/{id}/accept-return")
+    Call<Void> acceptReturn(
+            @Path("id") int orderId
+    );
+
+    // REJECT RETURN
+    @PUT("seller/orders/{id}/reject-return")
+    Call<Void> rejectReturn(
+            @Path("id") int orderId,
+            @Query("reason") String reason
+    );
 }

@@ -11,6 +11,11 @@
         android:title="@string/admin_nav_orders"/>
 
     <item
+        android:id="@+id/adminNotificationFragment"
+        android:icon="@drawable/ic_notification"
+        android:title="Thông báo" />
+
+    <item
         android:id="@+id/adminManagementFragment"
         android:icon="@drawable/ic_menu"
         android:title="Quản lý"/>

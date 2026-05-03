@@ -370,8 +370,7 @@
             app:cardUseCompatPadding="true"
             app:layout_constraintTop_toBottomOf="@id/cardPayment"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -517,6 +516,43 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRefund"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="Phán quyết: Hoàn tiền User"
+            android:textSize="14sp"
+            android:layout_marginEnd="6dp"
+            android:backgroundTint="@color/green"
+            android:textColor="@color/white"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginStart="12dp"
+            app:cornerRadius="4dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/cardFinance"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnCompleted"
+            app:layout_constraintHorizontal_weight="1"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCompleted"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="Phán quyết: Tiền về Shop"
+            android:textSize="14sp"
+            android:backgroundTint="@color/red"
+            android:textColor="@color/white"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="12dp"
+            app:cornerRadius="4dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/cardFinance"
+            app:layout_constraintStart_toEndOf="@id/btnRefund"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -3,10 +3,13 @@ package com.example.ecommerceapp.data.enums;
 public enum OrderStatus {
 
     PENDING("Chờ xác nhận"),
-    CONFIRMED("Đã xác nhận"),
-    SHIPPING("Đang giao"),
-    COMPLETED("Hoàn tất"),
-    CANCELED("Đã huỷ");
+    CONFIRMED("Đang chuẩn bị hàng"),
+    SHIPPING("Đang giao hàng"),
+    COMPLETED("Đã giao thành công"),
+    CANCELED("Đã huỷ"),
+    RETURN_REQUESTED("Yêu cầu trả hàng/hoàn tiền"),
+    RETURNED("Đã hoàn tiền"),
+    DISPUTED("Đang tranh chấp (Admin xử lý)");
 
     private final String label;
 

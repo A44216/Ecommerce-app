@@ -53,4 +53,9 @@ public class AdminOrderRepository {
     public Call<List<String>> autocompleteOrders(String keyword, Integer shopId) {
         return service.autocompleteOrders(keyword, shopId);
     }
+
+    // RESOLVE DISPUTE
+    public Call<Void> resolveDispute(int orderId, String decision) {
+        return service.resolveDispute(orderId, decision);
+    }
 }

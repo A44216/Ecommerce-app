@@ -303,7 +303,8 @@ public class SellerOrderFragment extends Fragment {
                     "Xác nhận",
                     "Đang giao",
                     "Hoàn tất",
-                    "Huỷ"
+                    "Huỷ",
+                    "Trả hàng"
             };
             tab.setText(titles[position]);
         }).attach();
