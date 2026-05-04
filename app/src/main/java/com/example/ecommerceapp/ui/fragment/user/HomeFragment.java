@@ -121,6 +121,20 @@ public class HomeFragment extends Fragment {
         // 2. Setup RecyclerView Sản phẩm
         rvProducts = view.findViewById(R.id.rvProducts);
         shimmerContainer = view.findViewById(R.id.shimmer_view_container);
+
+        // --- GỢI Ý THÔNG MINH ---
+        View cardSuggestionEntry = view.findViewById(R.id.cardSuggestionEntry);
+        if (cardSuggestionEntry != null) {
+            cardSuggestionEntry.setOnClickListener(v -> {
+                TokenManager tm = TokenManager.getInstance(getContext());
+                if (tm.getUserId() == -1) {
+                    showLoginRequireDialog();
+                } else {
+                    Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.suggestion.SuggestionCenterActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
         
         rvProducts.setLayoutManager(new GridLayoutManager(getContext(), 2));
         productAdapter = new UserProductAdapter(getContext());

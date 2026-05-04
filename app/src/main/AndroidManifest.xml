@@ -121,6 +121,10 @@
             android:windowSoftInputMode="stateAlwaysVisible"/>
 
         <activity
+            android:name=".ui.activity.home.user.suggestion.SuggestionCenterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.home.UserHomeActivity"
             android:exported="false" />
         <activity

@@ -116,14 +116,14 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProductImage;
-        TextView tvProductName, tvProductPrice;
+        TextView tvProductName, tvProductPrice, tvMatchScore;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Bạn nhớ check lại ID ở file item_product.xml xem có khớp không nhé
             ivProductImage = itemView.findViewById(R.id.ivProductImage);
             tvProductName = itemView.findViewById(R.id.tvProductName);
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
+            tvMatchScore = itemView.findViewById(R.id.tvMatchScore);
         }
     }
 }
