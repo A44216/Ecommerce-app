@@ -7,8 +7,10 @@ import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.api.service.CategoryService;
 import com.example.ecommerceapp.api.service.ChatApiService;
 import com.example.ecommerceapp.api.service.PaymentApiService;
+import com.example.ecommerceapp.api.service.ProductEvaluationService;
 import com.example.ecommerceapp.api.service.ProductImageService;
 import com.example.ecommerceapp.api.service.ProductService;
+import com.example.ecommerceapp.api.service.RecommendationService;
 import com.example.ecommerceapp.api.service.ShopService;
 import com.example.ecommerceapp.api.service.UserAddressApiService;
 import com.example.ecommerceapp.api.service.UserCategoryApiService;
@@ -162,6 +164,14 @@ public class ApiClient {
 
     public static PaymentApiService getPaymentApiService() {
         return getPublicRetrofit().create(com.example.ecommerceapp.api.service.PaymentApiService.class);
+    }
+
+    public static ProductEvaluationService getProductEvaluationService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(ProductEvaluationService.class);
+    }
+
+    public static RecommendationService getRecommendationService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(RecommendationService.class);
     }
 
     // ===== SELLER API =====
