@@ -26,6 +26,7 @@ import com.example.ecommerceapp.data.repository.seller.SellerShopRepository;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerChatActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerShopInfoActivity;
+import com.example.ecommerceapp.ui.activity.home.user.help.HelpCenterActivity;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerShopViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerShopViewModelFactory;
 import com.example.ecommerceapp.utils.ImageLoader;
@@ -41,6 +42,7 @@ public class SellerShopFragment extends Fragment {
 
     private View itemShopInfo;
     private View itemChat;
+    private View itemComplaint;
     private View itemLogout;
     private com.google.android.material.button.MaterialButton btnCancelRegistration;
 
@@ -121,6 +123,7 @@ public class SellerShopFragment extends Fragment {
 
         itemShopInfo = view.findViewById(R.id.itemShopInfo);
         itemChat = view.findViewById(R.id.itemChat);
+        itemComplaint = view.findViewById(R.id.itemComplaint);
         itemLogout = view.findViewById(R.id.itemLogout);
         btnCancelRegistration = view.findViewById(R.id.btnCancelRegistration);
     }
@@ -134,6 +137,12 @@ public class SellerShopFragment extends Fragment {
 
         itemChat.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), SellerChatActivity.class);
+            startActivity(intent);
+        });
+
+        itemComplaint.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), HelpCenterActivity.class);
+            intent.putExtra("is_seller", true);
             startActivity(intent);
         });
 

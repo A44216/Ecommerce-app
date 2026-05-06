@@ -145,6 +145,7 @@
 
             <!-- FAQs Section -->
             <TextView
+                android:id="@+id/tvFaqTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -155,6 +156,7 @@
 
             <!-- FAQ Items -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardFaqItems"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
