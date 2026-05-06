@@ -127,15 +127,16 @@ public class AdminNotificationFragment extends Fragment {
                 intent.putExtra("orderId", relatedId);
                 startActivity(intent);
             } else if ("SYSTEM".equals(type)) {
-                if (item.getTitle() != null && item.getTitle().toLowerCase().contains("trả hàng")) {
+                String title = item.getTitle() != null ? item.getTitle().toLowerCase() : "";
+                if (title.contains("trả hàng") || title.contains("tranh chấp") || title.contains("phân xử")) {
                     Intent intent = new Intent(getActivity(), AdminOrderDetailActivity.class);
                     intent.putExtra("orderId", relatedId);
                     startActivity(intent);
-                } else if (item.getTitle() != null && item.getTitle().toLowerCase().contains("gian hàng")) {
+                } else if (title.contains("gian hàng")) {
                     Intent intent = new Intent(getActivity(), AdminShopDetailActivity.class);
                     intent.putExtra("SHOP_ID", relatedId);
                     startActivity(intent);
-                } else if (item.getTitle() != null && item.getTitle().toLowerCase().contains("sản phẩm")) {
+                } else if (title.contains("sản phẩm")) {
                     Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductDetailActivity.class);
                     intent.putExtra("productId", relatedId);
                     startActivity(intent);
