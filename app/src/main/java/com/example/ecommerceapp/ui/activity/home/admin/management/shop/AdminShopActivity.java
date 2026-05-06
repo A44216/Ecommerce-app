@@ -166,7 +166,7 @@ public class AdminShopActivity extends AppCompatActivity {
             viewModel.setFilters(currentStatus, currentKeyword, currentSortBy, currentSortDir);
         });
 
-        String[] statusOptions = {"Tất cả", "Chờ duyệt", "Đã duyệt", "Bị từ chối", "Bị khóa"};
+        String[] statusOptions = {"Tất cả", "Chờ duyệt", "Đã duyệt", "Bị từ chối", "Bị khóa", "Đã hủy"};
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, statusOptions);
         actvFilterStatus.setAdapter(statusAdapter);
 
@@ -183,6 +183,9 @@ public class AdminShopActivity extends AppCompatActivity {
                     break;
                 case 4:
                     currentStatus = ShopStatus.BLOCKED;
+                    break;
+                case 5:
+                    currentStatus = ShopStatus.CANCELED;
                     break;
                 default:
                     currentStatus = null;

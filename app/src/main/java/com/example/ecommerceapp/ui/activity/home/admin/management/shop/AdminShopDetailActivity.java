@@ -228,8 +228,8 @@ public class AdminShopDetailActivity extends AppCompatActivity {
                 btnApprove.setText("Mở khóa");
                 break;
             case CANCELED:
-                tvStatus.setText("Người dùng đã hủy");
-                tvStatus.setBackgroundResource(R.drawable.bg_shop_status_rejected);
+                tvStatus.setText("Đã hủy");
+                tvStatus.setBackgroundResource(R.drawable.bg_shop_status_canceled);
                 tvStatus.setTextColor(ContextCompat.getColor(this, R.color.gray));
                 break;
         }

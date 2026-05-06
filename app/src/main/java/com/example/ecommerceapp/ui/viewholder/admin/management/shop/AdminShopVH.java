@@ -80,6 +80,11 @@ public class AdminShopVH extends RecyclerView.ViewHolder {
                 tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_blocked);
                 tvShopStatus.setTextColor(androidx.core.content.ContextCompat.getColor(itemView.getContext(), R.color.red));
                 break;
+            case CANCELED:
+                tvShopStatus.setText("Đã hủy");
+                tvShopStatus.setBackgroundResource(R.drawable.bg_shop_status_canceled);
+                tvShopStatus.setTextColor(androidx.core.content.ContextCompat.getColor(itemView.getContext(), R.color.gray));
+                break;
         }
     }
 }
