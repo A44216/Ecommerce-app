@@ -141,13 +141,31 @@ public class AdminCategoryListFragment extends Fragment {
             viewModel.getDeleted().observe(getViewLifecycleOwner(), list -> {
                 if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
                 if (list == null) return;
-                adapter.submitList(new java.util.ArrayList<>(list));
+                
+                RecyclerView.ItemAnimator animator = rv != null ? rv.getItemAnimator() : null;
+                if (rv != null) rv.setItemAnimator(null);
+                
+                adapter.submitList(new java.util.ArrayList<>(list), () -> {
+                    if (rv != null) {
+                        rv.scrollToPosition(0);
+                        rv.post(() -> rv.setItemAnimator(animator));
+                    }
+                });
             });
         } else {
             viewModel.getAll().observe(getViewLifecycleOwner(), list -> {
                 if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
                 if (list == null) return;
-                adapter.submitList(new java.util.ArrayList<>(list));
+                
+                RecyclerView.ItemAnimator animator = rv != null ? rv.getItemAnimator() : null;
+                if (rv != null) rv.setItemAnimator(null);
+                
+                adapter.submitList(new java.util.ArrayList<>(list), () -> {
+                    if (rv != null) {
+                        rv.scrollToPosition(0);
+                        rv.post(() -> rv.setItemAnimator(animator));
+                    }
+                });
             });
         }
     }

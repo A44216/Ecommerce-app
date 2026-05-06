@@ -44,12 +44,23 @@ public class SellerOrderListFragment extends Fragment {
 
     private androidx.lifecycle.LiveData<List<com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse>> currentOrdersLiveData;
     private final androidx.lifecycle.Observer<List<com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse>> ordersObserver = data -> {
+        boolean wasLoadingMore = isLoadingMore;
         isLoadingMore = false;
         if (swipeRefreshOrders != null) {
             swipeRefreshOrders.setRefreshing(false);
         }
         if (data != null) {
-            adapter.submitList(new ArrayList<>(data));
+            RecyclerView.ItemAnimator animator = rvOrders != null ? rvOrders.getItemAnimator() : null;
+            if (!wasLoadingMore && rvOrders != null) {
+                rvOrders.setItemAnimator(null);
+            }
+            
+            adapter.submitList(new ArrayList<>(data), () -> {
+                if (!wasLoadingMore && rvOrders != null) {
+                    rvOrders.scrollToPosition(0);
+                    rvOrders.post(() -> rvOrders.setItemAnimator(animator));
+                }
+            });
         }
     };
 

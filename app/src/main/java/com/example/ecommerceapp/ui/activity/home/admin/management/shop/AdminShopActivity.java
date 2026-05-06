@@ -61,6 +61,8 @@ public class AdminShopActivity extends AppCompatActivity {
     private String currentKeyword = "";
     private String currentSortBy = "createdAt";
     private String currentSortDir = "desc";
+    
+    private boolean isLoadMore = false;
 
     private final ActivityResultLauncher<Intent> detailActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -142,6 +144,7 @@ public class AdminShopActivity extends AppCompatActivity {
                     int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
 
                     if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        isLoadMore = true;
                         viewModel.loadNextPage();
                     }
                 }
@@ -281,7 +284,20 @@ public class AdminShopActivity extends AppCompatActivity {
 
     private void observeViewModel() {
         viewModel.getShops().observe(this, shops -> {
-            adapter.submitList(shops);
+            boolean wasLoadMore = isLoadMore;
+            isLoadMore = false;
+            
+            RecyclerView.ItemAnimator animator = rvShops != null ? rvShops.getItemAnimator() : null;
+            if (!wasLoadMore && rvShops != null) {
+                rvShops.setItemAnimator(null);
+            }
+            
+            adapter.submitList(shops, () -> {
+                if (!wasLoadMore && rvShops != null) {
+                    rvShops.scrollToPosition(0);
+                    rvShops.post(() -> rvShops.setItemAnimator(animator));
+                }
+            });
             tvEmpty.setVisibility(shops.isEmpty() ? View.VISIBLE : View.GONE);
         });
 

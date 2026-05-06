@@ -55,6 +55,7 @@ public class AdminUserActivity extends AppCompatActivity {
     private ArrayAdapter<String> autoCompleteAdapter;
     private Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
+    private boolean isLoadMore = false;
 
     private final ActivityResultLauncher<Intent> detailLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -138,6 +139,7 @@ public class AdminUserActivity extends AppCompatActivity {
                     int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
 
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount - 2) {
+                        isLoadMore = true;
                         viewModel.fetchUsers(true, true);
                     }
                 }
@@ -281,12 +283,29 @@ public class AdminUserActivity extends AppCompatActivity {
 
     private void setupObservers() {
         viewModel.getUsersLiveData().observe(this, users -> {
+            boolean wasLoadMore = isLoadMore;
+            isLoadMore = false;
+            
+            RecyclerView.ItemAnimator animator = rvUsers != null ? rvUsers.getItemAnimator() : null;
+            if (!wasLoadMore && rvUsers != null) {
+                rvUsers.setItemAnimator(null);
+            }
+            
             if (users != null && !users.isEmpty()) {
-                adapter.submitList(users);
+                adapter.submitList(users, () -> {
+                    if (!wasLoadMore && rvUsers != null) {
+                        rvUsers.scrollToPosition(0);
+                        rvUsers.post(() -> rvUsers.setItemAnimator(animator));
+                    }
+                });
                 tvEmpty.setVisibility(View.GONE);
                 rvUsers.setVisibility(View.VISIBLE);
             } else {
-                adapter.submitList(null);
+                adapter.submitList(null, () -> {
+                    if (!wasLoadMore && rvUsers != null) {
+                        rvUsers.post(() -> rvUsers.setItemAnimator(animator));
+                    }
+                });
                 tvEmpty.setVisibility(View.VISIBLE);
                 rvUsers.setVisibility(View.GONE);
             }

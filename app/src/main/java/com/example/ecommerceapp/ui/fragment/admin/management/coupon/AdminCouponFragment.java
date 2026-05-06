@@ -43,6 +43,7 @@ public class AdminCouponFragment extends Fragment {
 
     private String currentKeyword = "";
     private boolean isFirstLoad = true;
+    private boolean isLoadMore = false;
 
     public static AdminCouponFragment newInstance(int position) {
         AdminCouponFragment fragment = new AdminCouponFragment();
@@ -144,6 +145,7 @@ public class AdminCouponFragment extends Fragment {
                                 status = null;
                                 isDeleted = true;
                             }
+                            isLoadMore = true;
                             viewModel.loadCoupons(status, currentKeyword, isDeleted, true, true);
                         }
                     }
@@ -170,13 +172,30 @@ public class AdminCouponFragment extends Fragment {
         }
 
         viewModel.getCouponsLiveData(status, isDeleted).observe(getViewLifecycleOwner(), list -> {
+            boolean wasLoadMore = isLoadMore;
+            isLoadMore = false;
+            
+            RecyclerView.ItemAnimator animator = rvCoupons != null ? rvCoupons.getItemAnimator() : null;
+            if (!wasLoadMore && rvCoupons != null) {
+                rvCoupons.setItemAnimator(null);
+            }
+            
             swipeRefreshLayout.setRefreshing(false);
             if (list != null && !list.isEmpty()) {
-                adapter.submitList(list);
+                adapter.submitList(list, () -> {
+                    if (!wasLoadMore && rvCoupons != null) {
+                        rvCoupons.scrollToPosition(0);
+                        rvCoupons.post(() -> rvCoupons.setItemAnimator(animator));
+                    }
+                });
                 tvEmpty.setVisibility(View.GONE);
                 rvCoupons.setVisibility(View.VISIBLE);
             } else {
-                adapter.submitList(null);
+                adapter.submitList(null, () -> {
+                    if (!wasLoadMore && rvCoupons != null) {
+                        rvCoupons.post(() -> rvCoupons.setItemAnimator(animator));
+                    }
+                });
                 tvEmpty.setVisibility(View.VISIBLE);
                 rvCoupons.setVisibility(View.GONE);
             }

@@ -45,11 +45,22 @@ public class AdminOrderListFragment extends Fragment {
 
     private LiveData<List<AdminOrderResponse>> currentOrdersLiveData;
     private final Observer<List<AdminOrderResponse>> ordersObserver = data -> {
+        boolean wasLoadingMore = isLoadingMore;
         isLoadingMore = false;
         progressBarOrder.setVisibility(View.GONE);
         swipeRefreshOrder.setRefreshing(false);
         if (data != null) {
-            adapter.submitList(new ArrayList<>(data));
+            RecyclerView.ItemAnimator animator = rvOrder != null ? rvOrder.getItemAnimator() : null;
+            if (!wasLoadingMore && rvOrder != null) {
+                rvOrder.setItemAnimator(null);
+            }
+            
+            adapter.submitList(new ArrayList<>(data), () -> {
+                if (!wasLoadingMore && rvOrder != null) {
+                    rvOrder.scrollToPosition(0);
+                    rvOrder.post(() -> rvOrder.setItemAnimator(animator));
+                }
+            });
             if (data.isEmpty()) {
                 tvEmptyOrder.setVisibility(View.VISIBLE);
             } else {

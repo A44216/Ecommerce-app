@@ -225,12 +225,23 @@ public class SellerProductListFragment extends Fragment {
     private void observeData() {
 
         viewModel.getProducts().observe(getViewLifecycleOwner(), items -> {
+            boolean wasLoadingMore = isLoadingMore;
             isLoadingMore = false;
             if (swipeRefreshProducts != null) {
                 swipeRefreshProducts.setRefreshing(false);
             }
             if (items != null) {
-                adapter.submitList(items);
+                RecyclerView.ItemAnimator animator = recyclerView != null ? recyclerView.getItemAnimator() : null;
+                if (!wasLoadingMore && recyclerView != null) {
+                    recyclerView.setItemAnimator(null);
+                }
+                
+                adapter.submitList(items, () -> {
+                    if (!wasLoadingMore && recyclerView != null) {
+                        recyclerView.scrollToPosition(0);
+                        recyclerView.post(() -> recyclerView.setItemAnimator(animator));
+                    }
+                });
             }
         });
     }
