@@ -23,12 +23,15 @@ public class AdminOrderPagerAdapter extends FragmentStateAdapter {
             case 2: status = OrderStatus.SHIPPING.name(); break;
             case 3: status = OrderStatus.COMPLETED.name(); break;
             case 4: status = OrderStatus.CANCELED.name(); break;
+            case 5: status = OrderStatus.RETURN_REQUESTED.name(); break;
+            case 6: status = OrderStatus.DISPUTED.name(); break;
+            case 7: status = OrderStatus.RETURNED.name(); break;
         }
         return AdminOrderListFragment.newInstance(status);
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 8;
     }
 }

@@ -437,7 +437,10 @@ public class AdminOrderFragment extends Fragment {
                     "Xác nhận",
                     "Đang giao",
                     "Hoàn tất",
-                    "Huỷ"
+                    "Huỷ",
+                    "Yêu cầu trả",
+                    "Tranh chấp",
+                    "Trả hàng"
             };
             tab.setText(titles[position]);
         }).attach();
