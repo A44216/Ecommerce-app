@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/primary_blue"
-        android:text="Đã hiểu"
+        android:text="Xem sản phẩm"
         android:textAllCaps="false"
         android:textColor="@color/white" />
 

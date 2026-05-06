@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.activity.home.user.suggestion;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -118,7 +119,19 @@ public class SuggestionCenterActivity extends AppCompatActivity {
                 item.getPriceScore().floatValue()
         );
 
-        btnClose.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        btnClose.setOnClickListener(v -> {
+            bottomSheetDialog.dismiss();
+            Intent intent = new Intent(SuggestionCenterActivity.this, com.example.ecommerceapp.ui.activity.home.user.product.UserProductDetailActivity.class);
+            if (item.getProduct() != null) {
+                intent.putExtra("product_id", item.getProduct().getProductId());
+                intent.putExtra("product_name", item.getProduct().getProductName());
+                if (item.getProduct().getPrice() != null) {
+                    intent.putExtra("product_price", item.getProduct().getPrice().toString());
+                }
+                intent.putExtra("product_image", item.getProduct().getImageUrl());
+            }
+            startActivity(intent);
+        });
 
         bottomSheetDialog.setContentView(view);
         bottomSheetDialog.show();
