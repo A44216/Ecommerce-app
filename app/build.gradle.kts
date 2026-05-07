@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -68,5 +69,5 @@ dependencies {
 
     implementation(libs.mpandroidchart)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
 }
+apply(plugin = "com.google.gms.google-services")

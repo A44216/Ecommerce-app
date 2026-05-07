@@ -113,8 +113,7 @@ public class LoginActivity extends AppCompatActivity {
 
         tokenManager = TokenManager.getInstance(this);
         if (tokenManager.isRememberLogin() && tokenManager.getToken() != null) {
-            tokenManager.clearToken();
-//            checkRememberLogin();
+            checkRememberLogin();
         }
 
         // --- GOOGLE SIGN IN CONFIG ---
@@ -369,8 +368,6 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(LoginActivity.this, AdminHomeActivity.class));
                             break;
                         case "SELLER":
-                            startActivity(new Intent(LoginActivity.this, SellerHomeActivity.class));
-                            break;
                         case "CUSTOMER":
                             startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
                             break;

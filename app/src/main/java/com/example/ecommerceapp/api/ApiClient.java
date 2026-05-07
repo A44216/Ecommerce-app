@@ -2,7 +2,6 @@ package com.example.ecommerceapp.api;
 
 import android.os.Build;
 
-import com.example.ecommerceapp.api.service.AddressService;
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.api.service.CategoryService;
 import com.example.ecommerceapp.api.service.ChatApiService;
@@ -56,8 +55,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://10.0.2.2:8081/api/";
-
+    private static final String BASE_URL = "https://ecommerce-backend-production-7a13.up.railway.app/api/";
     private static Retrofit publicRetrofit;
 
     private static Gson getGson() {

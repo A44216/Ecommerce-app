@@ -39,6 +39,8 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void checkNavigation() {
+
+
         Intent intent = new Intent(SplashActivity.this, UserHomeActivity.class);
         startActivity(intent);
         finish();
