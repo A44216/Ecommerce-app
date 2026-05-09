@@ -30,16 +30,24 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(new Intent(this, ChangePasswordActivity.class));
         });
 
-        // Chuyển sang Trung tâm trợ giúp
         Button btnHelpCenter = findViewById(R.id.btnHelpCenter);
         btnHelpCenter.setOnClickListener(v -> {
             startActivity(new Intent(this, HelpCenterActivity.class));
         });
 
         Button btnRegisterSeller = findViewById(R.id.btnRegisterSeller);
-        btnRegisterSeller.setOnClickListener(v -> {
-            checkShopStatusAndNavigate();
-        });
+        com.example.ecommerceapp.data.local.TokenManager tokenManager = com.example.ecommerceapp.data.local.TokenManager.getInstance(this);
+        
+        if ("SELLER".equals(tokenManager.getRole())) {
+            btnRegisterSeller.setText("Shop của tôi");
+            btnRegisterSeller.setOnClickListener(v -> {
+                startActivity(new Intent(this, com.example.ecommerceapp.ui.activity.home.SellerHomeActivity.class));
+            });
+        } else {
+            btnRegisterSeller.setOnClickListener(v -> {
+                checkShopStatusAndNavigate();
+            });
+        }
     }
 
     private void checkShopStatusAndNavigate() {
