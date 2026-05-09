@@ -328,7 +328,7 @@ public class UserCheckoutActivity extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.show();
 
-                ApiClient.getPaymentApiService().createPaymentUrl(finalTotal.longValue(), "Thanh toan don hang").enqueue(new retrofit2.Callback<com.example.ecommerceapp.data.model.response.PaymentResponse>() {
+                ApiClient.getPaymentApiService().createPaymentUrl(finalTotal.longValue(), "ThanhToanDonHang").enqueue(new retrofit2.Callback<com.example.ecommerceapp.data.model.response.PaymentResponse>() {
                     @Override
                     public void onResponse(retrofit2.Call<com.example.ecommerceapp.data.model.response.PaymentResponse> call, retrofit2.Response<com.example.ecommerceapp.data.model.response.PaymentResponse> response) {
                         progressDialog.dismiss();
