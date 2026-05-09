@@ -59,8 +59,8 @@ public class VnPayPaymentActivity extends AppCompatActivity {
             }
             
             private boolean handleUrl(String url, WebView view) {
-                // Kiểm tra xem URL có phải là URL trả về (Return URL) không
-                if (url.contains("vnpay-return")) {
+                // Kiểm tra xem URL có phải là URL trả về (Return URL) không bằng tham số vnp_ResponseCode
+                if (url.contains("vnp_ResponseCode=")) {
                     Uri uri = Uri.parse(url);
                     String responseCode = uri.getQueryParameter("vnp_ResponseCode");
                     
