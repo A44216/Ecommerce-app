@@ -198,6 +198,9 @@
             android:name=".ui.activity.home.user.shop.UserShopDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.home.user.shop.ShopCategoryProductsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.home.user.settings.UserRegisterShopActivity"
             android:exported="false" />
     </application>

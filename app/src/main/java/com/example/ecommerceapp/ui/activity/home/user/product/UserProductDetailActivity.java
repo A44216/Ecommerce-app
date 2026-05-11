@@ -81,8 +81,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
         mainRatingBar = findViewById(R.id.mainRatingBar);
         tvNoReviews = findViewById(R.id.tvNoReviews);
         
-        // --- ÁNH XẠ THÊM VIEW SHOP INFO ---
-        com.google.android.material.imageview.ShapeableImageView ivShopAvatar = findViewById(R.id.ivShopAvatar);
+        ImageView ivShopAvatar = findViewById(R.id.ivShopAvatar);
         TextView tvShopNameView = findViewById(R.id.tvShopName);
         TextView tvShopRatingView = findViewById(R.id.tvShopRating);
         Button btnViewShop = findViewById(R.id.btnViewShop);

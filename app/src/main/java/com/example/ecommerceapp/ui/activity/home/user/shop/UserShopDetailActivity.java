@@ -20,7 +20,6 @@ import com.example.ecommerceapp.data.model.response.ConversationResponse;
 import com.example.ecommerceapp.data.model.response.ShopResponse;
 import com.example.ecommerceapp.ui.activity.home.user.chat.ChatActivity;
 import com.example.ecommerceapp.utils.ImageLoader;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -34,7 +33,7 @@ public class UserShopDetailActivity extends AppCompatActivity {
     private TokenManager tokenManager;
     private ShopResponse currentShop;
 
-    private ShapeableImageView ivShopAvatar;
+    private ImageView ivShopAvatar;
     private TextView tvShopName, tvShopRating;
     private EditText edtSearchShop;
 

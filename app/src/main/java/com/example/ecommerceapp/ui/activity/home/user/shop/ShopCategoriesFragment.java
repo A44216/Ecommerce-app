@@ -65,10 +65,7 @@ public class ShopCategoriesFragment extends Fragment {
         rvCategories.setLayoutManager(new GridLayoutManager(getContext(), 4)); // Using grid like the home page
         
         adapter = new UserCategoryAdapter(categoryId -> {
-            Intent intent = new Intent(requireContext(), UserSearchActivity.class);
-            // SearchActivity might not support categoryId filtering directly out of the box with the search API,
-            // but we can pass it if the backend search API supports it or just use keyword for now.
-            // As decided, we will open a new screen. We can use UserSearchActivity.
+            Intent intent = new Intent(requireContext(), ShopCategoryProductsActivity.class);
             intent.putExtra("categoryId", categoryId);
             intent.putExtra("shopId", shopId);
             startActivity(intent);
