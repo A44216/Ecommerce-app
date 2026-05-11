@@ -11,4 +11,7 @@ public interface CategoryService {
 
     @GET("categories")
     Call<List<CategoryResponse>> getCategories();
+
+    @GET("categories/shop/{shopId}")
+    Call<List<CategoryResponse>> getCategoriesByShopId(@retrofit2.http.Path("shopId") int shopId);
 }

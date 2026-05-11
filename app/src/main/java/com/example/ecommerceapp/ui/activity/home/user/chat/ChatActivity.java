@@ -111,6 +111,7 @@ public class ChatActivity extends AppCompatActivity {
                     // Chỉ cuộn xuống dưới cùng nếu phát hiện có tin nhắn mới (chống giật màn hình)
                     if (newMessages.size() > oldCount && adapter.getItemCount() > 0) {
                         rvMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                        markMessagesAsRead();
                     }
                 }
             }
@@ -132,6 +133,7 @@ public class ChatActivity extends AppCompatActivity {
                     if (adapter.getItemCount() > 0) {
                         rvMessages.scrollToPosition(adapter.getItemCount() - 1);
                     }
+                    markMessagesAsRead();
                 }
             }
 
@@ -139,6 +141,15 @@ public class ChatActivity extends AppCompatActivity {
             public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
                 Toast.makeText(ChatActivity.this, "Không thể tải tin nhắn", Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void markMessagesAsRead() {
+        ApiClient.getChatApiService(tokenManager).markAsRead(conversationId, currentUserId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {}
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {}
         });
     }
 

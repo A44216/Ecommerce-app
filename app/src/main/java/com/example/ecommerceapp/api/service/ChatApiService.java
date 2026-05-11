@@ -28,4 +28,13 @@ public interface ChatApiService {
 
     @GET("conversations/shop/{shopId}")
     Call<List<ConversationResponse>> getConversationsByShop(@Path("shopId") int shopId);
+
+    @GET("messages/unread-count/customer/{customerId}")
+    Call<Integer> getUnreadCountForCustomer(@Path("customerId") int customerId);
+
+    @GET("messages/unread-count/shop/{shopId}")
+    Call<Integer> getUnreadCountForShop(@Path("shopId") int shopId);
+
+    @retrofit2.http.PUT("messages/read/{conversationId}")
+    Call<Void> markAsRead(@Path("conversationId") int conversationId, @retrofit2.http.Query("userId") int userId);
 }

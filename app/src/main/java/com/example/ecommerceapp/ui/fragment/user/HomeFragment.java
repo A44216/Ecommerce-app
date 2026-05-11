@@ -39,6 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import com.example.ecommerceapp.api.service.ChatApiService;
 
 public class HomeFragment extends Fragment {
 
@@ -49,6 +54,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvProducts;
 
     private TextView tvCartBadge;
+    private View vChatBadgeHome;
     private ViewPager2 vpBanners;
     private final Handler bannerHandler = new Handler(Looper.getMainLooper());
     private final Runnable bannerRunnable = new Runnable() {
@@ -73,6 +79,7 @@ public class HomeFragment extends Fragment {
         SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_dark);
         tvCartBadge = view.findViewById(R.id.tvCartBadgeHome);
+        vChatBadgeHome = view.findViewById(R.id.vChatBadgeHome);
 
         // 1. Nút Giỏ hàng
         ImageView ivCartHome = view.findViewById(R.id.ivCartHome);
@@ -252,6 +259,30 @@ public class HomeFragment extends Fragment {
                 tvCartBadge.setVisibility(View.GONE);
             }
         }
+        
+        TokenManager tm = TokenManager.getInstance(getContext());
+        if (tm.getUserId() != -1 && vChatBadgeHome != null) {
+            ChatApiService chatApiService = ApiClient.getChatApiService(tm);
+            chatApiService.getUnreadCountForCustomer((int) tm.getUserId()).enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        int unreadCount = response.body();
+                        if (unreadCount > 0) {
+                            vChatBadgeHome.setVisibility(View.VISIBLE);
+                        } else {
+                            vChatBadgeHome.setVisibility(View.GONE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
+                    Log.e("HomeFragment", "Failed to fetch unread messages count", t);
+                }
+            });
+        }
+        
         bannerHandler.postDelayed(bannerRunnable, 4000);
     }
 

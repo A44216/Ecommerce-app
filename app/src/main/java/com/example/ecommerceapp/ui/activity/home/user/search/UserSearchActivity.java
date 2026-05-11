@@ -53,10 +53,16 @@ public class UserSearchActivity extends AppCompatActivity {
     private final android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable searchRunnable;
 
+    private int shopId = -1;
+    private int categoryId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_search);
+
+        shopId = getIntent().getIntExtra("shopId", -1);
+        categoryId = getIntent().getIntExtra("categoryId", -1);
 
         etSearchInput = findViewById(R.id.etSearchInput);
         rvSearchResults = findViewById(R.id.rvSearchResults);
@@ -100,7 +106,7 @@ public class UserSearchActivity extends AppCompatActivity {
             // Lưu vào lịch sử tìm kiếm
             historyManager.addSearchKeyword(suggestion);
             
-            viewModel.searchProducts(suggestion, true);
+            performSearch(suggestion, true);
         });
         rvSuggestions.setAdapter(suggestionAdapter);
 
@@ -117,7 +123,7 @@ public class UserSearchActivity extends AppCompatActivity {
 
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             String keyword = etSearchInput.getText().toString().trim();
-                            if (!keyword.isEmpty()) {
+                            if (!keyword.isEmpty() && shopId == -1) {
                                 viewModel.searchProducts(keyword, false);
                             }
                         }
@@ -135,7 +141,7 @@ public class UserSearchActivity extends AppCompatActivity {
                 etSearchInput.setSelection(keyword.length());
                 layoutSearchHistory.setVisibility(View.GONE);
                 hideKeyboard();
-                viewModel.searchProducts(keyword, true);
+                performSearch(keyword, true);
                 historyManager.addSearchKeyword(keyword); // Đưa lên đầu
             }
 
@@ -233,7 +239,7 @@ public class UserSearchActivity extends AppCompatActivity {
                 rvSuggestions.setVisibility(View.GONE);
                 if (!keyword.isEmpty()) {
                     historyManager.addSearchKeyword(keyword);
-                    viewModel.searchProducts(keyword, true);
+                    performSearch(keyword, true);
                     layoutSearchHistory.setVisibility(View.GONE);
                     hideKeyboard();
                 } else {
@@ -251,7 +257,7 @@ public class UserSearchActivity extends AppCompatActivity {
                 if (keyword.isEmpty()) {
                     rvSuggestions.setVisibility(View.GONE);
                     showSearchHistory();
-                    viewModel.fetchTrendingProducts(); // Lấy lại trending nếu xóa trắng
+                    if (shopId == -1) viewModel.fetchTrendingProducts(); // Lấy lại trending nếu xóa trắng
                 } else {
                     layoutSearchHistory.setVisibility(View.GONE);
                     
@@ -317,5 +323,51 @@ public class UserSearchActivity extends AppCompatActivity {
 
         // Select one
         selectedBtn.setSelected(true);
+    }
+
+    private void performSearch(String keyword, boolean isRefresh) {
+        if (shopId != -1) {
+            progressBar.setVisibility(View.VISIBLE);
+            rvSearchResults.setVisibility(View.GONE);
+            layoutEmptyState.setVisibility(View.GONE);
+            tvTrendingTitle.setVisibility(View.GONE);
+            scrollFilter.setVisibility(View.GONE);
+            
+            ApiClient.getUserProductService().searchProducts(keyword, shopId).enqueue(new retrofit2.Callback<java.util.List<com.example.ecommerceapp.data.model.response.UserProductResponse>>() {
+                @Override
+                public void onResponse(retrofit2.Call<java.util.List<com.example.ecommerceapp.data.model.response.UserProductResponse>> call, retrofit2.Response<java.util.List<com.example.ecommerceapp.data.model.response.UserProductResponse>> response) {
+                    progressBar.setVisibility(View.GONE);
+                    if (response.isSuccessful() && response.body() != null) {
+                        java.util.List<com.example.ecommerceapp.data.model.response.UserProductResponse> products = response.body();
+                        // Filter by categoryId if present
+                        if (categoryId != -1) {
+                            java.util.List<com.example.ecommerceapp.data.model.response.UserProductResponse> filtered = new java.util.ArrayList<>();
+                            for (com.example.ecommerceapp.data.model.response.UserProductResponse p : products) {
+                                if (p.getCategoryId() != null && p.getCategoryId() == categoryId) {
+                                    filtered.add(p);
+                                }
+                            }
+                            products = filtered;
+                        }
+
+                        if (products.isEmpty()) {
+                            rvSearchResults.setVisibility(View.GONE);
+                            layoutEmptyState.setVisibility(View.VISIBLE);
+                        } else {
+                            productAdapter.updateData(products);
+                            rvSearchResults.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<java.util.List<com.example.ecommerceapp.data.model.response.UserProductResponse>> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(UserSearchActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            viewModel.searchProducts(keyword, isRefresh);
+        }
     }
 }

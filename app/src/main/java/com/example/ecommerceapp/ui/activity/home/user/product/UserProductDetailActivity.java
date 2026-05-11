@@ -80,6 +80,12 @@ public class UserProductDetailActivity extends AppCompatActivity {
         tvAverageRating = findViewById(R.id.tvAverageRating);
         mainRatingBar = findViewById(R.id.mainRatingBar);
         tvNoReviews = findViewById(R.id.tvNoReviews);
+        
+        // --- ÁNH XẠ THÊM VIEW SHOP INFO ---
+        com.google.android.material.imageview.ShapeableImageView ivShopAvatar = findViewById(R.id.ivShopAvatar);
+        TextView tvShopNameView = findViewById(R.id.tvShopName);
+        TextView tvShopRatingView = findViewById(R.id.tvShopRating);
+        Button btnViewShop = findViewById(R.id.btnViewShop);
 
         // Cài đặt RecyclerView cho Review
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
@@ -127,6 +133,34 @@ public class UserProductDetailActivity extends AppCompatActivity {
         if (productId != -1) {
             loadProductDetail(productId);
             loadReviews(productId);
+        }
+
+        // --- TẢI THÔNG TIN SHOP ---
+        if (shopId != -1) {
+            ApiClient.getPublicShopService(tokenManager).getShopById(shopId).enqueue(new Callback<com.example.ecommerceapp.data.model.response.ShopResponse>() {
+                @Override
+                public void onResponse(Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Response<com.example.ecommerceapp.data.model.response.ShopResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        com.example.ecommerceapp.data.model.response.ShopResponse shop = response.body();
+                        tvShopNameView.setText(shop.getShopName() != null ? shop.getShopName() : "Shop");
+                        if (shop.getRatingAvg() != null) {
+                            tvShopRatingView.setText(String.format("%.1f", shop.getRatingAvg()));
+                        }
+                        if (shop.getAvatar() != null && !shop.getAvatar().isEmpty()) {
+                            ImageLoader.load(UserProductDetailActivity.this, ivShopAvatar, shop.getAvatar());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Throwable t) {}
+            });
+
+            btnViewShop.setOnClickListener(v -> {
+                Intent intent = new Intent(UserProductDetailActivity.this, com.example.ecommerceapp.ui.activity.home.user.shop.UserShopDetailActivity.class);
+                intent.putExtra("SHOP_ID", shopId);
+                startActivity(intent);
+            });
         }
 
         // ==========================================

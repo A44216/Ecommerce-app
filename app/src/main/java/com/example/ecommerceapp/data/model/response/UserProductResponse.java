@@ -11,6 +11,7 @@ public class UserProductResponse {
     private String description;
     private List<UserProductImageResponse> images;
     private String categoryName;
+    private Integer categoryId;
     private Integer shopId;
     private String shopName;
 
@@ -27,6 +28,7 @@ public class UserProductResponse {
     public String getDescription() { return description; }
     public List<UserProductImageResponse> getImages() { return images; }
     public String getCategoryName() { return categoryName; }
+    public Integer getCategoryId() { return categoryId; }
     public Integer getShopId() { return shopId; }
     public String getShopName() { return shopName; }
 
@@ -44,6 +46,7 @@ public class UserProductResponse {
     public void setDescription(String description) { this.description = description; }
     public void setImages(List<UserProductImageResponse> images) { this.images = images; }
     public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
     public void setShopId(Integer shopId) { this.shopId = shopId; }
     public void setShopName(String shopName) { this.shopName = shopName; }
     public void setRatingAvg(Float ratingAvg) { this.ratingAvg = ratingAvg; }

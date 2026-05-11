@@ -19,6 +19,10 @@ import android.widget.TextView;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.service.ChatApiService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.enums.ShopStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
@@ -42,6 +46,7 @@ public class SellerShopFragment extends Fragment {
 
     private View itemShopInfo;
     private View itemChat;
+    private View vChatBadgeSeller;
     private View itemComplaint;
     private View itemLogout;
     private com.google.android.material.button.MaterialButton btnCancelRegistration;
@@ -108,6 +113,28 @@ public class SellerShopFragment extends Fragment {
             } else {
                 ImageLoader.load(requireContext(), imgShopAvatar, avatar);
             }
+            
+            // Check unread messages
+            if (vChatBadgeSeller != null) {
+                ChatApiService chatApiService = ApiClient.getChatApiService(tokenManager);
+                chatApiService.getUnreadCountForShop((int) shop.getId()).enqueue(new Callback<Integer>() {
+                    @Override
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            if (response.body() > 0) {
+                                vChatBadgeSeller.setVisibility(View.VISIBLE);
+                            } else {
+                                vChatBadgeSeller.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Integer> call, Throwable t) {
+                        Log.e("SellerShopFragment", "Failed to fetch unread count", t);
+                    }
+                });
+            }
         });
     }
 
@@ -123,6 +150,7 @@ public class SellerShopFragment extends Fragment {
 
         itemShopInfo = view.findViewById(R.id.itemShopInfo);
         itemChat = view.findViewById(R.id.itemChat);
+        vChatBadgeSeller = view.findViewById(R.id.vChatBadgeSeller);
         itemComplaint = view.findViewById(R.id.itemComplaint);
         itemLogout = view.findViewById(R.id.itemLogout);
         btnCancelRegistration = view.findViewById(R.id.btnCancelRegistration);

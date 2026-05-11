@@ -12,6 +12,10 @@ public class ShopResponse {
     private String ownerName;
     private ShopStatus status;
     private String createdAt;
+    
+    private String avatar;
+    private Float ratingAvg;
+    private Integer ratingCount;
 
     public Integer getId() { return id; }
     public String getShopName() { return shopName; }
@@ -19,4 +23,7 @@ public class ShopResponse {
     public String getOwnerName() { return ownerName; }
     public ShopStatus getStatus() { return status; }
     public String getCreatedAt() { return createdAt; }
+    public String getAvatar() { return avatar; }
+    public Float getRatingAvg() { return ratingAvg; }
+    public Integer getRatingCount() { return ratingCount; }
 }
