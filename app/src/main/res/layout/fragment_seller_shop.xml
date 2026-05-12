@@ -177,6 +177,44 @@
             android:textColor="@color/blue"/>
     </LinearLayout>
 
+    <!-- ITEM: AI CHATBOT -->
+    <LinearLayout
+        android:id="@+id/itemAiChatbot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center_vertical"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintTop_toBottomOf="@id/itemChat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_robot"
+            android:contentDescription="@string/desc_image"
+            app:tint="@color/green"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="Tự động trả lời (AI)"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/swAiReply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"/>
+    </LinearLayout>
+
     <!-- ITEM 3: KHIẾU NẠI -->
     <LinearLayout
         android:id="@+id/itemComplaint"
@@ -188,7 +226,7 @@
         android:layout_marginHorizontal="16dp"
         android:gravity="center_vertical"
         android:background="?attr/selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@id/itemChat"
+        app:layout_constraintTop_toBottomOf="@id/itemAiChatbot"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:clickable="true"

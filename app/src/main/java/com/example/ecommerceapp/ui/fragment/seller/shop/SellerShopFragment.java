@@ -50,6 +50,7 @@ public class SellerShopFragment extends Fragment {
     private View itemComplaint;
     private View itemLogout;
     private com.google.android.material.button.MaterialButton btnCancelRegistration;
+    private com.google.android.material.switchmaterial.SwitchMaterial swAiReply;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -135,6 +136,13 @@ public class SellerShopFragment extends Fragment {
                     }
                 });
             }
+
+            // Set AI Reply switch
+            if (swAiReply != null && shop.getIsAiReplyEnabled() != null) {
+                swAiReply.setOnCheckedChangeListener(null); // Tạm tắt listener để tránh loop
+                swAiReply.setChecked(shop.getIsAiReplyEnabled());
+                setAiReplyListener(); // Gán lại listener
+            }
         });
     }
 
@@ -154,6 +162,7 @@ public class SellerShopFragment extends Fragment {
         itemComplaint = view.findViewById(R.id.itemComplaint);
         itemLogout = view.findViewById(R.id.itemLogout);
         btnCancelRegistration = view.findViewById(R.id.btnCancelRegistration);
+        swAiReply = view.findViewById(R.id.swAiReply);
     }
 
     private void setListeners() {
@@ -199,6 +208,18 @@ public class SellerShopFragment extends Fragment {
                     })
                     .setNegativeButton("Quay lại", null)
                     .show();
+        });
+
+        setAiReplyListener();
+    }
+
+    private void setAiReplyListener() {
+        if (swAiReply == null) return;
+        swAiReply.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            SellerShopResponse currentShop = mViewModel.getShop().getValue();
+            if (currentShop != null) {
+                mViewModel.toggleAiReply(currentShop.getId(), isChecked);
+            }
         });
     }
 

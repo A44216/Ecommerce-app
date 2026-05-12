@@ -22,4 +22,7 @@ public interface SellerShopService {
 
     @DELETE("seller/shops/cancel")
     Call<Void> cancelRegistration();
+
+    @PUT("shops/{id}/ai-reply")
+    Call<com.example.ecommerceapp.data.model.response.ShopResponse> toggleAiReply(@Path("id") Integer id, @Query("enabled") Boolean enabled);
 }

@@ -19,6 +19,7 @@ public class SellerShopResponse {
     private Integer ratingCount;
     private String phone;
     private String email;
+    private Boolean isAiReplyEnabled;
 
     // getters
     public Integer getId() { return id; }
@@ -51,4 +52,7 @@ public class SellerShopResponse {
 
     public void setPhone(String phone) { this.phone = phone; }
     public void setEmail(String email) { this.email = email; }
+
+    public Boolean getIsAiReplyEnabled() { return isAiReplyEnabled; }
+    public void setIsAiReplyEnabled(Boolean isAiReplyEnabled) { this.isAiReplyEnabled = isAiReplyEnabled; }
 }

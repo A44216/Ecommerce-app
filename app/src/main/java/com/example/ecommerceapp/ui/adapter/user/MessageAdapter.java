@@ -56,6 +56,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             holder.layoutLeft.setVisibility(View.VISIBLE);
             holder.layoutRight.setVisibility(View.GONE);
             holder.tvLeft.setText(message.getMessage());
+
+            if (message.getIsAiGenerated() != null && message.getIsAiGenerated()) {
+                holder.imgAiIcon.setVisibility(View.VISIBLE);
+            } else {
+                holder.imgAiIcon.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -67,6 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         LinearLayout layoutLeft, layoutRight;
         TextView tvLeft, tvRight;
+        android.widget.ImageView imgAiIcon;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,6 +81,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             layoutRight = itemView.findViewById(R.id.layoutRightMessage);
             tvLeft = itemView.findViewById(R.id.tvLeftMessage);
             tvRight = itemView.findViewById(R.id.tvRightMessage);
+            imgAiIcon = itemView.findViewById(R.id.imgAiIcon);
         }
     }
 }

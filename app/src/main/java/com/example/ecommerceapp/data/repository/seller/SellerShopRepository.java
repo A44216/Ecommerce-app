@@ -37,4 +37,8 @@ public class SellerShopRepository {
     public Call<Void> cancelRegistration() {
         return apiService.cancelRegistration();
     }
+
+    public Call<com.example.ecommerceapp.data.model.response.ShopResponse> toggleAiReply(Integer id, Boolean enabled) {
+        return apiService.toggleAiReply(id, enabled);
+    }
 }

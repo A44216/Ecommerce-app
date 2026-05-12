@@ -108,4 +108,25 @@ public class SellerShopViewModel extends ViewModel {
             }
         });
     }
+
+    public void toggleAiReply(Integer shopId, Boolean enabled) {
+        repository.toggleAiReply(shopId, enabled).enqueue(new Callback<com.example.ecommerceapp.data.model.response.ShopResponse>() {
+            @Override
+            public void onResponse(Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Response<com.example.ecommerceapp.data.model.response.ShopResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Cập nhật lại shop state
+                    SellerShopResponse currentShop = shop.getValue();
+                    if (currentShop != null) {
+                        currentShop.setIsAiReplyEnabled(response.body().getIsAiReplyEnabled());
+                        shop.setValue(currentShop);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
 }

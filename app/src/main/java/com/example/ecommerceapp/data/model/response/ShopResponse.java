@@ -16,6 +16,7 @@ public class ShopResponse {
     private String avatar;
     private Float ratingAvg;
     private Integer ratingCount;
+    private Boolean isAiReplyEnabled;
 
     public Integer getId() { return id; }
     public String getShopName() { return shopName; }
@@ -26,4 +27,6 @@ public class ShopResponse {
     public String getAvatar() { return avatar; }
     public Float getRatingAvg() { return ratingAvg; }
     public Integer getRatingCount() { return ratingCount; }
+    public Boolean getIsAiReplyEnabled() { return isAiReplyEnabled; }
+    public void setIsAiReplyEnabled(Boolean isAiReplyEnabled) { this.isAiReplyEnabled = isAiReplyEnabled; }
 }

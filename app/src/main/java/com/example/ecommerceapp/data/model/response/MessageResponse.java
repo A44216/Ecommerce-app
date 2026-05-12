@@ -8,6 +8,7 @@ public class MessageResponse {
     private String message;
     private String createdAt;
     private Boolean isRead;
+    private Boolean isAiGenerated;
 
     public Integer getId() { return id; }
     public Integer getConversationId() { return conversationId; }
@@ -15,4 +16,5 @@ public class MessageResponse {
     public String getMessage() { return message; }
     public String getCreatedAt() { return createdAt; }
     public Boolean getIsRead() { return isRead; }
+    public Boolean getIsAiGenerated() { return isAiGenerated; }
 }
