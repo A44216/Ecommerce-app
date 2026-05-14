@@ -32,9 +32,6 @@ import com.example.ecommerceapp.ui.viewmodel.UserHomeViewModel;
 import com.example.ecommerceapp.ui.viewmodel.factory.UserHomeViewModelFactory;
 import com.example.ecommerceapp.utils.CartManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager2.widget.ViewPager2;
-import com.example.ecommerceapp.ui.adapter.user.BannerAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
@@ -55,21 +52,7 @@ public class HomeFragment extends Fragment {
 
     private TextView tvCartBadge;
     private View vChatBadgeHome;
-    private ViewPager2 vpBanners;
-    private final Handler bannerHandler = new Handler(Looper.getMainLooper());
-    private final Runnable bannerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (vpBanners != null && vpBanners.getAdapter() != null) {
-                int currentItem = vpBanners.getCurrentItem();
-                int totalItems = vpBanners.getAdapter().getItemCount();
-                if (totalItems > 0) {
-                    vpBanners.setCurrentItem((currentItem + 1) % totalItems, true);
-                    bannerHandler.postDelayed(this, 4000);
-                }
-            }
-        }
-    };
+
 
     @Nullable
     @Override
@@ -106,24 +89,7 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-        // --- SETUP BANNER ---
-        vpBanners = view.findViewById(R.id.vpBanners);
-        List<Integer> banners = new ArrayList<>();
-        banners.add(R.drawable.img_banner_1);
-        banners.add(R.drawable.img_banner_2);
-        banners.add(R.drawable.img_banner_3);
 
-        BannerAdapter bannerAdapter = new BannerAdapter(banners);
-        vpBanners.setAdapter(bannerAdapter);
-
-        // Hiệu ứng lướt mượt mà cho banner
-        vpBanners.setOffscreenPageLimit(3);
-        vpBanners.setClipToPadding(false);
-        vpBanners.setClipChildren(false);
-        vpBanners.setPageTransformer((page, position) -> {
-            float r = 1 - Math.abs(position);
-            page.setScaleY(0.85f + r * 0.15f);
-        });
 
         // 2. Setup RecyclerView Sản phẩm
         rvProducts = view.findViewById(R.id.rvProducts);
@@ -282,13 +248,6 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
-        
-        bannerHandler.postDelayed(bannerRunnable, 4000);
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        bannerHandler.removeCallbacks(bannerRunnable);
     }
 }
