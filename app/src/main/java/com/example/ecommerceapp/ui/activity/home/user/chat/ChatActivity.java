@@ -39,7 +39,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable pollingRunnable;
-    private static final int POLLING_INTERVAL = 3000; // 3 giây
+    private static final int POLLING_INTERVAL = 5000; // Tăng lên 5 giây để giảm tải Server
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void startPolling() {
+        stopPolling(); // Dừng cái cũ nếu có
         pollingRunnable = new Runnable() {
             @Override
             public void run() {
@@ -97,6 +98,24 @@ public class ChatActivity extends AppCompatActivity {
             }
         };
         handler.postDelayed(pollingRunnable, POLLING_INTERVAL);
+    }
+
+    private void stopPolling() {
+        if (handler != null && pollingRunnable != null) {
+            handler.removeCallbacks(pollingRunnable);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startPolling(); // Chạy lại khi quay lại app
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopPolling(); // Dừng ngay khi ẩn app/thoát màn hình để tiết kiệm Railway
     }
 
     private void loadMessagesQuietly() {
