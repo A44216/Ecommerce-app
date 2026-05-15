@@ -141,6 +141,10 @@ public class AdminNotificationFragment extends Fragment {
                     intent.putExtra("productId", relatedId);
                     startActivity(intent);
                 }
+            } else if ("COMPLAINT".equals(type)) {
+                Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.admin.management.complaint.AdminComplaintDetailActivity.class);
+                intent.putExtra("complaintId", relatedId);
+                startActivity(intent);
             }
         }
     }
