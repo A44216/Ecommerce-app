@@ -3,6 +3,8 @@ package com.example.ecommerceapp.ui.activity.home.admin.management.order;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,8 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     private RecyclerView rvOrderItems;
     private AdminOrderItemAdapter adapter;
     private AdminOrderRepository repository;
+    private ScrollView svOrderDetail;
+    private ProgressBar progressBarOrderDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +99,9 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         rvOrderItems.setLayoutManager(new LinearLayoutManager(this));
         rvOrderItems.setAdapter(adapter);
 
+        svOrderDetail = findViewById(R.id.svOrderDetail);
+        progressBarOrderDetail = findViewById(R.id.progressBarOrderDetail);
+
         repository = new AdminOrderRepository(TokenManager.getInstance(this));
     }
 
@@ -121,6 +128,9 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void bindData(AdminOrderDetailResponse data) {
+        if (progressBarOrderDetail != null) progressBarOrderDetail.setVisibility(android.view.View.GONE);
+        if (svOrderDetail != null) svOrderDetail.setVisibility(android.view.View.VISIBLE);
+
         tvOrderCode.setText("Mã ĐH: " + (data.getOrderCode() != null ? data.getOrderCode() : "N/A"));
         tvOrderStatus.setText("Trạng thái: " + (data.getStatus() != null ? data.getStatus().getLabel() : "N/A"));
         

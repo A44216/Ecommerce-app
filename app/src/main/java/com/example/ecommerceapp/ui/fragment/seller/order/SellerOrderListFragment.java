@@ -187,8 +187,18 @@ public class SellerOrderListFragment extends Fragment {
         if (!isLoadMore) {
             if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         }
-        viewModel.loadOrders(status, paymentMethod, paymentStatus, keyword, isLoadMore);
     }
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Tải lại dữ liệu ngầm khi quay lại từ màn hình chi tiết
+        // Không bật progress bar để tránh hiện tượng nháy hay che màn hình
+        if (viewModel != null) {
+            SellerOrderViewModel.FilterState filter = viewModel.getFilter().getValue();
+            String pm = filter != null ? filter.paymentMethod : null;
+            String ps = filter != null ? filter.paymentStatus : null;
+            String kw = filter != null ? filter.keyword : null;
+            viewModel.loadOrders(status, pm, ps, kw, false);
+        }
+    }
 }

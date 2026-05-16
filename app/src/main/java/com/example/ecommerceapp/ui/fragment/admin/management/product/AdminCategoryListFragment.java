@@ -39,6 +39,7 @@ public class AdminCategoryListFragment extends Fragment {
     private AdminCategoryViewModel viewModel;
 
     private AlertDialog editDialog;
+    private boolean isSilentFetch = false;
 
     public static AdminCategoryListFragment newInstance(int type) {
         AdminCategoryListFragment f = new AdminCategoryListFragment();
@@ -48,12 +49,19 @@ public class AdminCategoryListFragment extends Fragment {
         return f;
     }
 
-    // Đã bỏ onResume để không bị fetch lại khi chuyển tab
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         type = getArguments() != null ? getArguments().getInt(ARG_TYPE) : 0;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isSilentFetch = true;
+        if (viewModel != null) {
+            viewModel.fetchCategories(type == TYPE_DELETED);
+        }
     }
 
     @Nullable
@@ -111,6 +119,7 @@ public class AdminCategoryListFragment extends Fragment {
                                 .setTitle("Xác nhận xoá")
                                 .setMessage("Bạn có chắc muốn xoá danh mục: " + category.getName())
                                 .setPositiveButton("Xoá", (dialog, which) -> {
+                                    isSilentFetch = true;
                                     viewModel.delete(category.getId(), type == TYPE_DELETED);
                                 })
                                 .setNegativeButton("Huỷ", null)
@@ -124,6 +133,7 @@ public class AdminCategoryListFragment extends Fragment {
                                 .setTitle("Xác nhận khôi phục")
                                 .setMessage("Bạn có chắc muốn khôi phục danh mục: " + category.getName() + " ?")
                                 .setPositiveButton("Khôi phục", (dialog, which) -> {
+                                    isSilentFetch = true;
                                     viewModel.restore(category.getId());
                                 })
                                 .setNegativeButton("Huỷ", null)
@@ -140,6 +150,10 @@ public class AdminCategoryListFragment extends Fragment {
 
     private void observeData() {
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isSilentFetch) {
+                if (progressBarCategory != null) progressBarCategory.setVisibility(View.GONE);
+                return;
+            }
             if (isLoading != null && isLoading) {
                 if (swipeRefreshCategory != null && swipeRefreshCategory.isRefreshing()) {
                     if (progressBarCategory != null) progressBarCategory.setVisibility(View.GONE);
@@ -156,6 +170,7 @@ public class AdminCategoryListFragment extends Fragment {
             viewModel.getDeleted().observe(getViewLifecycleOwner(), list -> {
                 if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
                 if (progressBarCategory != null) progressBarCategory.setVisibility(View.GONE);
+                isSilentFetch = false; // Reset flag
                 if (list == null) return;
                 
                 RecyclerView.ItemAnimator animator = rv != null ? rv.getItemAnimator() : null;
@@ -172,6 +187,7 @@ public class AdminCategoryListFragment extends Fragment {
             viewModel.getAll().observe(getViewLifecycleOwner(), list -> {
                 if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
                 if (progressBarCategory != null) progressBarCategory.setVisibility(View.GONE);
+                isSilentFetch = false; // Reset flag
                 if (list == null) return;
                 
                 RecyclerView.ItemAnimator animator = rv != null ? rv.getItemAnimator() : null;
@@ -217,6 +233,7 @@ public class AdminCategoryListFragment extends Fragment {
                     editDialog.dismiss();
                     editDialog = null;
 
+                    isSilentFetch = true;
                     viewModel.update(category.getId(), new CategoryRequest(name));
                 });
     }

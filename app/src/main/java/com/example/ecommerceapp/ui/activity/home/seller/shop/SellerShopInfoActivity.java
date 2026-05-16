@@ -3,9 +3,12 @@ package com.example.ecommerceapp.ui.activity.home.seller.shop;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,6 +37,8 @@ public class SellerShopInfoActivity extends AppCompatActivity {
     private TokenManager tokenManager;
 
     private String avatarUrl;
+    private ScrollView svShopInfo;
+    private ProgressBar progressBarShopInfo;
 
     private boolean isUpdating = false;
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
@@ -103,6 +108,8 @@ public class SellerShopInfoActivity extends AppCompatActivity {
 
         btnUpdate = findViewById(R.id.btnUpdateShopInfo);
         btnChooseImage = findViewById(R.id.btnChooseImage);
+        svShopInfo = findViewById(R.id.svShopInfo);
+        progressBarShopInfo = findViewById(R.id.progressBarShopInfo);
     }
 
     private void setupViewModel() {
@@ -121,6 +128,9 @@ public class SellerShopInfoActivity extends AppCompatActivity {
     private void observeData() {
         viewModel.getShop().observe(this, shop -> {
             if (shop == null) return;
+
+            if (progressBarShopInfo != null) progressBarShopInfo.setVisibility(View.GONE);
+            if (svShopInfo != null) svShopInfo.setVisibility(View.VISIBLE);
 
             edtShopName.setText(shop.getShopName());
             edtAddress.setText(shop.getAddress());

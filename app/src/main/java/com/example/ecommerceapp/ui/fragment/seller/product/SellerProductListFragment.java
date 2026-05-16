@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -111,7 +112,7 @@ public class SellerProductListFragment extends Fragment {
                     android.view.View currentFocus = requireActivity().getCurrentFocus();
                     if (currentFocus != null) {
                         currentFocus.clearFocus();
-                        android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
                         if (imm != null) imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
                     }
                 }
@@ -256,5 +257,14 @@ public class SellerProductListFragment extends Fragment {
         if (viewModel == null) return;
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         viewModel.fetchProducts(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Tải lại dữ liệu ngầm khi quay lại từ màn hình chi tiết
+        if (viewModel != null) {
+            viewModel.fetchProducts(false);
+        }
     }
 }

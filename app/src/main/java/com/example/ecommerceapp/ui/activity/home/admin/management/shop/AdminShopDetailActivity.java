@@ -150,7 +150,13 @@ public class AdminShopDetailActivity extends AppCompatActivity {
         });
 
         viewModel.getIsLoading().observe(this, isLoading -> {
-            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            if (currentStatus == null) {
+                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                contentLayout.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+                contentLayout.setVisibility(View.VISIBLE);
+            }
         });
 
         viewModel.getError().observe(this, error -> {

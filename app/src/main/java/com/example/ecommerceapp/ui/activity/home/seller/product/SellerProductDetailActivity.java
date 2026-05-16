@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
@@ -33,6 +36,8 @@ public class SellerProductDetailActivity extends AppCompatActivity {
     private ViewPager2 viewPagerImages;
     private ImageView ivBack;
     private WormDotsIndicator dotsIndicator;
+    private ScrollView svProductDetail;
+    private ProgressBar progressBarProductDetail;
 
     private SellerProductRepository repository;
 
@@ -84,6 +89,8 @@ public class SellerProductDetailActivity extends AppCompatActivity {
         dotsIndicator = findViewById(R.id.dotsIndicator);
         ivBack = findViewById(R.id.ivBack);
         tvViewReviews = findViewById(R.id.tvViewReviews);
+        svProductDetail = findViewById(R.id.svProductDetail);
+        progressBarProductDetail = findViewById(R.id.progressBarProductDetail);
     }
 
     private void initListeners() {
@@ -98,6 +105,8 @@ public class SellerProductDetailActivity extends AppCompatActivity {
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void bindData(SellerProductResponse product) {
+        if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.GONE);
+        if (svProductDetail != null) svProductDetail.setVisibility(View.VISIBLE);
 
         txtProductCode.setText(product.getProductCode() != null ? product.getProductCode() : "N/A");
         txtName.setText(product.getName());
@@ -110,7 +119,32 @@ public class SellerProductDetailActivity extends AppCompatActivity {
         } else {
             txtRating.setText("⭐ 0.0");
         }
-        txtStatus.setText("Trạng thái: " + product.getStatus().getLabel());
+        boolean isDeleted = Boolean.TRUE.equals(product.getIsDeleted());
+        if (isDeleted) {
+            txtStatus.setText("Đã xóa");
+            txtStatus.setTextColor(ContextCompat.getColor(this, R.color.red));
+            txtStatus.setBackgroundResource(R.drawable.bg_product_status_rejected);
+        } else {
+            txtStatus.setText(product.getStatus().getLabel());
+            switch (product.getStatus()) {
+                case PENDING:
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    txtStatus.setBackgroundResource(R.drawable.bg_product_status_pending);
+                    break;
+                case APPROVED:
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.green));
+                    txtStatus.setBackgroundResource(R.drawable.bg_product_status_approved);
+                    break;
+                case REJECTED:
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.red));
+                    txtStatus.setBackgroundResource(R.drawable.bg_product_status_rejected);
+                    break;
+                default:
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.black));
+                    txtStatus.setBackgroundResource(0);
+                    break;
+            }
+        }
         txtDescription.setText(product.getDescription() != null
                 ? "Mô tả: " +product.getDescription()
                 : "Chưa có mô tả");

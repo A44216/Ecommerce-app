@@ -83,21 +83,21 @@ public class AdminProductAdapter extends ListAdapter<AdminProductResponse, Admin
         boolean isDeleted = Boolean.TRUE.equals(product.getIsDeleted());
         if (isDeleted) {
             holder.getTvProductStatus().setText("Đã xóa");
-            holder.getTvProductStatus().setBackgroundResource(R.drawable.bg_status_blocked);
+            holder.getTvProductStatus().setBackgroundResource(R.drawable.bg_product_status_rejected);
             holder.getTvProductStatus().setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
         } else {
             holder.getTvProductStatus().setText(product.getStatus().getLabel());
             switch (product.getStatus()) {
                 case PENDING:
-                    holder.getTvProductStatus().setBackgroundResource(R.drawable.bg_shop_status_pending);
+                    holder.getTvProductStatus().setBackgroundResource(R.drawable.bg_product_status_pending);
                     holder.getTvProductStatus().setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.orange));
                     break;
                 case APPROVED:
-                    holder.getTvProductStatus().setBackgroundResource(R.drawable.bg_shop_status_approved);
+                    holder.getTvProductStatus().setBackgroundResource(R.drawable.bg_product_status_approved);
                     holder.getTvProductStatus().setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.green));
                     break;
                 case REJECTED:
-                    holder.getTvProductStatus().setBackgroundResource(R.drawable.bg_shop_status_rejected);
+                    holder.getTvProductStatus().setBackgroundResource(R.drawable.bg_product_status_rejected);
                     holder.getTvProductStatus().setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
                     break;
             }

@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
@@ -38,6 +41,8 @@ public class AdminProductDetailActivity extends AppCompatActivity {
     private ViewPager2 viewPagerImages;
     private ImageView ivBack;
     private WormDotsIndicator dotsIndicator;
+    private ScrollView scrollView;
+    private ProgressBar progressBarProductDetail;
     
     private MaterialButton btnApprove, btnReject, btnDelete, btnRestore;
 
@@ -110,6 +115,9 @@ public class AdminProductDetailActivity extends AppCompatActivity {
         dotsIndicator = findViewById(R.id.dotsIndicator);
         ivBack = findViewById(R.id.ivBack);
         
+        scrollView = findViewById(R.id.scrollView);
+        progressBarProductDetail = findViewById(R.id.progressBarProductDetail);
+        
         btnApprove = findViewById(R.id.btnApprove);
         btnReject = findViewById(R.id.btnReject);
         btnDelete = findViewById(R.id.btnDelete);
@@ -155,6 +163,9 @@ public class AdminProductDetailActivity extends AppCompatActivity {
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void bindData(AdminProductDetailResponse product) {
+        if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(android.view.View.GONE);
+        if (scrollView != null) scrollView.setVisibility(android.view.View.VISIBLE);
+
         txtProductCode.setText(product.getProductCode() != null ? product.getProductCode() : "N/A");
         txtName.setText(product.getName());
         txtPrice.setText("Giá: " + String.format("%,.0f", product.getPrice()) + " đ");
@@ -181,9 +192,29 @@ public class AdminProductDetailActivity extends AppCompatActivity {
         boolean isDeleted = isDeletedTab;
         
         if (isDeleted) {
-            txtStatus.setText("Trạng thái: Đã xóa");
+            txtStatus.setText("Đã xóa");
+            txtStatus.setTextColor(ContextCompat.getColor(this, R.color.red));
+            txtStatus.setBackgroundResource(R.drawable.bg_product_status_rejected);
         } else {
-            txtStatus.setText("Trạng thái: " + product.getStatus().getLabel());
+            txtStatus.setText(product.getStatus().getLabel());
+            switch (product.getStatus()) {
+                case PENDING:
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    txtStatus.setBackgroundResource(R.drawable.bg_product_status_pending);
+                    break;
+                case APPROVED:
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.green));
+                    txtStatus.setBackgroundResource(R.drawable.bg_product_status_approved);
+                    break;
+                case REJECTED:
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.red));
+                    txtStatus.setBackgroundResource(R.drawable.bg_product_status_rejected);
+                    break;
+                default:
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.black));
+                    txtStatus.setBackgroundResource(0);
+                    break;
+            }
         }
         
         if (product.getCreatedAt() != null) {

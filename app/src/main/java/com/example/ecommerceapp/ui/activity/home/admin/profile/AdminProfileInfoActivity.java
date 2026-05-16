@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -32,6 +34,8 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
     private TextInputEditText etFullName, edtPhone, edtEmail;
     private ImageView ivBack, imgAvatar;
     private MaterialButton btnChooseImage;
+    private ScrollView svProfileInfo;
+    private ProgressBar progressBarProfileInfo;
 
     private String avatarUrl = "";
 
@@ -109,6 +113,9 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
         imgAvatar = findViewById(R.id.imgAvatar);
         ivBack = findViewById(R.id.ivBack);
         btnChooseImage = findViewById(R.id.btnChooseImage);
+        
+        svProfileInfo = findViewById(R.id.svProfileInfo);
+        progressBarProfileInfo = findViewById(R.id.progressBarProfileInfo);
     }
 
     private void setupListeners() {
@@ -160,6 +167,10 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
     }
 
     private void observeData() {
+        viewModel.getLoading().observe(this, isLoading -> {
+            if (progressBarProfileInfo != null) progressBarProfileInfo.setVisibility(isLoading ? android.view.View.VISIBLE : android.view.View.GONE);
+            if (svProfileInfo != null) svProfileInfo.setVisibility(isLoading ? android.view.View.GONE : android.view.View.VISIBLE);
+        });
 
         viewModel.getProfileData().observe(this, data -> {
 

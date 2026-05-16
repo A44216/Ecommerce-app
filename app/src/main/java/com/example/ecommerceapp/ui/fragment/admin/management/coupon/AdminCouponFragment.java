@@ -30,6 +30,11 @@ import com.example.ecommerceapp.ui.adapter.admin.management.coupon.AdminCouponAd
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminCouponViewModel;
 import com.example.ecommerceapp.ui.viewmodel.admin.factory.AdminCouponViewModelFactory;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import android.content.Intent;
+import android.app.Activity;
+
 public class AdminCouponFragment extends Fragment {
 
     private static final String ARG_POSITION = "arg_position";
@@ -45,6 +50,17 @@ public class AdminCouponFragment extends Fragment {
 
     private String currentKeyword = "";
     private boolean isLoadMore = false;
+    private boolean isSilentFetch = false;
+
+    private final ActivityResultLauncher<Intent> couponLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            fetchData(true);
+                        }
+                    }
+            );
 
     public static AdminCouponFragment newInstance(int position) {
         AdminCouponFragment fragment = new AdminCouponFragment();
@@ -99,10 +115,10 @@ public class AdminCouponFragment extends Fragment {
         adapter.setOnItemClickListener(new AdminCouponAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AdminCouponResponse coupon) {
-                android.content.Intent intent = new android.content.Intent(requireContext(), AdminAddAndEditCouponActivity.class);
+                Intent intent = new Intent(requireContext(), AdminAddAndEditCouponActivity.class);
                 intent.putExtra("couponId", coupon.getId());
                 intent.putExtra("isDeleted", position == 3);
-                startActivity(intent);
+                couponLauncher.launch(intent);
             }
 
             @Override
@@ -187,6 +203,7 @@ public class AdminCouponFragment extends Fragment {
             }
             
             swipeRefreshLayout.setRefreshing(false);
+            isSilentFetch = false; // Reset flag
             if (list != null && !list.isEmpty()) {
                 adapter.submitList(list, () -> {
                     if (!wasLoadMore && rvCoupons != null) {
@@ -208,6 +225,10 @@ public class AdminCouponFragment extends Fragment {
         });
 
         viewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isSilentFetch) {
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
             if (isLoading != null && isLoading && !swipeRefreshLayout.isRefreshing()) {
                 progressBar.setVisibility(View.VISIBLE);
             } else {
@@ -244,7 +265,12 @@ public class AdminCouponFragment extends Fragment {
         fetchData(false);
     }
 
-    // Đã bỏ onResume để fetch sẵn data thay vì load lại mỗi khi chuyển tab
+    @Override
+    public void onResume() {
+        super.onResume();
+        isSilentFetch = true;
+        fetchData(true);
+    }
 
     private CouponStatus getStatusByPosition(int position) {
         switch (position) {

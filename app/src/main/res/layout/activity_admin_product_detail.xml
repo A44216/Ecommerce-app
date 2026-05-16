@@ -43,15 +43,21 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Content -->
-    <ScrollView
-        android:id="@+id/scrollView"
+    <FrameLayout
+        android:id="@+id/flContentWrapper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="16dp"
-        android:clipToPadding="false"
-        android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/headerLayout"
         app:layout_constraintBottom_toTopOf="@id/actionsLayout">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:scrollbars="none"
+            android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -159,15 +165,30 @@
 
             <!-- Trạng thái -->
             <TextView
-                android:id="@+id/txtStatus"
+                android:id="@+id/txtStatusLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Trạng thái: "
                 android:textStyle="bold"
-                android:paddingTop="8dp"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/txtRating"
+                app:layout_constraintTop_toTopOf="@id/txtStatus"
+                app:layout_constraintBottom_toBottomOf="@id/txtStatus"
                 app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/bg_product_status_pending"
+                android:textColor="@color/orange"
+                app:layout_constraintTop_toBottomOf="@id/txtRating"
+                app:layout_constraintStart_toEndOf="@id/txtStatusLabel"
+                android:layout_marginStart="8dp"/>
 
             <!-- Ngày tạo -->
             <TextView
@@ -215,7 +236,14 @@
                 android:layout_marginBottom="20dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/progressBarProductDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <!-- Bottom Actions -->
     <LinearLayout

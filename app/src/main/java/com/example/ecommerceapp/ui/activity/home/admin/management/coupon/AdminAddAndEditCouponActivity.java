@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +51,8 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
     private RadioGroup rgDiscountType;
     private RadioButton rbPercent, rbAmount;
     private MaterialButton btnAddVoucher, btnDeleteVoucher, btnRestoreVoucher;
+    private ScrollView svCoupon;
+    private ProgressBar progressBarCoupon;
 
     private AdminCouponService couponService;
     private int couponId = -1;
@@ -96,6 +100,9 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         tvTitle = findViewById(R.id.tvTitle);
+
+        svCoupon = findViewById(R.id.svCoupon);
+        progressBarCoupon = findViewById(R.id.progressBarCoupon);
 
         etCode = findViewById(R.id.etCode);
         etDiscountPercent = findViewById(R.id.etDiscountPercent);
@@ -297,18 +304,23 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
     }
 
     private void loadCouponData() {
+        if (progressBarCoupon != null) progressBarCoupon.setVisibility(android.view.View.VISIBLE);
+        if (svCoupon != null) svCoupon.setVisibility(android.view.View.GONE);
+
         couponService.getCouponById(couponId, isDeletedCoupon).enqueue(new Callback<AdminCouponResponse>() {
             @Override
             public void onResponse(@NonNull Call<AdminCouponResponse> call, @NonNull Response<AdminCouponResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     bindData(response.body());
                 } else {
+                    if (progressBarCoupon != null) progressBarCoupon.setVisibility(android.view.View.GONE);
                     Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi tải thông tin coupon", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<AdminCouponResponse> call, @NonNull Throwable t) {
+                if (progressBarCoupon != null) progressBarCoupon.setVisibility(android.view.View.GONE);
                 Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
             }
         });
@@ -316,6 +328,9 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void bindData(AdminCouponResponse coupon) {
+        if (progressBarCoupon != null) progressBarCoupon.setVisibility(android.view.View.GONE);
+        if (svCoupon != null) svCoupon.setVisibility(android.view.View.VISIBLE);
+
         etCode.setText(coupon.getCode());
         
         if (coupon.getDiscountPercent() != null) {

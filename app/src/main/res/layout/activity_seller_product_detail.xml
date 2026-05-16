@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
-    android:padding="@dimen/screen_padding_small"
-    tools:context=".ui.activity.home.seller.product.SellerProductDetailActivity">
+    android:background="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
+    <ScrollView
+        android:id="@+id/svProductDetail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:padding="@dimen/screen_padding_small"
+        android:visibility="gone"
+        tools:context=".ui.activity.home.seller.product.SellerProductDetailActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <!-- Nút quay lại -->
         <ImageView
@@ -126,15 +132,30 @@
 
         <!-- Trạng thái -->
         <TextView
+            android:id="@+id/txtStatusLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trạng thái: "
+            android:textStyle="bold"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="@id/txtStatus"
+            app:layout_constraintBottom_toBottomOf="@id/txtStatus"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
             android:id="@+id/txtStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/seller_product_default_status"
             android:textStyle="bold"
-            android:paddingTop="5dp"
-            android:textSize="18sp"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/bg_product_status_pending"
+            android:textColor="@color/orange"
             app:layout_constraintTop_toBottomOf="@id/txtRating"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/txtStatusLabel"
+            android:layout_marginStart="8dp"/>
 
         <!-- Mô tả -->
         <TextView
@@ -169,6 +190,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBarProductDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+</FrameLayout>

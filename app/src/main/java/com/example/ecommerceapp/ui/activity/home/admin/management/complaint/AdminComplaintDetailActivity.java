@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +50,8 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
     private TextInputLayout tilReplyContent;
     private TextInputEditText edtReplyContent;
     private TextView tvReplyTitle;
-    private ProgressBar progressBar;
+    private ScrollView svComplaintDetail;
+    private ProgressBar progressBarComplaintDetail;
 
     private AdminComplaintService adminComplaintService;
     private int complaintId = -1;
@@ -108,7 +110,8 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
         edtReplyContent = findViewById(R.id.edtReplyContent);
         tvReplyTitle = findViewById(R.id.tvReplyTitle);
         
-        progressBar = findViewById(R.id.progressBar);
+        svComplaintDetail = findViewById(R.id.svComplaintDetail);
+        progressBarComplaintDetail = findViewById(R.id.progressBarComplaintDetail);
     }
 
     private void setupListeners() {
@@ -147,11 +150,13 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
     }
 
     private void fetchComplaintDetail() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.VISIBLE);
+        if (svComplaintDetail != null) svComplaintDetail.setVisibility(View.GONE);
+        
         adminComplaintService.getComplaintById(complaintId).enqueue(new Callback<AdminComplaintDetailResponse>() {
             @Override
             public void onResponse(Call<AdminComplaintDetailResponse> call, Response<AdminComplaintDetailResponse> response) {
-                progressBar.setVisibility(View.GONE);
+                if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
                     bindData(response.body());
                 } else {
@@ -161,7 +166,7 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AdminComplaintDetailResponse> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
+                if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.GONE);
                 Toast.makeText(AdminComplaintDetailActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -169,6 +174,9 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void bindData(AdminComplaintDetailResponse data) {
+        if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.GONE);
+        if (svComplaintDetail != null) svComplaintDetail.setVisibility(View.VISIBLE);
+
         tvComplaintCode.setText("Mã: " + (data.getComplaintCode() != null ? data.getComplaintCode() : "N/A"));
 
         if (data.getUser() != null) {
@@ -264,11 +272,11 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
 
         AdminReplyComplaintRequest request = new AdminReplyComplaintRequest(pendingActionStatus, responseContent);
         
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.VISIBLE);
         adminComplaintService.replyComplaint(complaintId, request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                progressBar.setVisibility(View.GONE);
+                if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     Toast.makeText(AdminComplaintDetailActivity.this, "Xử lý khiếu nại thành công", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK); // Notify parent activity to refresh
@@ -280,7 +288,7 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
+                if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.GONE);
                 Toast.makeText(AdminComplaintDetailActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

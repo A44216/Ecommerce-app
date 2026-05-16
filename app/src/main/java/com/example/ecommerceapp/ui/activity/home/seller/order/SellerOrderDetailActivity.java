@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,6 +41,8 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     private SellerOrderDetailAdapter adapter;
     private SellerOrderViewModel viewModel;
     private SellerOrderStatusAdapter statusAdapter;
+    private android.widget.ScrollView svOrderDetail;
+    private android.widget.ProgressBar progressBarOrderDetail;
 
     private TokenManager tokenManager;
 
@@ -98,6 +101,8 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         rvStatus.setAdapter(statusAdapter);
 
         orderId = getIntent().getIntExtra("orderId", 0);
+        svOrderDetail = findViewById(R.id.svOrderDetail);
+        progressBarOrderDetail = findViewById(R.id.progressBarOrderDetail);
     }
 
     private void initViewModel() {
@@ -118,7 +123,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
         statusAdapter.setOnStatusChangeListener(status -> {
 
-            new androidx.appcompat.app.AlertDialog.Builder(this)
+            new AlertDialog.Builder(this)
                     .setTitle("Xác nhận thay đổi")
                     .setMessage("Đổi sang: " + getStatusText(status) + "?")
                     .setPositiveButton("OK", (dialog, which) -> {
@@ -135,7 +140,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
             if (selectedStatus == null) return;
 
-            new androidx.appcompat.app.AlertDialog.Builder(this)
+            new AlertDialog.Builder(this)
                     .setTitle("Xác nhận")
                     .setMessage("Đổi sang: " + getStatusText(selectedStatus) + "?")
                     .setPositiveButton("OK", (dialog, which) -> {
@@ -148,7 +153,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
         btnCancel.setOnClickListener(v -> {
 
-            new androidx.appcompat.app.AlertDialog.Builder(this)
+            new AlertDialog.Builder(this)
                     .setTitle("Huỷ đơn hàng")
                     .setMessage("Bạn chắc chắn muốn huỷ đơn này?")
                     .setPositiveButton("Huỷ đơn", (dialog, which) -> {
@@ -167,6 +172,9 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                 .observe(this, data -> {
 
                     if (data == null) return;
+
+                    if (progressBarOrderDetail != null) progressBarOrderDetail.setVisibility(View.GONE);
+                    if (svOrderDetail != null) svOrderDetail.setVisibility(View.VISIBLE);
 
                     // OrderId
                     tvOrderCode.setText("Mã đơn: " + data.getOrderCode());
