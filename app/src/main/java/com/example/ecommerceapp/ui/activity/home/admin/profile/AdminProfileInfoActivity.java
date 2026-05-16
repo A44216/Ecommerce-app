@@ -3,6 +3,7 @@ package com.example.ecommerceapp.ui.activity.home.admin.profile;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -142,9 +144,17 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
             if (email.isEmpty()) {
                 edtEmail.setError("Không được để trống email");
                 return;
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                edtEmail.setError("Email không hợp lệ");
+                return;
             }
 
-            new androidx.appcompat.app.AlertDialog.Builder(this)
+            if (!phone.isEmpty() && !phone.matches("^0\\d{9}$")) {
+                edtPhone.setError("SĐT phải 10 số và bắt đầu bằng số 0");
+                return;
+            }
+
+            new AlertDialog.Builder(this)
                     .setTitle("Xác nhận cập nhật")
                     .setMessage("Bạn có chắc muốn cập nhật profile không?")
                     .setPositiveButton("Cập nhật", (dialog, which) -> {

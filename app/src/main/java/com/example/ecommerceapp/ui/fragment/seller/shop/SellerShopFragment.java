@@ -35,10 +35,22 @@ import com.example.ecommerceapp.ui.activity.home.user.help.HelpCenterActivity;
 import com.example.ecommerceapp.ui.viewmodel.seller.SellerShopViewModel;
 import com.example.ecommerceapp.ui.viewmodel.seller.factory.SellerShopViewModelFactory;
 import com.example.ecommerceapp.utils.ImageLoader;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 public class SellerShopFragment extends Fragment {
 
     private SellerShopViewModel mViewModel;
+
+    private final ActivityResultLauncher<Intent> shopInfoLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == android.app.Activity.RESULT_OK) {
+                            mViewModel.fetchMyShop();
+                        }
+                    }
+            );
 
     private ImageView imgShopAvatar;
     private TextView tvShopName, tvShopStatus, tvShopAddress, tvShopRating;
@@ -187,7 +199,7 @@ public class SellerShopFragment extends Fragment {
 
         itemShopInfo.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), SellerShopInfoActivity.class);
-            startActivity(intent);
+            shopInfoLauncher.launch(intent);
         });
 
         itemChat.setOnClickListener(v -> {

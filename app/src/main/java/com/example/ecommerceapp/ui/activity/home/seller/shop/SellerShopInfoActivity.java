@@ -129,6 +129,15 @@ public class SellerShopInfoActivity extends AppCompatActivity {
         viewModel.getShop().observe(this, shop -> {
             if (shop == null) return;
 
+            // chỉ xử lý khi update xong
+            if (isUpdating) {
+                isUpdating = false;
+                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
+                return;
+            }
+
             if (progressBarShopInfo != null) progressBarShopInfo.setVisibility(View.GONE);
             if (svShopInfo != null) svShopInfo.setVisibility(View.VISIBLE);
 
@@ -144,14 +153,6 @@ public class SellerShopInfoActivity extends AppCompatActivity {
                 imgAvatar.setImageResource(R.drawable.ic_avatar);
             } else {
                 ImageLoader.load(this, imgAvatar, avatarUrl);
-            }
-
-            // chỉ xử lý khi update xong
-            if (isUpdating) {
-                isUpdating = false;
-
-                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                finish();
             }
         });
     }
@@ -208,6 +209,9 @@ public class SellerShopInfoActivity extends AppCompatActivity {
                 .setPositiveButton("Cập nhật", (dialog, which) -> {
 
                     isUpdating = true;
+
+                    if (progressBarShopInfo != null) progressBarShopInfo.setVisibility(View.VISIBLE);
+                    if (svShopInfo != null) svShopInfo.setVisibility(View.GONE);
 
                     int shopId = (int) tokenManager.getShopId();
 
