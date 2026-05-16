@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse;
 import com.example.ecommerceapp.data.repository.seller.SellerOrderRepository;
 import com.example.ecommerceapp.ui.activity.home.seller.order.SellerOrderDetailActivity;
 import com.example.ecommerceapp.ui.adapter.seller.order.SellerOrderAdapter;
@@ -41,14 +44,16 @@ public class SellerOrderListFragment extends Fragment {
 
     private RecyclerView rvOrders;
     private SwipeRefreshLayout swipeRefreshOrders;
+    private android.widget.ProgressBar progressBar;
 
-    private androidx.lifecycle.LiveData<List<com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse>> currentOrdersLiveData;
-    private final androidx.lifecycle.Observer<List<com.example.ecommerceapp.data.model.response.seller.order.SellerOrderResponse>> ordersObserver = data -> {
+    private LiveData<List<SellerOrderResponse>> currentOrdersLiveData;
+    private final Observer<List<SellerOrderResponse>> ordersObserver = data -> {
         boolean wasLoadingMore = isLoadingMore;
         isLoadingMore = false;
         if (swipeRefreshOrders != null) {
             swipeRefreshOrders.setRefreshing(false);
         }
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
         if (data != null) {
             RecyclerView.ItemAnimator animator = rvOrders != null ? rvOrders.getItemAnimator() : null;
             if (!wasLoadingMore && rvOrders != null) {
@@ -100,6 +105,7 @@ public class SellerOrderListFragment extends Fragment {
     private void initViews(View view) {
         rvOrders = view.findViewById(R.id.rvOrders);
         swipeRefreshOrders = view.findViewById(R.id.swipeRefreshOrders);
+        progressBar = view.findViewById(R.id.progressBar);
         swipeRefreshOrders.setOnRefreshListener(() -> loadOrdersWithFilters(false));
     }
 
@@ -178,12 +184,11 @@ public class SellerOrderListFragment extends Fragment {
     }
 
     private void loadOrdersWithFilters(boolean isLoadMore, String paymentMethod, String paymentStatus, String keyword) {
+        if (!isLoadMore) {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        }
         viewModel.loadOrders(status, paymentMethod, paymentStatus, keyword, isLoadMore);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadOrdersWithFilters(false);
-    }
+
 }

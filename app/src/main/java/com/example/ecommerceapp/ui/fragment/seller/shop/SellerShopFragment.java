@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,8 @@ public class SellerShopFragment extends Fragment {
 
     private ImageView imgShopAvatar;
     private TextView tvShopName, tvShopStatus, tvShopAddress, tvShopRating;
+    private SwipeRefreshLayout swipeRefreshShop;
+    private android.widget.ProgressBar progressBar;
 
     private TokenManager tokenManager;
 
@@ -50,6 +53,7 @@ public class SellerShopFragment extends Fragment {
     private View vChatBadgeSeller;
     private View itemComplaint;
     private View itemLogout;
+    private View itemAiChatbot;
     private com.google.android.material.button.MaterialButton btnCancelRegistration;
     private com.google.android.material.switchmaterial.SwitchMaterial swAiReply;
 
@@ -75,10 +79,16 @@ public class SellerShopFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadShop(); // refresh khi quay lại từ Activity
+        if (mViewModel.getShop().getValue() == null) {
+            loadShop();
+        }
     }
 
     private void loadShop() {
+        if (mViewModel.getShop().getValue() == null) {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+            setShopViewsVisible(false);
+        }
         int userId = (int) tokenManager.getUserId();
         mViewModel.fetchMyShop();
     }
@@ -96,6 +106,9 @@ public class SellerShopFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void observeData() {
         mViewModel.getShop().observe(getViewLifecycleOwner(), shop -> {
+            if (swipeRefreshShop != null) swipeRefreshShop.setRefreshing(false);
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
+            setShopViewsVisible(true);
             if (shop == null) return;
 
             Log.e("SHOP_NAME = ", shop.getShopName());
@@ -159,11 +172,16 @@ public class SellerShopFragment extends Fragment {
 
         itemShopInfo = view.findViewById(R.id.itemShopInfo);
         itemChat = view.findViewById(R.id.itemChat);
+        itemAiChatbot = view.findViewById(R.id.itemAiChatbot);
         vChatBadgeSeller = view.findViewById(R.id.vChatBadgeSeller);
         itemComplaint = view.findViewById(R.id.itemComplaint);
         itemLogout = view.findViewById(R.id.itemLogout);
         btnCancelRegistration = view.findViewById(R.id.btnCancelRegistration);
         swAiReply = view.findViewById(R.id.swAiReply);
+        swipeRefreshShop = view.findViewById(R.id.swipeRefreshShop);
+        progressBar = view.findViewById(R.id.progressBar);
+        
+        swipeRefreshShop.setOnRefreshListener(this::loadShop);
     }
 
     private void setListeners() {
@@ -271,4 +289,14 @@ public class SellerShopFragment extends Fragment {
         }
     }
 
+    private void setShopViewsVisible(boolean visible) {
+        int v = visible ? View.VISIBLE : View.INVISIBLE;
+        View cardInfo = getView() != null ? getView().findViewById(R.id.cardShopInfo) : null;
+        if (cardInfo != null) cardInfo.setVisibility(v);
+        if (itemShopInfo != null) itemShopInfo.setVisibility(v);
+        if (itemChat != null) itemChat.setVisibility(v);
+        if (itemAiChatbot != null) itemAiChatbot.setVisibility(v);
+        if (itemComplaint != null) itemComplaint.setVisibility(v);
+        if (itemLogout != null) itemLogout.setVisibility(v);
+    }
 }

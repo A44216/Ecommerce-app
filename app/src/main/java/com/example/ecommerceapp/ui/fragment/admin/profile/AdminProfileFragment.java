@@ -15,8 +15,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
@@ -34,6 +36,8 @@ public class AdminProfileFragment extends Fragment {
     private LinearLayout itemProfileInfo, itemChangePassword, itemLogout;
     private TextView tvFullName, tvPhone;
     private ImageView imgAvatar;
+    private SwipeRefreshLayout swipeRefreshProfile;
+    private android.widget.ProgressBar progressBar;
 
     private AdminProfileViewModel viewModel;
 
@@ -61,6 +65,10 @@ public class AdminProfileFragment extends Fragment {
         initViewModel();
         observeData();
 
+        if (viewModel.getProfileData().getValue() == null) {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+            setProfileViewsVisible(false);
+        }
         viewModel.loadProfile();
 
         setListeners();
@@ -81,6 +89,9 @@ public class AdminProfileFragment extends Fragment {
     private void observeData() {
 
         viewModel.getProfileData().observe(getViewLifecycleOwner(), data -> {
+            if (swipeRefreshProfile != null) swipeRefreshProfile.setRefreshing(false);
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
+            setProfileViewsVisible(true);
             if (data == null) return;
 
             tvFullName.setText(data.getFullName());
@@ -97,6 +108,10 @@ public class AdminProfileFragment extends Fragment {
         tvFullName = rootView.findViewById(R.id.tvFullName);
         tvPhone = rootView.findViewById(R.id.tvPhone);
         imgAvatar = rootView.findViewById(R.id.imgAvatar);
+        swipeRefreshProfile = rootView.findViewById(R.id.swipeRefreshProfile);
+        progressBar = rootView.findViewById(R.id.progressBar);
+        
+        swipeRefreshProfile.setOnRefreshListener(() -> viewModel.loadProfile());
     }
 
     private void setListeners() {
@@ -119,7 +134,7 @@ public class AdminProfileFragment extends Fragment {
     }
 
     private void logout() {
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        new AlertDialog.Builder(requireContext())
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc muốn đăng xuất không?")
                 .setPositiveButton("Đăng xuất", (dialog, which) -> {
@@ -134,5 +149,14 @@ public class AdminProfileFragment extends Fragment {
                 })
                 .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    private void setProfileViewsVisible(boolean visible) {
+        int v = visible ? View.VISIBLE : View.INVISIBLE;
+        View cardInfo = rootView.findViewById(R.id.cardAdminInfo);
+        if (cardInfo != null) cardInfo.setVisibility(v);
+        if (itemProfileInfo != null) itemProfileInfo.setVisibility(v);
+        if (itemChangePassword != null) itemChangePassword.setVisibility(v);
+        if (itemLogout != null) itemLogout.setVisibility(v);
     }
 }

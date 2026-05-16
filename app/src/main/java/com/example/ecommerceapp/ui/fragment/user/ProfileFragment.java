@@ -43,6 +43,8 @@ public class ProfileFragment extends Fragment {
     private Button btnSetPassword;
 
     private TokenManager tokenManager;
+    private android.widget.ProgressBar progressBar;
+    private View nsvProfileContent;
 
     @Nullable
     @Override
@@ -56,6 +58,8 @@ public class ProfileFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btnLogout);
         ivSettings = view.findViewById(R.id.ivSettings);
         btnSetPassword = view.findViewById(R.id.btnSetPassword);
+        progressBar = view.findViewById(R.id.progressBar);
+        nsvProfileContent = view.findViewById(R.id.nsvProfileContent);
 
         tokenManager = TokenManager.getInstance(getContext());
 
@@ -100,6 +104,13 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateCartBadge();
+        
+        // Hide content and show progress bar only if this is the first load or data isn't loaded yet
+        if (tvUsername.getText().toString().equals("Tên Người Dùng") || tvUsername.getText().toString().isEmpty()) {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+            if (nsvProfileContent != null) nsvProfileContent.setVisibility(View.INVISIBLE);
+        }
+        
         loadUserProfile();
     }
 
@@ -151,12 +162,17 @@ public class ProfileFragment extends Fragment {
                         } else {
                             btnSetPassword.setVisibility(View.GONE);
                         }
+                        
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
+                        if (nsvProfileContent != null) nsvProfileContent.setVisibility(View.VISIBLE);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<UserProfileResponse> call, Throwable t) {
                     if (isAdded() && getContext() != null) {
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
+                        if (nsvProfileContent != null) nsvProfileContent.setVisibility(View.VISIBLE);
                         tvUsername.setText("Khách hàng #" + currentUserId);
                         Toast.makeText(getContext(), "Không thể tải thông tin: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -179,6 +195,9 @@ public class ProfileFragment extends Fragment {
                 });
 
                 btnSetPassword.setVisibility(View.GONE);
+                
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+                if (nsvProfileContent != null) nsvProfileContent.setVisibility(View.VISIBLE);
             }
         }
     }

@@ -236,8 +236,8 @@ public class AdminProductActivity extends AppCompatActivity {
                         currentIsDeleted = true;
                         break;
                 }
-                // Silent fetch without showing swipe refresh spinner to prevent flashing
-                fetchProducts(true, true, false);
+                // Fetch with progress bar
+                fetchProducts(true, false, false);
             }
 
             @Override
@@ -345,7 +345,7 @@ public class AdminProductActivity extends AppCompatActivity {
                 case 3: currentSortBy = "price"; currentDirection = "desc"; break;
                 case 4: currentSortBy = "price"; currentDirection = "asc"; break;
             }
-            fetchProducts(true, true, true);
+            fetchProducts(true, false, true);
         });
         
         // Setup Filter Button for Bottom Sheet
@@ -521,7 +521,11 @@ public class AdminProductActivity extends AppCompatActivity {
             currentPage = 0;
             isLastPage = false;
             if (!isSilent) {
-                swipeRefreshLayout.setRefreshing(true);
+                if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
             }
         }
 
@@ -532,6 +536,7 @@ public class AdminProductActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<PageResponse<AdminProductResponse>> call, Response<PageResponse<AdminProductResponse>> response) {
                 isLoading = false;
+                progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
                 if (response.isSuccessful() && response.body() != null) {
@@ -581,6 +586,7 @@ public class AdminProductActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<PageResponse<AdminProductResponse>> call, Throwable t) {
                 isLoading = false;
+                progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(AdminProductActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }

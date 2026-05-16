@@ -22,6 +22,7 @@ public class AdminCategoryViewModel extends ViewModel {
     private final MutableLiveData<List<AdminCategoryResponse>> deleted = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final MutableLiveData<List<String>> autocompleteSuggestions = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
     private String currentKeyword = "";
     private boolean isDeletedTab = false;
@@ -46,13 +47,19 @@ public class AdminCategoryViewModel extends ViewModel {
         return autocompleteSuggestions;
     }
 
+    public LiveData<Boolean> getIsLoading() {
+        return loading;
+    }
+
     // LOAD
     public void fetchCategories(Boolean isDeleted) {
+        loading.setValue(true);
         repository.getAllCategories(isDeleted, currentKeyword)
                 .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(Call<List<AdminCategoryResponse>> call,
                                            Response<List<AdminCategoryResponse>> response) {
+                        loading.setValue(false);
 
                         if (response.isSuccessful() && response.body() != null) {
                             if (Boolean.TRUE.equals(isDeleted)) {
@@ -65,6 +72,7 @@ public class AdminCategoryViewModel extends ViewModel {
 
                     @Override
                     public void onFailure(Call<List<AdminCategoryResponse>> call, Throwable t) {
+                        loading.setValue(false);
                         t.printStackTrace();
                     }
                 });

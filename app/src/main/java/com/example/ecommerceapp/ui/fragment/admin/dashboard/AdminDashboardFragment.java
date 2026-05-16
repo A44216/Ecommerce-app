@@ -30,6 +30,7 @@ import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminCategor
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminOrderStatusChartResponse;
 import com.example.ecommerceapp.data.model.response.admin.dashboard.AdminRevenueChartResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminDashboardRepository;
+import com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductDetailActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.management.shop.AdminShopDetailActivity;
 import com.example.ecommerceapp.ui.adapter.admin.dashboard.AdminTopProductAdapter;
 import com.example.ecommerceapp.ui.adapter.admin.dashboard.AdminTopShopAdapter;
@@ -65,6 +66,7 @@ public class AdminDashboardFragment extends Fragment {
     private PieChart chartOrderStatus;
 
     private SwipeRefreshLayout swipeRefreshAdminDashboard;
+    private android.widget.ProgressBar progressBar;
 
     private TextView kpiGMV, kpiOrders, kpiRevenue, kpiShops, kpiProducts, kpiComplaints, kpiCoupons;
 
@@ -135,6 +137,8 @@ public class AdminDashboardFragment extends Fragment {
         chartCategorySales = view.findViewById(R.id.chartCategorySales);
 
         swipeRefreshAdminDashboard = view.findViewById(R.id.swipeRefreshAdminDashboard);
+        progressBar = view.findViewById(R.id.progressBar);
+        
         swipeRefreshAdminDashboard.setOnRefreshListener(() -> {
             if (viewModel != null) {
                 viewModel.fetchAllDataWithCurrentRange();
@@ -205,7 +209,7 @@ public class AdminDashboardFragment extends Fragment {
         topProductAdapter = new AdminTopProductAdapter();
         topProductAdapter.setListener(product -> {
             if (product.getId() != null) {
-                Intent intent = new Intent(requireContext(), com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductDetailActivity.class);
+                Intent intent = new Intent(requireContext(), AdminProductDetailActivity.class);
                 intent.putExtra("productId", product.getId());
                 startActivity(intent);
             }
@@ -237,6 +241,7 @@ public class AdminDashboardFragment extends Fragment {
             actFilterGlobalTime.setText(viewModel.getCurrentGlobalDateRange(), false);
         }
         actFilterGlobalTime.setOnItemClickListener((parent, view, position, id) -> {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             viewModel.setGlobalDateRange(timeRangeKeys[position]);
         });
 
@@ -251,6 +256,7 @@ public class AdminDashboardFragment extends Fragment {
             actFilterChartType.setText(viewModel.getCurrentChartType(), false);
         }
         actFilterChartType.setOnItemClickListener((parent, view, position, id) -> {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             viewModel.setChartType(chartTypeKeys[position]);
         });
 
@@ -265,6 +271,7 @@ public class AdminDashboardFragment extends Fragment {
             actFilterTopProductType.setText(viewModel.getCurrentTopProductType(), false);
         }
         actFilterTopProductType.setOnItemClickListener((parent, view, position, id) -> {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             viewModel.setTopProductType(productTypeKeys[position]);
         });
     }
@@ -273,6 +280,7 @@ public class AdminDashboardFragment extends Fragment {
     private void observeViewModel() {
         viewModel.getKpiLiveData().observe(getViewLifecycleOwner(), kpi -> {
             swipeRefreshAdminDashboard.setRefreshing(false);
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
             if (kpi != null) {
                 kpiGMV.setText(NumberUtils.formatCompact(kpi.getTotalGMV()) + " ₫");
                 kpiOrders.setText(NumberUtils.formatCompact(java.math.BigDecimal.valueOf(kpi.getTotalOrders())));
@@ -434,6 +442,7 @@ public class AdminDashboardFragment extends Fragment {
 
         // Trigger initial fetch only if data is empty
         if (viewModel.getKpiLiveData().getValue() == null) {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             viewModel.fetchAllDataWithCurrentRange();
         }
     }

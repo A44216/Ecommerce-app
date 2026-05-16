@@ -18,6 +18,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.admin.management.order.AdminOrderDetailResponse;
 import com.example.ecommerceapp.data.repository.admin.AdminOrderRepository;
+import com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductDetailActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.management.shop.AdminShopDetailActivity;
 import com.example.ecommerceapp.ui.activity.home.admin.management.user.AdminUserDetailActivity;
 import com.example.ecommerceapp.ui.adapter.admin.order.AdminOrderItemAdapter;
@@ -86,7 +87,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         adapter = new AdminOrderItemAdapter();
         adapter.setListener(item -> {
             if (item.getProductId() != null) {
-                Intent intent = new Intent(AdminOrderDetailActivity.this, com.example.ecommerceapp.ui.activity.home.admin.management.product.AdminProductDetailActivity.class);
+                Intent intent = new Intent(AdminOrderDetailActivity.this, AdminProductDetailActivity.class);
                 intent.putExtra("productId", item.getProductId());
                 startActivity(intent);
             }

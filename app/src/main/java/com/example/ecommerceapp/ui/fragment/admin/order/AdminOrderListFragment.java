@@ -160,7 +160,6 @@ public class AdminOrderListFragment extends Fragment {
                 currentOrdersLiveData.observe(getViewLifecycleOwner(), ordersObserver);
 
                 if (currentOrdersLiveData.getValue() == null || currentOrdersLiveData.getValue().isEmpty()) {
-                    progressBarOrder.setVisibility(View.VISIBLE);
                     loadOrdersWithFilters(false, pm, ps, kw, shopId, sortBy, direction);
                 }
             }
@@ -174,6 +173,13 @@ public class AdminOrderListFragment extends Fragment {
     }
 
     private void loadOrdersWithFilters(boolean isLoadMore, String pm, String ps, String kw, Integer shopId, String sortBy, String direction) {
+        if (!isLoadMore) {
+            if (swipeRefreshOrder != null && swipeRefreshOrder.isRefreshing()) {
+                progressBarOrder.setVisibility(View.GONE);
+            } else {
+                progressBarOrder.setVisibility(View.VISIBLE);
+            }
+        }
         viewModel.loadOrders(status, pm, ps, kw, shopId, sortBy, direction, isLoadMore);
     }
 

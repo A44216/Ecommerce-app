@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.text.TextWatcher;
 import android.text.Editable;
@@ -33,13 +34,14 @@ import com.example.ecommerceapp.ui.adapter.seller.product.SellerProductPagerAdap
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class SellerProductFragment extends Fragment {
 
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
-    private com.google.android.material.textfield.MaterialAutoCompleteTextView etSearch;
+    private MaterialAutoCompleteTextView etSearch;
     private SellerProductViewModel viewModel;
 
     private SellerProductPagerAdapter adapter;
@@ -109,7 +111,7 @@ public class SellerProductFragment extends Fragment {
         View currentFocus = requireActivity().getCurrentFocus();
         if (currentFocus != null) {
             currentFocus.clearFocus();
-            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
             if (imm != null) imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
         }
     }

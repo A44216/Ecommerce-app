@@ -160,8 +160,8 @@ public class AdminComplaintActivity extends AppCompatActivity {
                         currentStatus = ComplaintStatus.REJECTED;
                         break;
                 }
-                // Silent fetch without showing swipe refresh spinner to prevent flashing
-                fetchComplaints(true, true, false);
+                // Fetch with progress bar
+                fetchComplaints(true, false, false);
             }
 
             @Override
@@ -256,7 +256,7 @@ public class AdminComplaintActivity extends AppCompatActivity {
                 case 0: currentSortBy = "createdAt"; currentDirection = "desc"; break;
                 case 1: currentSortBy = "createdAt"; currentDirection = "asc"; break;
             }
-            fetchComplaints(true, true, true);
+            fetchComplaints(true, false, true);
         });
     }
 
@@ -290,7 +290,11 @@ public class AdminComplaintActivity extends AppCompatActivity {
             currentPage = 0;
             isLastPage = false;
             if (!isSilent) {
-                swipeRefreshLayout.setRefreshing(true);
+                if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
             }
         }
 
@@ -300,6 +304,7 @@ public class AdminComplaintActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<PageResponse<AdminComplaintResponse>> call, Response<PageResponse<AdminComplaintResponse>> response) {
                 isLoading = false;
+                progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
 
                 if (response.isSuccessful() && response.body() != null) {
@@ -341,6 +346,7 @@ public class AdminComplaintActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<PageResponse<AdminComplaintResponse>> call, Throwable t) {
                 isLoading = false;
+                progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(AdminComplaintActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -42,7 +44,6 @@ public class AdminCouponFragment extends Fragment {
     private TextView tvEmpty;
 
     private String currentKeyword = "";
-    private boolean isFirstLoad = true;
     private boolean isLoadMore = false;
 
     public static AdminCouponFragment newInstance(int position) {
@@ -78,6 +79,11 @@ public class AdminCouponFragment extends Fragment {
         setupObservers();
 
         swipeRefreshLayout.setOnRefreshListener(() -> fetchData(false));
+        
+        if (getActivity() instanceof AdminCouponActivity) {
+            this.currentKeyword = ((AdminCouponActivity) getActivity()).getSearchKeyword();
+        }
+        fetchData(false);
     }
 
     private void initViews(View view) {
@@ -101,7 +107,7 @@ public class AdminCouponFragment extends Fragment {
 
             @Override
             public void onItemLongClick(AdminCouponResponse coupon, View view) {
-                android.widget.PopupMenu popup = new android.widget.PopupMenu(requireContext(), view);
+                android.widget.PopupMenu popup = new PopupMenu(requireContext(), view);
                 
                 if (position == 3) {
                     popup.getMenu().add("Khôi phục");
@@ -132,7 +138,7 @@ public class AdminCouponFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    androidx.recyclerview.widget.LinearLayoutManager layoutManager = (androidx.recyclerview.widget.LinearLayoutManager) rvCoupons.getLayoutManager();
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) rvCoupons.getLayoutManager();
                     if (layoutManager != null) {
                         int visibleItemCount = layoutManager.getChildCount();
                         int totalItemCount = layoutManager.getItemCount();
@@ -238,15 +244,7 @@ public class AdminCouponFragment extends Fragment {
         fetchData(false);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getActivity() instanceof AdminCouponActivity) {
-            this.currentKeyword = ((AdminCouponActivity) getActivity()).getSearchKeyword();
-        }
-        fetchData(!isFirstLoad);
-        isFirstLoad = false;
-    }
+    // Đã bỏ onResume để fetch sẵn data thay vì load lại mỗi khi chuyển tab
 
     private CouponStatus getStatusByPosition(int position) {
         switch (position) {

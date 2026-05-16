@@ -46,8 +46,11 @@ public class SellerDashboardFragment extends Fragment {
     private TextView tvRevenue, tvOrders, tvSold;
     private Spinner spFilterTime;
     private SwipeRefreshLayout swipeRefreshDashboard;
+    private android.widget.ProgressBar progressBar;
 
     private MaterialAutoCompleteTextView actFilterGlobalTime, actFilterTopProduct;
+
+    private boolean isChartFilterInitialSetup = true;
 
     private RecyclerView rvTopProduct;
     private BarChart chartRevenue;
@@ -93,6 +96,7 @@ public class SellerDashboardFragment extends Fragment {
         initViewModel();
         setupObservers();
 
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         viewModel.loadKpi(currentGlobalRange);
         viewModel.loadTopProducts(currentGlobalRange);
         viewModel.loadChart(currentChartType);
@@ -115,6 +119,7 @@ public class SellerDashboardFragment extends Fragment {
         rvTopProduct = view.findViewById(R.id.rvTopProducts);
         
         swipeRefreshDashboard = view.findViewById(R.id.swipeRefreshDashboard);
+        progressBar = view.findViewById(R.id.progressBar);
     }
 
     private void setInits() {
@@ -197,6 +202,7 @@ public class SellerDashboardFragment extends Fragment {
 
     private void setupGlobalTimeFilterListener() {
         actFilterGlobalTime.setOnItemClickListener((parent, view, position, id) -> {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             DateRange[] ranges = DateRange.values();
             if (position >= 0 && position < ranges.length) {
                 currentGlobalRange = ranges[position];
@@ -230,6 +236,11 @@ public class SellerDashboardFragment extends Fragment {
         spFilterTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isChartFilterInitialSetup) {
+                    isChartFilterInitialSetup = false;
+                    return;
+                }
+                if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
                 switch (position) {
                     case 1: currentChartType = ChartType.MONTH; break;
                     case 2: currentChartType = ChartType.YEAR; break;
@@ -253,6 +264,7 @@ public class SellerDashboardFragment extends Fragment {
     private void observeKpiData() {
         viewModel.getKpiData().observe(getViewLifecycleOwner(), data -> {
             swipeRefreshDashboard.setRefreshing(false);
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
             if (data == null) return;
 
             tvRevenue.setText(NumberUtils.formatCompact(data.getRevenue()) + " ₫");
@@ -264,6 +276,7 @@ public class SellerDashboardFragment extends Fragment {
     private void observeTopProductData() {
         viewModel.getTopProductData().observe(getViewLifecycleOwner(), data -> {
             swipeRefreshDashboard.setRefreshing(false);
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
             if (data == null) return;
 
             topProductData = data;
@@ -280,6 +293,7 @@ public class SellerDashboardFragment extends Fragment {
     private void observeChartData() {
         viewModel.getChartData().observe(getViewLifecycleOwner(), list -> {
             swipeRefreshDashboard.setRefreshing(false);
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
             boolean hasData = false;
             if (list != null && !list.isEmpty()) {
                 for (SellerRevenueChartResponse item : list) {

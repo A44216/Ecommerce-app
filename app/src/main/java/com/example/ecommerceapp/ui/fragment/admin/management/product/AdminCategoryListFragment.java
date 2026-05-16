@@ -34,6 +34,7 @@ public class AdminCategoryListFragment extends Fragment {
 
     private RecyclerView rv;
     private SwipeRefreshLayout swipeRefreshCategory;
+    private android.widget.ProgressBar progressBarCategory;
     private AdminCategoryAdapter adapter;
     private AdminCategoryViewModel viewModel;
 
@@ -47,12 +48,7 @@ public class AdminCategoryListFragment extends Fragment {
         return f;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        viewModel.reload(type == TYPE_DELETED);
-    }
+    // Đã bỏ onResume để không bị fetch lại khi chuyển tab
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +69,7 @@ public class AdminCategoryListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         rv = view.findViewById(R.id.rvCategory);
         swipeRefreshCategory = view.findViewById(R.id.swipeRefreshCategory);
+        progressBarCategory = view.findViewById(R.id.progressBarCategory);
 
         viewModel = new ViewModelProvider(requireActivity())
                 .get(AdminCategoryViewModel.class);
@@ -86,6 +83,12 @@ public class AdminCategoryListFragment extends Fragment {
         observeError();
 
         // LOAD THEO TAB
+        if (swipeRefreshCategory != null && swipeRefreshCategory.isRefreshing()) {
+            progressBarCategory.setVisibility(View.GONE);
+        } else {
+            progressBarCategory.setVisibility(View.VISIBLE);
+        }
+        
         if (type == TYPE_DELETED) {
             viewModel.fetchCategories(true);
         } else {
@@ -136,10 +139,23 @@ public class AdminCategoryListFragment extends Fragment {
     }
 
     private void observeData() {
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null && isLoading) {
+                if (swipeRefreshCategory != null && swipeRefreshCategory.isRefreshing()) {
+                    if (progressBarCategory != null) progressBarCategory.setVisibility(View.GONE);
+                } else {
+                    if (progressBarCategory != null) progressBarCategory.setVisibility(View.VISIBLE);
+                }
+            } else {
+                if (progressBarCategory != null) progressBarCategory.setVisibility(View.GONE);
+                if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
+            }
+        });
 
         if (type == TYPE_DELETED) {
             viewModel.getDeleted().observe(getViewLifecycleOwner(), list -> {
                 if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
+                if (progressBarCategory != null) progressBarCategory.setVisibility(View.GONE);
                 if (list == null) return;
                 
                 RecyclerView.ItemAnimator animator = rv != null ? rv.getItemAnimator() : null;
@@ -155,6 +171,7 @@ public class AdminCategoryListFragment extends Fragment {
         } else {
             viewModel.getAll().observe(getViewLifecycleOwner(), list -> {
                 if (swipeRefreshCategory != null) swipeRefreshCategory.setRefreshing(false);
+                if (progressBarCategory != null) progressBarCategory.setVisibility(View.GONE);
                 if (list == null) return;
                 
                 RecyclerView.ItemAnimator animator = rv != null ? rv.getItemAnimator() : null;

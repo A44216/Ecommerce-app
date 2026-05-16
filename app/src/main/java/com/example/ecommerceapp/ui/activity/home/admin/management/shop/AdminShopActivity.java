@@ -305,10 +305,17 @@ public class AdminShopActivity extends AppCompatActivity {
         });
 
         viewModel.getIsLoading().observe(this, isLoading -> {
-            boolean isListEmpty = adapter.getCurrentList().isEmpty();
-            progressBar.setVisibility((isLoading && isListEmpty) ? View.VISIBLE : View.GONE);
-            if (!isLoading && swipeRefreshShops != null) {
-                swipeRefreshShops.setRefreshing(false);
+            if (isLoading != null && isLoading) {
+                if (swipeRefreshShops != null && swipeRefreshShops.isRefreshing()) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            } else {
+                progressBar.setVisibility(View.GONE);
+                if (swipeRefreshShops != null) {
+                    swipeRefreshShops.setRefreshing(false);
+                }
             }
         });
 

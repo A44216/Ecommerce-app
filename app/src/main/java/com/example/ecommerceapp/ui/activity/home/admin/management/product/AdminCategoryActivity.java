@@ -89,6 +89,7 @@ public class AdminCategoryActivity extends AppCompatActivity {
     private void setupViewPager() {
 
         viewPager.setAdapter(new AdminCategoryPagerAdapter(this));
+        viewPager.setOffscreenPageLimit(2);
 
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> {

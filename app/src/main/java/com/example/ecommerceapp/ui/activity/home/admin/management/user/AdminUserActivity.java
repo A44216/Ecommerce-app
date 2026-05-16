@@ -312,9 +312,17 @@ public class AdminUserActivity extends AppCompatActivity {
         });
 
         viewModel.getLoading().observe(this, isLoading -> {
-            progressBar.setVisibility(isLoading != null && isLoading ? View.VISIBLE : View.GONE);
-            if (isLoading != null && !isLoading && swipeRefreshUsers != null) {
-                swipeRefreshUsers.setRefreshing(false);
+            if (isLoading != null && isLoading) {
+                if (swipeRefreshUsers != null && swipeRefreshUsers.isRefreshing()) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            } else {
+                progressBar.setVisibility(View.GONE);
+                if (swipeRefreshUsers != null) {
+                    swipeRefreshUsers.setRefreshing(false);
+                }
             }
         });
 

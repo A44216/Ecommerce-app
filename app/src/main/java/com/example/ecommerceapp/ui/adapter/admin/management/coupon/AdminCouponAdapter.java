@@ -100,6 +100,7 @@ public class AdminCouponAdapter extends ListAdapter<AdminCouponResponse, AdminCo
             });
         }
 
+        @SuppressLint({"DefaultLocale", "SetTextI18n"})
         public void bind(AdminCouponResponse item, boolean deletedTab) {
             tvCouponCode.setText(item.getCode());
 
@@ -144,6 +145,7 @@ public class AdminCouponAdapter extends ListAdapter<AdminCouponResponse, AdminCo
             }
         }
 
+        @SuppressLint("SetTextI18n")
         private void setupStatus(CouponStatus status) {
             if (status == null) return;
             

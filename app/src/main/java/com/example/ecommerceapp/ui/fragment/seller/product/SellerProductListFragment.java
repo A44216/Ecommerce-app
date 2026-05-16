@@ -31,6 +31,7 @@ public class SellerProductListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshProducts;
+    private android.widget.ProgressBar progressBar;
     private SellerProductAdapter adapter;
     private SellerProductViewModel viewModel;
 
@@ -59,15 +60,6 @@ public class SellerProductListFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // reload lại dữ liệu khi fragment được focus lại
-        if (viewModel != null) {
-            reload();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +80,7 @@ public class SellerProductListFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.listProduct);
         swipeRefreshProducts = view.findViewById(R.id.swipeRefreshProducts);
+        progressBar = view.findViewById(R.id.progressBar);
 
         swipeRefreshProducts.setOnRefreshListener(() -> {
             if (viewModel != null) {
@@ -219,6 +212,9 @@ public class SellerProductListFragment extends Fragment {
         viewModel.setKeyword(keyword);
 
         observeData();
+        if (viewModel.getProducts().getValue() == null) {
+            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        }
         viewModel.fetchProducts(false);
     }
 
@@ -230,6 +226,7 @@ public class SellerProductListFragment extends Fragment {
             if (swipeRefreshProducts != null) {
                 swipeRefreshProducts.setRefreshing(false);
             }
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
             if (items != null) {
                 RecyclerView.ItemAnimator animator = recyclerView != null ? recyclerView.getItemAnimator() : null;
                 if (!wasLoadingMore && recyclerView != null) {
@@ -250,12 +247,14 @@ public class SellerProductListFragment extends Fragment {
         this.keyword = keyword;
         if (viewModel == null) return;
 
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         viewModel.setKeyword(keyword);
         viewModel.fetchProducts(false);
     }
 
     public void reload() {
         if (viewModel == null) return;
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         viewModel.fetchProducts(false);
     }
 }

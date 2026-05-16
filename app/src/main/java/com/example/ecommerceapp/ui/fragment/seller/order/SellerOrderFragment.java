@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
@@ -273,7 +274,7 @@ public class SellerOrderFragment extends Fragment {
             String selected = (String) parent.getItemAtPosition(position);
             actvSearch.setText(selected, false);
             actvSearch.clearFocus();
-            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
             if (imm != null) imm.hideSoftInputFromWindow(actvSearch.getWindowToken(), 0);
             applyFiltersToChildren();
         });
