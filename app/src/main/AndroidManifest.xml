@@ -37,6 +37,10 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize"/>
         <activity
+            android:name=".ui.activity.home.user.chat.AiChatActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name=".ui.activity.home.user.review.ReviewActivity"
             android:exported="false"/>
         <activity

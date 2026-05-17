@@ -56,6 +56,7 @@ public class SellerConversationAdapter extends RecyclerView.Adapter<SellerConver
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("CONVERSATION_ID", conversation.getId());
             intent.putExtra("SHOP_NAME", conversation.getCustomerName());
+            intent.putExtra("IS_SELLER", true);
             context.startActivity(intent);
         });
     }

@@ -160,6 +160,10 @@ public class ApiClient {
         return createAuthRetrofit(tokenManager).create(ChatApiService.class);
     }
 
+    public static com.example.ecommerceapp.api.service.AiChatApiService getAiChatApiService(TokenManager tokenManager) {
+        return createAuthRetrofit(tokenManager).create(com.example.ecommerceapp.api.service.AiChatApiService.class);
+    }
+
     public static PaymentApiService getPaymentApiService() {
         return getPublicRetrofit().create(com.example.ecommerceapp.api.service.PaymentApiService.class);
     }

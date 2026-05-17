@@ -34,6 +34,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         notifyItemInserted(list.size() - 1);
     }
 
+    public List<MessageResponse> getMessages() {
+        return this.list;
+    }
+
+    public void addOldMessages(List<MessageResponse> oldMessages) {
+        if (oldMessages == null || oldMessages.isEmpty()) return;
+        this.list.addAll(0, oldMessages);
+        notifyItemRangeInserted(0, oldMessages.size());
+    }
+
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

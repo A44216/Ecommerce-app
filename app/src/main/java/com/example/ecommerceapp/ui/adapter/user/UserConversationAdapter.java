@@ -57,6 +57,7 @@ public class UserConversationAdapter extends RecyclerView.Adapter<UserConversati
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("CONVERSATION_ID", conversation.getId());
             intent.putExtra("SHOP_NAME", conversation.getShopName());
+            intent.putExtra("SHOP_ID", conversation.getShopId());
             context.startActivity(intent);
         });
     }

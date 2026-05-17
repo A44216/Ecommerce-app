@@ -3,6 +3,7 @@ package com.example.ecommerceapp.ui.activity.home.user.chat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,6 +42,10 @@ public class ChatActivity extends AppCompatActivity {
     private Runnable pollingRunnable;
     private static final int POLLING_INTERVAL = 5000; // Tăng lên 5 giây để giảm tải Server
 
+    private boolean isLoading = false;
+    private androidx.appcompat.widget.AppCompatButton btnAiAssistant;
+    private int shopId; // Sẽ lấy từ API hoặc Intent nếu có
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +58,7 @@ public class ChatActivity extends AppCompatActivity {
         // 2. Nhận dữ liệu từ Intent
         conversationId = getIntent().getIntExtra("CONVERSATION_ID", -1);
         String shopName = getIntent().getStringExtra("SHOP_NAME");
+        shopId = getIntent().getIntExtra("SHOP_ID", -1);
 
         if (conversationId == -1) {
             Toast.makeText(this, "Lỗi: Không tìm thấy phòng chat!", Toast.LENGTH_SHORT).show();
@@ -66,6 +72,12 @@ public class ChatActivity extends AppCompatActivity {
         btnSendMessage = findViewById(R.id.btnSendMessage);
         btnBackChat = findViewById(R.id.btnBackChat);
         tvChatShopName = findViewById(R.id.tvChatShopName);
+        btnAiAssistant = findViewById(R.id.btnAiAssistant);
+
+        boolean isSeller = getIntent().getBooleanExtra("IS_SELLER", false);
+        if (isSeller) {
+            btnAiAssistant.setVisibility(View.GONE);
+        }
 
         if (shopName != null) {
             tvChatShopName.setText(shopName);
@@ -79,9 +91,34 @@ public class ChatActivity extends AppCompatActivity {
         adapter = new MessageAdapter(currentUserId);
         rvMessages.setAdapter(adapter);
 
+        // Lắng nghe sự kiện lướt lên để tải thêm tin nhắn
+        rvMessages.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy < 0 && !isLoading) { // Lướt lên
+                    int firstVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                    if (firstVisiblePosition == 0) {
+                        loadOlderMessages();
+                    }
+                }
+            }
+        });
+
         // 5. Bắt sự kiện
         btnBackChat.setOnClickListener(v -> finish());
         btnSendMessage.setOnClickListener(v -> sendMessage());
+        btnAiAssistant.setOnClickListener(v -> {
+            if (shopId == -1) {
+                Toast.makeText(this, "Chưa xác định được Shop", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            android.content.Intent intent = new android.content.Intent(ChatActivity.this, AiChatActivity.class);
+            intent.putExtra("SHOP_NAME", shopName);
+            intent.putExtra("SHOP_ID", shopId);
+            intent.putExtra("CONVERSATION_ID", conversationId);
+            startActivity(intent);
+        });
 
         // 6. Tải lịch sử tin nhắn và bắt đầu Polling
         loadMessages();
@@ -119,7 +156,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadMessagesQuietly() {
-        ApiClient.getChatApiService(tokenManager).getMessages(conversationId).enqueue(new Callback<List<MessageResponse>>() {
+        ApiClient.getChatApiService(tokenManager).getMessages(conversationId, null).enqueue(new Callback<List<MessageResponse>>() {
             @Override
             public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -142,8 +179,32 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    private void loadOlderMessages() {
+        if (adapter.getItemCount() == 0) return;
+        
+        isLoading = true;
+        MessageResponse oldestMsg = adapter.getMessages().get(0);
+        String beforeTime = oldestMsg.getCreatedAt().toString();
+
+        ApiClient.getChatApiService(tokenManager).getMessages(conversationId, beforeTime).enqueue(new Callback<List<MessageResponse>>() {
+            @Override
+            public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    List<MessageResponse> oldMessages = response.body();
+                    adapter.addOldMessages(oldMessages);
+                }
+                isLoading = false;
+            }
+
+            @Override
+            public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
+                isLoading = false;
+            }
+        });
+    }
+
     private void loadMessages() {
-        ApiClient.getChatApiService(tokenManager).getMessages(conversationId).enqueue(new Callback<List<MessageResponse>>() {
+        ApiClient.getChatApiService(tokenManager).getMessages(conversationId, null).enqueue(new Callback<List<MessageResponse>>() {
             @Override
             public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {

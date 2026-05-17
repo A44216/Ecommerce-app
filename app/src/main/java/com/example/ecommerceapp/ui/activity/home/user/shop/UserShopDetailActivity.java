@@ -124,6 +124,7 @@ public class UserShopDetailActivity extends AppCompatActivity {
                     Intent intent = new Intent(UserShopDetailActivity.this, ChatActivity.class);
                     intent.putExtra("CONVERSATION_ID", response.body().getId());
                     intent.putExtra("SHOP_NAME", currentShop != null ? currentShop.getShopName() : "Shop");
+                    intent.putExtra("SHOP_ID", shopId);
                     startActivity(intent);
                 } else {
                     Toast.makeText(UserShopDetailActivity.this, "Không thể mở chat", Toast.LENGTH_SHORT).show();

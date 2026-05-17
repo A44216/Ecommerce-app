@@ -18,7 +18,10 @@ public interface ChatApiService {
     Call<ConversationResponse> createConversation(@Body ConversationRequest request);
 
     @GET("messages/conversation/{conversationId}")
-    Call<List<MessageResponse>> getMessages(@Path("conversationId") int conversationId);
+    Call<List<MessageResponse>> getMessages(@Path("conversationId") int conversationId, @retrofit2.http.Query("beforeTime") String beforeTime);
+
+    @GET("messages/conversation/{conversationId}/ai-chat")
+    Call<List<MessageResponse>> getAiChatMessages(@Path("conversationId") int conversationId, @retrofit2.http.Query("beforeTime") String beforeTime);
 
     @POST("messages")
     Call<MessageResponse> sendMessage(@Body MessageRequest request);

@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Tên Shop..."
+            android:text="Trợ Lý AI..."
             android:textColor="#333333"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/bg_search_bar"
-            android:hint="Nhập tin nhắn..."
+            android:hint="Hỏi AI tư vấn..."
             android:maxLines="4"
             android:padding="12dp"
             android:textSize="14sp" />
@@ -64,27 +64,22 @@
             app:tint="@color/primary_blue" />
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnAiAssistant"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_above="@id/layoutInput"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_button_rounded"
-        android:backgroundTint="#E3F2FD"
-        android:text="🤖 Trợ Lý AI"
-        android:textAllCaps="false"
-        android:textColor="@color/primary_blue"
-        android:textStyle="bold" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/btnAiAssistant"
+        android:layout_above="@id/layoutInput"
         android:layout_below="@id/layoutHeader"
         android:clipToPadding="false"
         android:padding="12dp" />
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@id/layoutInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
 </RelativeLayout>
