@@ -55,7 +55,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "https://ecommerce-backend-production-7a13.up.railway.app/api/";
+    private static final String BASE_URL = "https://ecommerce-backend-v9py.onrender.com/api/";
     private static Retrofit publicRetrofit;
 
     private static Gson getGson() {
