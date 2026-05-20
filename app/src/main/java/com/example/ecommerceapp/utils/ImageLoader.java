@@ -19,6 +19,17 @@ public class ImageLoader {
             return;
         }
 
+        // 1. Nếu là link ảnh từ Cloudinary, tải thẳng trực tiếp (Không gửi kèm Token JWT nội bộ)
+        if (url.contains("cloudinary.com")) {
+            Glide.with(context)
+                    .load(url)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(imageView);
+            return; // Dừng hàm tại đây luôn
+        }
+
+        // 2. Nếu là các link API nội bộ cũ, giữ nguyên cơ chế gửi kèm Token để qua cổng Spring Security
         TokenManager tm = TokenManager.getInstance(context);
 
         GlideUrl glideUrl = new GlideUrl(

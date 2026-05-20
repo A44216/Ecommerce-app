@@ -13,6 +13,7 @@ import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.data.enums.Role;
 import com.example.ecommerceapp.data.enums.UserStatus;
 import com.example.ecommerceapp.data.model.response.admin.management.user.AdminUserResponse;
+import com.example.ecommerceapp.utils.ImageLoader;
 import com.google.android.material.imageview.ShapeableImageView;
 
 public class AdminUserVH extends RecyclerView.ViewHolder {
@@ -43,7 +44,8 @@ public class AdminUserVH extends RecyclerView.ViewHolder {
         // Status
         if (user.getStatus() == UserStatus.ACTIVE) {
             tvStatus.setText("Hoạt động");
-            tvStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), android.R.color.holo_green_dark));            tvStatus.setBackgroundResource(R.drawable.bg_status_active);
+            tvStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), android.R.color.holo_green_dark));
+            tvStatus.setBackgroundResource(R.drawable.bg_status_active);
         } else {
             tvStatus.setText("Vô hiệu hóa");
             tvStatus.setTextColor(ContextCompat.getColor(itemView.getContext(), android.R.color.holo_red_dark));
@@ -60,14 +62,6 @@ public class AdminUserVH extends RecyclerView.ViewHolder {
         }
 
         // Avatar
-        if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
-            Glide.with(itemView.getContext())
-                    .load(user.getAvatar())
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile)
-                    .into(ivAvatar);
-        } else {
-            ivAvatar.setImageResource(R.drawable.ic_profile);
-        }
+        ImageLoader.load(itemView.getContext(), ivAvatar, user.getAvatar());
     }
 }

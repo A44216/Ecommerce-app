@@ -27,6 +27,7 @@ import com.example.ecommerceapp.data.model.response.admin.management.user.AdminU
 import com.example.ecommerceapp.data.repository.admin.AdminUserRepository;
 import com.example.ecommerceapp.ui.viewmodel.admin.AdminUserDetailViewModel;
 import com.example.ecommerceapp.ui.viewmodel.admin.factory.AdminUserDetailViewModelFactory;
+import com.example.ecommerceapp.utils.ImageLoader;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -196,15 +197,7 @@ public class AdminUserDetailActivity extends AppCompatActivity {
             btnChangeStatus.setBackgroundColor(getResources().getColor(R.color.green));
         }
 
-        if (detail.getAvatar() != null && !detail.getAvatar().isEmpty()) {
-            Glide.with(this)
-                    .load(detail.getAvatar())
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile)
-                    .into(ivAvatar);
-        } else {
-            ivAvatar.setImageResource(R.drawable.ic_profile);
-        }
+        ImageLoader.load(this, ivAvatar, detail.getAvatar());
     }
 
     private void showConfirmDialog() {
