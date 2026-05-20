@@ -28,19 +28,16 @@ public class AdminDashboardRepository {
         this.apiService = ApiClient.getAdminDashboardService(tokenManager);
     }
 
-    private String getToken() {
-        return "Bearer " + tokenManager.getToken();
-    }
-
     public void getKPI(String range, Callback<AdminDashboardKPIResponse> callback) {
-        apiService.getKPI(getToken(), range).enqueue(new Callback<AdminDashboardKPIResponse>() {
+        apiService.getKPI(range).enqueue(new Callback<AdminDashboardKPIResponse>() {
             @Override
             public void onResponse(@NonNull Call<AdminDashboardKPIResponse> call, @NonNull Response<AdminDashboardKPIResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     callback.onResponse(call, response);
                 } else {
-                    Log.e("AdminDashboardRepo", "Error fetching KPI: " + response.message());
-                    callback.onFailure(call, new Throwable(response.message()));
+                    String errorMsg = "HTTP " + response.code() + " " + (response.message() != null ? response.message() : "");
+                    Log.e("AdminDashboardRepo", "Error fetching KPI: " + errorMsg);
+                    callback.onFailure(call, new Throwable(errorMsg));
                 }
             }
 
@@ -53,22 +50,22 @@ public class AdminDashboardRepository {
     }
 
     public void getRevenueChart(String type, Callback<List<com.example.ecommerceapp.data.model.response.admin.dashboard.AdminRevenueChartResponse>> callback) {
-        apiService.getRevenueChart(getToken(), type).enqueue(callback);
+        apiService.getRevenueChart(type).enqueue(callback);
     }
 
     public void getOrderStatusChart(String range, Callback<List<AdminOrderStatusChartResponse>> callback) {
-        apiService.getOrderStatusChart(getToken(), range).enqueue(callback);
+        apiService.getOrderStatusChart(range).enqueue(callback);
     }
 
     public void getCategorySalesChart(String range, Callback<List<AdminCategorySalesChartResponse>> callback) {
-        apiService.getCategorySalesChart(getToken(), range).enqueue(callback);
+        apiService.getCategorySalesChart(range).enqueue(callback);
     }
 
     public void getTopSellingShops(String range, Callback<List<AdminTopShopResponse>> callback) {
-        apiService.getTopSellingShops(getToken(), range).enqueue(callback);
+        apiService.getTopSellingShops(range).enqueue(callback);
     }
 
     public void getTopSellingProducts(String range, Callback<AdminDashboardTopProductResponse> callback) {
-        apiService.getTopSellingProducts(getToken(), range).enqueue(callback);
+        apiService.getTopSellingProducts(range).enqueue(callback);
     }
 }

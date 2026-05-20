@@ -10,44 +10,37 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Query;
 
 public interface AdminDashboardService {
 
     @GET("admin/dashboard/kpi")
     Call<AdminDashboardKPIResponse> getKPI(
-            @Header("Authorization") String token,
             @Query("range") String range
     );
 
     @GET("admin/dashboard/revenue-chart")
     Call<List<com.example.ecommerceapp.data.model.response.admin.dashboard.AdminRevenueChartResponse>> getRevenueChart(
-            @Header("Authorization") String token,
             @Query("type") String type
     );
 
     @GET("admin/dashboard/order-status-chart")
     Call<List<AdminOrderStatusChartResponse>> getOrderStatusChart(
-            @Header("Authorization") String token,
             @Query("range") String range
     );
 
     @GET("admin/dashboard/category-sales-chart")
     Call<List<AdminCategorySalesChartResponse>> getCategorySalesChart(
-            @Header("Authorization") String token,
             @Query("range") String range
     );
 
     @GET("admin/dashboard/top-selling-shops")
     Call<List<AdminTopShopResponse>> getTopSellingShops(
-            @Header("Authorization") String token,
             @Query("range") String range
     );
 
     @GET("admin/dashboard/top-selling-products")
     Call<AdminDashboardTopProductResponse> getTopSellingProducts(
-            @Header("Authorization") String token,
             @Query("range") String range
     );
 }

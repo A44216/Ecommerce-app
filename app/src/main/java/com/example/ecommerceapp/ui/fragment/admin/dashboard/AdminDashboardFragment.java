@@ -241,7 +241,6 @@ public class AdminDashboardFragment extends Fragment {
             actFilterGlobalTime.setText(viewModel.getCurrentGlobalDateRange(), false);
         }
         actFilterGlobalTime.setOnItemClickListener((parent, view, position, id) -> {
-            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             viewModel.setGlobalDateRange(timeRangeKeys[position]);
         });
 
@@ -256,7 +255,6 @@ public class AdminDashboardFragment extends Fragment {
             actFilterChartType.setText(viewModel.getCurrentChartType(), false);
         }
         actFilterChartType.setOnItemClickListener((parent, view, position, id) -> {
-            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             viewModel.setChartType(chartTypeKeys[position]);
         });
 
@@ -271,16 +269,28 @@ public class AdminDashboardFragment extends Fragment {
             actFilterTopProductType.setText(viewModel.getCurrentTopProductType(), false);
         }
         actFilterTopProductType.setOnItemClickListener((parent, view, position, id) -> {
-            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             viewModel.setTopProductType(productTypeKeys[position]);
         });
     }
 
     @SuppressLint("SetTextI18n")
     private void observeViewModel() {
+        // Observe loading state
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (progressBar != null) {
+                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        // Observe error messages
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                android.widget.Toast.makeText(getContext(), error, android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
+
         viewModel.getKpiLiveData().observe(getViewLifecycleOwner(), kpi -> {
             swipeRefreshAdminDashboard.setRefreshing(false);
-            if (progressBar != null) progressBar.setVisibility(View.GONE);
             if (kpi != null) {
                 kpiGMV.setText(NumberUtils.formatCompact(kpi.getTotalGMV()) + " ₫");
                 kpiOrders.setText(NumberUtils.formatCompact(java.math.BigDecimal.valueOf(kpi.getTotalOrders())));
@@ -442,7 +452,6 @@ public class AdminDashboardFragment extends Fragment {
 
         // Trigger initial fetch only if data is empty
         if (viewModel.getKpiLiveData().getValue() == null) {
-            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
             viewModel.fetchAllDataWithCurrentRange();
         }
     }

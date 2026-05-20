@@ -66,6 +66,7 @@ public class AdminDashboardViewModel extends ViewModel {
     public void setChartType(String type) {
         if (!type.equals(this.currentChartType)) {
             this.currentChartType = type;
+            isLoading.setValue(true);
             fetchRevenueChart();
         }
     }
@@ -91,10 +92,13 @@ public class AdminDashboardViewModel extends ViewModel {
         repository.getRevenueChart(currentChartType, new Callback<List<AdminRevenueChartResponse>>() {
             @Override
             public void onResponse(@NonNull Call<List<AdminRevenueChartResponse>> call, @NonNull Response<List<AdminRevenueChartResponse>> response) {
+                isLoading.setValue(false);
                 if (response.isSuccessful()) revenueChartLiveData.setValue(response.body());
             }
             @Override
-            public void onFailure(@NonNull Call<List<AdminRevenueChartResponse>> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<List<AdminRevenueChartResponse>> call, @NonNull Throwable t) {
+                isLoading.setValue(false);
+            }
         });
     }
 
