@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.api.service.ChatApiService;
+import com.example.ecommerceapp.api.service.PlatformFeeService;
+import com.example.ecommerceapp.data.model.response.PlatformFeeResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +55,7 @@ public class SellerShopFragment extends Fragment {
             );
 
     private ImageView imgShopAvatar;
-    private TextView tvShopName, tvShopStatus, tvShopAddress, tvShopRating;
+    private TextView tvShopName, tvShopStatus, tvShopAddress, tvShopRating, tvShopPlatformFee;
     private SwipeRefreshLayout swipeRefreshShop;
     private android.widget.ProgressBar progressBar;
 
@@ -102,11 +104,13 @@ public class SellerShopFragment extends Fragment {
         }
         int userId = (int) tokenManager.getUserId();
         mViewModel.fetchMyShop();
+        mViewModel.fetchPlatformFee();
     }
 
     private void setUpViewModel() {
         SellerShopService api = ApiClient.getShopService(tokenManager);
-        SellerShopRepository repository = new SellerShopRepository(api);
+        PlatformFeeService feeService = ApiClient.getPlatformFeeService(tokenManager);
+        SellerShopRepository repository = new SellerShopRepository(api, feeService);
 
         mViewModel = new ViewModelProvider(
                 requireActivity(),
@@ -122,13 +126,28 @@ public class SellerShopFragment extends Fragment {
             setShopViewsVisible(true);
             if (shop == null) return;
 
-            Log.e("SHOP_NAME = ", shop.getShopName());
+            if (shop.getShopName() != null && !shop.getShopName().trim().isEmpty()) {
+                tvShopName.setText(shop.getShopName());
+                tvShopName.setVisibility(View.VISIBLE);
+            } else {
+                tvShopName.setVisibility(View.GONE);
+            }
 
-            tvShopName.setText(shop.getShopName());
-            tvShopAddress.setText(shop.getAddress());
-            tvShopRating.setText(
-                    shop.getRatingAvg() + " ⭐ (" + shop.getRatingCount() + " đánh giá)"
-            );
+            if (shop.getAddress() != null && !shop.getAddress().trim().isEmpty()) {
+                tvShopAddress.setText(shop.getAddress());
+                tvShopAddress.setVisibility(View.VISIBLE);
+            } else {
+                tvShopAddress.setVisibility(View.GONE);
+            }
+
+            if (shop.getRatingAvg() != null && shop.getRatingCount() != null) {
+                tvShopRating.setText(
+                        shop.getRatingAvg() + " ⭐ (" + shop.getRatingCount() + " đánh giá)"
+                );
+                tvShopRating.setVisibility(View.VISIBLE);
+            } else {
+                tvShopRating.setVisibility(View.GONE);
+            }
 
             setStatusUI(shop.getStatus());
 
@@ -169,6 +188,17 @@ public class SellerShopFragment extends Fragment {
                 setAiReplyListener(); // Gán lại listener
             }
         });
+
+        mViewModel.getPlatformFee().observe(getViewLifecycleOwner(), fee -> {
+            if (tvShopPlatformFee != null) {
+                if (fee != null && fee.getRate() != null) {
+                    tvShopPlatformFee.setText("Phí nền tảng: " + fee.getRate().stripTrailingZeros().toPlainString() + "%");
+                    tvShopPlatformFee.setVisibility(View.VISIBLE);
+                } else {
+                    tvShopPlatformFee.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void setInits(View view) {
@@ -180,6 +210,7 @@ public class SellerShopFragment extends Fragment {
         tvShopName = view.findViewById(R.id.tvShopName);
         tvShopAddress = view.findViewById(R.id.tvShopAddress);
         tvShopRating = view.findViewById(R.id.tvShopRating);
+        tvShopPlatformFee = view.findViewById(R.id.tvShopPlatformFee);
 
         itemShopInfo = view.findViewById(R.id.itemShopInfo);
         itemChat = view.findViewById(R.id.itemChat);
@@ -257,6 +288,12 @@ public class SellerShopFragment extends Fragment {
     private void setStatusUI(ShopStatus status) {
         
         btnCancelRegistration.setVisibility(View.GONE);
+        if (tvShopStatus == null) return;
+        if (status == null) {
+            tvShopStatus.setVisibility(View.GONE);
+            return;
+        }
+        tvShopStatus.setVisibility(View.VISIBLE);
 
         switch (status) {
 

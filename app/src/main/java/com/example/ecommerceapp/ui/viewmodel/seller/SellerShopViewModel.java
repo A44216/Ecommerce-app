@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecommerceapp.data.model.request.seller.shop.SellerShopRequest;
 import com.example.ecommerceapp.data.model.response.seller.shop.SellerShopResponse;
+import com.example.ecommerceapp.data.model.response.PlatformFeeResponse;
 import com.example.ecommerceapp.data.repository.seller.SellerShopRepository;
 
 import retrofit2.Call;
@@ -15,6 +16,7 @@ import retrofit2.Response;
 public class SellerShopViewModel extends ViewModel {
 
     private final MutableLiveData<SellerShopResponse> shop = new MutableLiveData<>();
+    private final MutableLiveData<PlatformFeeResponse> platformFee = new MutableLiveData<>();
     private final SellerShopRepository repository;
 
     public SellerShopViewModel(SellerShopRepository repository) {
@@ -23,6 +25,30 @@ public class SellerShopViewModel extends ViewModel {
 
     public LiveData<SellerShopResponse> getShop() {
         return shop;
+    }
+
+    public LiveData<PlatformFeeResponse> getPlatformFee() {
+        return platformFee;
+    }
+
+    // GET CURRENT PLATFORM FEE
+    public void fetchPlatformFee() {
+        repository.getCurrentFee().enqueue(new Callback<PlatformFeeResponse>() {
+            @Override
+            public void onResponse(Call<PlatformFeeResponse> call, Response<PlatformFeeResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    platformFee.setValue(response.body());
+                } else {
+                    platformFee.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlatformFeeResponse> call, Throwable t) {
+                t.printStackTrace();
+                platformFee.setValue(null);
+            }
+        });
     }
 
     // GET MY SHOP

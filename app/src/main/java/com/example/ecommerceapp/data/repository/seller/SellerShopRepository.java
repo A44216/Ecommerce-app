@@ -6,12 +6,17 @@ import com.example.ecommerceapp.data.model.response.seller.shop.SellerShopRespon
 
 import retrofit2.Call;
 
+import com.example.ecommerceapp.api.service.PlatformFeeService;
+import com.example.ecommerceapp.data.model.response.PlatformFeeResponse;
+
 public class SellerShopRepository {
 
     private final SellerShopService apiService;
+    private final PlatformFeeService platformFeeService;
 
-    public SellerShopRepository(SellerShopService apiService) {
+    public SellerShopRepository(SellerShopService apiService, PlatformFeeService platformFeeService) {
         this.apiService = apiService;
+        this.platformFeeService = platformFeeService;
     }
 
     // lấy shop của seller hiện tại
@@ -40,5 +45,9 @@ public class SellerShopRepository {
 
     public Call<com.example.ecommerceapp.data.model.response.ShopResponse> toggleAiReply(Integer id, Boolean enabled) {
         return apiService.toggleAiReply(id, enabled);
+    }
+
+    public Call<PlatformFeeResponse> getCurrentFee() {
+        return platformFeeService.getCurrentFee();
     }
 }

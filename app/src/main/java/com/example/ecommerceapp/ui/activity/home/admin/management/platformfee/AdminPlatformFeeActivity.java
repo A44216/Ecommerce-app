@@ -17,6 +17,8 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.admin.platformfee.AdminPlatformFeeRequest;
 import com.example.ecommerceapp.data.model.response.admin.platformfee.AdminPlatformFeeResponse;
+import com.example.ecommerceapp.data.model.response.PlatformFeeResponse;
+import com.example.ecommerceapp.api.service.PlatformFeeService;
 
 import java.math.BigDecimal;
 
@@ -65,12 +67,12 @@ public class AdminPlatformFeeActivity extends AppCompatActivity {
 
     private void loadCurrentFee() {
         showLoading(true);
-        ApiClient.getAdminPlatformFeeService(tokenManager).getCurrentFee().enqueue(new Callback<AdminPlatformFeeResponse>() {
+        ApiClient.getPlatformFeeService(tokenManager).getCurrentFee().enqueue(new Callback<PlatformFeeResponse>() {
             @Override
-            public void onResponse(Call<AdminPlatformFeeResponse> call, Response<AdminPlatformFeeResponse> response) {
+            public void onResponse(Call<PlatformFeeResponse> call, Response<PlatformFeeResponse> response) {
                 showLoading(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    AdminPlatformFeeResponse data = response.body();
+                    PlatformFeeResponse data = response.body();
                     displayFeeData(data);
                 } else {
                     Toast.makeText(AdminPlatformFeeActivity.this, "Không thể tải thông tin phí hiện tại", Toast.LENGTH_SHORT).show();
@@ -78,7 +80,7 @@ public class AdminPlatformFeeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AdminPlatformFeeResponse> call, Throwable t) {
+            public void onFailure(Call<PlatformFeeResponse> call, Throwable t) {
                 showLoading(false);
                 Toast.makeText(AdminPlatformFeeActivity.this, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
             }
@@ -86,7 +88,16 @@ public class AdminPlatformFeeActivity extends AppCompatActivity {
     }
 
     private void displayFeeData(AdminPlatformFeeResponse data) {
-        BigDecimal rate = data.getRate();
+        if (data == null) return;
+        displayFeeData(data.getRate(), data.getIsActive());
+    }
+
+    private void displayFeeData(PlatformFeeResponse data) {
+        if (data == null) return;
+        displayFeeData(data.getRate(), data.getIsActive());
+    }
+
+    private void displayFeeData(BigDecimal rate, Boolean isActive) {
         if (rate != null) {
             String rateText = rate.stripTrailingZeros().toPlainString() + "%";
             tvCurrentFeeRate.setText(rateText);
@@ -96,7 +107,6 @@ public class AdminPlatformFeeActivity extends AppCompatActivity {
             tvCurrentFeeRate.setText("0%");
         }
 
-        Boolean isActive = data.getIsActive();
         if (isActive != null && isActive) {
             tvStatus.setText("Đang hoạt động");
             tvStatus.setTextColor(getResources().getColor(R.color.green));

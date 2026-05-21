@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.api.service.PlatformFeeService;
 import com.example.ecommerceapp.api.service.seller.SellerShopService;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.request.seller.shop.SellerShopRequest;
@@ -114,7 +115,8 @@ public class SellerShopInfoActivity extends AppCompatActivity {
 
     private void setupViewModel() {
         SellerShopService api = ApiClient.getShopService(tokenManager);
-        SellerShopRepository repository = new SellerShopRepository(api);
+        PlatformFeeService feeService = ApiClient.getPlatformFeeService(tokenManager);
+        SellerShopRepository repository = new SellerShopRepository(api, feeService);
 
         viewModel = new ViewModelProvider(
                 this,

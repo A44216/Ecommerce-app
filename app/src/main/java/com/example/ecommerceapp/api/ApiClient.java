@@ -2,12 +2,14 @@ package com.example.ecommerceapp.api;
 
 import android.os.Build;
 
+import com.example.ecommerceapp.api.service.AiChatApiService;
 import com.example.ecommerceapp.api.service.AuthService;
 import com.example.ecommerceapp.api.service.CategoryService;
 import com.example.ecommerceapp.api.service.ChatApiService;
 import com.example.ecommerceapp.api.service.PaymentApiService;
 import com.example.ecommerceapp.api.service.ProductEvaluationService;
 import com.example.ecommerceapp.api.service.ProductImageService;
+import com.example.ecommerceapp.api.service.PlatformFeeService;
 import com.example.ecommerceapp.api.service.ProductService;
 import com.example.ecommerceapp.api.service.RecommendationService;
 import com.example.ecommerceapp.api.service.ShopService;
@@ -112,6 +114,10 @@ public class ApiClient {
     }
 
     // ===== AUTH API =====
+    public static PlatformFeeService getPlatformFeeService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(PlatformFeeService.class);
+    }
+
     public static AuthService getAuthService(TokenManager tm) {
         return createAuthRetrofit(tm).create(AuthService.class);
     }
@@ -161,12 +167,12 @@ public class ApiClient {
         return createAuthRetrofit(tokenManager).create(ChatApiService.class);
     }
 
-    public static com.example.ecommerceapp.api.service.AiChatApiService getAiChatApiService(TokenManager tokenManager) {
-        return createAuthRetrofit(tokenManager).create(com.example.ecommerceapp.api.service.AiChatApiService.class);
+    public static AiChatApiService getAiChatApiService(TokenManager tokenManager) {
+        return createAuthRetrofit(tokenManager).create(AiChatApiService.class);
     }
 
     public static PaymentApiService getPaymentApiService() {
-        return getPublicRetrofit().create(com.example.ecommerceapp.api.service.PaymentApiService.class);
+        return getPublicRetrofit().create(PaymentApiService.class);
     }
 
     public static ProductEvaluationService getProductEvaluationService(TokenManager tm) {
