@@ -27,6 +27,7 @@ public class ReviewActivity extends AppCompatActivity {
     private Button btnSubmitReview;
 
     private int productId = -1;
+    private int orderItemId = -1;
     private TokenManager tokenManager;
 
     @Override
@@ -43,10 +44,11 @@ public class ReviewActivity extends AppCompatActivity {
 
         tokenManager = TokenManager.getInstance(this);
 
-        // 2. Nhận Product ID từ Intent
+        // 2. Nhận Product ID và Order Item ID từ Intent
         productId = getIntent().getIntExtra("PRODUCT_ID", -1);
-        if (productId == -1) {
-            Toast.makeText(this, "Lỗi: Không tìm thấy sản phẩm!", Toast.LENGTH_SHORT).show();
+        orderItemId = getIntent().getIntExtra("ORDER_ITEM_ID", -1);
+        if (productId == -1 || orderItemId == -1) {
+            Toast.makeText(this, "Lỗi: Không tìm thấy sản phẩm hoặc đơn hàng!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -81,7 +83,7 @@ public class ReviewActivity extends AppCompatActivity {
         }
 
         // Tạo cục dữ liệu Request giống hệt BE yêu cầu
-        ReviewRequest request = new ReviewRequest(userId, productId, rating, comment);
+        ReviewRequest request = new ReviewRequest(userId, productId, orderItemId, rating, comment);
 
         // HIỂN THỊ LOADING Ở ĐÂY (NẾU CÓ)
         btnSubmitReview.setEnabled(false);

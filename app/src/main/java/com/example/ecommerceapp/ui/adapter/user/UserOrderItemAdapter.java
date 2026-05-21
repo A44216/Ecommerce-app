@@ -51,6 +51,7 @@ public class UserOrderItemAdapter extends RecyclerView.Adapter<UserOrderItemAdap
 
             android.content.Intent intent = new android.content.Intent(context, com.example.ecommerceapp.ui.activity.home.user.review.ReviewActivity.class);
             intent.putExtra("PRODUCT_ID", item.getProductId()); // Gửi ID của sản phẩm này sang
+            intent.putExtra("ORDER_ITEM_ID", item.getId()); // Gửi ID của OrderItem
             context.startActivity(intent); // Bắt đầu bay sang màn hình Đánh giá
         });
 
