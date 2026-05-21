@@ -23,6 +23,7 @@ import com.example.ecommerceapp.api.service.admin.AdminCouponService;
 import com.example.ecommerceapp.api.service.admin.AdminDashboardService;
 import com.example.ecommerceapp.api.service.admin.AdminNotificationService;
 import com.example.ecommerceapp.api.service.admin.AdminOrderService;
+import com.example.ecommerceapp.api.service.admin.AdminPlatformFeeService;
 import com.example.ecommerceapp.api.service.admin.AdminProductService;
 import com.example.ecommerceapp.api.service.admin.AdminProfileService;
 import com.example.ecommerceapp.api.service.admin.AdminShopService;
@@ -208,6 +209,10 @@ public class ApiClient {
 
     public static AdminProfileService getAdminProfileService(TokenManager tm) {
         return createAuthRetrofit(tm).create(AdminProfileService.class);
+    }
+
+    public static AdminPlatformFeeService getAdminPlatformFeeService(TokenManager tm) {
+        return createAuthRetrofit(tm).create(AdminPlatformFeeService.class);
     }
 
     public static AdminCouponService getAdminCouponService(TokenManager tm) {

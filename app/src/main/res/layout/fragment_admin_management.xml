@@ -109,6 +109,35 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Platform Fee Management -->
+        <LinearLayout
+            android:id="@+id/itemPlatformFee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="6dp">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="Platform Fee"
+                android:src="@drawable/ic_revenue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Quản lý phí nền tảng"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

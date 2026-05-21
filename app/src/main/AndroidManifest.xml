@@ -162,6 +162,9 @@
             android:name=".ui.activity.home.admin.management.AdminCreateNotificationActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.home.admin.management.platformfee.AdminPlatformFeeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.login.RegisterActivity"
             android:exported="false" />
         <activity
