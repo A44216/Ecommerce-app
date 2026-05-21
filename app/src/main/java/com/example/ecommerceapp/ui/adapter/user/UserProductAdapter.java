@@ -16,6 +16,9 @@ import com.example.ecommerceapp.data.model.response.UserProductImageResponse;
 import com.example.ecommerceapp.data.model.response.UserProductResponse;
 import com.example.ecommerceapp.ui.activity.home.user.product.UserProductDetailActivity;
 import com.example.ecommerceapp.utils.ImageLoader;
+import com.example.ecommerceapp.utils.NumberUtils;
+
+import java.math.BigDecimal;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -57,6 +60,13 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
         if (product.getPrice() != null) {
             DecimalFormat formatter = new DecimalFormat("#,###");
             holder.tvProductPrice.setText(formatter.format(product.getPrice()) + "đ");
+        }
+
+        int displaySoldCount = product.getSoldCount() != null ? product.getSoldCount() : 0;
+        if (displaySoldCount >= 1000) {
+            holder.tvSold.setText("Đã bán " + NumberUtils.formatCompact(BigDecimal.valueOf(displaySoldCount)).toLowerCase());
+        } else {
+            holder.tvSold.setText("Đã bán " + displaySoldCount);
         }
 
         // 2. Load Hình ảnh (Lấy ảnh đầu tiên trong mảng images trả về)
@@ -116,7 +126,7 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProductImage;
-        TextView tvProductName, tvProductPrice, tvMatchScore;
+        TextView tvProductName, tvProductPrice, tvMatchScore, tvSold;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -124,6 +134,7 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
             tvProductName = itemView.findViewById(R.id.tvProductName);
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
             tvMatchScore = itemView.findViewById(R.id.tvMatchScore);
+            tvSold = itemView.findViewById(R.id.tvSold);
         }
     }
 }
