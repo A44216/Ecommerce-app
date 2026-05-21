@@ -235,9 +235,10 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
 
                         @Override
                         public void onSuccess(String url) {
-                            addProductImage(productId, url);
-                            done[0]++;
-                            checkDone(total, done[0]);
+                            addProductImage(productId, url, () -> {
+                                done[0]++;
+                                checkDone(total, done[0]);
+                            });
                         }
 
                         @Override
@@ -259,7 +260,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
         }
     }
 
-    private void addProductImage(int productId, String url) {
+    private void addProductImage(int productId, String url, Runnable onComplete) {
 
         ProductImageRequest req = new ProductImageRequest();
         req.setProductId(productId);
@@ -273,12 +274,18 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             System.out.println("Save image OK");
                         }
+                        if (onComplete != null) {
+                            onComplete.run();
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<ProductImageResponse> call, Throwable t) {
                         Toast.makeText(SellerAddAndEditProductActivity.this,
                                 "Lưu ảnh DB lỗi", Toast.LENGTH_SHORT).show();
+                        if (onComplete != null) {
+                            onComplete.run();
+                        }
                     }
                 });
     }

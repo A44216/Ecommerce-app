@@ -279,11 +279,14 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                                 Log.d("UPLOAD", "========================");
 
                                 if (response.isSuccessful() && response.body() != null) {
-                                    addProductImage(productId, response.body());
+                                    addProductImage(productId, response.body(), () -> {
+                                        count[0]++;
+                                        checkDone(total, count[0]);
+                                    });
+                                } else {
+                                    count[0]++;
+                                    checkDone(total, count[0]);
                                 }
-
-                                count[0]++;
-                                checkDone(total, count[0]);
                             }
 
                             @Override
@@ -315,7 +318,7 @@ public class AddAndEditProductActivity extends AppCompatActivity {
         }
     }
 
-    private void addProductImage(int productId, String url) {
+    private void addProductImage(int productId, String url, Runnable onComplete) {
 
         ProductImageRequest req = new ProductImageRequest();
         req.setProductId(productId);
@@ -329,12 +332,18 @@ public class AddAndEditProductActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             System.out.println("Save image OK");
                         }
+                        if (onComplete != null) {
+                            onComplete.run();
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<ProductImageResponse> call, Throwable t) {
                         Toast.makeText(AddAndEditProductActivity.this,
                                 "Lưu ảnh DB lỗi", Toast.LENGTH_SHORT).show();
+                        if (onComplete != null) {
+                            onComplete.run();
+                        }
                     }
                 });
     }
