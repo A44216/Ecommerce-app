@@ -17,6 +17,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
+        Button btnManageAddress = findViewById(R.id.btnManageAddress);
+        btnManageAddress.setOnClickListener(v -> {
+            startActivity(new Intent(this, com.example.ecommerceapp.ui.activity.home.user.settings.UserManageAddressActivity.class));
+        });
+
         Button btnEditProfile = findViewById(R.id.btnEditProfile);
         Button btnChangePassword = findViewById(R.id.btnChangePassword);
 

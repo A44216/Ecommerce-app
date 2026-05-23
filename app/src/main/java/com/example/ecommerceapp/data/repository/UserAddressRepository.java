@@ -23,4 +23,12 @@ public class UserAddressRepository {
     public Call<UserAddressResponse> createAddress(UserAddressRequest request) {
         return apiService.createAddress(request);
     }
+
+    public Call<UserAddressResponse> updateAddress(int id, UserAddressRequest request) {
+        return apiService.updateAddress(id, request);
+    }
+
+    public Call<Void> deleteAddress(int id) {
+        return apiService.deleteAddress(id);
+    }
 }

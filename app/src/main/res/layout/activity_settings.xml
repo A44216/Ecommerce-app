@@ -32,6 +32,16 @@
     </RelativeLayout>
 
     <Button
+        android:id="@+id/btnManageAddress"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Quản lý địa chỉ giao hàng"
+        android:backgroundTint="@color/white"
+        android:textColor="#333333" />
+
+    <Button
         android:id="@+id/btnEditProfile"
         android:layout_width="match_parent"
         android:layout_height="60dp"

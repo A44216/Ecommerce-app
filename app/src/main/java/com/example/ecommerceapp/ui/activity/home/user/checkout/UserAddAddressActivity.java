@@ -49,7 +49,21 @@ public class UserAddAddressActivity extends AppCompatActivity {
         UserAddressApiService apiService = ApiClient.getUserAddressApiService(tokenManager);
         repository = new UserAddressRepository(apiService);
 
-        // 3. Sự kiện Lưu Địa Chỉ
+        // 3. Xử lý logic Edit (Nếu có truyền data từ Intent)
+        int editAddressId = getIntent().getIntExtra("ADDRESS_ID", -1);
+        boolean isEditMode = (editAddressId != -1);
+
+        if (isEditMode) {
+            etFullName.setText(getIntent().getStringExtra("FULL_NAME"));
+            etPhone.setText(getIntent().getStringExtra("PHONE"));
+            etCity.setText(getIntent().getStringExtra("CITY"));
+            etDistrict.setText(getIntent().getStringExtra("DISTRICT"));
+            etWard.setText(getIntent().getStringExtra("WARD"));
+            etAddressLine.setText(getIntent().getStringExtra("ADDRESS_LINE"));
+            btnSaveAddress.setText("Cập nhật địa chỉ");
+        }
+
+        // 4. Sự kiện Lưu / Cập Nhật Địa Chỉ
         btnSaveAddress.setOnClickListener(v -> {
             String name = etFullName.getText().toString().trim();
             String phone = etPhone.getText().toString().trim();
@@ -72,24 +86,43 @@ public class UserAddAddressActivity extends AppCompatActivity {
             // Gói thành Request (mặc định cho isDefault = false)
             UserAddressRequest request = new UserAddressRequest(userId, name, phone, line, city, district, ward, false);
 
-            // Bắn API
-            repository.createAddress(request).enqueue(new Callback<UserAddressResponse>() {
-                @Override
-                public void onResponse(Call<UserAddressResponse> call, Response<UserAddressResponse> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(UserAddAddressActivity.this, "Thêm địa chỉ thành công!", Toast.LENGTH_SHORT).show();
-                        // Đóng màn hình này lại, quay về màn hình Checkout
-                        finish();
-                    } else {
-                        Toast.makeText(UserAddAddressActivity.this, "Thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+            if (isEditMode) {
+                // Gọi API Update
+                repository.updateAddress(editAddressId, request).enqueue(new Callback<UserAddressResponse>() {
+                    @Override
+                    public void onResponse(Call<UserAddressResponse> call, Response<UserAddressResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(UserAddAddressActivity.this, "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(UserAddAddressActivity.this, "Cập nhật thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<UserAddressResponse> call, Throwable t) {
-                    Toast.makeText(UserAddAddressActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<UserAddressResponse> call, Throwable t) {
+                        Toast.makeText(UserAddAddressActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                // Bắn API Create
+                repository.createAddress(request).enqueue(new Callback<UserAddressResponse>() {
+                    @Override
+                    public void onResponse(Call<UserAddressResponse> call, Response<UserAddressResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(UserAddAddressActivity.this, "Thêm địa chỉ thành công!", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(UserAddAddressActivity.this, "Thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserAddressResponse> call, Throwable t) {
+                        Toast.makeText(UserAddAddressActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         });
     }
 }

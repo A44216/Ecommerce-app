@@ -50,6 +50,9 @@
             android:name=".ui.activity.home.user.settings.SettingsActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.home.user.settings.UserManageAddressActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.home.user.settings.ChangePasswordActivity"
             android:exported="false" />
         <activity
