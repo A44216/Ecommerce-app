@@ -56,4 +56,8 @@ public class SellerProductRepository {
         return apiService.autocompleteProducts(keyword);
     }
 
+    public Call<com.example.ecommerceapp.data.model.response.seller.product.SellerAssistantResponse> getProductAnalysis(int id) {
+        return apiService.getProductAnalysis(id);
+    }
+
 }

@@ -23,9 +23,14 @@ import com.example.ecommerceapp.api.ApiClient;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.data.repository.seller.SellerProductRepository;
+import com.example.ecommerceapp.data.model.response.seller.product.SellerAssistantResponse;
 import com.example.ecommerceapp.ui.activity.home.seller.review.SellerReviewActivity;
 import com.example.ecommerceapp.ui.adapter.seller.product.SellerImagePagerAdapter;
+import com.example.ecommerceapp.ui.view.FuzzyTriangleView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
+import android.app.ProgressDialog;
+import android.widget.Button;
 
 import java.math.RoundingMode;
 
@@ -38,6 +43,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
     private WormDotsIndicator dotsIndicator;
     private ScrollView svProductDetail;
     private ProgressBar progressBarProductDetail;
+    private Button btnAiAnalysis;
 
     private SellerProductRepository repository;
 
@@ -91,6 +97,7 @@ public class SellerProductDetailActivity extends AppCompatActivity {
         tvViewReviews = findViewById(R.id.tvViewReviews);
         svProductDetail = findViewById(R.id.svProductDetail);
         progressBarProductDetail = findViewById(R.id.progressBarProductDetail);
+        btnAiAnalysis = findViewById(R.id.btnAiAnalysis);
     }
 
     private void initListeners() {
@@ -101,6 +108,10 @@ public class SellerProductDetailActivity extends AppCompatActivity {
             it.putExtra("productId", productId);
             startActivity(it);
         });
+
+        if (btnAiAnalysis != null) {
+            btnAiAnalysis.setOnClickListener(v -> fetchAiAnalysis());
+        }
     }
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
@@ -188,6 +199,55 @@ public class SellerProductDetailActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void fetchAiAnalysis() {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Trợ lý AI đang phân tích dữ liệu...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        repository.getProductAnalysis(productId).enqueue(new retrofit2.Callback<SellerAssistantResponse>() {
+            @Override
+            public void onResponse(retrofit2.Call<SellerAssistantResponse> call, retrofit2.Response<SellerAssistantResponse> response) {
+                progressDialog.dismiss();
+                if (response.isSuccessful() && response.body() != null) {
+                    showAiAnalysisBottomSheet(response.body());
+                } else {
+                    Toast.makeText(SellerProductDetailActivity.this, "Không thể phân tích sản phẩm lúc này.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<SellerAssistantResponse> call, Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(SellerProductDetailActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showAiAnalysisBottomSheet(SellerAssistantResponse data) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_seller_ai_analysis_bottom_sheet, null);
+        bottomSheetDialog.setContentView(view);
+
+        TextView tvAnalysis = view.findViewById(R.id.tvAnalysis);
+        TextView tvRecommendation = view.findViewById(R.id.tvRecommendation);
+        FuzzyTriangleView fuzzyTriangleView = view.findViewById(R.id.fuzzyTriangleView);
+        Button btnClose = view.findViewById(R.id.btnClose);
+
+        tvAnalysis.setText(data.getAnalysis() != null ? data.getAnalysis() : "Không có phân tích.");
+        tvRecommendation.setText(data.getRecommendation() != null ? data.getRecommendation() : "Không có lời khuyên.");
+
+        double r = data.getRatingScore() != null ? data.getRatingScore() : 0.0;
+        double s = data.getSoldScore() != null ? data.getSoldScore() : 0.0;
+        double p = data.getPriceScore() != null ? data.getPriceScore() : 0.0;
+
+        fuzzyTriangleView.setScores((float) r, (float) s, (float) p);
+
+        btnClose.setOnClickListener(v -> bottomSheetDialog.dismiss());
+
+        bottomSheetDialog.show();
     }
 
 }

@@ -190,6 +190,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp"/>
 
+        <!-- Nút Trợ lý AI -->
+        <Button
+            android:id="@+id/btnAiAnalysis"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            android:text="✨ Trợ lý AI Phân tích"
+            android:backgroundTint="#2563EB"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="14dp"
+            app:layout_constraintTop_toBottomOf="@+id/dotsIndicator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

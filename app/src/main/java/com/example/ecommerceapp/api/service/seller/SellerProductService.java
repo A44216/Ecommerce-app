@@ -47,4 +47,7 @@ public interface SellerProductService {
             @Query("keyword") String keyword
     );
 
+    @GET("seller/products/{id}/analysis")
+    Call<com.example.ecommerceapp.data.model.response.seller.product.SellerAssistantResponse> getProductAnalysis(@Path("id") int id);
+
 }
