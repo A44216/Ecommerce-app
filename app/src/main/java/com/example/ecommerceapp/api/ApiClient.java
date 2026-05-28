@@ -58,7 +58,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://10.0.2.2:8081/api/";
+    private static final String BASE_URL = "https://ecommerce-rgcj.onrender.com/api/";
     private static Retrofit publicRetrofit;
 
     private static Gson getGson() {

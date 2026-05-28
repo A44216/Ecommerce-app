@@ -20,6 +20,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.ecommerceapp.R;
 import com.example.ecommerceapp.api.ApiClient;
+import com.example.ecommerceapp.data.enums.ProductStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.product.SellerProductResponse;
 import com.example.ecommerceapp.data.repository.seller.SellerProductRepository;
@@ -176,6 +177,14 @@ public class SellerProductDetailActivity extends AppCompatActivity {
             viewPagerImages.setAdapter(null);
 
             dotsIndicator.setVisibility(View.GONE);
+        }
+
+        if (btnAiAnalysis != null) {
+            if (!isDeleted && product.getStatus() == ProductStatus.APPROVED) {
+                btnAiAnalysis.setVisibility(View.VISIBLE);
+            } else {
+                btnAiAnalysis.setVisibility(View.GONE);
+            }
         }
 
     }
