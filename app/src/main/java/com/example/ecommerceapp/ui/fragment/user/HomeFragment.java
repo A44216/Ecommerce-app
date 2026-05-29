@@ -89,7 +89,11 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-
+        // Nút Mở Trợ lý ảo AI
+        com.google.android.material.floatingactionbutton.FloatingActionButton fabAssistant = view.findViewById(R.id.fabAssistant);
+        fabAssistant.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), com.example.ecommerceapp.ui.activity.AssistantChatActivity.class));
+        });
 
         // 2. Setup RecyclerView Sản phẩm
         rvProducts = view.findViewById(R.id.rvProducts);

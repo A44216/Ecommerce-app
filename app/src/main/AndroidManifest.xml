@@ -213,6 +213,10 @@
         <activity
             android:name=".ui.activity.home.user.settings.UserRegisterShopActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.activity.AssistantChatActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
