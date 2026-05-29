@@ -184,6 +184,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
                             Intent intent = new Intent(UserProductDetailActivity.this, ChatActivity.class);
                             intent.putExtra("CONVERSATION_ID", conversationId);
                             intent.putExtra("SHOP_NAME", shopName != null ? shopName : "Shop");
+                            intent.putExtra("SHOP_ID", shopId);
                             startActivity(intent);
 
                             Toast.makeText(UserProductDetailActivity.this, "Đã lấy thành công phòng Chat ID: " + conversationId, Toast.LENGTH_SHORT).show();
