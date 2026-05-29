@@ -233,6 +233,10 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 showLoginRequireDialog();
                 return;
             }
+            if (tokenManager.getShopId() == shopId) {
+                Toast.makeText(UserProductDetailActivity.this, "Bạn không thể mua sản phẩm của chính mình!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet bottomSheet = new com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet(currentProduct, currentProduct.getStock() != null ? currentProduct.getStock() : stock, quantity -> {
                 CartManager.getInstance().addToCart(currentProduct, quantity);
                 Toast.makeText(UserProductDetailActivity.this, "Đã thêm " + quantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
@@ -243,6 +247,10 @@ public class UserProductDetailActivity extends AppCompatActivity {
         btnBuyNow.setOnClickListener(v -> {
             if (tokenManager.getUserId() == -1) {
                 showLoginRequireDialog();
+                return;
+            }
+            if (tokenManager.getShopId() == shopId) {
+                Toast.makeText(UserProductDetailActivity.this, "Bạn không thể mua sản phẩm của chính mình!", Toast.LENGTH_SHORT).show();
                 return;
             }
             com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet bottomSheet = new com.example.ecommerceapp.ui.fragment.user.AddToCartBottomSheet(currentProduct, currentProduct.getStock() != null ? currentProduct.getStock() : stock, quantity -> {
