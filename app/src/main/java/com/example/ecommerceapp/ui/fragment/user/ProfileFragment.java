@@ -121,7 +121,7 @@ public class ProfileFragment extends Fragment {
             btnLogout.setText("Đăng xuất");
             btnLogout.setOnClickListener(v -> {
                 tokenManager.clearAllData();
-                CartManager.getInstance().clearCart();
+                CartManager.getInstance().loadCart();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

@@ -261,6 +261,9 @@ public class LoginActivity extends AppCompatActivity {
                     tokenManager.saveRole(user.role);
                     tokenManager.setRememberLogin(true);
                     tokenManager.saveUserId(user.id);
+                    
+                    com.example.ecommerceapp.utils.CartManager.getInstance().loadCart();
+                    com.example.ecommerceapp.utils.CartManager.getInstance().mergeGuestCart();
 
                     Toast.makeText(LoginActivity.this, "Đăng nhập Google thành công!", Toast.LENGTH_SHORT).show();
 
@@ -360,6 +363,9 @@ public class LoginActivity extends AppCompatActivity {
                     tokenManager.saveRole(user.role);
                     tokenManager.setRememberLogin(chkRememberLogin.isChecked());
                     tokenManager.saveUserId(user.id);
+                    
+                    com.example.ecommerceapp.utils.CartManager.getInstance().loadCart();
+                    com.example.ecommerceapp.utils.CartManager.getInstance().mergeGuestCart();
 
                     Toast.makeText(LoginActivity.this, "Login success: " + user.role, Toast.LENGTH_SHORT).show();
 
