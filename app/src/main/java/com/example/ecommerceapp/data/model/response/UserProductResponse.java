@@ -14,6 +14,7 @@ public class UserProductResponse {
     private Integer categoryId;
     private Integer shopId;
     private String shopName;
+    private Integer shopOwnerId;
 
     // --- Các thông số để hiển thị thống kê ---
     private Float ratingAvg;   // Đã đổi thành Float để dễ truyền qua Intent (Hoặc bạn có thể dùng BigDecimal cũng được nhưng cần ép kiểu)
@@ -31,6 +32,7 @@ public class UserProductResponse {
     public Integer getCategoryId() { return categoryId; }
     public Integer getShopId() { return shopId; }
     public String getShopName() { return shopName; }
+    public Integer getShopOwnerId() { return shopOwnerId; }
 
     // Đã đổi kiểu trả về cho khớp với adapter
     public Float getRatingAvg() { return ratingAvg; }
@@ -49,6 +51,7 @@ public class UserProductResponse {
     public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
     public void setShopId(Integer shopId) { this.shopId = shopId; }
     public void setShopName(String shopName) { this.shopName = shopName; }
+    public void setShopOwnerId(Integer shopOwnerId) { this.shopOwnerId = shopOwnerId; }
     public void setRatingAvg(Float ratingAvg) { this.ratingAvg = ratingAvg; }
     public void setSoldCount(Integer soldCount) { this.soldCount = soldCount; }
     public void setStock(Integer stock) { this.stock = stock; }

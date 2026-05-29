@@ -233,7 +233,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 showLoginRequireDialog();
                 return;
             }
-            if (tokenManager.getShopId() == shopId) {
+            if (currentProduct != null && currentProduct.getShopOwnerId() != null && currentProduct.getShopOwnerId() == tokenManager.getUserId()) {
                 Toast.makeText(UserProductDetailActivity.this, "Bạn không thể mua sản phẩm của chính mình!", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -249,7 +249,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 showLoginRequireDialog();
                 return;
             }
-            if (tokenManager.getShopId() == shopId) {
+            if (currentProduct != null && currentProduct.getShopOwnerId() != null && currentProduct.getShopOwnerId() == tokenManager.getUserId()) {
                 Toast.makeText(UserProductDetailActivity.this, "Bạn không thể mua sản phẩm của chính mình!", Toast.LENGTH_SHORT).show();
                 return;
             }
