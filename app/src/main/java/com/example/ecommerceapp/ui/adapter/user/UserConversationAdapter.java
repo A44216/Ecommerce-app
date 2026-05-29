@@ -43,10 +43,27 @@ public class UserConversationAdapter extends RecyclerView.Adapter<UserConversati
 
         holder.tvShopName.setText(conversation.getShopName());
         
-        // Hiển thị ngày tạo (nếu có)
         if (conversation.getCreatedAt() != null && conversation.getCreatedAt().length() >= 10) {
-            String date = conversation.getCreatedAt().substring(0, 10);
-            holder.tvDate.setText(date);
+            try {
+                String dateStr = conversation.getCreatedAt();
+                if (dateStr.length() > 19) {
+                    dateStr = dateStr.substring(0, 19); // Bỏ phần milliseconds
+                }
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                java.util.Date date = sdf.parse(dateStr);
+                java.util.Calendar now = java.util.Calendar.getInstance();
+                java.util.Calendar msgTime = java.util.Calendar.getInstance();
+                msgTime.setTime(date);
+                
+                if (now.get(java.util.Calendar.YEAR) == msgTime.get(java.util.Calendar.YEAR) &&
+                    now.get(java.util.Calendar.DAY_OF_YEAR) == msgTime.get(java.util.Calendar.DAY_OF_YEAR)) {
+                    holder.tvDate.setText(new java.text.SimpleDateFormat("HH:mm").format(date));
+                } else {
+                    holder.tvDate.setText(new java.text.SimpleDateFormat("dd/MM/yyyy").format(date));
+                }
+            } catch (Exception e) {
+                holder.tvDate.setText(conversation.getCreatedAt().substring(0, 10));
+            }
         } else {
             holder.tvDate.setText("");
         }
