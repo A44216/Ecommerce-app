@@ -78,19 +78,15 @@ public class NotificationFragment extends Fragment {
 
         listTopNotifications = new ArrayList<>();
         listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_today, "Khuyến mãi", "Chưa có thông báo mới", 0));
-        listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_camera, "Live & Video", "Chưa có thông báo mới", 0));
         listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_agenda, "Cập nhật hệ thống", "Chưa có thông báo mới", 0));
         listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_gallery, "Giải thưởng & Quà tặng", "Chưa có thông báo mới", 0));
-        listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_mapmode, "Giao đồ ăn", "Chưa có thông báo mới", 0));
  
         topAdapter = new NotificationAdapter(listTopNotifications, item -> {
             String type = "";
             switch (item.getTitle()) {
                 case "Khuyến mãi": type = "PROMOTION"; break;
-                case "Live & Video": type = "LIVE"; break;
                 case "Cập nhật hệ thống": type = "SYSTEM"; break;
                 case "Giải thưởng & Quà tặng": type = "AWARDS"; break;
-                case "Giao đồ ăn": type = "FOOD"; break;
             }
             if (!type.isEmpty()) {
                 Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.notification.CategoryNotificationActivity.class);
@@ -182,12 +178,10 @@ public class NotificationFragment extends Fragment {
                         }
                     }
 
-                    // --- CẬP NHẬT DANH SÁCH TRÊN (5 mục) ---
+                    // --- CẬP NHẬT DANH SÁCH TRÊN ---
                     updateTopCategory("Khuyến mãi", "PROMOTION", latestByType, unreadCounts);
-                    updateTopCategory("Live & Video", "LIVE", latestByType, unreadCounts);
                     updateTopCategory("Cập nhật hệ thống", "SYSTEM", latestByType, unreadCounts);
                     updateTopCategory("Giải thưởng & Quà tặng", "AWARDS", latestByType, unreadCounts);
-                    updateTopCategory("Giao đồ ăn", "FOOD", latestByType, unreadCounts);
                     topAdapter.notifyDataSetChanged();
 
                     // --- CẬP NHẬT DANH SÁCH DƯỚI (Cập nhật đơn hàng) ---

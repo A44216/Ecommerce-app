@@ -31,17 +31,13 @@ public class AdminCreateNotificationActivity extends AppCompatActivity {
     private final String[] notificationTypes = {
             "PROMOTION", // Khuyến mãi
             "SYSTEM",    // Cập nhật hệ thống
-            "LIVE",      // Live & Video
-            "AWARDS",    // Giải thưởng
-            "FOOD"       // Giao đồ ăn
+            "AWARDS"     // Giải thưởng
     };
 
     private final String[] notificationTypeDisplayNames = {
             "Khuyến mãi (PROMOTION)",
             "Hệ thống (SYSTEM)",
-            "Live & Video (LIVE)",
-            "Giải thưởng (AWARDS)",
-            "Giao đồ ăn (FOOD)"
+            "Giải thưởng (AWARDS)"
     };
 
     @Override
