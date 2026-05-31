@@ -121,7 +121,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                     // --- HIỂN THỊ PHƯƠNG THỨC THANH TOÁN ---
                     if (order.getPaymentMethod() != null) {
                         if ("QR".equalsIgnoreCase(order.getPaymentMethod())) {
-                            tvPaymentMethod.setText("Ví VNPay (QR)");
+                            tvPaymentMethod.setText("VNPay");
                         } else {
                             tvPaymentMethod.setText("Thanh toán khi nhận hàng (COD)");
                         }

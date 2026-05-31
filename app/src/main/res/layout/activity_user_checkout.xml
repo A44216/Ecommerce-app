@@ -263,7 +263,7 @@
                         android:id="@+id/rbVNPay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ví VNPay"
+                        android:text="VNPay"
                         android:buttonTint="@color/primary_blue" />
                 </RadioGroup>
             </LinearLayout>
