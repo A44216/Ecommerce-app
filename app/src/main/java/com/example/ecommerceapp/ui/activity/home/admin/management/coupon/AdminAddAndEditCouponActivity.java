@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -169,6 +171,13 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
             }
         });
 
+        clearErrorOnType(etCode);
+        clearErrorOnType(etDiscountPercent);
+        clearErrorOnType(etDiscountAmount);
+        clearErrorOnType(etMaxDiscountAmount);
+        clearErrorOnType(etMinOrderValue);
+        clearErrorOnType(etMaxUsage);
+
         etStartDate.setOnClickListener(v -> showDatePicker(true));
         etEndDate.setOnClickListener(v -> showDatePicker(false));
 
@@ -180,6 +189,19 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
 
         btnDeleteVoucher.setOnClickListener(v -> showDeleteConfirmDialog());
         btnRestoreVoucher.setOnClickListener(v -> showRestoreConfirmDialog());
+    }
+
+    private void clearErrorOnType(TextInputEditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editText.setError(null);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
     private void showDeleteConfirmDialog() {
@@ -307,9 +329,11 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
             if (isStart) {
                 startDateTime = selectedDate;
                 etStartDate.setText(startDateTime.format(formatter));
+                etStartDate.setError(null);
             } else {
                 endDateTime = selectedDate.withHour(23).withMinute(59).withSecond(59);
                 etEndDate.setText(endDateTime.format(formatter));
+                etEndDate.setError(null);
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         dialog.show();
@@ -411,10 +435,28 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                 etDiscountPercent.setError("Vui lòng nhập phần trăm");
                 return false;
             }
-            int pct = Integer.parseInt(pctStr);
-            if (pct < 0 || pct > 100) {
-                etDiscountPercent.setError("Phần trăm phải từ 0 - 100");
+            try {
+                int pct = Integer.parseInt(pctStr);
+                if (pct < 0 || pct > 100) {
+                    etDiscountPercent.setError("Phần trăm phải từ 0 - 100");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                etDiscountPercent.setError("Định dạng số không hợp lệ");
                 return false;
+            }
+
+            String maxDiscountStr = etMaxDiscountAmount.getText().toString();
+            if (!maxDiscountStr.isEmpty()) {
+                try {
+                    if (new BigDecimal(maxDiscountStr).compareTo(BigDecimal.ZERO) < 0) {
+                        etMaxDiscountAmount.setError("Giảm tối đa phải >= 0");
+                        return false;
+                    }
+                } catch (NumberFormatException e) {
+                    etMaxDiscountAmount.setError("Định dạng số không hợp lệ");
+                    return false;
+                }
             }
         } else {
             String amtStr = etDiscountAmount.getText().toString();
@@ -422,30 +464,51 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                 etDiscountAmount.setError("Vui lòng nhập số tiền");
                 return false;
             }
-            if (new BigDecimal(amtStr).compareTo(BigDecimal.ZERO) < 0) {
-                etDiscountAmount.setError("Số tiền phải >= 0");
+            try {
+                if (new BigDecimal(amtStr).compareTo(BigDecimal.ZERO) < 0) {
+                    etDiscountAmount.setError("Số tiền phải >= 0");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                etDiscountAmount.setError("Định dạng số không hợp lệ");
                 return false;
             }
         }
 
         String minOrder = etMinOrderValue.getText().toString();
-        if (!minOrder.isEmpty() && new BigDecimal(minOrder).compareTo(BigDecimal.ZERO) < 0) {
-            etMinOrderValue.setError("Đơn tối thiểu phải >= 0");
-            return false;
+        if (!minOrder.isEmpty()) {
+            try {
+                if (new BigDecimal(minOrder).compareTo(BigDecimal.ZERO) < 0) {
+                    etMinOrderValue.setError("Đơn tối thiểu phải >= 0");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                etMinOrderValue.setError("Định dạng số không hợp lệ");
+                return false;
+            }
+        }
+
+        String maxUsage = etMaxUsage.getText().toString();
+        if (!maxUsage.isEmpty()) {
+            try {
+                if (Integer.parseInt(maxUsage) <= 0) {
+                    etMaxUsage.setError("Lượt sử dụng phải > 0");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                etMaxUsage.setError("Định dạng số không hợp lệ");
+                return false;
+            }
         }
 
         if (startDateTime == null) {
             etStartDate.setError("Vui lòng chọn ngày bắt đầu");
             return false;
-        } else {
-            etStartDate.setError(null);
         }
 
         if (endDateTime == null) {
             etEndDate.setError("Vui lòng chọn ngày kết thúc");
             return false;
-        } else {
-            etEndDate.setError(null);
         }
 
         if (!endDateTime.isAfter(startDateTime)) {
@@ -478,6 +541,8 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
         String minOrderStr = etMinOrderValue.getText().toString();
         if (!minOrderStr.isEmpty()) {
             request.setMinOrderValue(new BigDecimal(minOrderStr));
+        } else {
+            request.setMinOrderValue(BigDecimal.ZERO);
         }
 
         String maxUsageStr = etMaxUsage.getText().toString();

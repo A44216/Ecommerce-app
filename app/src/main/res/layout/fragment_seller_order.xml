@@ -115,6 +115,7 @@
         android:paddingTop="6dp"
         android:paddingBottom="4dp"
         app:tabTextAppearance="@style/OrderTabTextAppearance"
+        app:tabMode="scrollable"
         tools:ignore="SpeakableTextPresentCheck"/>
 
     <!-- ViewPager để slide mượt -->
