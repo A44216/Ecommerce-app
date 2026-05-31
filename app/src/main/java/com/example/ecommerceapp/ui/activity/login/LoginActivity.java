@@ -3,11 +3,15 @@ package com.example.ecommerceapp.ui.activity.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,10 +62,10 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnLogin;
     private ImageView ivBack;
     private TextView tvContinueAsGuest;
-
+    private ProgressBar progressBar;
 
     // --- GOOGLE SIGN IN VARIABLES ---
-    private android.widget.LinearLayout btnLoginGoogle; // Đổi sang LinearLayout và đổi tên biến
+    private LinearLayout btnLoginGoogle; // Đổi sang LinearLayout và đổi tên biến
     private GoogleSignInClient mGoogleSignInClient;
     // --------------------------------
 
@@ -141,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         chkRememberLogin = findViewById(R.id.chkRememberLogin);
         ivBack = findViewById(R.id.ivBack);
         tvContinueAsGuest = findViewById(R.id.tvContinueAsGuest);
+        progressBar = findViewById(R.id.progressBar);
 
         // --- GOOGLE SIGN IN VIEW ---
         btnLoginGoogle = findViewById(R.id.btnLoginGoogle); // Khớp chuẩn với ID trong XML
@@ -194,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
             if (parts.length < 2) return true;
 
             String payload = new String(
-                    android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT)
+                    Base64.decode(parts[1], Base64.DEFAULT)
             );
 
             org.json.JSONObject json = new org.json.JSONObject(payload);
@@ -248,11 +253,17 @@ public class LoginActivity extends AppCompatActivity {
     private void sendTokenToBackend(String idToken) {
         Toast.makeText(this, "Đang xác thực với Server...", Toast.LENGTH_SHORT).show();
 
+        progressBar.setVisibility(View.VISIBLE);
+        if (btnLoginGoogle != null) btnLoginGoogle.setEnabled(false);
+
         GoogleLoginRequest request = new GoogleLoginRequest(idToken);
 
         authService.loginWithGoogle(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+                progressBar.setVisibility(View.GONE);
+                if (btnLoginGoogle != null) btnLoginGoogle.setEnabled(true);
+
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse user = response.body();
 
@@ -302,6 +313,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                if (btnLoginGoogle != null) btnLoginGoogle.setEnabled(true);
                 Toast.makeText(LoginActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -353,9 +366,15 @@ public class LoginActivity extends AppCompatActivity {
         }
         request.password = password;
 
+        btnLogin.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+
         authService.loginUser(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+                btnLogin.setEnabled(true);
+                progressBar.setVisibility(View.GONE);
+
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse user = response.body();
 
@@ -393,6 +412,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
+                btnLogin.setEnabled(true);
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(LoginActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

@@ -1,10 +1,14 @@
 package com.example.ecommerceapp.ui.activity.login;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -36,7 +40,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private MaterialButton btnSendCode, btnConfirm;
 
     private AuthService authService;
-    private android.os.CountDownTimer countDownTimer;
+    private CountDownTimer countDownTimer;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         etCode = findViewById(R.id.etCode);
         btnSendCode = findViewById(R.id.btnSendCode);
         btnConfirm = findViewById(R.id.btnConfirm);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void initEvents() {
@@ -115,7 +121,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     Toast.makeText(ForgotPasswordActivity.this, "Đã gửi mã xác nhận đến email của bạn", Toast.LENGTH_SHORT).show();
                     etCode.requestFocus(); // Tự động trỏ con trỏ chuột sang ô nhập mã
                     
-                    countDownTimer = new android.os.CountDownTimer(60000, 1000) {
+                    countDownTimer = new CountDownTimer(60000, 1000) {
                         public void onTick(long millisUntilFinished) {
                             btnSendCode.setText("Gửi lại (" + millisUntilFinished / 1000 + "s)");
                         }
@@ -155,6 +161,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     // --- HÀM XỬ LÝ XÁC NHẬN OTP ---
+    @SuppressLint("SetTextI18n")
     private void handleConfirm() {
         String input = Objects.requireNonNull(etUsernameOrEmail.getText()).toString().trim();
         String code = Objects.requireNonNull(etCode.getText()).toString().trim();
@@ -180,6 +187,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         // Đổi trạng thái nút bấm
         btnConfirm.setEnabled(false);
         btnConfirm.setText("Đang kiểm tra...");
+        progressBar.setVisibility(View.VISIBLE);
 
         // GỌI API XÁC NHẬN OTP
         VerifyOtpRequest request = new VerifyOtpRequest(input, code);
@@ -188,6 +196,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 btnConfirm.setEnabled(true);
                 btnConfirm.setText("Xác nhận");
+                progressBar.setVisibility(View.GONE);
 
                 if (response.isSuccessful()) {
                     // MÃ ĐÚNG -> CHUYỂN MÀN HÌNH VÀ "GÓI" THEO EMAIL/USERNAME
@@ -214,6 +223,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 btnConfirm.setEnabled(true);
                 btnConfirm.setText("Xác nhận");
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(ForgotPasswordActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

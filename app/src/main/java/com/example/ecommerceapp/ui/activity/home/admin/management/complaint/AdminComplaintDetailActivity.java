@@ -273,9 +273,11 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
         AdminReplyComplaintRequest request = new AdminReplyComplaintRequest(pendingActionStatus, responseContent);
         
         if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.VISIBLE);
+        setButtonsEnabled(false);
         adminComplaintService.replyComplaint(complaintId, request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                setButtonsEnabled(true);
                 if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     Toast.makeText(AdminComplaintDetailActivity.this, "Xử lý khiếu nại thành công", Toast.LENGTH_SHORT).show();
@@ -288,9 +290,15 @@ public class AdminComplaintDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                setButtonsEnabled(true);
                 if (progressBarComplaintDetail != null) progressBarComplaintDetail.setVisibility(View.GONE);
                 Toast.makeText(AdminComplaintDetailActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    
+    private void setButtonsEnabled(boolean enabled) {
+        if (btnSubmitReply != null) btnSubmitReply.setEnabled(enabled);
+        if (btnCancelReply != null) btnCancelReply.setEnabled(enabled);
     }
 }

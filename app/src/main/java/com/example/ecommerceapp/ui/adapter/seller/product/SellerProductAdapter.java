@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,11 +44,26 @@ public class SellerProductAdapter extends ListAdapter<SellerProductResponse, Sel
             @SuppressLint("DiffUtilEquals")
             @Override
             public boolean areContentsTheSame(@NonNull SellerProductResponse oldItem, @NonNull SellerProductResponse newItem) {
-                return Objects.equals(oldItem.getName(), newItem.getName()) &&
+                boolean sameBasic = Objects.equals(oldItem.getName(), newItem.getName()) &&
                        Objects.equals(oldItem.getPrice(), newItem.getPrice()) &&
                        oldItem.getStatus() == newItem.getStatus() &&
                        Objects.equals(oldItem.getIsDeleted(), newItem.getIsDeleted()) &&
                        oldItem.getSoldCount() == newItem.getSoldCount();
+
+                if (!sameBasic) return false;
+
+                List<ProductImageResponse> oldImgs = oldItem.getImages();
+                List<ProductImageResponse> newImgs = newItem.getImages();
+
+                if (oldImgs == null && newImgs == null) return true;
+                if (oldImgs == null || newImgs == null) return false;
+                if (oldImgs.size() != newImgs.size()) return false;
+
+                if (!oldImgs.isEmpty() && !newImgs.isEmpty()) {
+                    return Objects.equals(oldImgs.get(0).getImageUrl(), newImgs.get(0).getImageUrl());
+                }
+
+                return true;
             }
         });
     }
@@ -86,21 +102,21 @@ public class SellerProductAdapter extends ListAdapter<SellerProductResponse, Sel
         if (isDeleted) {
             holder.getStatus().setText("Đã xóa");
             holder.getStatus().setBackgroundResource(R.drawable.bg_product_status_rejected);
-            holder.getStatus().setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
+            holder.getStatus().setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
         } else {
             holder.getStatus().setText(product.getStatus().getLabel());
             switch (product.getStatus()) {
                 case PENDING:
                     holder.getStatus().setBackgroundResource(R.drawable.bg_product_status_pending);
-                    holder.getStatus().setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.orange));
+                    holder.getStatus().setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.orange));
                     break;
                 case APPROVED:
                     holder.getStatus().setBackgroundResource(R.drawable.bg_product_status_approved);
-                    holder.getStatus().setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.green));
+                    holder.getStatus().setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.green));
                     break;
                 case REJECTED:
                     holder.getStatus().setBackgroundResource(R.drawable.bg_product_status_rejected);
-                    holder.getStatus().setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
+                    holder.getStatus().setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
                     break;
             }
         }

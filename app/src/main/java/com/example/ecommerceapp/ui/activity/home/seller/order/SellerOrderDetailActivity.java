@@ -2,13 +2,19 @@ package com.example.ecommerceapp.ui.activity.home.seller.order;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -144,7 +150,9 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setTitle("Xác nhận")
                     .setMessage("Đổi sang: " + getStatusText(selectedStatus) + "?")
                     .setPositiveButton("OK", (dialog, which) -> {
-
+                        btnConfirm.setEnabled(false);
+                        btnCancel.setEnabled(false);
+                        if (progressBarOrderDetail != null) progressBarOrderDetail.setVisibility(View.VISIBLE);
                         viewModel.updateOrderStatus(orderId, selectedStatus);
                     })
                     .setNegativeButton("Huỷ", null)
@@ -157,7 +165,9 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     .setTitle("Huỷ đơn hàng")
                     .setMessage("Bạn chắc chắn muốn huỷ đơn này?")
                     .setPositiveButton("Huỷ đơn", (dialog, which) -> {
-
+                        btnConfirm.setEnabled(false);
+                        btnCancel.setEnabled(false);
+                        if (progressBarOrderDetail != null) progressBarOrderDetail.setVisibility(View.VISIBLE);
                         viewModel.updateOrderStatus(orderId, OrderStatus.CANCELED);
                     })
                     .setNegativeButton("Không", null)
@@ -268,12 +278,15 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                         btnCancel.setVisibility(View.VISIBLE);
 
                         btnConfirm.setText("Đồng ý hoàn tiền");
-                        btnConfirm.setBackgroundTintList(android.content.res.ColorStateList.valueOf(androidx.core.content.ContextCompat.getColor(this, R.color.green)));
+                        btnConfirm.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green)));
                         btnConfirm.setOnClickListener(v -> {
                             new androidx.appcompat.app.AlertDialog.Builder(this)
                                     .setTitle("Đồng ý hoàn tiền")
                                     .setMessage("Bạn chắc chắn muốn đồng ý hoàn tiền cho đơn hàng này?")
                                     .setPositiveButton("Đồng ý", (dialog, which) -> {
+                                        btnConfirm.setEnabled(false);
+                                        btnCancel.setEnabled(false);
+                                        if (progressBarOrderDetail != null) progressBarOrderDetail.setVisibility(View.VISIBLE);
                                         viewModel.acceptReturn(orderId);
                                     })
                                     .setNegativeButton("Hủy", null)
@@ -281,30 +294,33 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                         });
 
                         btnCancel.setText("Từ chối");
-                        btnCancel.setBackgroundTintList(android.content.res.ColorStateList.valueOf(androidx.core.content.ContextCompat.getColor(this, R.color.red)));
+                        btnCancel.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.red)));
                         btnCancel.setOnClickListener(v -> {
-                            android.widget.EditText input = new android.widget.EditText(this);
+                            EditText input = new EditText(this);
                             input.setHint("Nhập lý do từ chối...");
                             
-                            android.widget.FrameLayout container = new android.widget.FrameLayout(this);
-                            android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(
-                                    android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
-                                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+                            FrameLayout container = new FrameLayout(this);
+                            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT
                             );
                             params.leftMargin = 50;
                             params.rightMargin = 50;
                             input.setLayoutParams(params);
                             container.addView(input);
 
-                            new androidx.appcompat.app.AlertDialog.Builder(this)
+                            new AlertDialog.Builder(this)
                                     .setTitle("Từ chối hoàn tiền (Khiếu nại Admin)")
                                     .setMessage("Vui lòng nhập lý do từ chối yêu cầu trả hàng của khách:")
                                     .setView(container)
                                     .setPositiveButton("Gửi khiếu nại", (dialog, which) -> {
                                         String reason = input.getText().toString();
                                         if (reason.trim().isEmpty()) {
-                                            android.widget.Toast.makeText(this, "Vui lòng nhập lý do!", android.widget.Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(this, "Vui lòng nhập lý do!", Toast.LENGTH_SHORT).show();
                                         } else {
+                                            btnConfirm.setEnabled(false);
+                                            btnCancel.setEnabled(false);
+                                            if (progressBarOrderDetail != null) progressBarOrderDetail.setVisibility(View.VISIBLE);
                                             viewModel.rejectReturn(orderId, reason);
                                         }
                                     })
@@ -372,10 +388,16 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
     private void observeUpdateStatus() {
 
         viewModel.getUpdateStatusResult().observe(this, success -> {
+            if (progressBarOrderDetail != null) progressBarOrderDetail.setVisibility(View.GONE);
+            btnConfirm.setEnabled(true);
+            btnCancel.setEnabled(true);
 
             if (success != null && success) {
+                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
+            } else if (success != null && !success) {
+                Toast.makeText(this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
             }
         });
     }

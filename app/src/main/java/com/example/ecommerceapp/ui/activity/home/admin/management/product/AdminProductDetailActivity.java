@@ -279,9 +279,13 @@ public class AdminProductDetailActivity extends AppCompatActivity {
     }
 
     private void updateProductStatus(ProductStatus status) {
+        setButtonsEnabled(false);
+        if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.VISIBLE);
         service.updateProductStatus(productId, status).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                setButtonsEnabled(true);
+                if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     Toast.makeText(AdminProductDetailActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                     lastAction = "UPDATE_STATUS";
@@ -294,15 +298,21 @@ public class AdminProductDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                setButtonsEnabled(true);
+                if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.GONE);
                 Toast.makeText(AdminProductDetailActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void deleteProduct() {
+        setButtonsEnabled(false);
+        if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.VISIBLE);
         service.deleteProduct(productId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                setButtonsEnabled(true);
+                if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     Toast.makeText(AdminProductDetailActivity.this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
                     isDeletedTab = true;
@@ -315,15 +325,21 @@ public class AdminProductDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                setButtonsEnabled(true);
+                if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.GONE);
                 Toast.makeText(AdminProductDetailActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void restoreProduct() {
+        setButtonsEnabled(false);
+        if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.VISIBLE);
         service.restoreProduct(productId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                setButtonsEnabled(true);
+                if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     Toast.makeText(AdminProductDetailActivity.this, "Đã khôi phục sản phẩm", Toast.LENGTH_SHORT).show();
                     isDeletedTab = false;
@@ -336,6 +352,8 @@ public class AdminProductDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                setButtonsEnabled(true);
+                if (progressBarProductDetail != null) progressBarProductDetail.setVisibility(View.GONE);
                 Toast.makeText(AdminProductDetailActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -344,5 +362,12 @@ public class AdminProductDetailActivity extends AppCompatActivity {
     private void setResultAndFetch() {
         isDataChanged = true;
         fetchProductDetail(productId);
+    }
+    
+    private void setButtonsEnabled(boolean enabled) {
+        if (btnApprove != null) btnApprove.setEnabled(enabled);
+        if (btnReject != null) btnReject.setEnabled(enabled);
+        if (btnDelete != null) btnDelete.setEnabled(enabled);
+        if (btnRestore != null) btnRestore.setEnabled(enabled);
     }
 }

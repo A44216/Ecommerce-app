@@ -187,9 +187,13 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc chắn muốn xóa coupon này?")
                 .setPositiveButton("Xóa", (dialog, which) -> {
+                    setButtonsEnabled(false);
+                    if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.VISIBLE);
                     couponService.deleteCoupon(couponId).enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                            setButtonsEnabled(true);
+                            if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                             if (response.isSuccessful()) {
                                 Toast.makeText(AdminAddAndEditCouponActivity.this, "Đã xóa coupon", Toast.LENGTH_SHORT).show();
                                 setResult(RESULT_OK);
@@ -200,6 +204,8 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                            setButtonsEnabled(true);
+                            if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                             Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -213,9 +219,13 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc chắn muốn khôi phục coupon này?")
                 .setPositiveButton("Khôi phục", (dialog, which) -> {
+                    setButtonsEnabled(false);
+                    if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.VISIBLE);
                     couponService.restoreCoupon(couponId).enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                            setButtonsEnabled(true);
+                            if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                             if (response.isSuccessful()) {
                                 Toast.makeText(AdminAddAndEditCouponActivity.this, "Đã khôi phục coupon", Toast.LENGTH_SHORT).show();
                                 originalStatus = CouponStatus.ACTIVE;
@@ -234,6 +244,8 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                            setButtonsEnabled(true);
+                            if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                             Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -476,6 +488,9 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
         request.setStartDate(startDateTime);
         request.setEndDate(endDateTime);
 
+        setButtonsEnabled(false);
+        if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.VISIBLE);
+
         if (isEdit) {
             couponService.updateCoupon(couponId, request).enqueue(new Callback<AdminCouponResponse>() {
                 @Override
@@ -483,12 +498,16 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         checkAndUpdateStatus();
                     } else {
+                        setButtonsEnabled(true);
+                        if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                         Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi cập nhật", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<AdminCouponResponse> call, @NonNull Throwable t) {
+                    setButtonsEnabled(true);
+                    if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                     Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -496,6 +515,8 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
             couponService.createCoupon(request).enqueue(new Callback<AdminCouponResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<AdminCouponResponse> call, @NonNull Response<AdminCouponResponse> response) {
+                    setButtonsEnabled(true);
+                    if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                     if (response.isSuccessful()) {
                         Toast.makeText(AdminAddAndEditCouponActivity.this, "Tạo thành công", Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
@@ -507,6 +528,8 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NonNull Call<AdminCouponResponse> call, @NonNull Throwable t) {
+                    setButtonsEnabled(true);
+                    if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                     Toast.makeText(AdminAddAndEditCouponActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -531,6 +554,8 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
         return new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                setButtonsEnabled(true);
+                if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                 Toast.makeText(AdminAddAndEditCouponActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
@@ -538,10 +563,18 @@ public class AdminAddAndEditCouponActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                setButtonsEnabled(true);
+                if (progressBarCoupon != null) progressBarCoupon.setVisibility(View.GONE);
                 Toast.makeText(AdminAddAndEditCouponActivity.this, "Cập nhật trạng thái bị lỗi", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
             }
         };
+    }
+    
+    private void setButtonsEnabled(boolean enabled) {
+        if (btnAddVoucher != null) btnAddVoucher.setEnabled(enabled);
+        if (btnDeleteVoucher != null) btnDeleteVoucher.setEnabled(enabled);
+        if (btnRestoreVoucher != null) btnRestoreVoucher.setEnabled(enabled);
     }
 }

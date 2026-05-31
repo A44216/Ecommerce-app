@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +64,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
 
     private int productId = -1;
     private boolean isEdit = false;
+    private ProgressBar progressBar;
 
     private List<CategoryResponse> categoryList = new ArrayList<>();
     private Integer selectedCategoryId = null;
@@ -119,8 +122,14 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
                 ApiClient.getProductService(tokenManager)
         );
 
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+
         loadCategories(() -> {
-            if (isEdit) loadProduct();
+            if (isEdit) {
+                loadProduct();
+            } else {
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+            }
         });
     }
 
@@ -142,6 +151,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
         ivBack.setOnClickListener(v -> finish());
 
         rvImages = findViewById(R.id.rvImages);
+        progressBar = findViewById(R.id.progressBar);
 
         imageAdapter = new SellerImageEditAdapter();
 
@@ -158,7 +168,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<SellerProductResponse> call,
                                            @NonNull Response<SellerProductResponse> response) {
-
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
                         if (response.isSuccessful() && response.body() != null) {
                             bindData(response.body());
                         }
@@ -166,6 +176,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<SellerProductResponse> call, @NonNull Throwable t) {
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
                         Toast.makeText(SellerAddAndEditProductActivity.this,
                                 "Lỗi load sản phẩm",
                                 Toast.LENGTH_SHORT).show();
@@ -206,6 +217,7 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<List<CategoryResponse>> call, @NonNull Throwable t) {
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
                 Toast.makeText(SellerAddAndEditProductActivity.this,
                         "Load category lỗi",
                         Toast.LENGTH_SHORT).show();
@@ -378,6 +390,8 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
     }
 
     private void createProduct(SellerProductRequest request) {
+        btnSubmit.setEnabled(false);
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
 
         productRepository.createProduct(request)
                 .enqueue(new Callback<SellerProductResponse>() {
@@ -390,14 +404,13 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
                             int newProductId = response.body().getId();
 
                             uploadImages(newProductId);
-
-                            Toast.makeText(SellerAddAndEditProductActivity.this,
-                                    "Tạo thành công", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<SellerProductResponse> call, @NonNull Throwable t) {
+                        btnSubmit.setEnabled(true);
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
                         Toast.makeText(SellerAddAndEditProductActivity.this,
                                 "Lỗi tạo sản phẩm", Toast.LENGTH_SHORT).show();
                     }
@@ -405,6 +418,8 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
     }
 
     private void updateProduct(SellerProductRequest request) {
+        btnSubmit.setEnabled(false);
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
 
         productRepository.updateProduct(productId, request)
                 .enqueue(new Callback<SellerProductResponse>() {
@@ -453,6 +468,8 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
                             }
 
                         } else {
+                            btnSubmit.setEnabled(true);
+                            if (progressBar != null) progressBar.setVisibility(View.GONE);
                             Toast.makeText(SellerAddAndEditProductActivity.this,
                                     "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();
                         }
@@ -460,6 +477,8 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<SellerProductResponse> call, @NonNull Throwable t) {
+                        btnSubmit.setEnabled(true);
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
                         Toast.makeText(SellerAddAndEditProductActivity.this,
                                 "Lỗi cập nhật", Toast.LENGTH_SHORT).show();
                     }
@@ -549,6 +568,9 @@ public class SellerAddAndEditProductActivity extends AppCompatActivity {
     }
 
     private void finishSuccess() {
+        if (progressBar != null) progressBar.setVisibility(View.GONE);
+        String msg = isEdit ? "Cập nhật thành công" : "Tạo thành công";
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         finish();
     }

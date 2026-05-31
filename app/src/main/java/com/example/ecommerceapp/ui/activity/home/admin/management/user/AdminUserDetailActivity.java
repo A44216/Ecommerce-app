@@ -114,6 +114,9 @@ public class AdminUserDetailActivity extends AppCompatActivity {
     private void setupObservers() {
         viewModel.getLoading().observe(this, isLoading -> {
             progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            if (btnChangeStatus != null) {
+                btnChangeStatus.setEnabled(!isLoading);
+            }
         });
 
         viewModel.getError().observe(this, error -> {
@@ -211,6 +214,7 @@ public class AdminUserDetailActivity extends AppCompatActivity {
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc chắn muốn " + actionStr + " tài khoản này không?")
                 .setPositiveButton("Đồng ý", (dialog, which) -> {
+                    btnChangeStatus.setEnabled(false);
                     viewModel.changeStatus(userId, newStatus);
                 })
                 .setNegativeButton("Hủy", null)

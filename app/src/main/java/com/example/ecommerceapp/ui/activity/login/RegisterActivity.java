@@ -1,9 +1,12 @@
 package com.example.ecommerceapp.ui.activity.login;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -40,7 +43,8 @@ public class RegisterActivity extends AppCompatActivity {
     private AuthService authService;
     private TextInputEditText etCode;
     private MaterialButton btnSendCode;
-    private android.os.CountDownTimer countDownTimer;
+    private CountDownTimer countDownTimer;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -75,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         etCode = findViewById(R.id.etCode);
         btnSendCode = findViewById(R.id.btnSendCode);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     // Thiết lập sự kiện
@@ -107,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         Toast.makeText(RegisterActivity.this, "Mã OTP đã được gửi đến Email của bạn!", Toast.LENGTH_LONG).show();
                         
-                        countDownTimer = new android.os.CountDownTimer(60000, 1000) {
+                        countDownTimer = new CountDownTimer(60000, 1000) {
                             public void onTick(long millisUntilFinished) {
                                 btnSendCode.setText("Gửi lại (" + millisUntilFinished / 1000 + "s)");
                             }
@@ -264,11 +269,15 @@ public class RegisterActivity extends AppCompatActivity {
         // BỔ SUNG 4: Nhét mã OTP vào Request để gửi lên Server
         request.setOtpCode(otpCode);
 
+        btnRegister.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
 
         // Gọi API
         authService.register(request).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(@NonNull Call<UserResponse> call, @NonNull Response<UserResponse> response) {
+                btnRegister.setEnabled(true);
+                progressBar.setVisibility(View.GONE);
 
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
@@ -282,6 +291,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<UserResponse> call, @NonNull Throwable t) {
+                btnRegister.setEnabled(true);
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

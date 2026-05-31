@@ -1,9 +1,12 @@
 package com.example.ecommerceapp.ui.activity.login;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -33,6 +36,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private AuthService authService;
 
     private String targetEmail; // Đổi tên biến cho rõ nghĩa
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         etNewPassword = findViewById(R.id.etNewPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnFinish = findViewById(R.id.btnFinish);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     // Thiết lập sự kiện
@@ -83,6 +88,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     // Hàm xử lý reset password
+    @SuppressLint("SetTextI18n")
     private void handleResetPassword() {
         String newPassword = etNewPassword.getText() != null ? etNewPassword.getText().toString().trim() : "";
         String confirmPassword = etConfirmPassword.getText() != null ? etConfirmPassword.getText().toString().trim() : "";
@@ -117,6 +123,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // Đổi trạng thái nút tránh bấm 2 lần
         btnFinish.setEnabled(false);
         btnFinish.setText("Đang xử lý...");
+        progressBar.setVisibility(View.VISIBLE);
 
         // Chuẩn bị Request
         ResetPasswordRequest request = new ResetPasswordRequest(targetEmail, newPassword);
@@ -128,6 +135,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 btnFinish.setEnabled(true);
                 btnFinish.setText("Hoàn tất");
+                progressBar.setVisibility(View.GONE);
 
                 if (response.isSuccessful()) {
                     Toast.makeText(ResetPasswordActivity.this, "Đổi mật khẩu thành công! Vui lòng đăng nhập lại.", Toast.LENGTH_LONG).show();
@@ -147,6 +155,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 btnFinish.setEnabled(true);
                 btnFinish.setText("Hoàn tất");
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(ResetPasswordActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

@@ -124,18 +124,21 @@ public class AdminShopDetailActivity extends AppCompatActivity {
         btnApprove.setOnClickListener(v -> {
             String message = currentStatus == ShopStatus.BLOCKED ? "Bạn có chắc muốn MỞ KHÓA shop này?" : "Bạn có chắc muốn DUYỆT shop này?";
             showConfirmDialog(message, () -> {
+                setButtonsEnabled(false);
                 viewModel.updateShopStatus(shopId, ShopStatus.APPROVED);
             });
         });
 
         btnReject.setOnClickListener(v -> {
             showConfirmDialog("Bạn có chắc muốn TỪ CHỐI shop này?", () -> {
+                setButtonsEnabled(false);
                 viewModel.updateShopStatus(shopId, ShopStatus.REJECTED);
             });
         });
 
         btnBlock.setOnClickListener(v -> {
             showConfirmDialog("Bạn có chắc muốn KHÓA shop này?", () -> {
+                setButtonsEnabled(false);
                 viewModel.updateShopStatus(shopId, ShopStatus.BLOCKED);
             });
         });
@@ -150,12 +153,14 @@ public class AdminShopDetailActivity extends AppCompatActivity {
         });
 
         viewModel.getIsLoading().observe(this, isLoading -> {
+            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
             if (currentStatus == null) {
-                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 contentLayout.setVisibility(isLoading ? View.GONE : View.VISIBLE);
             } else {
-                progressBar.setVisibility(View.GONE);
                 contentLayout.setVisibility(View.VISIBLE);
+            }
+            if (!isLoading) {
+                setButtonsEnabled(true);
             }
         });
 
@@ -248,6 +253,12 @@ public class AdminShopDetailActivity extends AppCompatActivity {
                 .setPositiveButton("Đồng ý", (dialog, which) -> onConfirm.run())
                 .setNegativeButton("Hủy", null)
                 .show();
+    }
+
+    private void setButtonsEnabled(boolean enabled) {
+        if (btnApprove != null) btnApprove.setEnabled(enabled);
+        if (btnReject != null) btnReject.setEnabled(enabled);
+        if (btnBlock != null) btnBlock.setEnabled(enabled);
     }
 
 }
