@@ -21,6 +21,7 @@ public class SellerReviewViewModel extends ViewModel {
     private final SellerReviewRepository repository;
 
     private final Map<String, MutableLiveData<PageResponse<SellerReviewResponse>>> cache = new HashMap<>();
+    private final Map<String, MutableLiveData<Boolean>> loadingState = new HashMap<>();
     private final MutableLiveData<Boolean> replyResult = new MutableLiveData<>();
 
     private String currentSort = "rating_desc,time_desc";
@@ -43,6 +44,14 @@ public class SellerReviewViewModel extends ViewModel {
         return cache.get(k);
     }
 
+    public LiveData<Boolean> getLoadingLiveData(int productId, Boolean isReplied) {
+        String k = key(productId, isReplied);
+        if (!loadingState.containsKey(k)) {
+            loadingState.put(k, new MutableLiveData<>(false));
+        }
+        return loadingState.get(k);
+    }
+
     public void loadReviews(int productId, Boolean isReplied, int page, int size) {
 
         if (page == 0) {
@@ -52,6 +61,13 @@ public class SellerReviewViewModel extends ViewModel {
             if (liveData != null) {
                 liveData.setValue(null); // reset UI
             }
+            
+            MutableLiveData<Boolean> loading = loadingState.get(k);
+            if (loading == null) {
+                loading = new MutableLiveData<>();
+                loadingState.put(k, loading);
+            }
+            loading.setValue(true);
         }
 
         repository.getReviews(productId, isReplied, page, size, currentSort)
@@ -62,6 +78,10 @@ public class SellerReviewViewModel extends ViewModel {
                                            Response<PageResponse<SellerReviewResponse>> response) {
 
                         String k = key(productId, isReplied);
+                        
+                        MutableLiveData<Boolean> loading = loadingState.get(k);
+                        if (loading != null) loading.setValue(false);
+
                         MutableLiveData<PageResponse<SellerReviewResponse>> liveData = cache.get(k);
 
                         if (liveData == null) {
@@ -79,8 +99,12 @@ public class SellerReviewViewModel extends ViewModel {
                     @Override
                     public void onFailure(Call<PageResponse<SellerReviewResponse>> call, Throwable t) {
 
+                        String k = key(productId, isReplied);
+                        MutableLiveData<Boolean> loading = loadingState.get(k);
+                        if (loading != null) loading.setValue(false);
+
                         MutableLiveData<PageResponse<SellerReviewResponse>> liveData =
-                                cache.get(key(productId, isReplied));
+                                cache.get(k);
 
                         if (liveData != null) liveData.setValue(null);
                     }
@@ -104,6 +128,14 @@ public class SellerReviewViewModel extends ViewModel {
 
     public void replyReview(int reviewId, int productId, Boolean isReplied, String content) {
 
+        String k = key(productId, isReplied);
+        MutableLiveData<Boolean> loading = loadingState.get(k);
+        if (loading == null) {
+            loading = new MutableLiveData<>();
+            loadingState.put(k, loading);
+        }
+        loading.setValue(true); // BẬT LOADING KHI ĐANG GỬI TRẢ LỜI
+
         SellerReplyRequest request = new SellerReplyRequest(content);
 
         repository.replyReview(reviewId, request)
@@ -121,12 +153,16 @@ public class SellerReviewViewModel extends ViewModel {
                             loadReviews(productId, true, 0, 10);
 
                         } else {
+                            MutableLiveData<Boolean> loading = loadingState.get(key(productId, isReplied));
+                            if (loading != null) loading.setValue(false); // TẮT NẾU LỖI
                             replyResult.setValue(false);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
+                        MutableLiveData<Boolean> loading = loadingState.get(key(productId, isReplied));
+                        if (loading != null) loading.setValue(false); // TẮT NẾU LỖI
                         replyResult.setValue(false);
                     }
                 });

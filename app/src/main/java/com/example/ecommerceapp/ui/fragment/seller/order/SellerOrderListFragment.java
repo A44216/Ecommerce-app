@@ -185,7 +185,12 @@ public class SellerOrderListFragment extends Fragment {
 
     private void loadOrdersWithFilters(boolean isLoadMore, String paymentMethod, String paymentStatus, String keyword) {
         if (!isLoadMore) {
-            if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+            if (progressBar != null && (swipeRefreshOrders == null || !swipeRefreshOrders.isRefreshing())) {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }
+        if (viewModel != null) {
+            viewModel.loadOrders(status, paymentMethod, paymentStatus, keyword, isLoadMore);
         }
     }
     @Override

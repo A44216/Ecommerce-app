@@ -85,7 +85,11 @@ public class SellerProductViewModel extends ViewModel {
                     public void onResponse(Call<PageResponse<SellerProductResponse>> call,
                                            Response<PageResponse<SellerProductResponse>> response) {
 
-                        if (!response.isSuccessful() || response.body() == null) return;
+                        if (!response.isSuccessful() || response.body() == null) {
+                            MutableLiveData<List<SellerProductResponse>> liveData = cache.get(key);
+                            if (liveData != null) liveData.setValue(null);
+                            return;
+                        }
 
                         PageResponse<SellerProductResponse> body = response.body();
 
@@ -120,6 +124,8 @@ public class SellerProductViewModel extends ViewModel {
                     @Override
                     public void onFailure(Call<PageResponse<SellerProductResponse>> call, Throwable t) {
                         Log.e("API", "FAIL: " + t.getMessage());
+                        MutableLiveData<List<SellerProductResponse>> liveData = cache.get(key);
+                        if (liveData != null) liveData.setValue(null);
                     }
                 });
     }

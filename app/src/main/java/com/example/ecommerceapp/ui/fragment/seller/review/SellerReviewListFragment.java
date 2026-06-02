@@ -27,6 +27,7 @@ public class SellerReviewListFragment extends Fragment {
     private SellerReviewViewModel viewModel;
     private SellerReviewAdapter adapter;
     private LinearLayoutManager layoutManager;
+    private android.widget.ProgressBar progressBar;
 
     private boolean isLoadingMore = false;
     private int currentPage = 0;
@@ -54,6 +55,7 @@ public class SellerReviewListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_seller_review_list, container, false);
 
         RecyclerView rv = view.findViewById(R.id.rvReviews);
+        progressBar = view.findViewById(R.id.progressBar);
 
         layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
@@ -122,6 +124,12 @@ public class SellerReviewListFragment extends Fragment {
     }
 
     private void observeData() {
+        viewModel.getLoadingLiveData(productId, isReplied).observe(getViewLifecycleOwner(), isLoading -> {
+            if (progressBar != null) {
+                progressBar.setVisibility(isLoading != null && isLoading ? View.VISIBLE : View.GONE);
+            }
+        });
+
         viewModel.getReviewsLiveData(productId, isReplied)
                 .observe(getViewLifecycleOwner(), pageResponse -> {
 

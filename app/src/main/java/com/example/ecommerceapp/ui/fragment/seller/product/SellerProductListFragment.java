@@ -248,14 +248,18 @@ public class SellerProductListFragment extends Fragment {
         this.keyword = keyword;
         if (viewModel == null) return;
 
-        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null && (swipeRefreshProducts == null || !swipeRefreshProducts.isRefreshing())) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
         viewModel.setKeyword(keyword);
         viewModel.fetchProducts(false);
     }
 
     public void reload() {
         if (viewModel == null) return;
-        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null && (swipeRefreshProducts == null || !swipeRefreshProducts.isRefreshing())) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
         viewModel.fetchProducts(false);
     }
 

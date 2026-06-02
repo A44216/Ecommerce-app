@@ -89,7 +89,11 @@ public class SellerOrderViewModel extends ViewModel {
                     @Override
                     public void onResponse(Call<PageResponse<SellerOrderResponse>> call,
                                            Response<PageResponse<SellerOrderResponse>> response) {
-                        if (!response.isSuccessful() || response.body() == null) return;
+                        if (!response.isSuccessful() || response.body() == null) {
+                            MutableLiveData<List<SellerOrderResponse>> liveData = cache.get(key);
+                            if (liveData != null) liveData.setValue(null);
+                            return;
+                        }
 
                         PageResponse<SellerOrderResponse> body = response.body();
                         MutableLiveData<List<SellerOrderResponse>> liveData = cache.get(key);
@@ -118,7 +122,10 @@ public class SellerOrderViewModel extends ViewModel {
                     }
 
                     @Override
-                    public void onFailure(Call<PageResponse<SellerOrderResponse>> call, Throwable t) {}
+                    public void onFailure(Call<PageResponse<SellerOrderResponse>> call, Throwable t) {
+                        MutableLiveData<List<SellerOrderResponse>> liveData = cache.get(key);
+                        if (liveData != null) liveData.setValue(null);
+                    }
                 });
     }
 
