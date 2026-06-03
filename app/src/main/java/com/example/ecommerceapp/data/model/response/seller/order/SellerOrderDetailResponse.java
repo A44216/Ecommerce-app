@@ -32,6 +32,7 @@ public class SellerOrderDetailResponse {
 
     private BigDecimal platformFeeRate;
     private BigDecimal platformFeeAmount;
+    private BigDecimal shippingFee;
 
     private List<SellerOrderItemResponse> items;
 
@@ -92,6 +93,10 @@ public class SellerOrderDetailResponse {
 
     public BigDecimal getPlatformFeeAmount() {
         return platformFeeAmount;
+    }
+
+    public BigDecimal getShippingFee() {
+        return shippingFee;
     }
 
     public List<SellerOrderItemResponse> getItems() {

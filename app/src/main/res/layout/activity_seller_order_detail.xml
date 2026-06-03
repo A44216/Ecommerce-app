@@ -256,6 +256,30 @@
                     app:layout_constraintStart_toEndOf="@id/txtSubtotal"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
+                <!-- SHIPPING FEE -->
+                <TextView
+                    android:id="@+id/txtShippingFee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phí vận chuyển:"
+                    android:textColor="@color/gray"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtSubtotal"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvShippingFee"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:layout_marginStart="6dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/gray"
+                    app:layout_constraintTop_toTopOf="@id/txtShippingFee"
+                    app:layout_constraintStart_toEndOf="@id/txtShippingFee"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
                 <!-- PLATFORM FEE RATE -->
                 <TextView
                     android:id="@+id/txtPlatformFee"
@@ -264,7 +288,7 @@
                     android:text="@string/seller_order_detail_default_platform_fee"
                     android:textColor="@color/gray"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@id/txtSubtotal"
+                    app:layout_constraintTop_toBottomOf="@id/txtShippingFee"
                     app:layout_constraintStart_toStartOf="parent"/>
 
                 <TextView

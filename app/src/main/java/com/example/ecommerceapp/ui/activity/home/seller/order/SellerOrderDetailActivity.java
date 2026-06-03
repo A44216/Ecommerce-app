@@ -36,7 +36,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
 
     private TextView tvOrderCode, tvCreatedAt, tvCompletedAt;
     private TextView tvCustomer, tvShippingName, tvPhone, tvAddress;
-    private TextView tvSubtotal, txtDiscount, tvDiscount, txtPlatformFee, tvPlatformFee, tvSellerRevenue;
+    private TextView tvSubtotal, txtDiscount, tvDiscount, txtPlatformFee, tvPlatformFee, tvSellerRevenue, tvShippingFee;
     private TextView tvPaymentMethod, tvPaymentStatus;
 
     private RecyclerView rvOrder, rvStatus;
@@ -89,6 +89,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
         txtPlatformFee = findViewById(R.id.txtPlatformFee);
         tvPlatformFee = findViewById(R.id.tvPlatformFee);
         tvSellerRevenue = findViewById(R.id.tvSellerRevenue);
+        tvShippingFee = findViewById(R.id.tvShippingFee);
 
         tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
         tvPaymentStatus = findViewById(R.id.tvPaymentStatus);
@@ -224,6 +225,12 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                         tvPlatformFee.setText(String.format("- %,.0f đ", data.getPlatformFeeAmount()));
 
                         txtPlatformFee.setText("Phí nền tảng (" + data.getPlatformFeeRate().stripTrailingZeros().toPlainString() + "%):");
+                    }
+
+                    if (data.getShippingFee() != null) {
+                        tvShippingFee.setText(String.format("%,.0f đ", data.getShippingFee()));
+                    } else {
+                        tvShippingFee.setText("0 đ");
                     }
 
                     if (data.getSellerRevenue() != null) {

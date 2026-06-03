@@ -24,6 +24,7 @@ public class AdminOrderDetailResponse {
     private BigDecimal platformFeeAmount; // phí hệ thống
     private BigDecimal sellerReceived;    // shop nhận
     private BigDecimal platformFeeRate;
+    private BigDecimal shippingFee;
     private String shippingName;
     private String shippingPhone;
     private String shippingAddress;
@@ -76,6 +77,9 @@ public class AdminOrderDetailResponse {
 
     public BigDecimal getPlatformFeeRate() { return platformFeeRate; }
     public void setPlatformFeeRate(BigDecimal platformFeeRate) { this.platformFeeRate = platformFeeRate; }
+
+    public BigDecimal getShippingFee() { return shippingFee; }
+    public void setShippingFee(BigDecimal shippingFee) { this.shippingFee = shippingFee; }
 
     public String getShippingName() { return shippingName; }
     public void setShippingName(String shippingName) { this.shippingName = shippingName; }

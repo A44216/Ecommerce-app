@@ -37,7 +37,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
     private TextView tvOrderCode, tvOrderStatus, tvCreatedAt, tvCompletedAt;
     private TextView tvShopName;
     private TextView tvCustomer, tvShippingName, tvPhone, tvAddress;
-    private TextView tvSubtotal, tvDiscount, tvTotalPrice, tvPlatformFee, tvSellerRevenue;
+    private TextView tvSubtotal, tvDiscount, tvTotalPrice, tvPlatformFee, tvSellerRevenue, tvShippingFee;
     private TextView tvPaymentMethod, tvPaymentStatus;
     private RecyclerView rvOrderItems;
     private AdminOrderItemAdapter adapter;
@@ -83,6 +83,7 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
         tvPlatformFee = findViewById(R.id.tvPlatformFee);
         tvSellerRevenue = findViewById(R.id.tvSellerRevenue);
+        tvShippingFee = findViewById(R.id.tvShippingFee);
 
         tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
         tvPaymentStatus = findViewById(R.id.tvPaymentStatus);
@@ -169,6 +170,11 @@ public class AdminOrderDetailActivity extends AppCompatActivity {
         tvAddress.setText("Địa chỉ: " + (data.getShippingAddress() != null ? data.getShippingAddress() : "--"));
 
         if (data.getSubtotal() != null) tvSubtotal.setText(String.format("%,.0f đ", data.getSubtotal()));
+        if (data.getShippingFee() != null) {
+            tvShippingFee.setText(String.format("%,.0f đ", data.getShippingFee()));
+        } else {
+            tvShippingFee.setText("0 đ");
+        }
         if (data.getDiscountAmount() != null) tvDiscount.setText(String.format("- %,.0f đ", data.getDiscountAmount()));
         if (data.getTotalPrice() != null) tvTotalPrice.setText(String.format("%,.0f đ", data.getTotalPrice()));
         if (data.getPlatformFeeAmount() != null) {
