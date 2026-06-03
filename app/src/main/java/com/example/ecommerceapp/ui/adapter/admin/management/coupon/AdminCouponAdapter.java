@@ -42,7 +42,13 @@ public class AdminCouponAdapter extends ListAdapter<AdminCouponResponse, AdminCo
             public boolean areContentsTheSame(@NonNull AdminCouponResponse oldItem, @NonNull AdminCouponResponse newItem) {
                 return Objects.equals(oldItem.getCode(), newItem.getCode()) &&
                        oldItem.getStatus() == newItem.getStatus() &&
-                       Objects.equals(oldItem.getUsedCount(), newItem.getUsedCount());
+                       Objects.equals(oldItem.getUsedCount(), newItem.getUsedCount()) &&
+                       Objects.equals(oldItem.getMaxUsage(), newItem.getMaxUsage()) &&
+                       Objects.equals(oldItem.getDiscountPercent(), newItem.getDiscountPercent()) &&
+                       Objects.equals(oldItem.getDiscountAmount(), newItem.getDiscountAmount()) &&
+                       Objects.equals(oldItem.getMinOrderValue(), newItem.getMinOrderValue()) &&
+                       Objects.equals(oldItem.getStartDate(), newItem.getStartDate()) &&
+                       Objects.equals(oldItem.getEndDate(), newItem.getEndDate());
             }
         });
     }
@@ -124,11 +130,16 @@ public class AdminCouponAdapter extends ListAdapter<AdminCouponResponse, AdminCo
             }
 
             int used = item.getUsedCount() != null ? item.getUsedCount() : 0;
-            int max = item.getMaxUsage() != null ? item.getMaxUsage() : 1;
-            tvUsageCount.setText(used + "/" + max);
-
-            pbUsage.setMax(max);
-            pbUsage.setProgress(used);
+            if (item.getMaxUsage() == null) {
+                tvUsageCount.setText(used + " / Không giới hạn");
+                pbUsage.setVisibility(View.GONE);
+            } else {
+                int max = item.getMaxUsage();
+                tvUsageCount.setText(used + "/" + max);
+                pbUsage.setVisibility(View.VISIBLE);
+                pbUsage.setMax(max);
+                pbUsage.setProgress(used);
+            }
 
             String minOrder = "0";
             if (item.getMinOrderValue() != null) {
