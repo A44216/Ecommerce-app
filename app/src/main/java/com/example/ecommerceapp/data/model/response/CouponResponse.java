@@ -8,4 +8,5 @@ public class CouponResponse {
     public Integer discountPercent;
     public BigDecimal discountAmount;
     public BigDecimal minOrderValue;
+    public BigDecimal maxDiscountAmount;
 }

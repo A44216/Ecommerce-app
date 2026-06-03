@@ -195,12 +195,24 @@ public class UserCheckoutActivity extends AppCompatActivity {
                             discountAmount = coupon.discountAmount;
                         } else if (coupon.discountPercent != null && coupon.discountPercent > 0) {
                             discountAmount = subtotal.multiply(new BigDecimal(coupon.discountPercent)).divide(new BigDecimal(100));
+                            if (coupon.maxDiscountAmount != null && coupon.maxDiscountAmount.compareTo(BigDecimal.ZERO) > 0 && discountAmount.compareTo(coupon.maxDiscountAmount) > 0) {
+                                discountAmount = coupon.maxDiscountAmount;
+                            }
                         }
                         
                         updateTotalDisplay();
                         Toast.makeText(UserCheckoutActivity.this, "Áp dụng mã giảm giá thành công!", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(UserCheckoutActivity.this, "Mã giảm giá không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
+                        String errMsg = "Mã giảm giá không hợp lệ hoặc đã hết hạn";
+                        try {
+                            if (response.errorBody() != null) {
+                                String errorBodyStr = response.errorBody().string();
+                                if (errorBodyStr != null && !errorBodyStr.isEmpty()) {
+                                    errMsg = errorBodyStr;
+                                }
+                            }
+                        } catch (Exception e) {}
+                        Toast.makeText(UserCheckoutActivity.this, errMsg, Toast.LENGTH_SHORT).show();
                     }
                 }
 
