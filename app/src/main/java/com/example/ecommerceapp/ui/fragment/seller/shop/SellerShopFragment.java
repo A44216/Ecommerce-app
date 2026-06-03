@@ -31,6 +31,7 @@ import com.example.ecommerceapp.data.enums.ShopStatus;
 import com.example.ecommerceapp.data.local.TokenManager;
 import com.example.ecommerceapp.data.model.response.seller.shop.SellerShopResponse;
 import com.example.ecommerceapp.data.repository.seller.SellerShopRepository;
+import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerChatActivity;
 import com.example.ecommerceapp.ui.activity.home.seller.shop.SellerShopInfoActivity;
 import com.example.ecommerceapp.ui.activity.home.user.help.HelpCenterActivity;
@@ -246,12 +247,11 @@ public class SellerShopFragment extends Fragment {
 
         itemLogout.setOnClickListener(v -> {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setTitle("Xác nhận đăng xuất")
-                    .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
-                    .setPositiveButton("Đăng xuất", (dialog, which) -> {
+                    .setTitle("Xác nhận thoát")
+                    .setMessage("Bạn có chắc chắn muốn thoát về trang chủ người dùng không?")
+                    .setPositiveButton("Thoát", (dialog, which) -> {
 
-                        TokenManager.getInstance(requireContext()).logout();
-                        Intent intent = new Intent(requireContext(), com.example.ecommerceapp.ui.activity.login.LoginActivity.class);
+                        Intent intent = new Intent(requireContext(), UserHomeActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
