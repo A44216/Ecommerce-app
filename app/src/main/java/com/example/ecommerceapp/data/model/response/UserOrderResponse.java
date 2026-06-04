@@ -10,6 +10,7 @@ public class UserOrderResponse {
     private Integer shopId;
     private String status;
     private BigDecimal totalPrice;
+    private BigDecimal discountAmount;
     private String createdAt;
     private String paymentMethod;
     private String paymentStatus;
@@ -29,6 +30,7 @@ public class UserOrderResponse {
     public Integer getShopId() { return shopId; }
     public String getStatus() { return status; }
     public BigDecimal getTotalPrice() { return totalPrice; }
+    public BigDecimal getDiscountAmount() { return discountAmount; }
     public String getCreatedAt() { return createdAt; }
     public String getPaymentMethod() { return paymentMethod; }
     public String getPaymentStatus() { return paymentStatus; }
@@ -44,6 +46,7 @@ public class UserOrderResponse {
     public void setShopId(Integer shopId) { this.shopId = shopId; }
     public void setStatus(String status) { this.status = status; }
     public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
+    public void setDiscountAmount(BigDecimal discountAmount) { this.discountAmount = discountAmount; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
     public void setShippingName(String shippingName) { this.shippingName = shippingName; }
     public void setShippingPhone(String shippingPhone) { this.shippingPhone = shippingPhone; }

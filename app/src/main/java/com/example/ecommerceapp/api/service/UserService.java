@@ -62,6 +62,9 @@ public interface UserService {
     @GET("reviews/product/{productId}")
     Call<List<ReviewResponse>> getReviewsByProduct(@Path("productId") int productId);
 
+    @GET("reviews/{id}")
+    Call<ReviewResponse> getReviewById(@Path("id") int id);
+
     @PUT("users/{id}/set-password")
     Call<Void> setPassword(@Path("id") int userId, @Body SetPasswordRequest request);
 

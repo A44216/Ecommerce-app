@@ -28,6 +28,8 @@ public class ReviewActivity extends AppCompatActivity {
 
     private int productId = -1;
     private int orderItemId = -1;
+    private int reviewId = -1;
+    private String mode = "";
     private TokenManager tokenManager;
 
     @Override
@@ -47,24 +49,62 @@ public class ReviewActivity extends AppCompatActivity {
         // 2. Nhận Product ID và Order Item ID từ Intent
         productId = getIntent().getIntExtra("PRODUCT_ID", -1);
         orderItemId = getIntent().getIntExtra("ORDER_ITEM_ID", -1);
+        reviewId = getIntent().getIntExtra("REVIEW_ID", -1);
+        mode = getIntent().getStringExtra("MODE");
+        
         if (productId == -1 || orderItemId == -1) {
             Toast.makeText(this, "Lỗi: Không tìm thấy sản phẩm hoặc đơn hàng!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // 3. Sự kiện thay đổi chữ khi vuốt sao
-        ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            if (rating == 1) tvRatingHint.setText("Rất tệ");
-            else if (rating == 2) tvRatingHint.setText("Tệ");
-            else if (rating == 3) tvRatingHint.setText("Bình thường");
-            else if (rating == 4) tvRatingHint.setText("Tốt");
-            else if (rating == 5) tvRatingHint.setText("Tuyệt vời");
-            else tvRatingHint.setText("Vui lòng chọn mức độ hài lòng");
-        });
+        if ("VIEW".equals(mode)) {
+            // Chế độ xem: Tắt tương tác và fetch dữ liệu
+            ratingBar.setIsIndicator(true);
+            edtReviewComment.setEnabled(false);
+            btnSubmitReview.setVisibility(android.view.View.GONE);
+            tvRatingHint.setText("Đang tải đánh giá...");
+            loadReviewData();
+        } else {
+            // 3. Sự kiện thay đổi chữ khi vuốt sao
+            ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+                if (rating == 1) tvRatingHint.setText("Rất tệ");
+                else if (rating == 2) tvRatingHint.setText("Tệ");
+                else if (rating == 3) tvRatingHint.setText("Bình thường");
+                else if (rating == 4) tvRatingHint.setText("Tốt");
+                else if (rating == 5) tvRatingHint.setText("Tuyệt vời");
+                else tvRatingHint.setText("Vui lòng chọn mức độ hài lòng");
+            });
 
-        // 4. Sự kiện bấm nút Gửi
-        btnSubmitReview.setOnClickListener(v -> submitReview());
+            // 4. Sự kiện bấm nút Gửi
+            btnSubmitReview.setOnClickListener(v -> submitReview());
+        }
+    }
+
+    private void loadReviewData() {
+        if (reviewId == -1) {
+            tvRatingHint.setText("Lỗi: Không tìm thấy ID đánh giá!");
+            return;
+        }
+
+        ApiClient.getUserService(tokenManager).getReviewById(reviewId).enqueue(new Callback<ReviewResponse>() {
+            @Override
+            public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ReviewResponse review = response.body();
+                    ratingBar.setRating(review.getRating());
+                    edtReviewComment.setText(review.getComment());
+                    tvRatingHint.setText("Đánh giá của bạn");
+                } else {
+                    tvRatingHint.setText("Lỗi khi tải đánh giá");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReviewResponse> call, Throwable t) {
+                tvRatingHint.setText("Lỗi kết nối mạng");
+            }
+        });
     }
 
     private void submitReview() {

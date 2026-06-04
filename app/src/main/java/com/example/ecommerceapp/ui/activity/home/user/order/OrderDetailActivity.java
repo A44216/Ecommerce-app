@@ -24,11 +24,12 @@ import retrofit2.Response;
 public class OrderDetailActivity extends AppCompatActivity {
 
     // Đã khai báo thêm tvOrderDate và tvSubTotal
-    private TextView tvStatus, tvAddress, tvTotal, tvOrderDate, tvSubTotal, tvShippingFee, tvPaymentMethod, tvPaymentStatus;
+    private TextView tvStatus, tvAddress, tvTotal, tvOrderDate, tvSubTotal, tvDiscountAmount, tvShippingFee, tvPaymentMethod, tvPaymentStatus;
     private RecyclerView rvItems;
     private Button btnCancelOrder, btnReceiveOrder, btnReturnOrder;
     private View ivStepPending, ivStepProcessing, ivStepShipping, ivStepDelivered;
     private View line1, line2, line3;
+    private View rlDiscount;
     private int orderId;
     private TokenManager tokenManager;
 
@@ -45,6 +46,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvTotal = findViewById(R.id.tvTotalPayment);
         tvOrderDate = findViewById(R.id.tvOrderDate); // Ánh xạ Ngày đặt
         tvSubTotal = findViewById(R.id.tvSubTotal);   // Ánh xạ Tổng tiền hàng
+        tvDiscountAmount = findViewById(R.id.tvDiscountAmount); // Ánh xạ Giảm giá
+        rlDiscount = findViewById(R.id.rlDiscount); // Box giảm giá
         tvShippingFee = findViewById(R.id.tvShippingFee); // Ánh xạ Phí vận chuyển
         tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
         tvPaymentStatus = findViewById(R.id.tvPaymentStatus);
@@ -80,6 +83,14 @@ public class OrderDetailActivity extends AppCompatActivity {
         btnReturnOrder.setOnClickListener(v -> showReturnDialog());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (orderId != -1) {
+            loadOrderDetail();
+        }
+    }
+
     private void loadOrderDetail() {
         ApiClient.getUserOrderApiService(tokenManager).getOrderById(orderId).enqueue(new Callback<UserOrderResponse>() {
             @Override
@@ -109,6 +120,13 @@ public class OrderDetailActivity extends AppCompatActivity {
                             }
                         }
                         tvSubTotal.setText(String.format("%,.0fđ", subTotalValue));
+                    }
+
+                    if (order.getDiscountAmount() != null && order.getDiscountAmount().compareTo(java.math.BigDecimal.ZERO) > 0) {
+                        rlDiscount.setVisibility(View.VISIBLE);
+                        tvDiscountAmount.setText(String.format("-%,.0fđ", order.getDiscountAmount()));
+                    } else {
+                        rlDiscount.setVisibility(View.GONE);
                     }
 
                     if (order.getCreatedAt() != null) {
