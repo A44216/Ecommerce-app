@@ -77,6 +77,11 @@ public class UserAddAddressActivity extends AppCompatActivity {
                 return;
             }
 
+            if (!phone.matches("^0\\d{9}$")) {
+                Toast.makeText(this, "Số điện thoại không hợp lệ (Phải gồm 10 số và bắt đầu bằng số 0)!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             int userId = (int) tokenManager.getUserId();
             if (userId == -1) {
                 Toast.makeText(this, "Lỗi xác thực người dùng", Toast.LENGTH_SHORT).show();
