@@ -9,15 +9,15 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        // 1. Khởi tạo Giỏ hàng
-        CartManager.init(this);
-        
-        // 2. Xử lý "Ghi nhớ đăng nhập"
+        // 1. Xử lý "Ghi nhớ đăng nhập" trước khi khởi tạo các Manager khác
         TokenManager tokenManager = TokenManager.getInstance(this);
         if (!tokenManager.isRememberLogin()) {
             // Nếu người dùng KHÔNG tích "Ghi nhớ mật khẩu", chúng ta sẽ xóa sạch phiên đăng nhập 
             // mỗi khi ứng dụng bị tắt (khởi động lại process).
             tokenManager.clearAllData();
         }
+        
+        // 2. Khởi tạo Giỏ hàng (Sẽ load đúng giỏ hàng của Guest nếu vừa bị xóa token)
+        CartManager.init(this);
     }
 }
