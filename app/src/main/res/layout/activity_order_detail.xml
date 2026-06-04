@@ -227,7 +227,7 @@
                 </RelativeLayout>
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phí vận chuyển" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="0đ" />
+                    <TextView android:id="@+id/tvShippingFee" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="30,000đ" />
                 </RelativeLayout>
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="12dp" />
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">

@@ -1,6 +1,5 @@
 package com.example.ecommerceapp.ui.activity.home.user.order;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +24,7 @@ import retrofit2.Response;
 public class OrderDetailActivity extends AppCompatActivity {
 
     // Đã khai báo thêm tvOrderDate và tvSubTotal
-    private TextView tvStatus, tvAddress, tvTotal, tvOrderDate, tvSubTotal, tvPaymentMethod, tvPaymentStatus;
+    private TextView tvStatus, tvAddress, tvTotal, tvOrderDate, tvSubTotal, tvShippingFee, tvPaymentMethod, tvPaymentStatus;
     private RecyclerView rvItems;
     private Button btnCancelOrder, btnReceiveOrder, btnReturnOrder;
     private View ivStepPending, ivStepProcessing, ivStepShipping, ivStepDelivered;
@@ -46,6 +45,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvTotal = findViewById(R.id.tvTotalPayment);
         tvOrderDate = findViewById(R.id.tvOrderDate); // Ánh xạ Ngày đặt
         tvSubTotal = findViewById(R.id.tvSubTotal);   // Ánh xạ Tổng tiền hàng
+        tvShippingFee = findViewById(R.id.tvShippingFee); // Ánh xạ Phí vận chuyển
         tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
         tvPaymentStatus = findViewById(R.id.tvPaymentStatus);
 
@@ -95,7 +95,20 @@ public class OrderDetailActivity extends AppCompatActivity {
                     if (order.getTotalPrice() != null) {
                         String priceFormatted = String.format("%,.0fđ", order.getTotalPrice());
                         tvTotal.setText(priceFormatted);
-                        tvSubTotal.setText(priceFormatted); // Set giá trị cho Tổng tiền hàng
+                    }
+                    
+                    if (tvShippingFee != null) {
+                        tvShippingFee.setText("30,000đ");
+                    }
+                    
+                    if (order.getOrderItems() != null) {
+                        double subTotalValue = 0;
+                        for (com.example.ecommerceapp.data.model.response.UserOrderItemResponse item : order.getOrderItems()) {
+                            if (item.getPrice() != null && item.getQuantity() != null) {
+                                subTotalValue += item.getPrice().doubleValue() * item.getQuantity();
+                            }
+                        }
+                        tvSubTotal.setText(String.format("%,.0fđ", subTotalValue));
                     }
 
                     if (order.getCreatedAt() != null) {
