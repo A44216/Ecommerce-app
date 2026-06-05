@@ -85,7 +85,7 @@
             android:layout_marginStart="3dp"
             app:boxBackgroundColor="@color/white"
             app:hintEnabled="false"
-            app:startIconDrawable="@drawable/ic_product">
+            app:startIconDrawable="@drawable/ic_stock">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/actvStock"

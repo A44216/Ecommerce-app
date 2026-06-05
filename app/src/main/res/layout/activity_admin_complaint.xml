@@ -89,7 +89,7 @@
             android:layout_weight="1"
             app:boxBackgroundColor="@color/white"
             app:hintEnabled="false"
-            app:startIconDrawable="@drawable/ic_filter_list">
+            app:startIconDrawable="@drawable/ic_calendar">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/actvSortTime"
