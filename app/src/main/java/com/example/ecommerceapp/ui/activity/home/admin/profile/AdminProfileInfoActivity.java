@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -37,9 +38,10 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
     private ImageView ivBack, imgAvatar;
     private MaterialButton btnChooseImage;
     private ScrollView svProfileInfo;
-    private ProgressBar progressBarProfileInfo;
+    private ProgressBar progressBarProfileInfo, progressBarAvatar;
 
     private String avatarUrl = "";
+    private Uri selectedImageUri = null;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(
@@ -51,34 +53,8 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
                         Uri uri = result.getData().getData();
                         if (uri == null) return;
 
-                        // upload ảnh lên server
-                        ImageUploadHelper.uploadImage(
-                                TokenManager.getInstance(this),
-                                uri,
-                                this,
-                                new ImageUploadHelper.Callback<String>() {
-
-                                    @Override
-                                    public void onSuccess(String url) {
-                                        avatarUrl = url;
-
-                                        ImageLoader.load(
-                                                AdminProfileInfoActivity.this,
-                                                imgAvatar,
-                                                url
-                                        );
-                                    }
-
-                                    @Override
-                                    public void onError(String error) {
-                                        Toast.makeText(
-                                                AdminProfileInfoActivity.this,
-                                                error,
-                                                Toast.LENGTH_SHORT
-                                        ).show();
-                                    }
-                                }
-                        );
+                        selectedImageUri = uri;
+                        ImageLoader.load(AdminProfileInfoActivity.this, imgAvatar, uri);
                     }
             );
 
@@ -118,6 +94,7 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
         
         svProfileInfo = findViewById(R.id.svProfileInfo);
         progressBarProfileInfo = findViewById(R.id.progressBarProfileInfo);
+        progressBarAvatar = findViewById(R.id.progressBarAvatar);
     }
 
     private void setupListeners() {
@@ -158,7 +135,32 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
                     .setTitle("Xác nhận cập nhật")
                     .setMessage("Bạn có chắc muốn cập nhật profile không?")
                     .setPositiveButton("Cập nhật", (dialog, which) -> {
-                        viewModel.updateProfile(fullName, email, phone, avatarUrl);
+                        if (selectedImageUri != null) {
+                            if (progressBarProfileInfo != null) progressBarProfileInfo.setVisibility(View.VISIBLE);
+                            if (svProfileInfo != null) svProfileInfo.setVisibility(View.GONE);
+
+                            ImageUploadHelper.uploadImage(
+                                    TokenManager.getInstance(AdminProfileInfoActivity.this),
+                                    selectedImageUri,
+                                    AdminProfileInfoActivity.this,
+                                    new ImageUploadHelper.Callback<String>() {
+                                        @Override
+                                        public void onSuccess(String url) {
+                                            avatarUrl = url;
+                                            viewModel.updateProfile(fullName, email, phone, avatarUrl);
+                                        }
+
+                                        @Override
+                                        public void onError(String error) {
+                                            if (progressBarProfileInfo != null) progressBarProfileInfo.setVisibility(View.GONE);
+                                            if (svProfileInfo != null) svProfileInfo.setVisibility(View.VISIBLE);
+                                            Toast.makeText(AdminProfileInfoActivity.this, "Lỗi upload ảnh: " + error, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                            );
+                        } else {
+                            viewModel.updateProfile(fullName, email, phone, avatarUrl);
+                        }
                     })
                     .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
                     .show();
@@ -178,8 +180,8 @@ public class AdminProfileInfoActivity extends AppCompatActivity {
 
     private void observeData() {
         viewModel.getLoading().observe(this, isLoading -> {
-            if (progressBarProfileInfo != null) progressBarProfileInfo.setVisibility(isLoading ? android.view.View.VISIBLE : android.view.View.GONE);
-            if (svProfileInfo != null) svProfileInfo.setVisibility(isLoading ? android.view.View.GONE : android.view.View.VISIBLE);
+            if (progressBarProfileInfo != null) progressBarProfileInfo.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            if (svProfileInfo != null) svProfileInfo.setVisibility(isLoading ? View.GONE : View.VISIBLE);
         });
 
         viewModel.getProfileData().observe(this, data -> {

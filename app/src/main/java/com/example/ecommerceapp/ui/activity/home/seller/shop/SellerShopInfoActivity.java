@@ -3,6 +3,7 @@ package com.example.ecommerceapp.ui.activity.home.seller.shop;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,9 +40,10 @@ public class SellerShopInfoActivity extends AppCompatActivity {
 
     private String avatarUrl;
     private ScrollView svShopInfo;
-    private ProgressBar progressBarShopInfo;
+    private ProgressBar progressBarShopInfo, progressBarAvatar;
 
     private boolean isUpdating = false;
+    private Uri selectedImageUri = null;
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
@@ -53,34 +55,8 @@ public class SellerShopInfoActivity extends AppCompatActivity {
                         Uri uri = result.getData().getData();
                         if (uri == null) return;
 
-                        ImageUploadHelper.uploadImage(
-                                tokenManager,
-                                uri,
-                                this,
-                                new ImageUploadHelper.Callback<String>() {
-                                    @Override
-                                    public void onSuccess(String url) {
-                                        avatarUrl = url;
-
-                                        ImageLoader.load(
-                                                SellerShopInfoActivity.this,
-                                                imgAvatar,
-                                                url
-                                        );
-
-                                    }
-
-                                    @Override
-                                    public void onError(String error) {
-
-                                        Toast.makeText(
-                                                SellerShopInfoActivity.this,
-                                                error,
-                                                Toast.LENGTH_SHORT
-                                        ).show();
-                                    }
-                                }
-                        );
+                        selectedImageUri = uri;
+                        ImageLoader.load(SellerShopInfoActivity.this, imgAvatar, uri);
                     }
             );
 
@@ -111,6 +87,7 @@ public class SellerShopInfoActivity extends AppCompatActivity {
         btnChooseImage = findViewById(R.id.btnChooseImage);
         svShopInfo = findViewById(R.id.svShopInfo);
         progressBarShopInfo = findViewById(R.id.progressBarShopInfo);
+        progressBarAvatar = findViewById(R.id.progressBarAvatar);
     }
 
     private void setupViewModel() {
@@ -188,7 +165,7 @@ public class SellerShopInfoActivity extends AppCompatActivity {
         }
 
         if (!email.isEmpty() &&
-                !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             edtEmail.setError("Email không hợp lệ");
             edtEmail.requestFocus();
             return;
@@ -203,6 +180,18 @@ public class SellerShopInfoActivity extends AppCompatActivity {
         showConfirmUpdateDialog(name, address, phone, email, description);
     }
 
+    private void performUpdateShop(String name, String address, String phone, String email, String description) {
+        SellerShopRequest request = new SellerShopRequest();
+        request.setShopName(name);
+        request.setAddress(address);
+        request.setPhone(phone);
+        request.setEmail(email);
+        request.setDescription(description);
+        request.setAvatar(avatarUrl);
+
+        viewModel.updateShop(request);
+    }
+
     private void showConfirmUpdateDialog(String name, String address, String phone, String email, String description) {
 
         new androidx.appcompat.app.AlertDialog.Builder(this)
@@ -215,17 +204,30 @@ public class SellerShopInfoActivity extends AppCompatActivity {
                     if (progressBarShopInfo != null) progressBarShopInfo.setVisibility(View.VISIBLE);
                     if (svShopInfo != null) svShopInfo.setVisibility(View.GONE);
 
-                    int shopId = (int) tokenManager.getShopId();
+                    if (selectedImageUri != null) {
+                        ImageUploadHelper.uploadImage(
+                                tokenManager,
+                                selectedImageUri,
+                                SellerShopInfoActivity.this,
+                                new ImageUploadHelper.Callback<String>() {
+                                    @Override
+                                    public void onSuccess(String url) {
+                                        avatarUrl = url;
+                                        performUpdateShop(name, address, phone, email, description);
+                                    }
 
-                    SellerShopRequest request = new SellerShopRequest();
-                    request.setShopName(name);
-                    request.setAddress(address);
-                    request.setPhone(phone);
-                    request.setEmail(email);
-                    request.setDescription(description);
-                    request.setAvatar(avatarUrl);
-
-                    viewModel.updateShop(request);
+                                    @Override
+                                    public void onError(String error) {
+                                        isUpdating = false;
+                                        if (progressBarShopInfo != null) progressBarShopInfo.setVisibility(View.GONE);
+                                        if (svShopInfo != null) svShopInfo.setVisibility(View.VISIBLE);
+                                        Toast.makeText(SellerShopInfoActivity.this, "Lỗi upload ảnh: " + error, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                        );
+                    } else {
+                        performUpdateShop(name, address, phone, email, description);
+                    }
                 })
                 .setNegativeButton("Huỷ", (dialog, which) -> dialog.dismiss())
                 .show();

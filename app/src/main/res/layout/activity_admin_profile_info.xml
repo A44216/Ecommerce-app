@@ -31,13 +31,25 @@
             android:focusable="true"/>
 
         <!-- Avatar -->
-        <ImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/desc_image"
-            android:src="@drawable/ic_launcher_background" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="@string/desc_image"
+                android:src="@drawable/ic_launcher_background" />
+
+            <ProgressBar
+                android:id="@+id/progressBarAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+        </FrameLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnChooseImage"
             android:layout_width="wrap_content"
