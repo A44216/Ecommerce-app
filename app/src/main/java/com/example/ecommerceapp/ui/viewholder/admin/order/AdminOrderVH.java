@@ -21,6 +21,7 @@ public class AdminOrderVH extends RecyclerView.ViewHolder {
     public final TextView tvPaymentStatus;
     public final ImageView ivOrder;
     public final TextView tvCustomerName;
+    public final TextView tvUsername;
     public final TextView tvShopName;
     public final TextView tvCreatedAt;
     public final TextView tvTotalPrice;
@@ -31,6 +32,7 @@ public class AdminOrderVH extends RecyclerView.ViewHolder {
         tvPaymentStatus = itemView.findViewById(R.id.tvPaymentStatus);
         ivOrder = itemView.findViewById(R.id.ivOrder);
         tvCustomerName = itemView.findViewById(R.id.tvCustomerName);
+        tvUsername = itemView.findViewById(R.id.tvUsername);
         tvShopName = itemView.findViewById(R.id.tvShopName);
         tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
         tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
@@ -53,7 +55,10 @@ public class AdminOrderVH extends RecyclerView.ViewHolder {
             tvPaymentStatus.setText("N/A");
         }
 
-        tvCustomerName.setText("Khách: " + (order.getUsername() != null ? order.getUsername() : "--"));
+        String fName = order.getFullName() != null && !order.getFullName().trim().isEmpty() ? order.getFullName() : "--";
+        tvCustomerName.setText("Khách: " + fName);
+        
+        tvUsername.setText("@" + order.getUsername());
         tvShopName.setText("Shop: " + (order.getShopName() != null ? order.getShopName() : "--"));
 
         if (order.getCreatedAt() != null) {

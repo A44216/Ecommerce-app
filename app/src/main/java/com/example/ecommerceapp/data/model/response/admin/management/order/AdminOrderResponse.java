@@ -14,6 +14,7 @@ public class AdminOrderResponse {
 
     private Integer userId;
     private String username;
+    private String fullName;
 
     private Integer shopId;
     private String shopName;
@@ -34,6 +35,7 @@ public class AdminOrderResponse {
 
     public Integer getUserId() { return userId; }
     public String getUsername() { return username; }
+    public String getFullName() { return fullName; }
 
     public Integer getShopId() { return shopId; }
     public String getShopName() { return shopName; }
