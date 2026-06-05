@@ -48,7 +48,9 @@ public class SellerProductAdapter extends ListAdapter<SellerProductResponse, Sel
                        Objects.equals(oldItem.getPrice(), newItem.getPrice()) &&
                        oldItem.getStatus() == newItem.getStatus() &&
                        Objects.equals(oldItem.getIsDeleted(), newItem.getIsDeleted()) &&
-                       oldItem.getSoldCount() == newItem.getSoldCount();
+                       oldItem.getSoldCount() == newItem.getSoldCount() &&
+                       oldItem.getStock() == newItem.getStock() &&
+                       Objects.equals(oldItem.getCategoryName(), newItem.getCategoryName());
 
                 if (!sameBasic) return false;
 
@@ -97,6 +99,7 @@ public class SellerProductAdapter extends ListAdapter<SellerProductResponse, Sel
 
         holder.getRating().setText("⭐ " + product.getRatingAvg());
         holder.getSold().setText("Đã bán " + product.getSoldCount());
+        holder.getStock().setText("Kho: " + product.getStock());
         // Style the status
         boolean isDeleted = Boolean.TRUE.equals(product.getIsDeleted());
         if (isDeleted) {

@@ -127,6 +127,19 @@
             app:layout_constraintEnd_toStartOf="@id/actionsLayoutProduct" />
 
         <TextView
+            android:id="@+id/tvStock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Kho: 0"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/tvProductName"
+            app:layout_constraintTop_toBottomOf="@id/tvRating"
+            app:layout_constraintEnd_toStartOf="@id/actionsLayoutProduct" />
+
+        <TextView
             android:id="@+id/tvProductPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -138,7 +151,7 @@
             android:textStyle="bold"
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@id/tvProductName"
-            app:layout_constraintTop_toBottomOf="@id/tvRating"
+            app:layout_constraintTop_toBottomOf="@id/tvStock"
             app:layout_constraintEnd_toStartOf="@id/actionsLayoutProduct" />
 
         <!-- Actions -->

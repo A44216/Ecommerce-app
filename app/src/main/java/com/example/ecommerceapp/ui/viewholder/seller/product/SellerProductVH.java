@@ -12,7 +12,7 @@ import com.example.ecommerceapp.R;
 public class SellerProductVH extends RecyclerView.ViewHolder {
 
     ImageView imgProduct;
-    TextView code, name, price, category, rating, sold, status;
+    TextView code, name, price, category, rating, sold, status, stock;
 
     public SellerProductVH(@NonNull View itemView) {
         super(itemView);
@@ -24,6 +24,7 @@ public class SellerProductVH extends RecyclerView.ViewHolder {
         category = itemView.findViewById(R.id.tvProductCategory);
         rating = itemView.findViewById(R.id.tvRating);
         sold = itemView.findViewById(R.id.tvSoldAndRevenue);
+        stock = itemView.findViewById(R.id.tvStock);
         status = itemView.findViewById(R.id.tvProductStatus);
     }
 
@@ -37,5 +38,6 @@ public class SellerProductVH extends RecyclerView.ViewHolder {
     public TextView getCategory() { return category; }
     public TextView getRating() { return rating; }
     public TextView getSold() { return sold; }
+    public TextView getStock() { return stock; }
     public TextView getStatus() { return status; }
 }
