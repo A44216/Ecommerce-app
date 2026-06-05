@@ -49,6 +49,16 @@ public class SellerProductPagerAdapter extends FragmentStateAdapter {
         }
     }
 
+    public void setFiltersToAll(Boolean inStock, String sortBy, String sortDir) {
+
+        for (Fragment fragment : fragmentManager.getFragments()) {
+
+            if (fragment instanceof SellerProductListFragment) {
+                ((SellerProductListFragment) fragment).setFilters(inStock, sortBy, sortDir);
+            }
+        }
+    }
+
     public void reloadAll() {
 
         for (Fragment fragment : fragmentManager.getFragments()) {

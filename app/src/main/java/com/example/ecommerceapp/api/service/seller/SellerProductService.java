@@ -17,6 +17,9 @@ public interface SellerProductService {
             @Query("status") String status,
             @Query("isDeleted") Boolean isDeleted,
             @Query("keyword") String keyword,
+            @Query("inStock") Boolean inStock,
+            @Query("sortBy") String sortBy,
+            @Query("sortDir") String sortDir,
             @Query("page") int page,
             @Query("size") int size
     );

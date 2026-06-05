@@ -41,6 +41,9 @@ public class SellerProductListFragment extends Fragment {
     private String status = "";
     private String keyword = "";
     private Boolean isDeleted = false;
+    private Boolean inStock = null;
+    private String sortBy = "createdAt";
+    private String sortDir = "desc";
 
     private final ActivityResultLauncher<Intent> editLauncher =
             registerForActivityResult(
@@ -211,6 +214,8 @@ public class SellerProductListFragment extends Fragment {
         viewModel.setStatus(status);
         viewModel.setIsDeleted(isDeleted);
         viewModel.setKeyword(keyword);
+        viewModel.setInStock(inStock);
+        viewModel.setSortBy(sortBy, sortDir);
 
         observeData();
         if (viewModel.getProducts().getValue() == null) {
@@ -252,6 +257,20 @@ public class SellerProductListFragment extends Fragment {
             progressBar.setVisibility(View.VISIBLE);
         }
         viewModel.setKeyword(keyword);
+        viewModel.fetchProducts(false);
+    }
+
+    public void setFilters(Boolean inStock, String sortBy, String sortDir) {
+        this.inStock = inStock;
+        this.sortBy = sortBy;
+        this.sortDir = sortDir;
+        if (viewModel == null) return;
+
+        if (progressBar != null && (swipeRefreshProducts == null || !swipeRefreshProducts.isRefreshing())) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        viewModel.setInStock(inStock);
+        viewModel.setSortBy(sortBy, sortDir);
         viewModel.fetchProducts(false);
     }
 

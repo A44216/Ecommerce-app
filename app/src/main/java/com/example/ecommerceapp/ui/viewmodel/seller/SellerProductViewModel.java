@@ -26,9 +26,21 @@ public class SellerProductViewModel extends ViewModel {
     private String keyword = "";
     private String status = "";
     private Boolean isDeleted = false;
+    private Boolean inStock = null;
+    private String sortBy = "createdAt";
+    private String sortDir = "desc";
 
     public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public void setInStock(Boolean inStock) {
+        this.inStock = inStock;
+    }
+
+    public void setSortBy(String sortBy, String sortDir) {
+        this.sortBy = sortBy;
+        this.sortDir = sortDir;
     }
 
     private final Map<String, MutableLiveData<List<SellerProductResponse>>> cache = new HashMap<>();
@@ -51,18 +63,22 @@ public class SellerProductViewModel extends ViewModel {
 
 
     private String getKey() {
-        return status + "_" + isDeleted;
+        return status + "_" + isDeleted + "_" + inStock + "_" + sortBy + "_" + sortDir;
     }
+
+    private final MutableLiveData<List<SellerProductResponse>> mainProductsLiveData = new MutableLiveData<>();
 
     public LiveData<List<SellerProductResponse>> getProducts() {
         String key = getKey();
 
         if (!cache.containsKey(key)) {
             cache.put(key, new MutableLiveData<>());
-            fetchProducts(false);
+            // fetchProducts will be called explicitly by fragment
+        } else {
+            mainProductsLiveData.setValue(cache.get(key).getValue());
         }
 
-        return cache.get(key);
+        return mainProductsLiveData;
     }
 
     public void fetchProducts(boolean isLoadMore) {
@@ -78,7 +94,7 @@ public class SellerProductViewModel extends ViewModel {
 
         if (Boolean.TRUE.equals(lastPageMap.get(key))) return;
 
-        repository.getProducts(status, isDeleted, keyword, page, PAGE_SIZE)
+        repository.getProducts(status, isDeleted, keyword, inStock, sortBy, sortDir, page, PAGE_SIZE)
                 .enqueue(new Callback<PageResponse<SellerProductResponse>>() {
 
                     @Override
@@ -112,6 +128,7 @@ public class SellerProductViewModel extends ViewModel {
                         }
 
                         liveData.setValue(current);
+                        mainProductsLiveData.setValue(current);
 
                         currentPageMap.put(key, body.getPage() + 1);
 
@@ -126,6 +143,7 @@ public class SellerProductViewModel extends ViewModel {
                         Log.e("API", "FAIL: " + t.getMessage());
                         MutableLiveData<List<SellerProductResponse>> liveData = cache.get(key);
                         if (liveData != null) liveData.setValue(null);
+                        mainProductsLiveData.setValue(null);
                     }
                 });
     }
@@ -168,6 +186,7 @@ public class SellerProductViewModel extends ViewModel {
                 List<SellerProductResponse> updated = new java.util.ArrayList<>(current);
                 updated.removeIf(p -> java.util.Objects.equals(p.getId(), id));
                 liveData.setValue(updated);
+                mainProductsLiveData.setValue(updated);
             }
         }
 
@@ -213,6 +232,7 @@ public class SellerProductViewModel extends ViewModel {
                 List<SellerProductResponse> updated = new java.util.ArrayList<>(current);
                 updated.removeIf(p -> java.util.Objects.equals(p.getId(), id));
                 liveData.setValue(updated);
+                mainProductsLiveData.setValue(updated);
             }
         }
 
@@ -252,6 +272,7 @@ public class SellerProductViewModel extends ViewModel {
                 List<SellerProductResponse> updated = new java.util.ArrayList<>(current);
                 updated.removeIf(p -> java.util.Objects.equals(p.getId(), id));
                 liveData.setValue(updated);
+                mainProductsLiveData.setValue(updated);
             }
         }
 

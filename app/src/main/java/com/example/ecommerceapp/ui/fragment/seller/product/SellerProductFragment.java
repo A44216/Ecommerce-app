@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.fragment.seller.product;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.text.TextWatcher;
 import android.text.Editable;
+import android.widget.Filter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +38,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-import com.google.android.material.textfield.TextInputEditText;
 
 public class SellerProductFragment extends Fragment {
 
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private MaterialAutoCompleteTextView etSearch;
+    private MaterialAutoCompleteTextView actvSortTime;
+    private MaterialAutoCompleteTextView actvStock;
     private SellerProductViewModel viewModel;
 
     private SellerProductPagerAdapter adapter;
@@ -84,8 +88,11 @@ public class SellerProductFragment extends Fragment {
         viewPager = view.findViewById(R.id.listProduct);
         tabLayout = view.findViewById(R.id.tabLayout);
         etSearch = view.findViewById(R.id.etSearch);
+        actvSortTime = view.findViewById(R.id.actvSortTime);
+        actvStock = view.findViewById(R.id.actvStock);
 
         initViewModel();
+        setupFilters();
         setupViewPager();
         setupSearch();
         setupFab(view);
@@ -111,7 +118,7 @@ public class SellerProductFragment extends Fragment {
         View currentFocus = requireActivity().getCurrentFocus();
         if (currentFocus != null) {
             currentFocus.clearFocus();
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
         }
     }
@@ -141,6 +148,77 @@ public class SellerProductFragment extends Fragment {
         });
     }
 
+    private void setupFilters() {
+        String[] timeOptions = {"Mới nhất", "Cũ nhất"};
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(requireContext(),
+                android.R.layout.simple_dropdown_item_1line, timeOptions) {
+            @NonNull
+            @Override
+            public Filter getFilter() {
+                return new Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence constraint) {
+                        FilterResults results = new FilterResults();
+                        results.values = timeOptions;
+                        results.count = timeOptions.length;
+                        return results;
+                    }
+                    @Override
+                    protected void publishResults(CharSequence constraint, FilterResults results) {
+                        notifyDataSetChanged();
+                    }
+                };
+            }
+        };
+        actvSortTime.setAdapter(timeAdapter);
+
+        String[] stockOptions = {"Tất cả", "Còn hàng", "Hết hàng"};
+        ArrayAdapter<String> stockAdapter = new ArrayAdapter<String>(requireContext(),
+                android.R.layout.simple_dropdown_item_1line, stockOptions) {
+            @NonNull
+            @Override
+            public Filter getFilter() {
+                return new Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence constraint) {
+                        FilterResults results = new FilterResults();
+                        results.values = stockOptions;
+                        results.count = stockOptions.length;
+                        return results;
+                    }
+                    @Override
+                    protected void publishResults(CharSequence constraint, FilterResults results) {
+                        notifyDataSetChanged();
+                    }
+                };
+            }
+        };
+        actvStock.setAdapter(stockAdapter);
+
+        actvSortTime.setOnItemClickListener((parent, view, position, id) -> {
+            applyFilters();
+        });
+
+        actvStock.setOnItemClickListener((parent, view, position, id) -> {
+            applyFilters();
+        });
+    }
+
+    private void applyFilters() {
+        if (adapter == null) return;
+
+        String time = actvSortTime.getText().toString();
+        String sortBy = "createdAt";
+        String sortDir = time.equals("Cũ nhất") ? "asc" : "desc";
+
+        String stockStr = actvStock.getText().toString();
+        Boolean inStock = null;
+        if (stockStr.equals("Còn hàng")) inStock = true;
+        else if (stockStr.equals("Hết hàng")) inStock = false;
+
+        adapter.setFiltersToAll(inStock, sortBy, sortDir);
+    }
+
     private void setupSearch() {
         searchAdapter = new ArrayAdapter<String>(
                 requireContext(),
@@ -149,8 +227,8 @@ public class SellerProductFragment extends Fragment {
         ) {
             @NonNull
             @Override
-            public android.widget.Filter getFilter() {
-                return new android.widget.Filter() {
+            public Filter getFilter() {
+                return new Filter() {
                     @Override
                     protected FilterResults performFiltering(CharSequence constraint) {
                         FilterResults results = new FilterResults();

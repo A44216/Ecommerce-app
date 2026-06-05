@@ -22,10 +22,13 @@ public class SellerProductRepository {
             String status,
             Boolean isDeleted,
             String keyword,
+            Boolean inStock,
+            String sortBy,
+            String sortDir,
             int page,
             int size
     ) {
-        return apiService.getProducts(status, isDeleted, keyword, page, size);
+        return apiService.getProducts(status, isDeleted, keyword, inStock, sortBy, sortDir, page, size);
     }
 
     public Call<SellerProductResponse> getProductById(int id) {

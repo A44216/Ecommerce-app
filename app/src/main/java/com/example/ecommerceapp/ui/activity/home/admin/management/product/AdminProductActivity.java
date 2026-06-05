@@ -603,13 +603,21 @@ public class AdminProductActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (actvSearchKeyword != null) actvSearchKeyword.dismissDropDown();
-        if (actvSortTime != null) actvSortTime.dismissDropDown();
-
-        if (getCurrentFocus() != null) {
-            clearSearchFocus();
+    public boolean dispatchTouchEvent(android.view.MotionEvent event) {
+        if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+            android.view.View v = getCurrentFocus();
+            if (v instanceof android.widget.EditText) {
+                android.graphics.Rect outRect = new android.graphics.Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                    v.clearFocus();
+                    android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
         }
-        return super.dispatchTouchEvent(ev);
+        return super.dispatchTouchEvent(event);
     }
 }
