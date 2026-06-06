@@ -76,14 +76,23 @@ public class SellerNotificationFragment extends Fragment {
                 if (isAdded()) swipeRefreshLayout.setRefreshing(false);
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
                     List<NotificationResponse> allNotifications = response.body();
+                    
+                    // Lọc chỉ lấy các thông báo dành cho Seller
+                    List<NotificationResponse> sellerNotifs = new java.util.ArrayList<>();
+                    for (NotificationResponse n : allNotifications) {
+                        String type = n.getType();
+                        if ("SELLER_ORDER".equals(type) || "PRODUCT".equals(type) || "SHOP".equals(type)) {
+                            sellerNotifs.add(n);
+                        }
+                    }
 
-                    if (allNotifications.isEmpty()) {
+                    if (sellerNotifs.isEmpty()) {
                         rvNotifications.setVisibility(View.GONE);
                         layoutEmpty.setVisibility(View.VISIBLE);
                     } else {
                         rvNotifications.setVisibility(View.VISIBLE);
                         layoutEmpty.setVisibility(View.GONE);
-                        OrderNotificationAdapter adapter = new OrderNotificationAdapter(allNotifications, item -> {
+                        OrderNotificationAdapter adapter = new OrderNotificationAdapter(sellerNotifs, item -> {
                             handleNotificationClick(item);
                         });
                         rvNotifications.setAdapter(adapter);
@@ -114,9 +123,13 @@ public class SellerNotificationFragment extends Fragment {
 
         // Điều hướng
         if (item.getRelatedId() != null && getActivity() != null) {
-            if ("ORDER".equals(item.getType())) {
+            if ("SELLER_ORDER".equals(item.getType())) {
                 Intent intent = new Intent(getActivity(), SellerOrderDetailActivity.class);
                 intent.putExtra("orderId", item.getRelatedId());
+                startActivity(intent);
+            } else if ("PRODUCT".equals(item.getType())) {
+                Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.seller.product.SellerProductDetailActivity.class);
+                intent.putExtra("productId", item.getRelatedId());
                 startActivity(intent);
             }
         }

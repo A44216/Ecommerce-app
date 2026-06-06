@@ -296,18 +296,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 } else {
                     String error = parseError(response);
-
-                    // BỔ SUNG: Bắt mã lỗi trùng tài khoản thường và báo cho người dùng
-                    if (error.contains("EMAIL_ALREADY_REGISTERED_LOCAL")) {
-                        Toast.makeText(LoginActivity.this,
-                                "Email này đã được đăng ký tài khoản thường. Vui lòng đăng nhập bằng Tên đăng nhập/Email và Mật khẩu!",
-                                Toast.LENGTH_LONG).show();
-
-                        // Đăng xuất Google client luôn để lần sau bấm vào nó hiện lại bảng chọn tài khoản
-                        mGoogleSignInClient.signOut();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Lỗi từ Server: " + error, Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(LoginActivity.this, "Lỗi từ Server: " + error, Toast.LENGTH_LONG).show();
                 }
             }
 
