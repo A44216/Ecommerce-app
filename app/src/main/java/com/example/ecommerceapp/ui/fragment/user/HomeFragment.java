@@ -117,25 +117,15 @@ public class HomeFragment extends Fragment {
         productAdapter = new UserProductAdapter(getContext());
         rvProducts.setAdapter(productAdapter);
 
-        // Lắng nghe sự kiện cuộn để tải thêm (Pagination)
-        rvProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) { // Cuộn xuống
-                    GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-                    if (layoutManager != null) {
-                        int visibleItemCount = layoutManager.getChildCount();
-                        int totalItemCount = layoutManager.getItemCount();
-                        int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
-
-                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            viewModel.fetchProducts(false); // Gọi thêm trang tiếp theo
-                        }
-                    }
+        // Lắng nghe sự kiện cuộn để tải thêm (Pagination) từ NestedScrollView
+        androidx.core.widget.NestedScrollView scrollView = view.findViewById(R.id.scroll_view);
+        if (scrollView != null) {
+            scrollView.setOnScrollChangeListener((androidx.core.widget.NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                if (scrollY >= (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    viewModel.fetchProducts(false); // Gọi thêm trang tiếp theo
                 }
-            }
-        });
+            });
+        }
 
         // 3. Setup RecyclerView Danh mục
         RecyclerView rvCategories = view.findViewById(R.id.rvCategories);
