@@ -146,7 +146,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                     // Setup danh sách sản phẩm
                     rvItems.setLayoutManager(new LinearLayoutManager(OrderDetailActivity.this));
                     if (order.getOrderItems() != null) {
-                        rvItems.setAdapter(new UserOrderItemAdapter(order.getOrderItems()));
+                        rvItems.setAdapter(new UserOrderItemAdapter(order.getOrderItems(), order.getStatus()));
                     }
 
                     // --- HIỂN THỊ PHƯƠNG THỨC THANH TOÁN ---

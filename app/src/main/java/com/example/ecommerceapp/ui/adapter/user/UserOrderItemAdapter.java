@@ -19,9 +19,11 @@ public class UserOrderItemAdapter extends RecyclerView.Adapter<UserOrderItemAdap
 
     // Đã đổi kiểu List thành UserOrderItemResponse
     private List<UserOrderItemResponse> list;
+    private String orderStatus;
 
-    public UserOrderItemAdapter(List<UserOrderItemResponse> list) {
+    public UserOrderItemAdapter(List<UserOrderItemResponse> list, String orderStatus) {
         this.list = list;
+        this.orderStatus = orderStatus;
     }
 
     @NonNull
@@ -45,35 +47,42 @@ public class UserOrderItemAdapter extends RecyclerView.Adapter<UserOrderItemAdap
         } else {
             holder.ivImage.setImageResource(R.drawable.ic_cart);
         }
-        if (item.getIsReviewed() != null && item.getIsReviewed()) {
-            holder.btnReview.setText("Xem đánh giá");
-            // Sử dụng giao diện mặc định của nút (nền trắng viền xanh) từ item_order_product.xml
-            holder.btnReview.setBackgroundTintList(android.content.res.ColorStateList.valueOf(holder.itemView.getContext().getResources().getColor(android.R.color.white, null)));
-            holder.btnReview.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.primary_blue, null));
 
-            holder.btnReview.setOnClickListener(v -> {
-                android.content.Context context = holder.itemView.getContext();
-                android.content.Intent intent = new android.content.Intent(context, com.example.ecommerceapp.ui.activity.home.user.review.ReviewActivity.class);
-                intent.putExtra("PRODUCT_ID", item.getProductId());
-                intent.putExtra("ORDER_ITEM_ID", item.getId());
-                intent.putExtra("REVIEW_ID", item.getReviewId()); // Truyền reviewId
-                intent.putExtra("MODE", "VIEW"); // Bật chế độ xem
-                context.startActivity(intent);
-            });
+        // CHỈ HIỂN THỊ NÚT ĐÁNH GIÁ NẾU ĐƠN HÀNG ĐÃ HOÀN THÀNH
+        if ("COMPLETED".equalsIgnoreCase(orderStatus)) {
+            holder.btnReview.setVisibility(View.VISIBLE);
+            if (item.getIsReviewed() != null && item.getIsReviewed()) {
+                holder.btnReview.setText("Xem đánh giá");
+                // Sử dụng giao diện mặc định của nút (nền trắng viền xanh) từ item_order_product.xml
+                holder.btnReview.setBackgroundTintList(android.content.res.ColorStateList.valueOf(holder.itemView.getContext().getResources().getColor(android.R.color.white, null)));
+                holder.btnReview.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.primary_blue, null));
+
+                holder.btnReview.setOnClickListener(v -> {
+                    android.content.Context context = holder.itemView.getContext();
+                    android.content.Intent intent = new android.content.Intent(context, com.example.ecommerceapp.ui.activity.home.user.review.ReviewActivity.class);
+                    intent.putExtra("PRODUCT_ID", item.getProductId());
+                    intent.putExtra("ORDER_ITEM_ID", item.getId());
+                    intent.putExtra("REVIEW_ID", item.getReviewId()); // Truyền reviewId
+                    intent.putExtra("MODE", "VIEW"); // Bật chế độ xem
+                    context.startActivity(intent);
+                });
+            } else {
+                holder.btnReview.setText("Đánh giá");
+                // Sử dụng giao diện mặc định của nút
+                holder.btnReview.setBackgroundTintList(android.content.res.ColorStateList.valueOf(holder.itemView.getContext().getResources().getColor(android.R.color.white, null)));
+                holder.btnReview.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.primary_blue, null));
+                holder.btnReview.setOnClickListener(v -> {
+                    // Lấy Context (Môi trường hiện tại của nút bấm)
+                    android.content.Context context = holder.itemView.getContext();
+
+                    android.content.Intent intent = new android.content.Intent(context, com.example.ecommerceapp.ui.activity.home.user.review.ReviewActivity.class);
+                    intent.putExtra("PRODUCT_ID", item.getProductId()); // Gửi ID của sản phẩm này sang
+                    intent.putExtra("ORDER_ITEM_ID", item.getId()); // Gửi ID của OrderItem
+                    context.startActivity(intent); // Bắt đầu bay sang màn hình Đánh giá
+                });
+            }
         } else {
-            holder.btnReview.setText("Đánh giá");
-            // Sử dụng giao diện mặc định của nút
-            holder.btnReview.setBackgroundTintList(android.content.res.ColorStateList.valueOf(holder.itemView.getContext().getResources().getColor(android.R.color.white, null)));
-            holder.btnReview.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.primary_blue, null));
-            holder.btnReview.setOnClickListener(v -> {
-                // Lấy Context (Môi trường hiện tại của nút bấm)
-                android.content.Context context = holder.itemView.getContext();
-
-                android.content.Intent intent = new android.content.Intent(context, com.example.ecommerceapp.ui.activity.home.user.review.ReviewActivity.class);
-                intent.putExtra("PRODUCT_ID", item.getProductId()); // Gửi ID của sản phẩm này sang
-                intent.putExtra("ORDER_ITEM_ID", item.getId()); // Gửi ID của OrderItem
-                context.startActivity(intent); // Bắt đầu bay sang màn hình Đánh giá
-            });
+            holder.btnReview.setVisibility(View.GONE);
         }
 
         // Sự kiện khi nhấn vào cả item để xem chi tiết sản phẩm

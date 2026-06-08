@@ -57,7 +57,20 @@ public class ComplaintHistoryActivity extends AppCompatActivity {
                     } else {
                         rvComplaints.setVisibility(View.VISIBLE);
                         layoutEmpty.setVisibility(View.GONE);
-                        ComplaintAdapter adapter = new ComplaintAdapter(list);
+                        ComplaintAdapter adapter = new ComplaintAdapter(list, item -> {
+                            String message = "Nội dung khiếu nại:\n" + item.getContent() + "\n\n";
+                            if (item.getAdminResponse() != null && !item.getAdminResponse().isEmpty()) {
+                                message += "Phản hồi từ Admin:\n" + item.getAdminResponse();
+                            } else {
+                                message += "Chưa có phản hồi từ Admin.";
+                            }
+                            
+                            new androidx.appcompat.app.AlertDialog.Builder(ComplaintHistoryActivity.this)
+                                    .setTitle("Chi tiết khiếu nại #" + item.getId())
+                                    .setMessage(message)
+                                    .setPositiveButton("Đóng", null)
+                                    .show();
+                        });
                         rvComplaints.setAdapter(adapter);
                     }
                 }

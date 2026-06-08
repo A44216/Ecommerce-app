@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -80,6 +81,12 @@ public class NotificationFragment extends Fragment {
         listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_today, "Khuyến mãi", "Chưa có thông báo mới", 0));
         listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_agenda, "Cập nhật hệ thống", "Chưa có thông báo mới", 0));
         listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_gallery, "Giải thưởng & Quà tặng", "Chưa có thông báo mới", 0));
+        listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_help, "Phản hồi khiếu nại", "Chưa có thông báo mới", 0));
+        
+        TokenManager tm = TokenManager.getInstance(getContext());
+        if ("SELLER".equals(tm.getRole())) {
+            listTopNotifications.add(new NotificationItem(android.R.drawable.ic_menu_manage, "Cập nhật Shop", "Nhấn vào đây để xem thông báo người bán", 0));
+        }
  
         topAdapter = new NotificationAdapter(listTopNotifications, item -> {
             String type = "";
@@ -87,6 +94,12 @@ public class NotificationFragment extends Fragment {
                 case "Khuyến mãi": type = "PROMOTION"; break;
                 case "Cập nhật hệ thống": type = "SYSTEM"; break;
                 case "Giải thưởng & Quà tặng": type = "AWARDS"; break;
+                case "Phản hồi khiếu nại": 
+                    startActivity(new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.help.ComplaintHistoryActivity.class));
+                    return;
+                case "Cập nhật Shop": 
+                    startActivity(new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.SellerHomeActivity.class));
+                    return;
             }
             if (!type.isEmpty()) {
                 Intent intent = new Intent(getActivity(), com.example.ecommerceapp.ui.activity.home.user.notification.CategoryNotificationActivity.class);
@@ -101,6 +114,15 @@ public class NotificationFragment extends Fragment {
         rvOrderNotifications = view.findViewById(R.id.rvOrderNotifications);
         layoutEmptyOrder = view.findViewById(R.id.layoutEmptyOrder);
         rvOrderNotifications.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        Button btnShopNow = view.findViewById(R.id.btnShopNow);
+        if (btnShopNow != null) {
+            btnShopNow.setOnClickListener(v -> {
+                if (getActivity() instanceof com.example.ecommerceapp.ui.activity.home.UserHomeActivity) {
+                    ((com.example.ecommerceapp.ui.activity.home.UserHomeActivity) getActivity()).switchToHome();
+                }
+            });
+        }
 
         tokenManager = TokenManager.getInstance(getContext());
         apiService = ApiClient.getUserService(tokenManager);
@@ -161,10 +183,20 @@ public class NotificationFragment extends Fragment {
                     // 3. Map để đếm số lượng chưa đọc theo loại
                     Map<String, Integer> unreadCounts = new HashMap<>();
 
+                    int unreadSellerCount = 0;
+                    NotificationResponse latestSellerNotif = null;
+
                     for (NotificationResponse n : allNotifications) {
                         String type = n.getType();
                         if ("ORDER".equals(type)) {
                             orderNotifs.add(n);
+                        } else if ("SELLER_ORDER".equals(type) || "PRODUCT".equals(type) || "SHOP".equals(type)) {
+                            if (latestSellerNotif == null) {
+                                latestSellerNotif = n; // Lấy thông báo mới nhất
+                            }
+                            if (!n.isRead()) {
+                                unreadSellerCount++;
+                            }
                         } else {
                             // Lưu thông báo đầu tiên (mới nhất) tìm thấy cho mỗi loại
                             if (!latestByType.containsKey(type)) {
@@ -172,9 +204,11 @@ public class NotificationFragment extends Fragment {
                             }
                         }
 
-                        // Đếm số lượng chưa đọc
-                        if (!n.isRead()) {
-                            unreadCounts.put(type, unreadCounts.getOrDefault(type, 0) + 1);
+                        // Đếm số lượng chưa đọc cho các loại thông thường
+                        if (!"SELLER_ORDER".equals(type) && !"PRODUCT".equals(type) && !"SHOP".equals(type)) {
+                            if (!n.isRead()) {
+                                unreadCounts.put(type, unreadCounts.getOrDefault(type, 0) + 1);
+                            }
                         }
                     }
 
@@ -182,6 +216,20 @@ public class NotificationFragment extends Fragment {
                     updateTopCategory("Khuyến mãi", "PROMOTION", latestByType, unreadCounts);
                     updateTopCategory("Cập nhật hệ thống", "SYSTEM", latestByType, unreadCounts);
                     updateTopCategory("Giải thưởng & Quà tặng", "AWARDS", latestByType, unreadCounts);
+                    updateTopCategory("Phản hồi khiếu nại", "COMPLAINT", latestByType, unreadCounts);
+
+                    if ("SELLER".equals(tokenManager.getRole())) {
+                        for (NotificationItem item : listTopNotifications) {
+                            if (item.getTitle().equals("Cập nhật Shop")) {
+                                if (latestSellerNotif != null) {
+                                    item.setDescription(latestSellerNotif.getTitle());
+                                }
+                                item.setBadgeCount(unreadSellerCount);
+                                break;
+                            }
+                        }
+                    }
+
                     topAdapter.notifyDataSetChanged();
 
                     // --- CẬP NHẬT DANH SÁCH DƯỚI (Cập nhật đơn hàng) ---

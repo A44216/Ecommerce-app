@@ -13,9 +13,15 @@ import java.util.List;
 public class ComplaintAdapter extends RecyclerView.Adapter<ComplaintAdapter.ViewHolder> {
 
     private List<ComplaintResponse> list;
+    private OnItemClickListener listener;
 
-    public ComplaintAdapter(List<ComplaintResponse> list) {
+    public interface OnItemClickListener {
+        void onItemClick(ComplaintResponse item);
+    }
+
+    public ComplaintAdapter(List<ComplaintResponse> list, OnItemClickListener listener) {
         this.list = list;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,10 +44,19 @@ public class ComplaintAdapter extends RecyclerView.Adapter<ComplaintAdapter.View
         } else if ("RESOLVED".equals(item.getStatus())) {
             holder.tvStatus.setText("Đã giải quyết");
             holder.tvStatus.setBackgroundResource(R.drawable.bg_status_resolved);
+        } else if ("REJECTED".equals(item.getStatus())) {
+            holder.tvStatus.setText("Từ chối");
+            holder.tvStatus.setBackgroundResource(R.drawable.bg_status_resolved);
         } else {
             holder.tvStatus.setText("Đã đóng");
             holder.tvStatus.setBackgroundResource(R.drawable.bg_status_resolved);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item);
+            }
+        });
     }
 
     @Override

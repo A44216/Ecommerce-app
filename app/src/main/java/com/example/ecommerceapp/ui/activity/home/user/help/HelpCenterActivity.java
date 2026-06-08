@@ -27,12 +27,5 @@ public class HelpCenterActivity extends AppCompatActivity {
             startActivity(new Intent(this, ComplaintHistoryActivity.class));
         });
 
-        boolean isSeller = getIntent().getBooleanExtra("is_seller", false);
-        if (isSeller) {
-            android.view.View tvFaqTitle = findViewById(R.id.tvFaqTitle);
-            android.view.View cardFaqItems = findViewById(R.id.cardFaqItems);
-            if (tvFaqTitle != null) tvFaqTitle.setVisibility(android.view.View.GONE);
-            if (cardFaqItems != null) cardFaqItems.setVisibility(android.view.View.GONE);
-        }
     }
 }
