@@ -18,7 +18,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.activity.home.admin.management.complaint.AdminComplaintDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.chat.UserConversationListActivity"
             android:exported="false"
@@ -26,7 +27,8 @@
         <activity
             android:name=".ui.activity.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.EcommerceApp">
+            android:theme="@style/Theme.EcommerceApp"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -35,97 +37,127 @@
         <activity
             android:name=".ui.activity.home.user.chat.ChatActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.chat.AiChatActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.review.ReviewActivity"
-            android:exported="false"/>
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.order.OrderDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.settings.SettingsActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.settings.UserManageAddressActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.settings.ChangePasswordActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.editprofile.EditUserProfileActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.editprofile.ChangeEmailActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.checkout.UserAddAddressActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.order.UserOrderHistoryActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.checkout.UserCheckoutActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.cart.UserCartActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.product.UserProductDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.seller.product.ProductDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.seller.product.AddAndEditProductActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.coupon.AdminCouponActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.coupon.AdminAddAndEditCouponActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.profile.AdminProfileInfoActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.profile.AdminChangePasswordActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.product.AdminCategoryActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.seller.review.SellerReviewActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.seller.order.SellerOrderDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.seller.shop.SellerChatActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.seller.shop.SellerShopInfoActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.seller.product.SellerProductDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.seller.product.SellerAddAndEditProductActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.SellerHomeActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.AdminHomeActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.search.UserSearchActivity"
             android:exported="false"
-            android:windowSoftInputMode="stateAlwaysVisible"/>
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.home.user.suggestion.SuggestionCenterActivity"
@@ -133,90 +165,116 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.UserHomeActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.user.AdminUserDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.user.AdminUserActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.product.AdminProductActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.product.AdminProductDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.shop.AdminShopActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.shop.AdminShopDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.complaint.AdminComplaintActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.order.AdminOrderDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.AdminNotificationActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.AdminCreateNotificationActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.admin.management.platformfee.AdminPlatformFeeActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.login.RegisterActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.login.ResetPasswordActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.login.ForgotPasswordActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MainActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.login.LoginActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.home.user.help.HelpCenterActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.help.SubmitComplaintActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.help.ComplaintHistoryActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.home.user.checkout.VnPayPaymentActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.checkout.PaymentSimulationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.notification.CategoryNotificationActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.shop.UserShopDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.shop.ShopCategoryProductsActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.home.user.settings.UserRegisterShopActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.AssistantChatActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" 
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
