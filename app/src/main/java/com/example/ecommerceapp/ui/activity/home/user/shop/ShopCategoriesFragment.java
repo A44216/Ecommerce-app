@@ -103,6 +103,7 @@ public class ShopCategoriesFragment extends Fragment {
                             userCategories.add(uCat);
                         }
                         adapter.updateData(userCategories);
+                        fetchImagesForCategories(userCategories);
                     }
                 } else {
                     Toast.makeText(getContext(), "Không tải được danh mục", Toast.LENGTH_SHORT).show();
@@ -114,5 +115,46 @@ public class ShopCategoriesFragment extends Fragment {
                 Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void fetchImagesForCategories(List<UserCategoryResponse> categories) {
+        if (getContext() == null) return;
+        android.content.SharedPreferences prefs = getContext().getSharedPreferences("category_cache", android.content.Context.MODE_PRIVATE);
+        boolean hasUpdateFromCache = false;
+
+        for (UserCategoryResponse category : categories) {
+            String cachedUrl = prefs.getString("cat_" + category.getId(), null);
+            if (cachedUrl != null && (category.getImageUrl() == null || category.getImageUrl().isEmpty())) {
+                category.setImageUrl(cachedUrl);
+                hasUpdateFromCache = true;
+            }
+
+            ApiClient.getUserProductService().getProductsByCategoryPaginated(category.getId(), 0, 1, "id,desc").enqueue(new Callback<com.example.ecommerceapp.data.model.response.UserPageResponse<com.example.ecommerceapp.data.model.response.UserProductResponse>>() {
+                @Override
+                public void onResponse(Call<com.example.ecommerceapp.data.model.response.UserPageResponse<com.example.ecommerceapp.data.model.response.UserProductResponse>> call, Response<com.example.ecommerceapp.data.model.response.UserPageResponse<com.example.ecommerceapp.data.model.response.UserProductResponse>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().getContent().isEmpty()) {
+                        com.example.ecommerceapp.data.model.response.UserProductResponse firstProduct = response.body().getContent().get(0);
+                        if (firstProduct.getImages() != null && !firstProduct.getImages().isEmpty()) {
+                            String imageUrl = firstProduct.getImages().get(0).getImageUrl();
+                            
+                            if (!imageUrl.equals(cachedUrl)) {
+                                prefs.edit().putString("cat_" + category.getId(), imageUrl).apply();
+                                category.setImageUrl(imageUrl);
+                                if (getActivity() != null) {
+                                    getActivity().runOnUiThread(() -> adapter.updateData(new ArrayList<>(categories)));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<com.example.ecommerceapp.data.model.response.UserPageResponse<com.example.ecommerceapp.data.model.response.UserProductResponse>> call, Throwable t) {}
+            });
+        }
+        
+        if (hasUpdateFromCache) {
+            adapter.updateData(new ArrayList<>(categories));
+        }
     }
 }
