@@ -49,6 +49,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
     private RatingBar mainRatingBar;
     private TokenManager tokenManager;
     private UserProductResponse currentProduct;
+    private int shopId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
 
         // 2. Nhận dữ liệu từ Intent gửi sang
         int productId = getIntent().getIntExtra("product_id", -1);
-        int shopId = getIntent().getIntExtra("shop_id", -1);
+        this.shopId = getIntent().getIntExtra("shop_id", -1);
         String name = getIntent().getStringExtra("product_name");
         String priceString = getIntent().getStringExtra("product_price");
         String imageUrl = getIntent().getStringExtra("product_image");
@@ -135,31 +136,8 @@ public class UserProductDetailActivity extends AppCompatActivity {
         }
 
         // --- TẢI THÔNG TIN SHOP ---
-        if (shopId != -1) {
-            ApiClient.getPublicShopService(tokenManager).getShopById(shopId).enqueue(new Callback<com.example.ecommerceapp.data.model.response.ShopResponse>() {
-                @Override
-                public void onResponse(Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Response<com.example.ecommerceapp.data.model.response.ShopResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        com.example.ecommerceapp.data.model.response.ShopResponse shop = response.body();
-                        tvShopNameView.setText(shop.getShopName() != null ? shop.getShopName() : "Shop");
-                        if (shop.getRatingAvg() != null) {
-                            tvShopRatingView.setText(String.format("%.1f", shop.getRatingAvg()));
-                        }
-                        if (shop.getAvatar() != null && !shop.getAvatar().isEmpty()) {
-                            ImageLoader.load(UserProductDetailActivity.this, ivShopAvatar, shop.getAvatar());
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Throwable t) {}
-            });
-
-            btnViewShop.setOnClickListener(v -> {
-                Intent intent = new Intent(UserProductDetailActivity.this, com.example.ecommerceapp.ui.activity.home.user.shop.UserShopDetailActivity.class);
-                intent.putExtra("SHOP_ID", shopId);
-                startActivity(intent);
-            });
+        if (this.shopId != -1) {
+            loadShopInfo(this.shopId);
         }
 
         // ==========================================
@@ -173,8 +151,8 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 return;
             }
 
-            if (shopId != -1) {
-                ConversationRequest req = new ConversationRequest(shopId, (int) tokenManager.getUserId());
+            if (this.shopId != -1) {
+                ConversationRequest req = new ConversationRequest(this.shopId, (int) tokenManager.getUserId());
                 ApiClient.getChatApiService(tokenManager).createConversation(req).enqueue(new Callback<ConversationResponse>() {
                     @Override
                     public void onResponse(Call<ConversationResponse> call, Response<ConversationResponse> response) {
@@ -184,7 +162,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
                             Intent intent = new Intent(UserProductDetailActivity.this, ChatActivity.class);
                             intent.putExtra("CONVERSATION_ID", conversationId);
                             intent.putExtra("SHOP_NAME", shopName != null ? shopName : "Shop");
-                            intent.putExtra("SHOP_ID", shopId);
+                            intent.putExtra("SHOP_ID", UserProductDetailActivity.this.shopId);
                             startActivity(intent);
 
                             Toast.makeText(UserProductDetailActivity.this, "Đã lấy thành công phòng Chat ID: " + conversationId, Toast.LENGTH_SHORT).show();
@@ -213,7 +191,7 @@ public class UserProductDetailActivity extends AppCompatActivity {
         // Khởi tạo đối tượng sản phẩm tạm thời từ Intent
         currentProduct = new UserProductResponse();
         if (productId != -1) currentProduct.setId(productId);
-        if (shopId != -1) currentProduct.setShopId(shopId);
+        if (this.shopId != -1) currentProduct.setShopId(this.shopId);
         if (name != null) currentProduct.setName(name);
         if (priceString != null) {
             try {
@@ -274,6 +252,10 @@ public class UserProductDetailActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     currentProduct = response.body();
                     displayProductDetail(currentProduct);
+                    if (shopId == -1 && currentProduct.getShopId() != null) {
+                        shopId = currentProduct.getShopId();
+                        loadShopInfo(shopId);
+                    }
                 }
             }
 
@@ -281,6 +263,40 @@ public class UserProductDetailActivity extends AppCompatActivity {
             public void onFailure(Call<UserProductResponse> call, Throwable t) {
                 Toast.makeText(UserProductDetailActivity.this, "Không thể tải chi tiết sản phẩm", Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void loadShopInfo(int shopId) {
+        if (shopId == -1) return;
+
+        ImageView ivShopAvatar = findViewById(R.id.ivShopAvatar);
+        TextView tvShopNameView = findViewById(R.id.tvShopName);
+        TextView tvShopRatingView = findViewById(R.id.tvShopRating);
+        Button btnViewShop = findViewById(R.id.btnViewShop);
+
+        ApiClient.getPublicShopService(tokenManager).getShopById(shopId).enqueue(new Callback<com.example.ecommerceapp.data.model.response.ShopResponse>() {
+            @Override
+            public void onResponse(Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Response<com.example.ecommerceapp.data.model.response.ShopResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    com.example.ecommerceapp.data.model.response.ShopResponse shop = response.body();
+                    tvShopNameView.setText(shop.getShopName() != null ? shop.getShopName() : "Shop");
+                    if (shop.getRatingAvg() != null) {
+                        tvShopRatingView.setText(String.format("%.1f", shop.getRatingAvg()));
+                    }
+                    if (shop.getAvatar() != null && !shop.getAvatar().isEmpty()) {
+                        ImageLoader.load(UserProductDetailActivity.this, ivShopAvatar, shop.getAvatar());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.ecommerceapp.data.model.response.ShopResponse> call, Throwable t) {}
+        });
+
+        btnViewShop.setOnClickListener(v -> {
+            Intent intent = new Intent(UserProductDetailActivity.this, com.example.ecommerceapp.ui.activity.home.user.shop.UserShopDetailActivity.class);
+            intent.putExtra("SHOP_ID", shopId);
+            startActivity(intent);
         });
     }
 
