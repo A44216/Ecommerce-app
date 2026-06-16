@@ -2,6 +2,8 @@ package com.example.ecommerceapp.data.local;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
+import org.json.JSONObject;
 
 public class TokenManager {
 
@@ -90,5 +92,26 @@ public class TokenManager {
                 .remove(KEY_SHOP_ID)
                 .putBoolean(KEY_REMEMBER, false)
                 .apply();
+    }
+
+    public boolean isTokenExpired() {
+        String token = getToken();
+        if (token == null) return true;
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length < 2) return true;
+
+            String payload = new String(
+                    Base64.decode(parts[1], Base64.DEFAULT)
+            );
+
+            JSONObject json = new JSONObject(payload);
+            long exp = json.getLong("exp") * 1000; // giây → ms
+
+            return System.currentTimeMillis() > exp;
+
+        } catch (Exception e) {
+            return true; // lỗi coi như hết hạn
+        }
     }
 }

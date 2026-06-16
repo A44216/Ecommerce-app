@@ -165,6 +165,22 @@ public class ProfileFragment extends Fragment {
                         
                         if (progressBar != null) progressBar.setVisibility(View.GONE);
                         if (nsvProfileContent != null) nsvProfileContent.setVisibility(View.VISIBLE);
+                    } else {
+                        if (isAdded() && getContext() != null) {
+                            if (progressBar != null) progressBar.setVisibility(View.GONE);
+                            if (nsvProfileContent != null) nsvProfileContent.setVisibility(View.VISIBLE);
+
+                            if (response.code() == 401) {
+                                tokenManager.logout();
+                                Toast.makeText(getContext(), "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            } else {
+                                tvUsername.setText("Khách hàng #" + currentUserId);
+                                Toast.makeText(getContext(), "Không thể tải thông tin cá nhân. Mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
 

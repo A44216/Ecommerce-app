@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ecommerceapp.R;
+import com.example.ecommerceapp.data.local.TokenManager;
+import com.example.ecommerceapp.ui.activity.home.AdminHomeActivity;
 import com.example.ecommerceapp.ui.activity.home.UserHomeActivity;
 
 public class SplashActivity extends AppCompatActivity {
@@ -39,10 +41,28 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void checkNavigation() {
+        TokenManager tokenManager = TokenManager.getInstance(this);
+        String token = tokenManager.getToken();
 
-
-        Intent intent = new Intent(SplashActivity.this, UserHomeActivity.class);
-        startActivity(intent);
+        if (token != null) {
+            if (tokenManager.isTokenExpired()) {
+                tokenManager.logout();
+                Intent intent = new Intent(SplashActivity.this, UserHomeActivity.class);
+                startActivity(intent);
+            } else {
+                String role = tokenManager.getRole();
+                Intent intent;
+                if ("ADMIN".equals(role)) {
+                    intent = new Intent(SplashActivity.this, AdminHomeActivity.class);
+                } else {
+                    intent = new Intent(SplashActivity.this, UserHomeActivity.class);
+                }
+                startActivity(intent);
+            }
+        } else {
+            Intent intent = new Intent(SplashActivity.this, UserHomeActivity.class);
+            startActivity(intent);
+        }
         finish();
     }
 }
